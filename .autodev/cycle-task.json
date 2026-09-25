@@ -1,10 +1,10 @@
 {
   "auto_create_pr": true,
   "poll_interval_seconds": 15,
-  "prompt": "Extend ADE repair handling by adding classify_failure(exc) to src/ade/repair.py. It must map ProviderQuotaError to PROVIDER_QUOTA, HumanInputRequired to HUMAN_INPUT, CycleTimedOut to CYCLE_TIMEOUT, CycleFailed to CYCLE_FAILED, other ProviderError instances to PROVIDER_ERROR, ValueError to VALIDATION_ERROR, and all other exceptions to UNKNOWN. Preserve correct subclass ordering so ProviderQuotaError is never collapsed into PROVIDER_ERROR. Add focused standard-library unittest coverage for every mapping and at least one unknown exception. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+  "prompt": "Add a deterministic repair planner for ADE. Create src/ade/repair_planner.py with an immutable RepairPlan dataclass containing task_id, failure_kind, disposition, next_attempt, next_replan_count, and error_summary. Add plan_repair(task_id, exc, attempt, replan_count, policy) which uses classify_failure and decide_repair from ade.repair, increments next_attempt only for RETRY, increments next_replan_count only for REPLAN, leaves counters unchanged for PAUSE_QUOTA/HUMAN_WAIT/FAIL, and stores a bounded non-empty error_summary without leaking tracebacks. Validate non-empty task_id and non-negative counters. Add focused standard-library unittest coverage for retry, replan, quota pause, human wait, terminal fail, and invalid inputs. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
   "schema_version": 1,
   "starting_branch": "main",
-  "task_id": "vertical-slice-005",
+  "task_id": "vertical-slice-006",
   "timeout_seconds": 1800,
-  "title": "Classify cycle failures for repair"
+  "title": "Add deterministic repair planner"
 }
