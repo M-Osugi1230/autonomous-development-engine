@@ -1,7 +1,9 @@
 from dataclasses import FrozenInstanceError
 import unittest
 
-from ade.repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
+from ade.cycle import CycleFailed, CycleTimedOut, HumanInputRequired
+from ade.providers.base import ProviderError, ProviderQuotaError, ProviderUnauthorizedError
+from ade.repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, classify_failure, decide_repair
 
 
 class TestRepairPrimitives(unittest.TestCase):
@@ -252,6 +254,26 @@ class TestRepairPrimitives(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             decide_repair(FailureKind.UNKNOWN, attempt=0, replan_count=0, policy="invalid")  # type: ignore[arg-type]
+
+    def test_classify_failure_mapping(self) -> None:
+        self.assertEqual(classify_failure(ProviderQuotaError("quota exceeded")), FailureKind.PROVIDER_QUOTA)
+        self.assertEqual(classify_failure(HumanInputRequired("need feedback")), FailureKind.HUMAN_INPUT)
+        self.assertEqual(classify_failure(CycleTimedOut("timed out")), FailureKind.CYCLE_TIMEOUT)
+        self.assertEqual(classify_failure(CycleFailed("failed")), FailureKind.CYCLE_FAILED)
+        self.assertEqual(classify_failure(ProviderError("generic provider error")), FailureKind.PROVIDER_ERROR)
+        self.assertEqual(classify_failure(ProviderUnauthorizedError("unauthorized")), FailureKind.PROVIDER_ERROR)
+        self.assertEqual(classify_failure(ValueError("invalid arg")), FailureKind.VALIDATION_ERROR)
+
+    def test_classify_failure_unknown_exceptions(self) -> None:
+        self.assertEqual(classify_failure(RuntimeError("runtime error")), FailureKind.UNKNOWN)
+        self.assertEqual(classify_failure(KeyError("key error")), FailureKind.UNKNOWN)
+        self.assertEqual(classify_failure(Exception("base exception")), FailureKind.UNKNOWN)
+
+    def test_classify_failure_subclass_ordering(self) -> None:
+        # ProviderQuotaError inherits from ProviderError; confirm it's mapped to PROVIDER_QUOTA, not PROVIDER_ERROR
+        quota_err = ProviderQuotaError("quota exceeded")
+        self.assertTrue(isinstance(quota_err, ProviderError))
+        self.assertEqual(classify_failure(quota_err), FailureKind.PROVIDER_QUOTA)
 
 
 if __name__ == "__main__":
