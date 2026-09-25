@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "task_id": "vertical-slice-001",
+  "title": "Add ADE health snapshot",
+  "prompt": "Implement a small ADE health snapshot feature. Add src/ade/health.py with a public function health_snapshot(state: ProjectState) -> dict[str, object]. The returned mapping must include project_id, status, iteration, current_task_id, completed_tasks, and failed_tasks, where status is the string value of the ProjectStatus enum and the task counts are integers. Add focused unit tests for this behavior. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, .github/workflows, or .autodev state files. Preserve existing APIs and run the complete existing unit test suite before finishing.",
+  "starting_branch": "main",
+  "auto_create_pr": true,
+  "timeout_seconds": 1800,
+  "poll_interval_seconds": 15
+}
