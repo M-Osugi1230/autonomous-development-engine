@@ -7,7 +7,7 @@ from pathlib import Path
 
 from ade.cycle import CycleTask
 from ade.providers.jules import JulesProvider
-from ade.repair import plan_repair
+from ade.repair_planner import plan_repair
 from ade.repair_runtime import RepairExecution, map_repair_execution, run_cycle_with_repair
 
 TASK_PATH = Path(".autodev/cycle-task.json")
