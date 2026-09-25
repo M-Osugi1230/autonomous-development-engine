@@ -53,14 +53,14 @@ def advance_queue(api: GitHubApi) -> str | None:
         state["current_task_id"] = None
         metadata = dict(state.get("metadata", {}))
         metadata["queue_exhausted"] = True
-        metadata["phase"] = "phase4-closed-loop"
+        metadata.setdefault("phase", "phase4-closed-loop")
         state["metadata"] = metadata
     else:
         state["status"] = "READY"
         state["current_task_id"] = str(next_task["task_id"])
         metadata = dict(state.get("metadata", {}))
         metadata["queue_exhausted"] = False
-        metadata["phase"] = "phase4-closed-loop"
+        metadata.setdefault("phase", "phase4-closed-loop")
         state["metadata"] = metadata
 
     api.put_json_file(
