@@ -15,13 +15,23 @@ Goal/task input -> Jules session -> PR -> CI -> persisted result.
 ## Phase 4 — Continuous Goal Loop ✅
 Automatically select the next bounded task after a successful cycle.
 
-Evidence: ADE completed and merged three bounded Jules tasks through the cloud loop without requiring a human "next" command between autonomous tasks.
+Evidence: ADE completed and merged multiple bounded Jules tasks through the cloud loop without requiring a human "next" command between autonomous tasks.
 
-## Phase 5 — Repair Loop 🚧
-Classify failures, choose bounded retry/replan/pause/human-wait dispositions, and wire the policy into execution.
+## Phase 5 — Repair Loop ✅
+Classify failures, choose bounded retry/replan/pause/human-wait dispositions, integrate repair into runtime execution, and prove a deterministic fail -> retry -> success path.
 
-## Phase 6 — Pause / Resume
+Evidence: the bounded repair runtime, operational Jules integration, import-regression guard, and deterministic repair probe are merged and CI-validated.
+
+## Phase 6 — Pause / Resume 🚧
 Quota-aware and crash-safe continuation.
+
+Current build order:
+1. validated checkpoint model
+2. atomic checkpoint persistence
+3. deterministic resume policy
+4. resumable provider-session primitives
+5. checkpoint lifecycle transitions
+6. checkpoint-aware runtime continuation
 
 ## Phase 7 — Human Decision Queue
 Ask only for decisions that exceed configured autonomy thresholds.
