@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
-  "task_id": "vertical-slice-007",
-  "title": "Add bounded runtime repair executor",
-  "prompt": "Add the Phase 5 bounded runtime repair executor for ADE. Create src/ade/repair_runtime.py with an immutable RepairExecution result that can represent either a successful CycleResult or a final RepairPlan plus the ordered repair history. Add run_cycle_with_repair(provider, *, task, source_name, policy=None, run_cycle_fn=run_cycle) that calls run_cycle, classifies failures through plan_repair, automatically retries only when the disposition is RETRY, and stops deterministically on REPLAN, PAUSE_QUOTA, HUMAN_WAIT, or FAIL. The retry loop must use the next_attempt and next_replan_count values from RepairPlan, must never exceed RepairPolicy bounds, and must not swallow unexpected exceptions as success. Validate inputs and keep the implementation provider-agnostic. Export the new public API from ade.__init__. Add focused standard-library unittest coverage proving: immediate success; timeout then success after one retry; repeated timeout reaches REPLAN after bounded retries; quota returns PAUSE_QUOTA without retry; human input returns HUMAN_WAIT without retry; terminal unknown error returns FAIL; and invalid arguments are rejected. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-  "starting_branch": "main",
   "auto_create_pr": true,
+  "poll_interval_seconds": 15,
+  "prompt": "Integrate the Phase 5 repair executor into the operational Jules cycle without changing workflows or trusted repository state. Update scripts/run_jules_cycle.py to use the repair execution API added by vertical-slice-007 instead of calling run_cycle directly. Persist a deterministic JSON result to .autodev/runtime/jules-session.json that records completion or, for a non-completed outcome, the final repair disposition, failure kind, bounded error summary, and retry/replan counters. Preserve exit code 0 for completed sessions, 20 for PAUSE_QUOTA, 21 for HUMAN_WAIT, use 22 for REPLAN, and 1 for terminal FAIL. Do not expose secrets or tracebacks. Add focused standard-library unittest coverage for the runtime result mapping/serialization by extracting pure helpers if needed. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+  "schema_version": 1,
+  "starting_branch": "main",
+  "task_id": "vertical-slice-008",
   "timeout_seconds": 1800,
-  "poll_interval_seconds": 15
+  "title": "Integrate bounded repair execution into Jules runtime"
 }
