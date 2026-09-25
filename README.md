@@ -9,13 +9,22 @@ The initial vertical slice uses:
 - GitHub Actions for deterministic validation.
 - Repository state under `.autodev/` so work can pause and resume without relying on chat history.
 
-## Phase 0–1 goals
+## Proven so far
 
-1. Define durable project/task state.
-2. Define safety and pause rules.
-3. Provide a provider abstraction that does not couple ADE to Jules.
-4. Implement the first Jules REST API adapter.
-5. Validate the Jules API key and repository visibility from GitHub Actions.
+ADE has completed the core closed loop:
+
+```text
+repository task
+→ Jules cloud coding session
+→ automatic pull request
+→ deterministic CI
+→ trusted PR gate
+→ merge
+→ durable state advance
+→ next autonomous task
+```
+
+Three bounded Jules development tasks have already completed through this loop.
 
 ## Repository layout
 
@@ -24,7 +33,7 @@ The initial vertical slice uses:
 src/ade/               ADE core
 scripts/               Operational entry points
 tests/                 Deterministic tests
-.github/workflows/     CI and Jules smoke test
+.github/workflows/     CI and Jules orchestration
 GOAL.md                Product goal
 SPEC.md                Frozen v0 architecture
 ACCEPTANCE.md          Machine-oriented acceptance criteria
@@ -37,4 +46,4 @@ Never commit provider API keys. The Jules key is read only from the `JULES_API_K
 
 ## Current milestone
 
-Phase 0 foundation + Phase 1 Jules provider.
+Phase 5: bounded repair loop. The active autonomous queue is building deterministic failure classification and retry/replan/pause/human-wait policy before wiring repair into the runtime controller.

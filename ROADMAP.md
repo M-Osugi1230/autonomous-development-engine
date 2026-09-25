@@ -1,22 +1,24 @@
 # ADE Roadmap
 
-## Phase 0 — Foundation
+## Phase 0 — Foundation ✅
 Durable state model, safety policy, repository contract, deterministic tests.
 
-## Phase 1 — Jules Provider
+## Phase 1 — Jules Provider ✅
 REST adapter, source discovery, authentication and quota error handling, smoke test.
 
-## Phase 2 — GitHub Validation
+## Phase 2 — GitHub Validation ✅
 CI, result normalization, PR validation contract.
 
-## Phase 3 — One Autonomous Cycle
+## Phase 3 — One Autonomous Cycle ✅
 Goal/task input -> Jules session -> PR -> CI -> persisted result.
 
-## Phase 4 — Continuous Goal Loop
+## Phase 4 — Continuous Goal Loop ✅
 Automatically select the next bounded task after a successful cycle.
 
-## Phase 5 — Repair Loop
-Feed deterministic failures back to the provider with bounded retry and rollback rules.
+Evidence: ADE completed and merged three bounded Jules tasks through the cloud loop without requiring a human "next" command between autonomous tasks.
+
+## Phase 5 — Repair Loop 🚧
+Classify failures, choose bounded retry/replan/pause/human-wait dispositions, and wire the policy into execution.
 
 ## Phase 6 — Pause / Resume
 Quota-aware and crash-safe continuation.

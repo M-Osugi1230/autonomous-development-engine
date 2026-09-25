@@ -1,10 +1,10 @@
 {
-  "auto_create_pr": true,
-  "poll_interval_seconds": 15,
-  "prompt": "Implement a small human-decision model for ADE. Add src/ade/decisions.py containing a DecisionPriority StrEnum with P0, P1, P2, P3 and an immutable DecisionRequest dataclass with decision_id, question, options, priority, blocking_task_id, and context. Validate that decision_id, question, and blocking_task_id are non-empty and that options contains at least two unique non-empty strings. Add focused tests using Python standard-library unittest only. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
   "schema_version": 1,
+  "task_id": "vertical-slice-004",
+  "title": "Add bounded repair policy primitives",
+  "prompt": "Implement deterministic bounded-repair primitives for ADE. Add src/ade/repair.py with a FailureKind StrEnum containing PROVIDER_QUOTA, HUMAN_INPUT, CYCLE_TIMEOUT, CYCLE_FAILED, PROVIDER_ERROR, VALIDATION_ERROR, and UNKNOWN; a RepairDisposition StrEnum containing RETRY, REPLAN, PAUSE_QUOTA, HUMAN_WAIT, and FAIL; an immutable RepairPolicy dataclass with max_retries default 2 and max_replans default 1 and validation that both are non-negative integers; and an immutable RepairState dataclass with task_id, attempt, replan_count, last_failure_kind, and last_error with strict validation. Add decide_repair(failure_kind, attempt, replan_count, policy) with these rules: provider quota -> PAUSE_QUOTA; human input -> HUMAN_WAIT; cycle timeout/cycle failed/provider error -> RETRY while attempt < max_retries, then REPLAN while replan_count < max_replans, then FAIL; validation error -> REPLAN while replan_count < max_replans, then FAIL; unknown -> FAIL. Add focused standard-library unittest coverage including boundary cases. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
   "starting_branch": "main",
-  "task_id": "vertical-slice-003",
+  "auto_create_pr": true,
   "timeout_seconds": 1800,
-  "title": "Add ADE human decision model"
+  "poll_interval_seconds": 15
 }
