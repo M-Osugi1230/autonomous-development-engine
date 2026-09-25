@@ -23,11 +23,22 @@
 - [x] Repository state advances to the next queued task.
 - [x] The next task is dispatched without a human "next" command.
 - [x] At least two consecutive autonomous development cycles completed successfully.
-- [x] Three autonomous vertical-slice tasks have completed and been merged.
+- [x] Multiple autonomous vertical-slice tasks have completed and been merged.
 
-## Active milestone — Phase 5 repair loop
+## Phase 5 — Repair loop
 
-- [ ] Failures are classified into deterministic failure kinds.
-- [ ] Retry/replan/pause/human-wait/terminal-fail decisions are bounded by policy.
-- [ ] Runtime cycle failures are persisted and can be resumed or repaired without losing project state.
-- [ ] A repair attempt is proven end-to-end in GitHub Actions.
+- [x] Failures are classified into deterministic failure kinds.
+- [x] Retry/replan/pause/human-wait/terminal-fail decisions are bounded by policy.
+- [x] Repair policy is wired into the operational Jules runtime.
+- [x] A deterministic fail -> retry -> success repair path is proven under CI.
+- [x] Operational-script import regressions are covered by CI.
+
+## Active milestone — Phase 6 pause / resume
+
+- [x] A validated provider-agnostic task checkpoint model exists.
+- [x] Checkpoints can be atomically persisted and loaded.
+- [ ] Resume decisions are deterministic for quota pause, human wait, running recovery, replan, failure, and completion.
+- [ ] An existing provider session can be monitored after process restart without creating a duplicate session.
+- [ ] Runtime lifecycle transitions persist RUNNING and terminal/resumable checkpoint states.
+- [ ] A crash/restart continuation path is proven end-to-end under CI.
+- [ ] A due quota-paused checkpoint can trigger a later cloud resume without a local machine.
