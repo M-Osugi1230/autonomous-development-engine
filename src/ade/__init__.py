@@ -2,6 +2,7 @@
 
 from .acceptance import AcceptanceReport, CheckResult, build_report
 from .checkpoint import CheckpointState, TaskCheckpoint
+from .checkpoint_store import CheckpointStore
 from .cycle import CycleResult, CycleTask, CycleTimedOut
 from .decisions import DecisionPriority, DecisionRequest
 from .health import health_snapshot
@@ -14,6 +15,7 @@ __all__ = [
     "AcceptanceReport",
     "CheckResult",
     "CheckpointState",
+    "CheckpointStore",
     "CycleResult",
     "CycleTask",
     "CycleTimedOut",
