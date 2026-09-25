@@ -1,12 +1,15 @@
 """Autonomous Development Engine core package."""
 
 from .acceptance import AcceptanceReport, CheckResult, build_report
+from .decisions import DecisionPriority, DecisionRequest
 from .health import health_snapshot
 from .models import ProjectState, ProjectStatus, TaskStatus
 
 __all__ = [
     "AcceptanceReport",
     "CheckResult",
+    "DecisionPriority",
+    "DecisionRequest",
     "ProjectState",
     "ProjectStatus",
     "TaskStatus",
