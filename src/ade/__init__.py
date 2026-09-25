@@ -1,6 +1,7 @@
 """Autonomous Development Engine core package."""
 
 from .acceptance import AcceptanceReport, CheckResult, build_report
+from .cycle import CycleResult, CycleTask, CycleTimedOut
 from .decisions import DecisionPriority, DecisionRequest
 from .health import health_snapshot
 from .models import ProjectState, ProjectStatus, TaskStatus
@@ -11,6 +12,9 @@ from .repair_runtime import RepairExecution, map_repair_execution, run_cycle_wit
 __all__ = [
     "AcceptanceReport",
     "CheckResult",
+    "CycleResult",
+    "CycleTask",
+    "CycleTimedOut",
     "DecisionPriority",
     "DecisionRequest",
     "FailureKind",
