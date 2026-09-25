@@ -1,10 +1,10 @@
 {
   "auto_create_pr": true,
   "poll_interval_seconds": 15,
-  "prompt": "Integrate the Phase 5 repair executor into the operational Jules cycle without changing workflows or trusted repository state. Update scripts/run_jules_cycle.py to use the repair execution API added by vertical-slice-007 instead of calling run_cycle directly. Persist a deterministic JSON result to .autodev/runtime/jules-session.json that records completion or, for a non-completed outcome, the final repair disposition, failure kind, bounded error summary, and retry/replan counters. Preserve exit code 0 for completed sessions, 20 for PAUSE_QUOTA, 21 for HUMAN_WAIT, use 22 for REPLAN, and 1 for terminal FAIL. Do not expose secrets or tracebacks. Add focused standard-library unittest coverage for the runtime result mapping/serialization by extracting pure helpers if needed. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+  "prompt": "Add a deterministic Phase 5 repair probe that exercises the real bounded repair runtime without calling external services. Create scripts/repair_probe.py using only the standard library and ADE public APIs. The probe must inject a run_cycle_fn that raises CycleTimedOut on the first call and returns a valid CycleResult on the second call, then invoke run_cycle_with_repair with a bounded RepairPolicy. It must validate that exactly one RETRY plan is recorded, exactly two cycle calls occurred, the final result is COMPLETED, and no secret or traceback data is emitted. Print one compact JSON object on success and exit 0; exit nonzero with a concise message on invariant failure. Add focused unittest coverage for the probe helpers if you extract any. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v and PYTHONPATH=src python scripts/repair_probe.py before finishing.",
   "schema_version": 1,
   "starting_branch": "main",
-  "task_id": "vertical-slice-008",
+  "task_id": "vertical-slice-009",
   "timeout_seconds": 1800,
-  "title": "Integrate bounded repair execution into Jules runtime"
+  "title": "Add deterministic Phase 5 repair probe"
 }
