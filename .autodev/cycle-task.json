@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
-  "task_id": "vertical-slice-004",
-  "title": "Add bounded repair policy primitives",
-  "prompt": "Implement deterministic bounded-repair primitives for ADE. Add src/ade/repair.py with a FailureKind StrEnum containing PROVIDER_QUOTA, HUMAN_INPUT, CYCLE_TIMEOUT, CYCLE_FAILED, PROVIDER_ERROR, VALIDATION_ERROR, and UNKNOWN; a RepairDisposition StrEnum containing RETRY, REPLAN, PAUSE_QUOTA, HUMAN_WAIT, and FAIL; an immutable RepairPolicy dataclass with max_retries default 2 and max_replans default 1 and validation that both are non-negative integers; and an immutable RepairState dataclass with task_id, attempt, replan_count, last_failure_kind, and last_error with strict validation. Add decide_repair(failure_kind, attempt, replan_count, policy) with these rules: provider quota -> PAUSE_QUOTA; human input -> HUMAN_WAIT; cycle timeout/cycle failed/provider error -> RETRY while attempt < max_retries, then REPLAN while replan_count < max_replans, then FAIL; validation error -> REPLAN while replan_count < max_replans, then FAIL; unknown -> FAIL. Add focused standard-library unittest coverage including boundary cases. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-  "starting_branch": "main",
   "auto_create_pr": true,
+  "poll_interval_seconds": 15,
+  "prompt": "Extend ADE repair handling by adding classify_failure(exc) to src/ade/repair.py. It must map ProviderQuotaError to PROVIDER_QUOTA, HumanInputRequired to HUMAN_INPUT, CycleTimedOut to CYCLE_TIMEOUT, CycleFailed to CYCLE_FAILED, other ProviderError instances to PROVIDER_ERROR, ValueError to VALIDATION_ERROR, and all other exceptions to UNKNOWN. Preserve correct subclass ordering so ProviderQuotaError is never collapsed into PROVIDER_ERROR. Add focused standard-library unittest coverage for every mapping and at least one unknown exception. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+  "schema_version": 1,
+  "starting_branch": "main",
+  "task_id": "vertical-slice-005",
   "timeout_seconds": 1800,
-  "poll_interval_seconds": 15
+  "title": "Classify cycle failures for repair"
 }
