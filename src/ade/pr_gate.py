@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -21,6 +22,8 @@ FORBIDDEN_PREFIXES = (
     ".github/",
     ".autodev/",
 )
+JULES_PROVENANCE_MARKER = "PR created automatically by Jules for task"
+JULES_TASK_URL = re.compile(r"https://jules\.google\.com/task/\d+")
 
 
 def evaluate_jules_pull_request(
@@ -43,12 +46,16 @@ def evaluate_jules_pull_request(
         return GateDecision(False, "head repository is not the ADE repository")
 
     head_ref = head.get("ref")
-    if not isinstance(head_ref, str) or not head_ref.startswith("feat/"):
-        return GateDecision(False, "head branch is not a Jules feature branch")
+    if not isinstance(head_ref, str) or not head_ref.strip():
+        return GateDecision(False, "pull request head branch is missing")
+    if head_ref in {"main", "master"}:
+        return GateDecision(False, "protected default branch cannot be auto-merged as a head")
 
     body = pull_request.get("body")
-    if not isinstance(body, str) or "PR created automatically by Jules for task" not in body:
+    if not isinstance(body, str):
         return GateDecision(False, "Jules provenance marker is missing")
+    if JULES_PROVENANCE_MARKER not in body or JULES_TASK_URL.search(body) is None:
+        return GateDecision(False, "Jules provenance marker or task URL is missing")
 
     if not files:
         return GateDecision(False, "pull request changes no files")
