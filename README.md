@@ -24,7 +24,7 @@ repository task
 → next autonomous task
 ```
 
-Three bounded Jules development tasks have already completed through this loop.
+It also has a bounded repair layer that classifies failures and can take deterministic retry, replan, quota-pause, human-wait, or terminal-fail dispositions. A fail -> retry -> success probe has been validated in CI.
 
 ## Repository layout
 
@@ -46,4 +46,4 @@ Never commit provider API keys. The Jules key is read only from the `JULES_API_K
 
 ## Current milestone
 
-Phase 5: bounded repair loop. The active autonomous queue is building deterministic failure classification and retry/replan/pause/human-wait policy before wiring repair into the runtime controller.
+Phase 6: quota-aware and crash-safe pause/resume. The active autonomous queue is building durable checkpoints, deterministic resume decisions, existing-session continuation, and checkpoint-aware runtime recovery.
