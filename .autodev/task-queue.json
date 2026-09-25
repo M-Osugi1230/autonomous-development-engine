@@ -4,16 +4,6 @@
     {
       "auto_create_pr": true,
       "poll_interval_seconds": 15,
-      "prompt": "Start Phase 6 by adding a provider-agnostic resumable checkpoint model for ADE. Create src/ade/checkpoint.py with immutable, validated data structures that can represent a task checkpoint across RUNNING, PAUSED_QUOTA, HUMAN_WAIT, REPLAN, FAILED, and COMPLETED states. Include task_id, attempt, replan_count, provider_session_id when known, last_failure_kind when known, bounded last_error when known, and an optional ISO-8601 resume_after timestamp. Add deterministic to_dict/from_dict round-tripping and reject invalid state/counter combinations rather than silently normalizing them. Keep secrets out of the model. Export the public checkpoint API from ade.__init__. Add focused standard-library unittest coverage for round-trip serialization, quota pause, human wait, completed state, invalid negative counters, invalid timestamps, and forbidden inconsistent combinations. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "schema_version": 1,
-      "starting_branch": "main",
-      "task_id": "vertical-slice-010",
-      "timeout_seconds": 1800,
-      "title": "Add resumable checkpoint model"
-    },
-    {
-      "auto_create_pr": true,
-      "poll_interval_seconds": 15,
       "prompt": "Continue Phase 6 by adding atomic checkpoint persistence for ADE. Create src/ade/checkpoint_store.py with a CheckpointStore that loads and atomically saves the TaskCheckpoint type introduced in vertical-slice-010. The default path should be .autodev/runtime/checkpoint.json but callers must be able to inject another path for tests. Saving must create parent directories, write deterministic pretty JSON with a trailing newline, fsync before os.replace, and clean up temporary files after failures. Loading must reject missing/non-object/invalid checkpoint payloads clearly. Add focused standard-library unittest coverage for save/load round-trip, parent creation, invalid JSON/object validation, replacement of an existing checkpoint, and cleanup on simulated write failure where practical without third-party dependencies. Export CheckpointStore from ade.__init__. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
       "schema_version": 1,
       "starting_branch": "main",
