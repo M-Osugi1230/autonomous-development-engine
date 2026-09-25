@@ -1,15 +1,4 @@
 {
   "schema_version": 1,
-  "tasks": [
-    {
-      "auto_create_pr": true,
-      "poll_interval_seconds": 15,
-      "prompt": "Continue Phase 6 by adding deterministic resume policy for ADE checkpoints. Create src/ade/resume.py with a ResumeAction enum and immutable ResumeDecision model plus decide_resume(checkpoint, now) logic. PAUSED_QUOTA checkpoints should auto-resume only when resume_after is present and due; otherwise WAIT. HUMAN_WAIT must never auto-resume. REPLAN should return REPLAN, RUNNING should return RESUME only when it represents an interrupted recoverable task with a known provider session id, FAILED and COMPLETED should return NOOP. All comparisons must use timezone-aware UTC datetimes and reject naive/invalid now values. The function must be side-effect free and provider-agnostic. Export the public API from ade.__init__. Add focused standard-library unittest coverage for quota-before-due, quota-due, quota-without-deadline, human wait, recoverable running, replan, failed, completed, and invalid naive time. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "schema_version": 1,
-      "starting_branch": "main",
-      "task_id": "vertical-slice-012",
-      "timeout_seconds": 1800,
-      "title": "Add deterministic checkpoint resume policy"
-    }
-  ]
+  "tasks": []
 }
