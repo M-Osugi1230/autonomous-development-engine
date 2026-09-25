@@ -13,7 +13,7 @@ from ade.cycle import (
 from ade.providers.base import ProviderQuotaError
 from ade.repair import FailureKind, RepairDisposition, RepairPolicy
 from ade.repair_planner import RepairPlan
-from ade.repair_runtime import RepairExecution, run_cycle_with_repair
+from ade.repair_runtime import RepairExecution, map_repair_execution, run_cycle_with_repair
 
 
 class DummyProvider:
@@ -277,3 +277,94 @@ class TestRepairRuntime(unittest.TestCase):
         # invalid run_cycle_fn
         with self.assertRaises(ValueError):
             run_cycle_with_repair(provider, task=task, source_name="src", run_cycle_fn="not-callable")  # type: ignore[arg-type]
+
+    def test_map_repair_execution_completed(self) -> None:
+        result = _make_cycle_result("task-101")
+        execution = RepairExecution(result=result, history=())
+        payload, code = map_repair_execution(execution)
+
+        self.assertEqual(code, 0)
+        self.assertEqual(
+            payload,
+            {
+                "task_id": "task-101",
+                "session_id": "session-1",
+                "session_url": "https://example.com/session-1",
+                "state": "COMPLETED",
+                "pull_request_url": "https://github.com/example/repo/pull/1",
+            },
+        )
+
+    def test_map_repair_execution_pause_quota(self) -> None:
+        plan = RepairPlan(
+            task_id="task-102",
+            failure_kind=FailureKind.PROVIDER_QUOTA,
+            disposition=RepairDisposition.PAUSE_QUOTA,
+            next_attempt=0,
+            next_replan_count=0,
+            error_summary="ProviderQuotaError: quota limit reached",
+        )
+        execution = RepairExecution(final_plan=plan, history=(plan,))
+        payload, code = map_repair_execution(execution)
+
+        self.assertEqual(code, 20)
+        self.assertEqual(payload["task_id"], "task-102")
+        self.assertEqual(payload["disposition"], "PAUSE_QUOTA")
+        self.assertEqual(payload["failure_kind"], "PROVIDER_QUOTA")
+        self.assertEqual(payload["error_summary"], "ProviderQuotaError: quota limit reached")
+        self.assertEqual(payload["attempt"], 0)
+        self.assertEqual(payload["replan_count"], 0)
+
+    def test_map_repair_execution_human_wait(self) -> None:
+        plan = RepairPlan(
+            task_id="task-103",
+            failure_kind=FailureKind.HUMAN_INPUT,
+            disposition=RepairDisposition.HUMAN_WAIT,
+            next_attempt=0,
+            next_replan_count=0,
+            error_summary="HumanInputRequired: feedback needed",
+        )
+        execution = RepairExecution(final_plan=plan, history=(plan,))
+        payload, code = map_repair_execution(execution)
+
+        self.assertEqual(code, 21)
+        self.assertEqual(payload["disposition"], "HUMAN_WAIT")
+        self.assertEqual(payload["failure_kind"], "HUMAN_INPUT")
+
+    def test_map_repair_execution_replan(self) -> None:
+        plan = RepairPlan(
+            task_id="task-104",
+            failure_kind=FailureKind.CYCLE_TIMEOUT,
+            disposition=RepairDisposition.REPLAN,
+            next_attempt=2,
+            next_replan_count=1,
+            error_summary="CycleTimedOut: session timed out",
+        )
+        execution = RepairExecution(final_plan=plan, history=(plan,))
+        payload, code = map_repair_execution(execution)
+
+        self.assertEqual(code, 22)
+        self.assertEqual(payload["disposition"], "REPLAN")
+        self.assertEqual(payload["failure_kind"], "CYCLE_TIMEOUT")
+        self.assertEqual(payload["attempt"], 2)
+        self.assertEqual(payload["replan_count"], 1)
+
+    def test_map_repair_execution_fail(self) -> None:
+        plan = RepairPlan(
+            task_id="task-105",
+            failure_kind=FailureKind.UNKNOWN,
+            disposition=RepairDisposition.FAIL,
+            next_attempt=2,
+            next_replan_count=1,
+            error_summary="RuntimeError: terminal issue",
+        )
+        execution = RepairExecution(final_plan=plan, history=(plan,))
+        payload, code = map_repair_execution(execution)
+
+        self.assertEqual(code, 1)
+        self.assertEqual(payload["disposition"], "FAIL")
+        self.assertEqual(payload["failure_kind"], "UNKNOWN")
+
+    def test_map_repair_execution_validation(self) -> None:
+        with self.assertRaises(ValueError):
+            map_repair_execution("not-an-execution")  # type: ignore[arg-type]

@@ -95,3 +95,45 @@ def run_cycle_with_repair(
                     final_plan=plan,
                     history=tuple(history),
                 )
+
+
+def map_repair_execution(execution: RepairExecution) -> tuple[dict[str, Any], int]:
+    if not isinstance(execution, RepairExecution):
+        raise ValueError("execution must be an instance of RepairExecution")
+
+    if execution.result is not None:
+        payload = {
+            "task_id": execution.result.task_id,
+            "session_id": execution.result.session_id,
+            "session_url": execution.result.session_url,
+            "state": execution.result.state,
+            "pull_request_url": execution.result.pull_request_url,
+        }
+        return payload, 0
+
+    plan = execution.final_plan
+    if plan is None:
+        raise ValueError("RepairExecution has neither result nor final_plan")
+
+    payload = {
+        "task_id": plan.task_id,
+        "disposition": str(plan.disposition),
+        "failure_kind": str(plan.failure_kind),
+        "error_summary": plan.error_summary,
+        "attempt": plan.next_attempt,
+        "replan_count": plan.next_replan_count,
+        "next_attempt": plan.next_attempt,
+        "next_replan_count": plan.next_replan_count,
+        "state": str(plan.disposition),
+    }
+
+    if plan.disposition is RepairDisposition.PAUSE_QUOTA:
+        exit_code = 20
+    elif plan.disposition is RepairDisposition.HUMAN_WAIT:
+        exit_code = 21
+    elif plan.disposition is RepairDisposition.REPLAN:
+        exit_code = 22
+    else:
+        exit_code = 1
+
+    return payload, exit_code
