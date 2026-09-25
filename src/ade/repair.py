@@ -3,6 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 
+from .cycle import CycleFailed, CycleTimedOut, HumanInputRequired
+from .providers.base import ProviderError, ProviderQuotaError
+
 
 class FailureKind(StrEnum):
     PROVIDER_QUOTA = "PROVIDER_QUOTA"
@@ -100,3 +103,19 @@ def decide_repair(
         return RepairDisposition.FAIL
 
     return RepairDisposition.FAIL
+
+
+def classify_failure(exc: BaseException) -> FailureKind:
+    if isinstance(exc, ProviderQuotaError):
+        return FailureKind.PROVIDER_QUOTA
+    if isinstance(exc, HumanInputRequired):
+        return FailureKind.HUMAN_INPUT
+    if isinstance(exc, CycleTimedOut):
+        return FailureKind.CYCLE_TIMEOUT
+    if isinstance(exc, CycleFailed):
+        return FailureKind.CYCLE_FAILED
+    if isinstance(exc, ProviderError):
+        return FailureKind.PROVIDER_ERROR
+    if isinstance(exc, ValueError):
+        return FailureKind.VALIDATION_ERROR
+    return FailureKind.UNKNOWN
