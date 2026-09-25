@@ -1,0 +1,27 @@
+name: Jules Smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify Jules authentication and repository visibility
+        env:
+          PYTHONPATH: src
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          ADE_GITHUB_OWNER: M-Osugi1230
+          ADE_GITHUB_REPO: autonomous-development-engine
+        run: python scripts/jules_smoke.py
