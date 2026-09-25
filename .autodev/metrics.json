@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "cycles_started": 0,
+  "cycles_completed": 0,
+  "repair_attempts": 0,
+  "human_interrupts": 0,
+  "quota_pauses": 0
+}
