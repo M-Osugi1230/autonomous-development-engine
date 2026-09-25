@@ -1,4 +1,25 @@
 {
   "schema_version": 1,
-  "tasks": []
+  "tasks": [
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-009",
+      "title": "Add deterministic Phase 5 repair probe",
+      "prompt": "Add a deterministic Phase 5 repair probe that exercises the real bounded repair runtime without calling external services. Create scripts/repair_probe.py using only the standard library and ADE public APIs. The probe must inject a run_cycle_fn that raises CycleTimedOut on the first call and returns a valid CycleResult on the second call, then invoke run_cycle_with_repair with a bounded RepairPolicy. It must validate that exactly one RETRY plan is recorded, exactly two cycle calls occurred, the final result is COMPLETED, and no secret or traceback data is emitted. Print one compact JSON object on success and exit 0; exit nonzero with a concise message on invariant failure. Add focused unittest coverage for the probe helpers if you extract any. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v and PYTHONPATH=src python scripts/repair_probe.py before finishing.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-010",
+      "title": "Add resumable checkpoint model",
+      "prompt": "Start Phase 6 by adding a provider-agnostic resumable checkpoint model for ADE. Create src/ade/checkpoint.py with immutable, validated data structures that can represent a task checkpoint across RUNNING, PAUSED_QUOTA, HUMAN_WAIT, REPLAN, FAILED, and COMPLETED states. Include task_id, attempt, replan_count, provider_session_id when known, last_failure_kind when known, bounded last_error when known, and an optional ISO-8601 resume_after timestamp. Add deterministic to_dict/from_dict round-tripping and reject invalid state/counter combinations rather than silently normalizing them. Keep secrets out of the model. Export the public checkpoint API from ade.__init__. Add focused standard-library unittest coverage for round-trip serialization, quota pause, human wait, completed state, invalid negative counters, invalid timestamps, and forbidden inconsistent combinations. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    }
+  ]
 }
