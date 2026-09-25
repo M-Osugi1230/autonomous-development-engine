@@ -16,8 +16,8 @@
   "failed_task_ids": [],
   "iteration": 11,
   "metadata": {
-    "milestone": "bounded-repair-core",
-    "phase": "phase5-repair-loop",
+    "milestone": "crash-safe-continuation",
+    "phase": "phase6-pause-resume",
     "queue_exhausted": false
   },
   "project_id": "autonomous-development-engine",
