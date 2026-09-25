@@ -10,7 +10,7 @@
   "iteration": 4,
   "metadata": {
     "milestone": "bounded-repair-core",
-    "phase": "phase4-closed-loop",
+    "phase": "phase5-repair-loop",
     "queue_exhausted": false
   },
   "project_id": "autonomous-development-engine",
