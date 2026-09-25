@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "project_id": "autonomous-development-engine",
+  "status": "READY",
+  "iteration": 0,
+  "current_task_id": null,
+  "completed_task_ids": [],
+  "failed_task_ids": [],
+  "provider": "jules",
+  "updated_at": null,
+  "metadata": {
+    "phase": "phase0-foundation"
+  }
+}
