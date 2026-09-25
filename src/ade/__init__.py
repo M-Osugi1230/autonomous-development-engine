@@ -6,6 +6,7 @@ from .health import health_snapshot
 from .models import ProjectState, ProjectStatus, TaskStatus
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
 from .repair_planner import RepairPlan, plan_repair
+from .repair_runtime import RepairExecution, run_cycle_with_repair
 
 __all__ = [
     "AcceptanceReport",
@@ -16,6 +17,7 @@ __all__ = [
     "ProjectState",
     "ProjectStatus",
     "RepairDisposition",
+    "RepairExecution",
     "RepairPlan",
     "RepairPolicy",
     "RepairState",
@@ -24,4 +26,5 @@ __all__ = [
     "decide_repair",
     "health_snapshot",
     "plan_repair",
+    "run_cycle_with_repair",
 ]
