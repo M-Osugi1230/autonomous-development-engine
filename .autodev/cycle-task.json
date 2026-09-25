@@ -1,10 +1,10 @@
 {
-  "auto_create_pr": true,
-  "poll_interval_seconds": 15,
-  "prompt": "Add a deterministic repair planner for ADE. Create src/ade/repair_planner.py with an immutable RepairPlan dataclass containing task_id, failure_kind, disposition, next_attempt, next_replan_count, and error_summary. Add plan_repair(task_id, exc, attempt, replan_count, policy) which uses classify_failure and decide_repair from ade.repair, increments next_attempt only for RETRY, increments next_replan_count only for REPLAN, leaves counters unchanged for PAUSE_QUOTA/HUMAN_WAIT/FAIL, and stores a bounded non-empty error_summary without leaking tracebacks. Validate non-empty task_id and non-negative counters. Add focused standard-library unittest coverage for retry, replan, quota pause, human wait, terminal fail, and invalid inputs. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
   "schema_version": 1,
+  "task_id": "vertical-slice-007",
+  "title": "Add bounded runtime repair executor",
+  "prompt": "Add the Phase 5 bounded runtime repair executor for ADE. Create src/ade/repair_runtime.py with an immutable RepairExecution result that can represent either a successful CycleResult or a final RepairPlan plus the ordered repair history. Add run_cycle_with_repair(provider, *, task, source_name, policy=None, run_cycle_fn=run_cycle) that calls run_cycle, classifies failures through plan_repair, automatically retries only when the disposition is RETRY, and stops deterministically on REPLAN, PAUSE_QUOTA, HUMAN_WAIT, or FAIL. The retry loop must use the next_attempt and next_replan_count values from RepairPlan, must never exceed RepairPolicy bounds, and must not swallow unexpected exceptions as success. Validate inputs and keep the implementation provider-agnostic. Export the new public API from ade.__init__. Add focused standard-library unittest coverage proving: immediate success; timeout then success after one retry; repeated timeout reaches REPLAN after bounded retries; quota returns PAUSE_QUOTA without retry; human input returns HUMAN_WAIT without retry; terminal unknown error returns FAIL; and invalid arguments are rejected. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
   "starting_branch": "main",
-  "task_id": "vertical-slice-006",
+  "auto_create_pr": true,
   "timeout_seconds": 1800,
-  "title": "Add deterministic repair planner"
+  "poll_interval_seconds": 15
 }
