@@ -21,6 +21,7 @@ def checkpoint_for_session(
     attempt: int = 0,
     replan_count: int = 0,
     task_id: str | None = None,
+    provider_id: str | None = None,
 ) -> TaskCheckpoint:
     if not isinstance(session, CycleSession):
         raise ValueError("session must be an instance of CycleSession")
@@ -34,6 +35,7 @@ def checkpoint_for_session(
         attempt=attempt,
         replan_count=replan_count,
         provider_session_id=session.session_id,
+        provider_id=provider_id,
     )
 
 
@@ -43,6 +45,7 @@ def checkpoint_for_completed(
     attempt: int = 0,
     replan_count: int = 0,
     task_id: str | None = None,
+    provider_id: str | None = None,
 ) -> TaskCheckpoint:
     if not isinstance(result, CycleResult):
         raise ValueError("result must be an instance of CycleResult")
@@ -56,6 +59,7 @@ def checkpoint_for_completed(
         attempt=attempt,
         replan_count=replan_count,
         provider_session_id=result.session_id,
+        provider_id=provider_id,
     )
 
 
@@ -63,6 +67,7 @@ def checkpoint_for_repair_plan(
     plan: RepairPlan,
     *,
     provider_session_id: str | None = None,
+    provider_id: str | None = None,
     resume_after: str | None = None,
     task_id: str | None = None,
 ) -> TaskCheckpoint:
@@ -87,6 +92,7 @@ def checkpoint_for_repair_plan(
         attempt=plan.next_attempt,
         replan_count=plan.next_replan_count,
         provider_session_id=provider_session_id,
+        provider_id=provider_id,
         last_failure_kind=plan.failure_kind,
         last_error=plan.error_summary,
         resume_after=resume_after,
