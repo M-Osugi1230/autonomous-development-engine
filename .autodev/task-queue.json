@@ -1,4 +1,55 @@
 {
   "schema_version": 1,
-  "tasks": []
+  "tasks": [
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-038",
+      "title": "Add deterministic provider registry",
+      "prompt": "Continue Phase 10 by adding src/ade/provider_registry.py. Implement an immutable/provider-agnostic ProviderRegistry that registers ProviderDescriptor plus an already-constructed CodingAgentProvider instance, rejects duplicate provider IDs, exposes descriptors without secrets, and returns deterministic candidates filtered by enabled state and RoutingRequest requirements. The registry must never construct providers or read credentials. Add tests for duplicate IDs, disabled providers, required capabilities, allow-list filtering, preference order, deterministic fallback order, and no mutation. Export from ade.__init__. No dependencies.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-039",
+      "title": "Add deterministic provider routing policy",
+      "prompt": "Continue Phase 10 by adding a pure routing policy in src/ade/provider_router.py. Given a ProviderRegistry, RoutingRequest, and explicit availability snapshots, choose the first eligible provider deterministically. Availability must distinguish AVAILABLE, QUOTA_PAUSED, TEMPORARILY_UNAVAILABLE, UNAUTHORIZED, and DISABLED. Never route to unauthorized or disabled providers. Quota/temporary states may be skipped for another eligible provider. If no provider is eligible return an explicit immutable decision rather than raising an opaque error. Add tests for preferred provider, quota fallback, temporary fallback, unauthorized exclusion, no candidate, and deterministic repeated selection. Export public API.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-040",
+      "title": "Add provider availability cooldown state",
+      "prompt": "Continue Phase 10 by adding durable provider availability/cooldown models and a small atomic store. Represent quota pause resume_after, temporary backoff, unauthorized state, and healthy availability without credentials or provider session IDs. Add pure evaluation against an injected timezone-aware now and atomic human-readable JSON persistence with tests for due/not-due cooldowns, invalid timestamps, round-trip, and secret rejection.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-041",
+      "title": "Add routed cycle execution",
+      "prompt": "Continue Phase 10 by adding provider-agnostic routed cycle execution that selects an eligible registered provider using the deterministic router, runs the existing cycle/checkpoint machinery, records provider_id in the returned execution metadata, and preserves sticky resume: a checkpoint with an existing provider/session must resume on that same provider rather than silently switching providers. Only a new/replanned task may select another provider. Add focused offline tests for primary success, quota fallback before session creation, sticky resume, unavailable sticky provider producing an explicit wait/replan outcome, and no eligible provider.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-042",
+      "title": "Prove multi-provider failover under CI",
+      "prompt": "Finish the Phase 10 routing core with an offline deterministic probe using two fake CodingAgentProvider implementations. Prove preferred-provider selection, quota-before-session fallback to a second provider, no failover after a provider session has been created, sticky crash resume to the original provider, and explicit no-provider outcome. Print compact JSON and run it explicitly in CI. Do not add real credentials or external network calls.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    }
+  ]
 }
