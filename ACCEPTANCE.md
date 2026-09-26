@@ -66,6 +66,6 @@
 - [x] A read-only GitHub Actions workflow builds and uploads Mission Control with no repository write permission, provider secrets, or deployment credentials.
 - [x] The real cloud workflow successfully produced the `ade-mission-control` artifact.
 - [x] An end-to-end offline probe proves snapshot -> HTML -> artifact -> reload without leaking sensitive fixture data.
-- [ ] Mission Control includes a durable project activity feed.
-- [ ] Mission Control includes safe latest-output / preview metadata for human review.
-- [ ] Phase 8 activity + preview behavior is proven end to end under CI.
+- [x] Mission Control includes a durable project activity feed.
+- [x] Mission Control includes safe latest-output / preview metadata for human review.
+- [x] Phase 8 activity + preview behavior is proven end to end under CI.
