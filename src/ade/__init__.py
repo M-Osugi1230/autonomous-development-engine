@@ -55,6 +55,13 @@ from .mission_control_html import render_mission_control
 from .models import ProjectState, ProjectStatus, TaskStatus
 from .preview import PreviewKind, PreviewManifest
 from .preview_store import PreviewStore
+from .provider_availability import (
+    ProviderAvailabilityRecord,
+    ProviderAvailabilityState,
+    evaluate_availability,
+    evaluate_provider_availability_state,
+)
+from .provider_availability_store import ProviderAvailabilityStore
 from .provider_registry import ProviderRegistration, ProviderRegistry
 from .provider_router import (
     ProviderAvailability,
@@ -117,7 +124,10 @@ __all__ = [
     "PreviewManifest",
     "PreviewStore",
     "ProviderAvailability",
+    "ProviderAvailabilityRecord",
     "ProviderAvailabilitySnapshot",
+    "ProviderAvailabilityState",
+    "ProviderAvailabilityStore",
     "ProviderCapability",
     "ProviderCostClass",
     "ProviderDescriptor",
@@ -152,6 +162,8 @@ __all__ = [
     "decide_interrupt",
     "decide_repair",
     "decide_resume",
+    "evaluate_availability",
+    "evaluate_provider_availability_state",
     "health_snapshot",
     "map_repair_execution",
     "monitor_cycle_session",
