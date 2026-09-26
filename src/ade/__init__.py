@@ -62,6 +62,13 @@ from .pilot import (
     PilotTarget,
 )
 from .pilot_store import PilotContractStore
+from .pilot_preflight import (
+    PilotPreflightCheck,
+    PilotPreflightReport,
+    PreflightCheckKind,
+    PreflightCheckStatus,
+    run_pilot_preflight,
+)
 from .preview import PreviewKind, PreviewManifest
 from .preview_store import PreviewStore
 from .providers.github_copilot import GitHubCopilotProvider
@@ -136,6 +143,10 @@ __all__ = [
     "PilotAction",
     "PilotContract",
     "PilotContractStore",
+    "PilotPreflightCheck",
+    "PilotPreflightReport",
+    "PreflightCheckKind",
+    "PreflightCheckStatus",
     "PilotProviderPolicy",
     "PilotSafetyEnvelope",
     "PilotTarget",
@@ -197,6 +208,7 @@ __all__ = [
     "run_checkpointed_cycle",
     "run_cycle",
     "run_cycle_with_repair",
+    "run_pilot_preflight",
     "run_routed_cycle",
     "start_cycle_session",
     "transition_task",
