@@ -1,4 +1,45 @@
 {
   "schema_version": 1,
-  "tasks": []
+  "tasks": [
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-023",
+      "title": "Add mobile-first Mission Control HTML renderer",
+      "prompt": "Continue Phase 8 by adding a pure, read-only HTML renderer for MissionControlSnapshot. Create src/ade/mission_control_html.py with render_mission_control(snapshot) -> str. Produce a single self-contained mobile-first HTML document with no JavaScript, no external CSS/fonts/assets, and no network calls. Escape every dynamic value. Show project status, phase/milestone, current task, progress counts, checkpoint summary, open human decisions, queue depth, and warnings. Do not render raw decision context, secrets, provider tokens, provider session ids, or arbitrary HTML. Use semantic HTML and basic accessibility landmarks. Add focused standard-library unittest coverage for escaping, no external resources/scripts, empty decisions, warnings, and representative snapshot content. Export the public renderer API from ade.__init__. Do not add dependencies. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-024",
+      "title": "Add deterministic Mission Control build CLI",
+      "prompt": "Continue Phase 8 by adding scripts/build_mission_control.py. It must build the read-only Mission Control from repository state using the public snapshot builder and HTML renderer, writing dist/mission-control/index.html and dist/mission-control/snapshot.json by default, with optional CLI paths for tests. Use only the standard library. Writes must be atomic, create parent directories, use deterministic pretty JSON with a trailing newline, and never copy secrets or raw decision context. Exit nonzero with concise errors and no traceback. Add focused unittest coverage using a temporary repository fixture. Do not add dependencies or network calls. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-025",
+      "title": "Build Mission Control as a read-only GitHub artifact",
+      "prompt": "Continue Phase 8 by adding a GitHub Actions workflow that builds Mission Control on pushes to main affecting ADE state/core/dashboard files and on workflow_dispatch, then uploads dist/mission-control as an artifact. The workflow must use contents: read only, must not receive JULES_API_KEY or a write-capable token, and must not deploy to Pages or any external host. Reuse scripts/build_mission_control.py. Keep the workflow isolated from privileged trusted runners. Add any deterministic workflow contract tests needed to prove no secret environment or write permission is present. Do not add dependencies. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-026",
+      "title": "Prove Phase 8 read-only Mission Control end to end",
+      "prompt": "Finish the Phase 8 core with a deterministic offline Mission Control probe. Add scripts/mission_control_probe.py that creates a temporary repository fixture containing representative state, checkpoint, task queue, metrics/failures, and one OPEN human decision; builds a MissionControlSnapshot; renders HTML; writes the build artifact; reloads snapshot.json; and proves no secret-like fixture value or raw decision context appears in snapshot or HTML. Assert the open decision is visible by id/question, progress counts are correct, a stale telemetry warning is present when metrics lag state, and the HTML contains no script tag or external resource URL. Print one compact JSON success record and exit 0; failures must exit nonzero without tracebacks. Add focused standard-library unittest coverage. Do not add dependencies or network calls. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v and PYTHONPATH=src python scripts/mission_control_probe.py before finishing.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    }
+  ]
 }
