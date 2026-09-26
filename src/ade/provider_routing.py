@@ -28,9 +28,11 @@ class ProviderCostClass(StrEnum):
 
 
 def _provider_id(value: object, *, field: str = "provider_id") -> str:
-    if not isinstance(value, str) or not value.strip():
+    if not isinstance(value, str) or not value:
         raise ValueError(f"{field} must be a non-empty string")
-    normalized = value.strip()
+    if value != value.strip():
+        raise ValueError(f"{field} must not contain leading or trailing whitespace")
+    normalized = value
     if not _PROVIDER_ID.fullmatch(normalized):
         raise ValueError(
             f"{field} must match {_PROVIDER_ID.pattern}"
