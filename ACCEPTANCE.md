@@ -88,7 +88,7 @@
 ## Phase 10 — Multi-provider Routing
 
 - [x] Provider identity and capabilities are immutable, validated, and provider-agnostic.
-- [ ] A registry holds configured provider instances without constructing them or reading credentials.
+- [x] A registry holds configured provider instances without constructing them or reading credentials.
 - [ ] Routing filters required capabilities and chooses candidates deterministically.
 - [ ] Quota-paused or temporarily unavailable providers can be skipped before session creation.
 - [ ] Unauthorized or disabled providers are never selected automatically.
