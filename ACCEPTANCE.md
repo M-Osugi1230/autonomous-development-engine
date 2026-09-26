@@ -55,3 +55,17 @@
 - [x] An existing OPEN decision cannot be bypassed by changing policy.
 - [x] Human responses must be explicitly resolved and retrieved; they are never treated as automatic approval.
 - [x] The full PROCEED -> HUMAN_WAIT -> resolve -> reload -> retrieve lifecycle is proven under CI.
+
+
+## Phase 8 — Mission Control
+
+- [x] A safe read-only Mission Control snapshot aggregates canonical project state, checkpoint, queue, failures, telemetry, and OPEN human decisions.
+- [x] Provider session identifiers, decision context, tracebacks, and secret-like values are excluded or redacted from display output.
+- [x] A mobile-first static HTML renderer works without JavaScript or external resources.
+- [x] A deterministic build CLI writes `index.html` and `snapshot.json` atomically.
+- [x] A read-only GitHub Actions workflow builds and uploads Mission Control with no repository write permission, provider secrets, or deployment credentials.
+- [x] The real cloud workflow successfully produced the `ade-mission-control` artifact.
+- [x] An end-to-end offline probe proves snapshot -> HTML -> artifact -> reload without leaking sensitive fixture data.
+- [ ] Mission Control includes a durable project activity feed.
+- [ ] Mission Control includes safe latest-output / preview metadata for human review.
+- [ ] Phase 8 activity + preview behavior is proven end to end under CI.
