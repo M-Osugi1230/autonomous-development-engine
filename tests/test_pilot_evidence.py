@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import json
 import tempfile
+import unittest
 from pathlib import Path
-
-import pytest
 
 from ade import (
     PilotAcceptanceCheck,
@@ -67,87 +66,91 @@ def build():
     )
 
 
-def test_final_evidence_is_contract_bound_and_complete() -> None:
-    evidence = build()
+class PilotEvidenceTests(unittest.TestCase):
+    def test_final_evidence_is_contract_bound_and_complete(self) -> None:
+        evidence = build()
 
-    assert evidence.target_repository == "owner/repo"
-    assert evidence.baseline_sha == "a" * 40
-    assert evidence.final_head_sha == "b" * 40
-    assert evidence.rollback_boundary_sha == evidence.baseline_sha
-    assert evidence.provider_id == "jules"
-    assert [check.check_id for check in evidence.acceptance_checks] == [
-        "tests",
-        "compile",
-    ]
-    assert all(check.passed for check in evidence.acceptance_checks)
-    assert evidence.completed_at == "2026-09-26T14:00:00Z"
-
-
-def test_final_evidence_rejects_failed_acceptance() -> None:
-    with pytest.raises(ValueError):
-        build_pilot_final_evidence(
-            contract(),
-            final_head_sha="b" * 40,
-            pull_request_url="https://github.com/owner/repo/pull/17",
-            ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
-            provider_id="jules",
-            acceptance_results={"tests": False, "compile": True},
-            completed_at="2026-09-26T14:00:00Z",
+        self.assertEqual(evidence.target_repository, "owner/repo")
+        self.assertEqual(evidence.baseline_sha, "a" * 40)
+        self.assertEqual(evidence.final_head_sha, "b" * 40)
+        self.assertEqual(evidence.rollback_boundary_sha, evidence.baseline_sha)
+        self.assertEqual(evidence.provider_id, "jules")
+        self.assertEqual(
+            [check.check_id for check in evidence.acceptance_checks],
+            ["tests", "compile"],
         )
+        self.assertTrue(all(check.passed for check in evidence.acceptance_checks))
+        self.assertEqual(evidence.completed_at, "2026-09-26T14:00:00Z")
+
+    def test_final_evidence_rejects_failed_acceptance(self) -> None:
+        with self.assertRaises(ValueError):
+            build_pilot_final_evidence(
+                contract(),
+                final_head_sha="b" * 40,
+                pull_request_url="https://github.com/owner/repo/pull/17",
+                ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
+                provider_id="jules",
+                acceptance_results={"tests": False, "compile": True},
+                completed_at="2026-09-26T14:00:00Z",
+            )
+
+    def test_final_evidence_rejects_unknown_provider_and_check_set(self) -> None:
+        with self.assertRaises(ValueError):
+            build_pilot_final_evidence(
+                contract(),
+                final_head_sha="b" * 40,
+                pull_request_url="https://github.com/owner/repo/pull/17",
+                ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
+                provider_id="other",
+                acceptance_results={"tests": True, "compile": True},
+                completed_at="2026-09-26T14:00:00Z",
+            )
+        with self.assertRaises(ValueError):
+            build_pilot_final_evidence(
+                contract(),
+                final_head_sha="b" * 40,
+                pull_request_url="https://github.com/owner/repo/pull/17",
+                ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
+                provider_id="jules",
+                acceptance_results={"tests": True},
+                completed_at="2026-09-26T14:00:00Z",
+            )
+
+    def test_final_evidence_rejects_wrong_repository_urls_and_no_change(self) -> None:
+        with self.assertRaises(ValueError):
+            build_pilot_final_evidence(
+                contract(),
+                final_head_sha="a" * 40,
+                pull_request_url="https://github.com/owner/repo/pull/17",
+                ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
+                provider_id="jules",
+                acceptance_results={"tests": True, "compile": True},
+                completed_at="2026-09-26T14:00:00Z",
+            )
+        with self.assertRaises(ValueError):
+            build_pilot_final_evidence(
+                contract(),
+                final_head_sha="b" * 40,
+                pull_request_url="https://github.com/other/repo/pull/17",
+                ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
+                provider_id="jules",
+                acceptance_results={"tests": True, "compile": True},
+                completed_at="2026-09-26T14:00:00Z",
+            )
+
+    def test_final_evidence_store_round_trip(self) -> None:
+        evidence = build()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "final-evidence.json"
+            store = PilotEvidenceStore(path)
+            store.save(evidence)
+
+            self.assertEqual(store.load(), evidence)
+            self.assertEqual(
+                json.loads(path.read_text(encoding="utf-8")),
+                evidence.to_dict(),
+            )
 
 
-def test_final_evidence_rejects_unknown_provider_and_check_set() -> None:
-    with pytest.raises(ValueError):
-        build_pilot_final_evidence(
-            contract(),
-            final_head_sha="b" * 40,
-            pull_request_url="https://github.com/owner/repo/pull/17",
-            ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
-            provider_id="other",
-            acceptance_results={"tests": True, "compile": True},
-            completed_at="2026-09-26T14:00:00Z",
-        )
-    with pytest.raises(ValueError):
-        build_pilot_final_evidence(
-            contract(),
-            final_head_sha="b" * 40,
-            pull_request_url="https://github.com/owner/repo/pull/17",
-            ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
-            provider_id="jules",
-            acceptance_results={"tests": True},
-            completed_at="2026-09-26T14:00:00Z",
-        )
-
-
-def test_final_evidence_rejects_wrong_repository_urls_and_no_change() -> None:
-    with pytest.raises(ValueError):
-        build_pilot_final_evidence(
-            contract(),
-            final_head_sha="a" * 40,
-            pull_request_url="https://github.com/owner/repo/pull/17",
-            ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
-            provider_id="jules",
-            acceptance_results={"tests": True, "compile": True},
-            completed_at="2026-09-26T14:00:00Z",
-        )
-    with pytest.raises(ValueError):
-        build_pilot_final_evidence(
-            contract(),
-            final_head_sha="b" * 40,
-            pull_request_url="https://github.com/other/repo/pull/17",
-            ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
-            provider_id="jules",
-            acceptance_results={"tests": True, "compile": True},
-            completed_at="2026-09-26T14:00:00Z",
-        )
-
-
-def test_final_evidence_store_round_trip() -> None:
-    evidence = build()
-    with tempfile.TemporaryDirectory() as tmp:
-        path = Path(tmp) / "final-evidence.json"
-        store = PilotEvidenceStore(path)
-        store.save(evidence)
-
-        assert store.load() == evidence
-        assert json.loads(path.read_text(encoding="utf-8")) == evidence.to_dict()
+if __name__ == "__main__":
+    unittest.main()
