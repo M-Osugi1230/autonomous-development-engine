@@ -89,9 +89,9 @@
 
 - [x] Provider identity and capabilities are immutable, validated, and provider-agnostic.
 - [x] A registry holds configured provider instances without constructing them or reading credentials.
-- [ ] Routing filters required capabilities and chooses candidates deterministically.
-- [ ] Quota-paused or temporarily unavailable providers can be skipped before session creation.
-- [ ] Unauthorized or disabled providers are never selected automatically.
+- [x] Routing filters required capabilities and chooses candidates deterministically.
+- [x] Quota-paused or temporarily unavailable providers can be skipped before session creation.
+- [x] Unauthorized or disabled providers are never selected automatically.
 - [ ] Provider availability/cooldown state is durable, explicit, and evaluated against injected time.
 - [ ] Existing provider sessions are sticky across crash/resume and are never silently migrated.
 - [ ] Routed execution returns explicit no-provider/wait/replan outcomes instead of opaque failure.
