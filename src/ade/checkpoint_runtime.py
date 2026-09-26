@@ -82,6 +82,7 @@ def run_checkpointed_cycle(
     policy: RepairPolicy | None = None,
     existing_checkpoint: TaskCheckpoint | None = None,
     load_existing_checkpoint: bool = True,
+    provider_id: str | None = None,
     start_fn: Callable[..., CycleSession] = start_cycle_session,
     monitor_fn: Callable[..., CycleResult] = monitor_cycle_session,
 ) -> CheckpointedCycleExecution:
@@ -111,6 +112,12 @@ def run_checkpointed_cycle(
     if type(load_existing_checkpoint) is not bool:
         raise ValueError("load_existing_checkpoint must be a boolean")
 
+    if provider_id is not None:
+        if not isinstance(provider_id, str) or not provider_id.strip():
+            raise ValueError("provider_id must be a non-empty string or None")
+        if provider_id != provider_id.strip():
+            raise ValueError("provider_id must not contain leading or trailing whitespace")
+
     if not callable(start_fn):
         raise ValueError("start_fn must be callable")
 
@@ -131,6 +138,14 @@ def run_checkpointed_cycle(
         if existing_checkpoint.task_id != task.task_id:
             raise ValueError(
                 f"checkpoint task_id '{existing_checkpoint.task_id}' does not match task task_id '{task.task_id}'"
+            )
+        if (
+            provider_id is not None
+            and existing_checkpoint.provider_id is not None
+            and existing_checkpoint.provider_id != provider_id
+        ):
+            raise ValueError(
+                f"checkpoint provider_id '{existing_checkpoint.provider_id}' does not match provider_id '{provider_id}'"
             )
 
         if existing_checkpoint.state in (
@@ -179,6 +194,7 @@ def run_checkpointed_cycle(
                         attempt=attempt,
                         replan_count=replan_count,
                         provider_session_id=None,
+                        provider_id=provider_id,
                     )
                     store.save(running_chk)
                     session = None
@@ -189,6 +205,18 @@ def run_checkpointed_cycle(
                         provider_session_id=None,
                         task_id=task.task_id,
                     )
+                    if provider_id is not None:
+                        terminal_chk = TaskCheckpoint(
+                            task_id=terminal_chk.task_id,
+                            state=terminal_chk.state,
+                            attempt=terminal_chk.attempt,
+                            replan_count=terminal_chk.replan_count,
+                            provider_session_id=terminal_chk.provider_session_id,
+                            provider_id=provider_id,
+                            last_failure_kind=terminal_chk.last_failure_kind,
+                            last_error=terminal_chk.last_error,
+                            resume_after=terminal_chk.resume_after,
+                        )
                     store.save(terminal_chk)
                     return CheckpointedCycleExecution(
                         result=None,
@@ -202,6 +230,15 @@ def run_checkpointed_cycle(
                 replan_count=replan_count,
                 task_id=task.task_id,
             )
+            if provider_id is not None:
+                running_chk = TaskCheckpoint(
+                    task_id=running_chk.task_id,
+                    state=running_chk.state,
+                    attempt=running_chk.attempt,
+                    replan_count=running_chk.replan_count,
+                    provider_session_id=running_chk.provider_session_id,
+                    provider_id=provider_id,
+                )
             store.save(running_chk)
 
         try:
@@ -212,6 +249,15 @@ def run_checkpointed_cycle(
                 replan_count=replan_count,
                 task_id=task.task_id,
             )
+            if provider_id is not None:
+                completed_chk = TaskCheckpoint(
+                    task_id=completed_chk.task_id,
+                    state=completed_chk.state,
+                    attempt=completed_chk.attempt,
+                    replan_count=completed_chk.replan_count,
+                    provider_session_id=completed_chk.provider_session_id,
+                    provider_id=provider_id,
+                )
             store.save(completed_chk)
             return CheckpointedCycleExecution(
                 result=result,
@@ -247,6 +293,18 @@ def run_checkpointed_cycle(
                     provider_session_id=session.session_id if session else None,
                     task_id=task.task_id,
                 )
+                if provider_id is not None:
+                    terminal_chk = TaskCheckpoint(
+                        task_id=terminal_chk.task_id,
+                        state=terminal_chk.state,
+                        attempt=terminal_chk.attempt,
+                        replan_count=terminal_chk.replan_count,
+                        provider_session_id=terminal_chk.provider_session_id,
+                        provider_id=provider_id,
+                        last_failure_kind=terminal_chk.last_failure_kind,
+                        last_error=terminal_chk.last_error,
+                        resume_after=terminal_chk.resume_after,
+                    )
                 store.save(terminal_chk)
                 return CheckpointedCycleExecution(
                     result=None,
