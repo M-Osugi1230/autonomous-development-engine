@@ -1,15 +1,4 @@
 {
   "schema_version": 1,
-  "tasks": [
-    {
-      "schema_version": 1,
-      "task_id": "vertical-slice-042",
-      "title": "Prove multi-provider failover under CI",
-      "prompt": "Finish the Phase 10 routing core with an offline deterministic probe using two fake CodingAgentProvider implementations. Prove preferred-provider selection, quota-before-session fallback to a second provider, no failover after a provider session has been created, sticky crash resume to the original provider, and explicit no-provider outcome. Print compact JSON and run it explicitly in CI. Do not add real credentials or external network calls.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    }
-  ]
+  "tasks": []
 }
