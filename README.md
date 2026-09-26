@@ -24,7 +24,9 @@ repository task
 → next autonomous task
 ```
 
-It also has a bounded repair layer that classifies failures and can take deterministic retry, replan, quota-pause, human-wait, or terminal-fail dispositions. A fail -> retry -> success probe has been validated in CI.
+It also has a bounded repair layer that classifies failures and can take deterministic retry, replan, quota-pause, human-wait, or terminal-fail dispositions. Crash-safe checkpoint continuation and cloud-only quota resume routing are proven under CI.
+
+Phase 7 adds a durable human-decision queue: routine reversible work can proceed automatically, while destructive/irreversible, credential/secret, and externally consequential actions enter HUMAN_WAIT and require an explicit persisted human response.
 
 ## Repository layout
 
@@ -46,4 +48,4 @@ Never commit provider API keys. The Jules key is read only from the `JULES_API_K
 
 ## Current milestone
 
-Phase 6: quota-aware and crash-safe pause/resume. The active autonomous queue is building durable checkpoints, deterministic resume decisions, existing-session continuation, and checkpoint-aware runtime recovery.
+Phase 8: Mission Control. The next milestone is a mobile-first, read-only operational view of project health, checkpoints, open human decisions, recent activity, and preview links before any remote control actions are added.
