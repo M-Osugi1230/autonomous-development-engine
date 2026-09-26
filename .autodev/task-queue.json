@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-025",
-      "title": "Build Mission Control as a read-only GitHub artifact",
-      "prompt": "Continue Phase 8 by adding a GitHub Actions workflow that builds Mission Control on pushes to main affecting ADE state/core/dashboard files and on workflow_dispatch, then uploads dist/mission-control as an artifact. The workflow must use contents: read only, must not receive JULES_API_KEY or a write-capable token, and must not deploy to Pages or any external host. Reuse scripts/build_mission_control.py. Keep the workflow isolated from privileged trusted runners. Add any deterministic workflow contract tests needed to prove no secret environment or write permission is present. Do not add dependencies. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-026",
       "title": "Prove Phase 8 read-only Mission Control end to end",
       "prompt": "Finish the Phase 8 core with a deterministic offline Mission Control probe. Add scripts/mission_control_probe.py that creates a temporary repository fixture containing representative state, checkpoint, task queue, metrics/failures, and one OPEN human decision; builds a MissionControlSnapshot; renders HTML; writes the build artifact; reloads snapshot.json; and proves no secret-like fixture value or raw decision context appears in snapshot or HTML. Assert the open decision is visible by id/question, progress counts are correct, a stale telemetry warning is present when metrics lag state, and the HTML contains no script tag or external resource URL. Print one compact JSON success record and exit 0; failures must exit nonzero without tracebacks. Add focused standard-library unittest coverage. Do not add dependencies or network calls. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v and PYTHONPATH=src python scripts/mission_control_probe.py before finishing.",
