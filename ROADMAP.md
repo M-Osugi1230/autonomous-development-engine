@@ -36,10 +36,12 @@ Current build order:
 
 Evidence: checkpoint persistence, existing-session continuation, deterministic crash/restart CI proof, and a cloud-only due-quota resume proof all pass without local compute.
 
-## Phase 7 — Human Decision Queue 🚧
+## Phase 7 — Human Decision Queue ✅
 Ask only for decisions that exceed configured autonomy thresholds.
 
-## Phase 8 — Mission Control
+Evidence: immutable decision lifecycle models, atomic persistence, a fixed safety boundary for high-risk actions, idempotent HUMAN_WAIT handling, explicit human resolution, and an end-to-end offline lifecycle probe all pass under CI.
+
+## Phase 8 — Mission Control 🚧
 Mobile-first project health, decisions, preview, and activity feed.
 
 ## Phase 9 — Task DAG
