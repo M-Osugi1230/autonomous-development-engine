@@ -51,6 +51,8 @@ from .mission_control import (
 )
 from .mission_control_html import render_mission_control
 from .models import ProjectState, ProjectStatus, TaskStatus
+from .preview import PreviewKind, PreviewManifest
+from .preview_store import PreviewStore
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
 from .repair_planner import RepairPlan, plan_repair
 from .repair_runtime import RepairExecution, map_repair_execution, run_cycle_with_repair
@@ -87,6 +89,9 @@ __all__ = [
     "MissionControlSnapshot",
     "MissionDecisionSummary",
     "MissionTelemetrySummary",
+    "PreviewKind",
+    "PreviewManifest",
+    "PreviewStore",
     "ProjectState",
     "ProjectStatus",
     "RepairDisposition",
