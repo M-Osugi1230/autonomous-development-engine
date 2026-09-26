@@ -108,14 +108,51 @@ def _load_task() -> dict[str, Any]:
     return payload
 
 
+def _parse_session_time(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        return None
+    return parsed.astimezone(UTC)
+
+
+def _infer_rolling_quota_resume_after(
+    client: JulesClient,
+    *,
+    now: datetime,
+    daily_limit: int,
+) -> datetime | None:
+    if daily_limit < 1:
+        raise ValueError("daily_limit must be positive")
+    cutoff = now - timedelta(hours=24)
+    create_times: list[datetime] = []
+    for session in client.list_sessions(page_size=100, max_pages=10):
+        created = _parse_session_time(session.get("createTime"))
+        if created is not None and created >= cutoff:
+            create_times.append(created)
+
+    if len(create_times) < daily_limit:
+        return None
+
+    create_times.sort()
+    release_index = len(create_times) - daily_limit
+    return create_times[release_index] + timedelta(hours=24, minutes=2)
+
+
 def _quota_pause(
     gh: GitHubClient,
     *,
     task_id: str,
     session_id: str | None,
     exc: BaseException,
+    resume_at: datetime | None = None,
 ) -> int:
-    resume_after = (datetime.now(UTC) + QUOTA_RETRY_DELAY).isoformat()
+    resume_dt = resume_at or (datetime.now(UTC) + QUOTA_RETRY_DELAY)
+    resume_after = resume_dt.astimezone(UTC).isoformat()
     error = _safe_error(exc)
     payload = _checkpoint(
         task_id,
@@ -129,6 +166,52 @@ def _quota_pause(
     _write_result({**payload, "state": "PAUSED_QUOTA"})
     print(f"Jules quota exhausted; resume after {resume_after}", file=sys.stderr)
     return 20
+
+
+def _handle_precondition(
+    client: JulesClient,
+    gh: GitHubClient,
+    *,
+    task_id: str,
+    session_id: str | None,
+    exc: JulesPrecondition,
+) -> int:
+    raw_limit = os.environ.get("ADE_JULES_DAILY_TASK_LIMIT", "15")
+    try:
+        daily_limit = int(raw_limit)
+    except ValueError:
+        daily_limit = 15
+
+    try:
+        resume_at = _infer_rolling_quota_resume_after(
+            client,
+            now=datetime.now(UTC),
+            daily_limit=daily_limit,
+        )
+    except (JulesError, ValueError):
+        resume_at = None
+
+    if resume_at is not None:
+        return _quota_pause(
+            gh,
+            task_id=task_id,
+            session_id=session_id,
+            exc=exc,
+            resume_at=resume_at,
+        )
+
+    error = _safe_error(exc)
+    checkpoint = _checkpoint(
+        task_id,
+        "REPLAN",
+        session_id=session_id,
+        last_failure_kind="PROVIDER_ERROR",
+        last_error=error,
+    )
+    _persist_checkpoint(gh, checkpoint)
+    _write_result({"task_id": task_id, "state": "REPLAN", "error": error})
+    print(f"Jules precondition requires replan: {error}", file=sys.stderr)
+    return 22
 
 
 def monitor_existing(
@@ -290,23 +373,21 @@ def main() -> int:
             return 20
         return _quota_pause(gh, task_id=task_id, session_id=session_id, exc=exc)
     except JulesPrecondition as exc:
-        error = _safe_error(exc)
         try:
+            client
             gh
         except UnboundLocalError:
-            gh = None
-        if gh is not None and task_id != "unknown":
-            checkpoint = _checkpoint(
-                task_id,
-                "REPLAN",
-                session_id=session_id,
-                last_failure_kind="PROVIDER_ERROR",
-                last_error=error,
-            )
-            _persist_checkpoint(gh, checkpoint)
-        _write_result({"task_id": task_id, "state": "REPLAN", "error": error})
-        print(f"Jules precondition requires replan: {error}", file=sys.stderr)
-        return 22
+            error = _safe_error(exc)
+            _write_result({"task_id": task_id, "state": "REPLAN", "error": error})
+            print(f"Jules precondition before quota inspection: {error}", file=sys.stderr)
+            return 22
+        return _handle_precondition(
+            client,
+            gh,
+            task_id=task_id,
+            session_id=session_id,
+            exc=exc,
+        )
     except (
         JulesUnauthorized,
         JulesError,
