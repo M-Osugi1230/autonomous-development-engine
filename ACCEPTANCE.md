@@ -39,6 +39,6 @@
 - [x] Checkpoints can be atomically persisted and loaded.
 - [x] Resume decisions are deterministic for quota pause, human wait, running recovery, replan, failure, and completion.
 - [x] An existing provider session can be monitored after process restart without creating a duplicate session.
-- [ ] Runtime lifecycle transitions persist RUNNING and terminal/resumable checkpoint states.
-- [ ] A crash/restart continuation path is proven end-to-end under CI.
+- [x] Runtime lifecycle transitions persist RUNNING and terminal/resumable checkpoint states.
+- [x] A crash/restart continuation path is proven end-to-end under CI.
 - [ ] A due quota-paused checkpoint can trigger a later cloud resume without a local machine.
