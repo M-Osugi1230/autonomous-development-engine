@@ -40,6 +40,13 @@ from .interrupt_policy import (
     InterruptPolicy,
     decide_interrupt,
 )
+from .mission_control import (
+    MissionCheckpointSummary,
+    MissionControlSnapshot,
+    MissionDecisionSummary,
+    MissionTelemetrySummary,
+    build_mission_control_snapshot,
+)
 from .models import ProjectState, ProjectStatus, TaskStatus
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
 from .repair_planner import RepairPlan, plan_repair
@@ -70,6 +77,10 @@ __all__ = [
     "FailureKind",
     "HumanInputRequired",
     "HumanInterruptCoordinator",
+    "MissionCheckpointSummary",
+    "MissionControlSnapshot",
+    "MissionDecisionSummary",
+    "MissionTelemetrySummary",
     "ProjectState",
     "ProjectStatus",
     "RepairDisposition",
@@ -81,6 +92,7 @@ __all__ = [
     "ResumeDecision",
     "TaskCheckpoint",
     "TaskStatus",
+    "build_mission_control_snapshot",
     "build_report",
     "checkpoint_for_completed",
     "checkpoint_for_repair_plan",
