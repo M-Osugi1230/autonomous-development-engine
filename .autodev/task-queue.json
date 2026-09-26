@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-034",
-      "title": "Prove independent branch progress during HUMAN_WAIT",
-      "prompt": "Add an offline Phase 9 DAG probe proving one branch can enter HUMAN_WAIT while an independent branch remains runnable and completes; descendants of the waiting branch remain blocked; after explicit resolution and completion the dependent node becomes runnable. No network calls or dependencies.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-035",
       "title": "Integrate DAG selection into trusted controller behind fallback",
       "prompt": "Integrate the proven TaskGraph scheduler into the trusted controller without removing the existing FIFO queue fallback. The trusted path must never dispatch a task with incomplete dependencies and must keep HUMAN_WAIT branches isolated. Add security and regression tests before enabling any DAG-backed dispatch.",
