@@ -8,8 +8,14 @@ from pathlib import Path
 from typing import Any
 
 from github_client import GitHubClient, GitHubError
-from jules_client import JulesClient, JulesError, JulesUnauthorized
-from jules_cycle import _load_task, _safe_error, monitor_existing, run_new_cycle
+from jules_client import JulesClient, JulesError, JulesPrecondition, JulesUnauthorized
+from jules_cycle import (
+    _handle_precondition,
+    _load_task,
+    _safe_error,
+    monitor_existing,
+    run_new_cycle,
+)
 
 CHECKPOINT_FILE = Path(".autodev/runtime/checkpoint.json")
 
@@ -136,6 +142,21 @@ def main() -> int:
 
         raise RuntimeError(f"unhandled resume action: {action}")
 
+    except JulesPrecondition as exc:
+        try:
+            client
+            gh
+            task
+        except UnboundLocalError:
+            print(f"Trusted resume precondition failed: {_safe_error(exc)}", file=sys.stderr)
+            return 22
+        return _handle_precondition(
+            client,
+            gh,
+            task_id=str(task["task_id"]),
+            session_id=None,
+            exc=exc,
+        )
     except (
         JulesUnauthorized,
         JulesError,
