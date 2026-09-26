@@ -33,7 +33,7 @@
 - [x] A deterministic fail -> retry -> success repair path is proven under CI.
 - [x] Operational-script import regressions are covered by CI.
 
-## Active milestone — Phase 6 pause / resume
+## Phase 6 — Pause / Resume
 
 - [x] A validated provider-agnostic task checkpoint model exists.
 - [x] Checkpoints can be atomically persisted and loaded.
@@ -42,3 +42,16 @@
 - [x] Runtime lifecycle transitions persist RUNNING and terminal/resumable checkpoint states.
 - [x] A crash/restart continuation path is proven end-to-end under CI.
 - [x] A due quota-paused checkpoint can trigger a later cloud resume without a local machine.
+
+
+## Phase 7 — Human Decision Queue
+
+- [x] Human decision requests and responses have strict immutable lifecycle models.
+- [x] Decision records are atomically persisted in a human-readable repository ledger.
+- [x] Destructive/irreversible, credential/secret, and external-side-effect decisions always require HUMAN_WAIT.
+- [x] Routine reversible work can proceed without creating a human decision.
+- [x] Specification ambiguity and user preference handling are deterministic and explicitly configurable.
+- [x] Repeated HUMAN_WAIT requests are idempotent and cannot create duplicate open decisions.
+- [x] An existing OPEN decision cannot be bypassed by changing policy.
+- [x] Human responses must be explicitly resolved and retrieved; they are never treated as automatic approval.
+- [x] The full PROCEED -> HUMAN_WAIT -> resolve -> reload -> retrieve lifecycle is proven under CI.
