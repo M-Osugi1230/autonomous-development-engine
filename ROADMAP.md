@@ -22,7 +22,7 @@ Classify failures, choose bounded retry/replan/pause/human-wait dispositions, in
 
 Evidence: the bounded repair runtime, operational Jules integration, import-regression guard, and deterministic repair probe are merged and CI-validated.
 
-## Phase 6 — Pause / Resume 🚧
+## Phase 6 — Pause / Resume ✅
 Quota-aware and crash-safe continuation.
 
 Current build order:
@@ -34,7 +34,9 @@ Current build order:
 6. checkpoint-aware runtime continuation
 7. cloud-only quota-resume proof
 
-## Phase 7 — Human Decision Queue
+Evidence: checkpoint persistence, existing-session continuation, deterministic crash/restart CI proof, and a cloud-only due-quota resume proof all pass without local compute.
+
+## Phase 7 — Human Decision Queue 🚧
 Ask only for decisions that exceed configured autonomy thresholds.
 
 ## Phase 8 — Mission Control
