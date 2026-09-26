@@ -15,21 +15,21 @@
     "vertical-slice-013",
     "vertical-slice-014",
     "vertical-slice-015",
-    "vertical-slice-016"
+    "vertical-slice-016",
+    "vertical-slice-017"
   ],
-  "current_task_id": "vertical-slice-017",
+  "current_task_id": "vertical-slice-018",
   "failed_task_ids": [],
-  "iteration": 16,
+  "iteration": 17,
   "metadata": {
-    "milestone": "decision-lifecycle-core",
+    "milestone": "decision-store",
     "phase": "phase7-human-decision",
     "queue_exhausted": false,
-    "pause_reason": "jules-rolling-quota",
-    "resume_after": "2026-09-26T21:44:58.976350+00:00"
+    "manual_progress_during_provider_quota": true
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "PAUSED_QUOTA",
-  "updated_at": "2026-09-26T00:35:30+00:00"
+  "status": "READY",
+  "updated_at": "2026-09-26T00:52:00+00:00"
 }
