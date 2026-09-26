@@ -10,6 +10,7 @@ from .models import ProjectState, ProjectStatus, TaskStatus
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
 from .repair_planner import RepairPlan, plan_repair
 from .repair_runtime import RepairExecution, map_repair_execution, run_cycle_with_repair
+from .resume import ResumeAction, ResumeDecision, decide_resume
 
 __all__ = [
     "AcceptanceReport",
@@ -29,10 +30,13 @@ __all__ = [
     "RepairPlan",
     "RepairPolicy",
     "RepairState",
+    "ResumeAction",
+    "ResumeDecision",
     "TaskCheckpoint",
     "TaskStatus",
     "build_report",
     "decide_repair",
+    "decide_resume",
     "health_snapshot",
     "map_repair_execution",
     "plan_repair",
