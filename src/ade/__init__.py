@@ -61,6 +61,7 @@ from .pilot import (
     PilotSafetyEnvelope,
     PilotTarget,
 )
+from .pilot_store import PilotContractStore
 from .preview import PreviewKind, PreviewManifest
 from .preview_store import PreviewStore
 from .providers.github_copilot import GitHubCopilotProvider
@@ -134,6 +135,7 @@ __all__ = [
     "PilotAcceptanceCheck",
     "PilotAction",
     "PilotContract",
+    "PilotContractStore",
     "PilotProviderPolicy",
     "PilotSafetyEnvelope",
     "PilotTarget",
