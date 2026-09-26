@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from github_client import GitHubClient, GitHubError
+from observability import record_merged_pr
 
 FORBIDDEN_EXACT = {
     "GOAL.md",
@@ -176,6 +177,11 @@ def main() -> int:
             print(f"HUMAN_WAIT: PR #{pr_number}: {reason}", file=sys.stderr)
             return 2
 
+        current_task, _ = api.get_json_file(".autodev/cycle-task.json")
+        current_task_id = current_task.get("task_id")
+        if not isinstance(current_task_id, str) or not current_task_id.strip():
+            raise RuntimeError("current cycle task has no valid task_id")
+
         head = pr.get("head", {})
         expected_sha = head.get("sha")
         if not isinstance(expected_sha, str) or not expected_sha:
@@ -189,6 +195,25 @@ def main() -> int:
 
         print(f"MERGED: Jules PR #{pr_number}")
         next_task_id = advance_queue(api)
+
+        try:
+            pr_url = pr.get("html_url")
+            if not isinstance(pr_url, str) or not pr_url:
+                raise ValueError("pull request html_url is missing")
+            record_merged_pr(
+                api,
+                pr_number=pr_number,
+                pr_url=pr_url,
+                task_id=current_task_id,
+                head_sha=expected_sha,
+                occurred_at=datetime.now(UTC).isoformat(),
+            )
+        except (GitHubError, ValueError) as observability_exc:
+            print(
+                f"WARNING: observability update failed: {observability_exc}",
+                file=sys.stderr,
+            )
+
         if next_task_id is None:
             print("QUEUE COMPLETE: no pending autonomous tasks")
         else:

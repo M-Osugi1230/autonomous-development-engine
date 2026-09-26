@@ -9,6 +9,10 @@ on:
       - ".autodev/**"
       - "src/ade/mission_control.py"
       - "src/ade/mission_control_html.py"
+      - "src/ade/activity.py"
+      - "src/ade/activity_store.py"
+      - "src/ade/preview.py"
+      - "src/ade/preview_store.py"
       - "scripts/build_mission_control.py"
       - ".github/workflows/mission-control.yml"
 
