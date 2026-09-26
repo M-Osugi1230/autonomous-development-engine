@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-033",
-      "title": "Add validated task graph transitions",
-      "prompt": "Add pure immutable task graph transitions for PENDING -> RUNNING -> COMPLETED/FAILED and RUNNING -> HUMAN_WAIT, plus HUMAN_WAIT -> PENDING only after explicit human resolution. Reject illegal transitions and dependency violations. Add deterministic tests.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-034",
       "title": "Prove independent branch progress during HUMAN_WAIT",
       "prompt": "Add an offline Phase 9 DAG probe proving one branch can enter HUMAN_WAIT while an independent branch remains runnable and completes; descendants of the waiting branch remain blocked; after explicit resolution and completion the dependent node becomes runnable. No network calls or dependencies.",
