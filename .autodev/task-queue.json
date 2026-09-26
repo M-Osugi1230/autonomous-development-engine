@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-039",
-      "title": "Add deterministic provider routing policy",
-      "prompt": "Continue Phase 10 by adding a pure routing policy in src/ade/provider_router.py. Given a ProviderRegistry, RoutingRequest, and explicit availability snapshots, choose the first eligible provider deterministically. Availability must distinguish AVAILABLE, QUOTA_PAUSED, TEMPORARILY_UNAVAILABLE, UNAUTHORIZED, and DISABLED. Never route to unauthorized or disabled providers. Quota/temporary states may be skipped for another eligible provider. If no provider is eligible return an explicit immutable decision rather than raising an opaque error. Add tests for preferred provider, quota fallback, temporary fallback, unauthorized exclusion, no candidate, and deterministic repeated selection. Export public API.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-040",
       "title": "Add provider availability cooldown state",
       "prompt": "Continue Phase 10 by adding durable provider availability/cooldown models and a small atomic store. Represent quota pause resume_after, temporary backoff, unauthorized state, and healthy availability without credentials or provider session IDs. Add pure evaluation against an injected timezone-aware now and atomic human-readable JSON persistence with tests for due/not-due cooldowns, invalid timestamps, round-trip, and secret rejection.",
