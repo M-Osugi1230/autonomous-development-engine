@@ -77,6 +77,7 @@ from .provider_routing import (
     ProviderDescriptor,
     RoutingRequest,
 )
+from .routed_execution import RoutedCycleExecution, RoutedExecutionOutcome, run_routed_cycle
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
 from .repair_planner import RepairPlan, plan_repair
 from .repair_runtime import RepairExecution, map_repair_execution, run_cycle_with_repair
@@ -137,6 +138,8 @@ __all__ = [
     "RoutingOutcome",
     "RoutingRequest",
     "RoutingSkip",
+    "RoutedCycleExecution",
+    "RoutedExecutionOutcome",
     "ProjectState",
     "ProjectStatus",
     "RepairDisposition",
@@ -176,6 +179,7 @@ __all__ = [
     "run_checkpointed_cycle",
     "run_cycle",
     "run_cycle_with_repair",
+    "run_routed_cycle",
     "start_cycle_session",
     "transition_task",
 ]
