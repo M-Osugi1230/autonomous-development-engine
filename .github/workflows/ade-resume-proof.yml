@@ -1,0 +1,32 @@
+name: ADE Phase 6 Resume Proof
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".autodev/resume-proof-trigger.txt"
+      - ".github/trusted/resume_probe.py"
+      - ".github/trusted/jules_resume.py"
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Prove due quota resume routing in cloud
+        run: python .github/trusted/resume_probe.py
