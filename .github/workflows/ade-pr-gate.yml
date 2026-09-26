@@ -34,6 +34,5 @@ jobs:
 
       - name: Evaluate, merge, and advance
         env:
-          PYTHONPATH: src
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/auto_pr_gate.py
+        run: python .github/trusted/ade_pr_gate.py
