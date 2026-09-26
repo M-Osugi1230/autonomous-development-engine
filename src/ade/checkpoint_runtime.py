@@ -81,6 +81,7 @@ def run_checkpointed_cycle(
     store: CheckpointStore,
     policy: RepairPolicy | None = None,
     existing_checkpoint: TaskCheckpoint | None = None,
+    load_existing_checkpoint: bool = True,
     start_fn: Callable[..., CycleSession] = start_cycle_session,
     monitor_fn: Callable[..., CycleResult] = monitor_cycle_session,
 ) -> CheckpointedCycleExecution:
@@ -107,13 +108,16 @@ def run_checkpointed_cycle(
     if existing_checkpoint is not None and not isinstance(existing_checkpoint, TaskCheckpoint):
         raise ValueError("existing_checkpoint must be an instance of TaskCheckpoint or None")
 
+    if type(load_existing_checkpoint) is not bool:
+        raise ValueError("load_existing_checkpoint must be a boolean")
+
     if not callable(start_fn):
         raise ValueError("start_fn must be callable")
 
     if not callable(monitor_fn):
         raise ValueError("monitor_fn must be callable")
 
-    if existing_checkpoint is None:
+    if existing_checkpoint is None and load_existing_checkpoint:
         try:
             existing_checkpoint = store.load()
         except (FileNotFoundError, ValueError):
