@@ -57,6 +57,9 @@ def contract() -> PilotContract:
 def build():
     return build_pilot_final_evidence(
         contract(),
+        base_branch="main",
+        pull_request_base_sha="a" * 40,
+        changed_paths=("src/feature.py", "tests/test_feature.py"),
         final_head_sha="b" * 40,
         pull_request_url="https://github.com/owner/repo/pull/17",
         ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
@@ -72,6 +75,12 @@ class PilotEvidenceTests(unittest.TestCase):
 
         self.assertEqual(evidence.target_repository, "owner/repo")
         self.assertEqual(evidence.baseline_sha, "a" * 40)
+        self.assertEqual(evidence.base_branch, "main")
+        self.assertEqual(evidence.pull_request_base_sha, "a" * 40)
+        self.assertEqual(
+            evidence.changed_paths,
+            ("src/feature.py", "tests/test_feature.py"),
+        )
         self.assertEqual(evidence.final_head_sha, "b" * 40)
         self.assertEqual(evidence.rollback_boundary_sha, evidence.baseline_sha)
         self.assertEqual(evidence.provider_id, "jules")
@@ -86,6 +95,9 @@ class PilotEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_pilot_final_evidence(
                 contract(),
+                base_branch="main",
+                pull_request_base_sha="a" * 40,
+                changed_paths=("src/feature.py",),
                 final_head_sha="b" * 40,
                 pull_request_url="https://github.com/owner/repo/pull/17",
                 ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
@@ -98,6 +110,9 @@ class PilotEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_pilot_final_evidence(
                 contract(),
+                base_branch="main",
+                pull_request_base_sha="a" * 40,
+                changed_paths=("src/feature.py",),
                 final_head_sha="b" * 40,
                 pull_request_url="https://github.com/owner/repo/pull/17",
                 ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
@@ -108,6 +123,9 @@ class PilotEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_pilot_final_evidence(
                 contract(),
+                base_branch="main",
+                pull_request_base_sha="a" * 40,
+                changed_paths=("src/feature.py",),
                 final_head_sha="b" * 40,
                 pull_request_url="https://github.com/owner/repo/pull/17",
                 ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
@@ -120,6 +138,9 @@ class PilotEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_pilot_final_evidence(
                 contract(),
+                base_branch="main",
+                pull_request_base_sha="a" * 40,
+                changed_paths=("src/feature.py",),
                 final_head_sha="a" * 40,
                 pull_request_url="https://github.com/owner/repo/pull/17",
                 ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
@@ -130,8 +151,52 @@ class PilotEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_pilot_final_evidence(
                 contract(),
+                base_branch="main",
+                pull_request_base_sha="a" * 40,
+                changed_paths=("src/feature.py",),
                 final_head_sha="b" * 40,
                 pull_request_url="https://github.com/other/repo/pull/17",
+                ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
+                provider_id="jules",
+                acceptance_results={"tests": True, "compile": True},
+                completed_at="2026-09-26T14:00:00Z",
+            )
+
+    def test_final_evidence_rejects_wrong_base_or_disallowed_paths(self) -> None:
+        with self.assertRaises(ValueError):
+            build_pilot_final_evidence(
+                contract(),
+                base_branch="develop",
+                pull_request_base_sha="a" * 40,
+                changed_paths=("src/feature.py",),
+                final_head_sha="b" * 40,
+                pull_request_url="https://github.com/owner/repo/pull/17",
+                ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
+                provider_id="jules",
+                acceptance_results={"tests": True, "compile": True},
+                completed_at="2026-09-26T14:00:00Z",
+            )
+        with self.assertRaises(ValueError):
+            build_pilot_final_evidence(
+                contract(),
+                base_branch="main",
+                pull_request_base_sha="c" * 40,
+                changed_paths=("src/feature.py",),
+                final_head_sha="b" * 40,
+                pull_request_url="https://github.com/owner/repo/pull/17",
+                ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
+                provider_id="jules",
+                acceptance_results={"tests": True, "compile": True},
+                completed_at="2026-09-26T14:00:00Z",
+            )
+        with self.assertRaises(ValueError):
+            build_pilot_final_evidence(
+                contract(),
+                base_branch="main",
+                pull_request_base_sha="a" * 40,
+                changed_paths=(".github/workflows/ci.yml",),
+                final_head_sha="b" * 40,
+                pull_request_url="https://github.com/owner/repo/pull/17",
                 ci_evidence_urls=("https://github.com/owner/repo/actions/runs/12345",),
                 provider_id="jules",
                 acceptance_results={"tests": True, "compile": True},
