@@ -81,6 +81,7 @@ def run_checkpointed_cycle(
     store: CheckpointStore,
     policy: RepairPolicy | None = None,
     existing_checkpoint: TaskCheckpoint | None = None,
+    provider_id: str | None = None,
     start_fn: Callable[..., CycleSession] = start_cycle_session,
     monitor_fn: Callable[..., CycleResult] = monitor_cycle_session,
 ) -> CheckpointedCycleExecution:
@@ -107,6 +108,14 @@ def run_checkpointed_cycle(
     if existing_checkpoint is not None and not isinstance(existing_checkpoint, TaskCheckpoint):
         raise ValueError("existing_checkpoint must be an instance of TaskCheckpoint or None")
 
+    if provider_id is not None:
+        if not isinstance(provider_id, str) or not provider_id:
+            raise ValueError("provider_id must be a non-empty string or None")
+        if provider_id != provider_id.strip():
+            raise ValueError(
+                "provider_id must not contain leading or trailing whitespace"
+            )
+
     if not callable(start_fn):
         raise ValueError("start_fn must be callable")
 
@@ -127,6 +136,15 @@ def run_checkpointed_cycle(
         if existing_checkpoint.task_id != task.task_id:
             raise ValueError(
                 f"checkpoint task_id '{existing_checkpoint.task_id}' does not match task task_id '{task.task_id}'"
+            )
+
+        if (
+            provider_id is not None
+            and existing_checkpoint.provider_id is not None
+            and existing_checkpoint.provider_id != provider_id
+        ):
+            raise ValueError(
+                f"checkpoint provider_id '{existing_checkpoint.provider_id}' does not match provider_id '{provider_id}'"
             )
 
         if existing_checkpoint.state in (
@@ -175,6 +193,7 @@ def run_checkpointed_cycle(
                         attempt=attempt,
                         replan_count=replan_count,
                         provider_session_id=None,
+                        provider_id=provider_id,
                     )
                     store.save(running_chk)
                     session = None
@@ -183,6 +202,7 @@ def run_checkpointed_cycle(
                     terminal_chk = checkpoint_for_repair_plan(
                         plan,
                         provider_session_id=None,
+                        provider_id=provider_id,
                         task_id=task.task_id,
                     )
                     store.save(terminal_chk)
@@ -197,6 +217,7 @@ def run_checkpointed_cycle(
                 attempt=attempt,
                 replan_count=replan_count,
                 task_id=task.task_id,
+                provider_id=provider_id,
             )
             store.save(running_chk)
 
@@ -207,6 +228,7 @@ def run_checkpointed_cycle(
                 attempt=attempt,
                 replan_count=replan_count,
                 task_id=task.task_id,
+                provider_id=provider_id,
             )
             store.save(completed_chk)
             return CheckpointedCycleExecution(
@@ -234,6 +256,7 @@ def run_checkpointed_cycle(
                     attempt=attempt,
                     replan_count=replan_count,
                     provider_session_id=None,
+                    provider_id=provider_id,
                 )
                 store.save(running_chk)
                 continue
@@ -241,6 +264,7 @@ def run_checkpointed_cycle(
                 terminal_chk = checkpoint_for_repair_plan(
                     plan,
                     provider_session_id=session.session_id if session else None,
+                    provider_id=provider_id,
                     task_id=task.task_id,
                 )
                 store.save(terminal_chk)
