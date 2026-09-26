@@ -106,7 +106,7 @@
 - [x] The first production pilot cannot express a direct MERGE action and requires READ, validation, and pull-request creation capabilities.
 - [x] Provider policy explicitly permits pre-session fallback while requiring sticky provider identity after a session exists.
 - [x] Acceptance checks are deterministic commands with bounded timeouts and unique IDs.
-- [ ] A pilot contract can be atomically persisted and loaded without normalization drift.
+- [x] A pilot contract can be atomically persisted and loaded without normalization drift.
 - [ ] A read-only preflight proves target repository, base branch, baseline SHA, provider availability, and acceptance-command readiness before any write.
 - [ ] Human activation is persisted when the contract requires it; absence of activation prevents all target writes.
 - [ ] A dry-run probe proves path/action enforcement and produces evidence without modifying the target repository.
