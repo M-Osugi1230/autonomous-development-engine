@@ -70,6 +70,12 @@ from .pilot_activation import (
     require_pilot_target_write_activation,
 )
 from .pilot_activation_store import PilotActivationStore
+from .pilot_evidence import (
+    PilotAcceptanceEvidence,
+    PilotFinalEvidence,
+    build_pilot_final_evidence,
+)
+from .pilot_evidence_store import PilotEvidenceStore
 from .pilot_dry_run import (
     DryRunCheckStatus,
     PilotDryRunOperation,
@@ -156,6 +162,7 @@ __all__ = [
     "MissionPreviewSummary",
     "MissionTelemetrySummary",
     "PilotAcceptanceCheck",
+    "PilotAcceptanceEvidence",
     "PilotActivation",
     "PilotActivationStore",
     "PilotAction",
@@ -168,6 +175,8 @@ __all__ = [
     "PilotDryRunOperation",
     "PilotDryRunOperationResult",
     "PilotDryRunReport",
+    "PilotEvidenceStore",
+    "PilotFinalEvidence",
     "PilotProviderPolicy",
     "PilotSafetyEnvelope",
     "PilotTarget",
@@ -206,6 +215,7 @@ __all__ = [
     "TaskStatus",
     "build_mission_control_snapshot",
     "build_pilot_activation",
+    "build_pilot_final_evidence",
     "build_report",
     "checkpoint_for_completed",
     "checkpoint_for_repair_plan",
