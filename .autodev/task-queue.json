@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-018",
-      "title": "Add atomic human decision store",
-      "prompt": "Continue Phase 7 by adding durable human-decision persistence. Create src/ade/decision_store.py with a DecisionStore backed by a human-readable JSON object at .autodev/decisions.json by default, while allowing an injected test path. It must atomically save with tempfile + fsync + os.replace, load/validate schema_version 1, enqueue DecisionRecord values idempotently by decision_id, list open records, resolve an open decision with a validated DecisionResponse, and reject duplicate/conflicting resolution rather than silently overwriting it. Preserve deterministic ordering and do not store secrets or tracebacks. Export the public store API from ade.__init__. Add focused standard-library unittest coverage for round-trip, parent creation, idempotent enqueue, duplicate conflict rejection, resolve, repeated/conflicting resolve, invalid JSON/schema, and atomic replacement. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-019",
       "title": "Add deterministic human interrupt policy",
       "prompt": "Continue Phase 7 by adding a deterministic autonomy/interrupt policy. Create src/ade/interrupt_policy.py with enums for DecisionKind and InterruptDisposition plus an immutable InterruptPolicy. Cover at minimum destructive_or_irreversible, credential_or_secret, external_side_effect, specification_ambiguity, user_preference, and routine_reversible kinds. The default policy must require HUMAN_WAIT for destructive/irreversible actions, credential/secret access, and externally consequential side effects; routine reversible work must PROCEED; specification ambiguity and user preference must be deterministic and configurable without confidence scores or probabilistic thresholds. Keep the module pure and provider-agnostic. Export its public API from ade.__init__. Add focused standard-library unittest coverage for every kind, policy overrides, invalid configuration, and deterministic repeated decisions. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
