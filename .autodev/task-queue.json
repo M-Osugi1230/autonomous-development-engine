@@ -2,34 +2,24 @@
   "schema_version": 1,
   "tasks": [
     {
-      "schema_version": 1,
-      "task_id": "vertical-slice-013",
-      "title": "Add resumable provider session primitives",
-      "prompt": "Continue Phase 6 by making provider sessions crash-resumable at the cycle layer. Refactor src/ade/cycle.py without changing existing run_cycle behavior. Add an immutable validated CycleSession handle containing task_id, session_id, and optional session_url. Add start_cycle_session(provider, *, task, source_name) that creates exactly one provider session and returns CycleSession. Add monitor_cycle_session(provider, *, task, session, sleeper=sleep, clock=monotonic) that polls an already-created session and returns CycleResult without ever calling create_session. Preserve the existing COMPLETED, FAILED, AWAITING_USER_FEEDBACK, PAUSED, and timeout semantics. Make run_cycle a thin composition of start_cycle_session followed by monitor_cycle_session. Export the new public API from ade.__init__. Add focused standard-library unittest coverage proving existing run_cycle still creates exactly one session, monitor resumes an existing session without create_session, completed result/PR extraction works, and failed/human-wait/paused/timeout states remain explicit. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "starting_branch": "main",
       "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
-      "task_id": "vertical-slice-014",
-      "title": "Add checkpoint lifecycle transitions",
+      "poll_interval_seconds": 15,
       "prompt": "Continue Phase 6 by adding deterministic checkpoint lifecycle transitions. Create src/ade/checkpoint_transition.py with pure provider-agnostic helpers that produce validated TaskCheckpoint values for: a newly started/running CycleSession; a completed CycleResult; and a RepairPlan final disposition. RETRY is not a terminal checkpoint transition and must be rejected by the final-disposition helper. Map PAUSE_QUOTA to PAUSED_QUOTA, HUMAN_WAIT to HUMAN_WAIT, REPLAN to REPLAN, and FAIL to FAILED. Preserve next_attempt/next_replan_count and bounded error/failure kind from the RepairPlan. Allow an optional provider_session_id and optional resume_after only where the TaskCheckpoint model permits them. Do not mutate inputs and do not persist anything in this module. Export the public helpers from ade.__init__. Add focused standard-library unittest coverage for running, completed, quota pause with/without session id, human wait, replan, fail, RETRY rejection, and task-id mismatch rejection. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+      "schema_version": 1,
       "starting_branch": "main",
-      "auto_create_pr": true,
+      "task_id": "vertical-slice-014",
       "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
+      "title": "Add checkpoint lifecycle transitions"
     },
     {
-      "schema_version": 1,
-      "task_id": "vertical-slice-015",
-      "title": "Add checkpoint-aware cycle continuation",
-      "prompt": "Complete the Phase 6 core by adding checkpoint-aware cycle continuation. Create src/ade/checkpoint_runtime.py with a provider-agnostic run_checkpointed_cycle(provider, *, task, source_name, store, policy=None, existing_checkpoint=None, start_fn=start_cycle_session, monitor_fn=monitor_cycle_session) API. If there is no recoverable existing checkpoint, start a provider session, persist a RUNNING checkpoint immediately after obtaining the session id, then monitor it. If a valid RUNNING checkpoint for the same task contains a provider_session_id, resume monitoring that existing session without creating a new session. On completion persist COMPLETED. On monitor/start failure, use plan_repair and the checkpoint transition helpers to persist PAUSED_QUOTA/HUMAN_WAIT/REPLAN/FAILED; automatically perform only bounded RETRY dispositions, persisting counters between attempts. Never silently resume HUMAN_WAIT or terminal FAILED checkpoints. Keep secrets and tracebacks out of persisted checkpoints. Return a structured immutable execution result describing the final CycleResult or checkpoint. Export the public API from ade.__init__. Add focused standard-library unittest coverage proving crash-resume with a preseeded RUNNING checkpoint does not call create_session, a fresh run saves RUNNING before monitor, completion saves COMPLETED, quota pause persists, human wait persists, retry is bounded, and mismatched task checkpoints are rejected. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "starting_branch": "main",
       "auto_create_pr": true,
+      "poll_interval_seconds": 15,
+      "prompt": "Complete the Phase 6 core by adding checkpoint-aware cycle continuation. Create src/ade/checkpoint_runtime.py with a provider-agnostic run_checkpointed_cycle(provider, *, task, source_name, store, policy=None, existing_checkpoint=None, start_fn=start_cycle_session, monitor_fn=monitor_cycle_session) API. If there is no recoverable existing checkpoint, start a provider session, persist a RUNNING checkpoint immediately after obtaining the session id, then monitor it. If a valid RUNNING checkpoint for the same task contains a provider_session_id, resume monitoring that existing session without creating a new session. On completion persist COMPLETED. On monitor/start failure, use plan_repair and the checkpoint transition helpers to persist PAUSED_QUOTA/HUMAN_WAIT/REPLAN/FAILED; automatically perform only bounded RETRY dispositions, persisting counters between attempts. Never silently resume HUMAN_WAIT or terminal FAILED checkpoints. Keep secrets and tracebacks out of persisted checkpoints. Return a structured immutable execution result describing the final CycleResult or checkpoint. Export the public API from ade.__init__. Add focused standard-library unittest coverage proving crash-resume with a preseeded RUNNING checkpoint does not call create_session, a fresh run saves RUNNING before monitor, completion saves COMPLETED, quota pause persists, human wait persists, retry is bounded, and mismatched task checkpoints are rejected. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+      "schema_version": 1,
+      "starting_branch": "main",
+      "task_id": "vertical-slice-015",
       "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
+      "title": "Add checkpoint-aware cycle continuation"
     }
   ]
 }
