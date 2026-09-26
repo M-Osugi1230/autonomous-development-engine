@@ -1,10 +1,10 @@
 {
   "attempt": 0,
-  "last_error": null,
-  "last_failure_kind": null,
+  "last_error": "HTTP 400: Precondition check failed.",
+  "last_failure_kind": "PROVIDER_ERROR",
   "provider_session_id": null,
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "vertical-slice-016"
+  "state": "FAILED",
+  "task_id": "vertical-slice-017"
 }
