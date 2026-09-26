@@ -123,7 +123,12 @@ class TaskSchedulerTests(unittest.TestCase):
                         TaskNode(task=task("b"), depends_on=("a",)),
                     )
                 )
-                self.assertEqual(runnable_tasks(graph), ())
+                runnable_ids = [node.task_id for node in runnable_tasks(graph)]
+                self.assertNotIn("b", runnable_ids)
+                if status is GraphTaskStatus.PENDING:
+                    self.assertEqual(runnable_ids, ["a"])
+                else:
+                    self.assertEqual(runnable_ids, [])
 
         graph = TaskGraph(
             tasks=(
