@@ -4,13 +4,26 @@ import json
 import os
 import sys
 import time
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from github_client import GitHubClient, GitHubError
 from jules_client import JulesClient, JulesError, JulesQuota, JulesUnauthorized
 
 TASK_PATH = Path(".autodev/cycle-task.json")
 RESULT_PATH = Path(".autodev/runtime/jules-session.json")
+CHECKPOINT_PATH = ".autodev/runtime/checkpoint.json"
+QUOTA_RETRY_DELAY = timedelta(hours=1)
+
+
+def _safe_error(exc: BaseException) -> str:
+    value = str(exc).splitlines()[0].strip() if str(exc).strip() else type(exc).__name__
+    for env_name in ("JULES_API_KEY", "GITHUB_TOKEN"):
+        secret = os.environ.get(env_name)
+        if secret:
+            value = value.replace(secret, "[REDACTED]")
+    return value[:256]
 
 
 def _write_result(payload: dict[str, Any]) -> None:
@@ -18,6 +31,35 @@ def _write_result(payload: dict[str, Any]) -> None:
     RESULT_PATH.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+    )
+
+
+def _checkpoint(
+    task_id: str,
+    state: str,
+    *,
+    session_id: str | None = None,
+    last_failure_kind: str | None = None,
+    last_error: str | None = None,
+    resume_after: str | None = None,
+) -> dict[str, Any]:
+    return {
+        "attempt": 0,
+        "last_error": last_error,
+        "last_failure_kind": last_failure_kind,
+        "provider_session_id": session_id,
+        "replan_count": 0,
+        "resume_after": resume_after,
+        "state": state,
+        "task_id": task_id,
+    }
+
+
+def _persist_checkpoint(gh: GitHubClient, payload: dict[str, Any]) -> None:
+    gh.upsert_json_file(
+        CHECKPOINT_PATH,
+        payload,
+        message=f"checkpoint: {payload['task_id']} {payload['state']}",
     )
 
 
@@ -60,40 +102,47 @@ def _load_task() -> dict[str, Any]:
     return payload
 
 
-def main() -> int:
-    owner = os.environ.get("ADE_GITHUB_OWNER", "M-Osugi1230")
-    repo = os.environ.get("ADE_GITHUB_REPO", "autonomous-development-engine")
-    task_id = "unknown"
+def _quota_pause(
+    gh: GitHubClient,
+    *,
+    task_id: str,
+    session_id: str | None,
+    exc: BaseException,
+) -> int:
+    resume_after = (datetime.now(UTC) + QUOTA_RETRY_DELAY).isoformat()
+    error = _safe_error(exc)
+    payload = _checkpoint(
+        task_id,
+        "PAUSED_QUOTA",
+        session_id=session_id,
+        last_failure_kind="PROVIDER_QUOTA",
+        last_error=error,
+        resume_after=resume_after,
+    )
+    _persist_checkpoint(gh, payload)
+    _write_result({**payload, "state": "PAUSED_QUOTA"})
+    print(f"Jules quota exhausted; resume after {resume_after}", file=sys.stderr)
+    return 20
 
+
+def monitor_existing(
+    client: JulesClient,
+    gh: GitHubClient,
+    *,
+    task: dict[str, Any],
+    session_id: str,
+    session_url: str | None = None,
+) -> int:
+    task_id = str(task["task_id"])
+    timeout_seconds = int(task.get("timeout_seconds", 1800))
+    poll_interval_seconds = int(task.get("poll_interval_seconds", 15))
+    if timeout_seconds < 60:
+        raise ValueError("timeout_seconds must be >= 60")
+    if poll_interval_seconds < 5:
+        raise ValueError("poll_interval_seconds must be >= 5")
+
+    deadline = time.monotonic() + timeout_seconds
     try:
-        task = _load_task()
-        task_id = str(task["task_id"])
-        timeout_seconds = int(task.get("timeout_seconds", 1800))
-        poll_interval_seconds = int(task.get("poll_interval_seconds", 15))
-        if timeout_seconds < 60:
-            raise ValueError("timeout_seconds must be >= 60")
-        if poll_interval_seconds < 5:
-            raise ValueError("poll_interval_seconds must be >= 5")
-
-        client = JulesClient()
-        source = client.find_github_source(owner, repo)
-        if source is None:
-            raise RuntimeError(f"{owner}/{repo} is not visible in Jules sources")
-        source_name = source.get("name")
-        if not isinstance(source_name, str) or not source_name:
-            raise RuntimeError("Jules source does not contain a valid resource name")
-
-        session = client.create_session(
-            prompt=str(task["prompt"]),
-            source=source_name,
-            starting_branch=str(task.get("starting_branch", "main")),
-            title=str(task["title"]),
-            auto_create_pr=bool(task.get("auto_create_pr", True)),
-        )
-        session_id = _session_id(session)
-        session_url = session.get("url") if isinstance(session.get("url"), str) else None
-        deadline = time.monotonic() + timeout_seconds
-
         while True:
             current = client.get_session(session_id)
             state = current.get("state")
@@ -101,6 +150,8 @@ def main() -> int:
                 raise RuntimeError("Jules returned a session without state")
 
             if state == "COMPLETED":
+                checkpoint = _checkpoint(task_id, "COMPLETED", session_id=session_id)
+                _persist_checkpoint(gh, checkpoint)
                 payload = {
                     "task_id": task_id,
                     "session_id": session_id,
@@ -115,40 +166,154 @@ def main() -> int:
                 return 0
 
             if state == "FAILED":
-                _write_result({"task_id": task_id, "session_id": session_id, "state": state})
-                print(f"Jules session failed: {session_id}", file=sys.stderr)
+                error = f"Jules session failed: {session_id}"
+                checkpoint = _checkpoint(
+                    task_id,
+                    "FAILED",
+                    session_id=session_id,
+                    last_failure_kind="CYCLE_FAILED",
+                    last_error=error,
+                )
+                _persist_checkpoint(gh, checkpoint)
+                _write_result(checkpoint)
+                print(error, file=sys.stderr)
                 return 1
 
             if state == "AWAITING_USER_FEEDBACK":
-                _write_result(
-                    {"task_id": task_id, "session_id": session_id, "state": "HUMAN_WAIT"}
+                checkpoint = _checkpoint(
+                    task_id,
+                    "HUMAN_WAIT",
+                    session_id=session_id,
+                    last_failure_kind="HUMAN_INPUT",
+                    last_error="Jules session requires human input",
                 )
+                _persist_checkpoint(gh, checkpoint)
+                _write_result(checkpoint)
                 print(f"Jules session requires human input: {session_id}", file=sys.stderr)
                 return 21
 
             if state == "PAUSED":
-                _write_result(
-                    {"task_id": task_id, "session_id": session_id, "state": "PAUSED"}
+                checkpoint = _checkpoint(
+                    task_id,
+                    "REPLAN",
+                    session_id=session_id,
+                    last_failure_kind="PROVIDER_ERROR",
+                    last_error="Jules session entered PAUSED state",
                 )
+                _persist_checkpoint(gh, checkpoint)
+                _write_result(checkpoint)
                 print(f"Jules session paused: {session_id}", file=sys.stderr)
                 return 22
 
             if time.monotonic() >= deadline:
-                _write_result(
-                    {"task_id": task_id, "session_id": session_id, "state": "TIMEOUT"}
+                checkpoint = _checkpoint(
+                    task_id,
+                    "RUNNING",
+                    session_id=session_id,
+                    last_failure_kind="CYCLE_TIMEOUT",
+                    last_error="monitor timeout; provider session may still be active",
                 )
-                print(f"Jules session timed out: {session_id}", file=sys.stderr)
-                return 1
+                _persist_checkpoint(gh, checkpoint)
+                _write_result(checkpoint)
+                print(
+                    f"DEFERRED: Jules session still running after monitor timeout: {session_id}"
+                )
+                return 0
 
             time.sleep(poll_interval_seconds)
+    except JulesQuota as exc:
+        return _quota_pause(gh, task_id=task_id, session_id=session_id, exc=exc)
+
+
+def run_new_cycle(
+    *,
+    task: dict[str, Any],
+    client: JulesClient,
+    gh: GitHubClient,
+    owner: str,
+    repo: str,
+) -> int:
+    task_id = str(task["task_id"])
+    source = client.find_github_source(owner, repo)
+    if source is None:
+        raise RuntimeError(f"{owner}/{repo} is not visible in Jules sources")
+    source_name = source.get("name")
+    if not isinstance(source_name, str) or not source_name:
+        raise RuntimeError("Jules source does not contain a valid resource name")
+
+    session = client.create_session(
+        prompt=str(task["prompt"]),
+        source=source_name,
+        starting_branch=str(task.get("starting_branch", "main")),
+        title=str(task["title"]),
+        auto_create_pr=bool(task.get("auto_create_pr", True)),
+    )
+    session_id = _session_id(session)
+    session_url = session.get("url") if isinstance(session.get("url"), str) else None
+    _persist_checkpoint(
+        gh,
+        _checkpoint(task_id, "RUNNING", session_id=session_id),
+    )
+    return monitor_existing(
+        client,
+        gh,
+        task=task,
+        session_id=session_id,
+        session_url=session_url,
+    )
+
+
+def main() -> int:
+    owner = os.environ.get("ADE_GITHUB_OWNER", "M-Osugi1230")
+    repo = os.environ.get("ADE_GITHUB_REPO", "autonomous-development-engine")
+    task_id = "unknown"
+    session_id: str | None = None
+
+    try:
+        task = _load_task()
+        task_id = str(task["task_id"])
+        client = JulesClient()
+        gh = GitHubClient()
+        return run_new_cycle(task=task, client=client, gh=gh, owner=owner, repo=repo)
 
     except JulesQuota as exc:
-        _write_result({"task_id": task_id, "state": "PAUSED_QUOTA", "error": str(exc)[:256]})
-        print(f"Jules quota exhausted: {exc}", file=sys.stderr)
-        return 20
-    except (JulesUnauthorized, JulesError, ValueError, RuntimeError, OSError, json.JSONDecodeError) as exc:
-        _write_result({"task_id": task_id, "state": "FAILED", "error": str(exc)[:256]})
-        print(f"Trusted Jules cycle failed: {exc}", file=sys.stderr)
+        try:
+            gh
+        except UnboundLocalError:
+            print("Jules quota exhausted before GitHub checkpoint client initialized", file=sys.stderr)
+            return 20
+        return _quota_pause(gh, task_id=task_id, session_id=session_id, exc=exc)
+    except (
+        JulesUnauthorized,
+        JulesError,
+        GitHubError,
+        ValueError,
+        RuntimeError,
+        OSError,
+        json.JSONDecodeError,
+    ) as exc:
+        error = _safe_error(exc)
+        try:
+            gh
+        except UnboundLocalError:
+            gh = None
+        if gh is not None and task_id != "unknown":
+            try:
+                checkpoint = _checkpoint(
+                    task_id,
+                    "FAILED",
+                    session_id=session_id,
+                    last_failure_kind="PROVIDER_ERROR",
+                    last_error=error,
+                )
+                _persist_checkpoint(gh, checkpoint)
+            except Exception as checkpoint_exc:
+                print(
+                    f"WARNING: failed to persist checkpoint: {_safe_error(checkpoint_exc)}",
+                    file=sys.stderr,
+                )
+        _write_result({"task_id": task_id, "state": "FAILED", "error": error})
+        print(f"Trusted Jules cycle failed: {error}", file=sys.stderr)
         return 1
 
 
