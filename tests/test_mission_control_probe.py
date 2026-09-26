@@ -42,6 +42,8 @@ class MissionControlProbeTests(unittest.TestCase):
         self.assertEqual(result["queue_depth"], 2)
         self.assertEqual(result["open_decision_id"], "decision-phase8-proof")
         self.assertGreaterEqual(result["warning_count"], 1)
+        self.assertEqual(result["activity_count"], 2)
+        self.assertEqual(result["preview_id"], "preview-pr-36")
         self.assertEqual(result["artifact_files"], ["index.html", "snapshot.json"])
 
     def test_main_emits_compact_json_and_returns_zero(self) -> None:
@@ -57,6 +59,8 @@ class MissionControlProbeTests(unittest.TestCase):
         self.assertNotIn("Traceback", line)
         self.assertNotIn(module.SECRET_LIKE_PROVIDER_VALUE, line)
         self.assertNotIn(module.RAW_DECISION_CONTEXT, line)
+        self.assertEqual(payload["activity_count"], 2)
+        self.assertEqual(payload["preview_id"], "preview-pr-36")
 
 
 if __name__ == "__main__":
