@@ -1,0 +1,46 @@
+name: ADE Mission Control
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".autodev/**"
+      - "src/ade/mission_control.py"
+      - "src/ade/mission_control_html.py"
+      - "scripts/build_mission_control.py"
+      - ".github/workflows/mission-control.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ade-mission-control
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build read-only Mission Control
+        env:
+          PYTHONPATH: src
+        run: python scripts/build_mission_control.py
+
+      - name: Upload Mission Control artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-mission-control
+          path: dist/mission-control
+          if-no-files-found: error
+          retention-days: 7
