@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "task_id": "vertical-slice-042",
-  "title": "Prove multi-provider failover under CI",
-  "prompt": "Finish the Phase 10 routing core with an offline deterministic probe using two fake CodingAgentProvider implementations. Prove preferred-provider selection, quota-before-session fallback to a second provider, no failover after a provider session has been created, sticky crash resume to the original provider, and explicit no-provider outcome. Print compact JSON and run it explicitly in CI. Do not add real credentials or external network calls.",
+  "task_id": "one-minute-cli-command-guard-001",
+  "title": "Production pilot: guard CLI command shorthand",
+  "prompt": "Execute the activated Phase 11 production pilot. Goal: make mistyped CLI command names fail fast instead of being interpreted as experiment IDs while preserving the existing numeric experiment-id shorthand. You may modify ONLY src/thought_pipeline/cli.py and tests/test_cli.py. Do not modify any other file, including workflows, dependencies, content, configuration, generated output, templates, pipeline.py, pyproject.toml, or requirements.txt. Preserve `python pipeline.py 001 --offline` as shorthand for generate. A mistyped or unknown command such as `valdate` must fail as an invalid command rather than being treated as an experiment id. Preserve all existing valid commands and behavior. Add focused regression tests in tests/test_cli.py. Do not merge the pull request. Before finishing run: python -m compileall -q src pipeline.py ; python pipeline.py validate ; python -m pytest -q ; python pipeline.py 001 --offline --output-root /tmp/ade-pilot-output --overwrite.",
   "starting_branch": "main",
   "auto_create_pr": true,
   "timeout_seconds": 1800,
