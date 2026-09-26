@@ -1,15 +1,4 @@
 {
   "schema_version": 1,
-  "tasks": [
-    {
-      "schema_version": 1,
-      "task_id": "vertical-slice-021",
-      "title": "Prove Phase 7 human decision lifecycle",
-      "prompt": "Finish the Phase 7 core with a deterministic offline human-decision lifecycle probe. Add scripts/human_decision_probe.py using the public Phase 7 APIs. In a temporary DecisionStore, prove that routine reversible work proceeds without creating an open decision; a destructive/irreversible request creates exactly one OPEN decision and returns HUMAN_WAIT; repeating the same request is idempotent; a simulated human response resolves it; reloading the store preserves the resolution; and the resolved response can be retrieved without changing it. Print one compact JSON success record and exit 0; invariant failures must exit nonzero without tracebacks or secrets. Add focused standard-library unittest coverage. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v and PYTHONPATH=src python scripts/human_decision_probe.py before finishing.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    }
-  ]
+  "tasks": []
 }
