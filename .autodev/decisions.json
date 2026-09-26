@@ -36,8 +36,12 @@
           ]
         }
       },
-      "status": "OPEN",
-      "response": null
+      "status": "RESOLVED",
+      "response": {
+        "decision_id": "phase11-pilot-activation-one-minute-cli-command-guard-001",
+        "text": "ACTIVATE",
+        "selected_option": "ACTIVATE"
+      }
     }
   ]
 }
