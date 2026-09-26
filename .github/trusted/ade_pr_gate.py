@@ -81,7 +81,7 @@ def evaluate_jules_pull_request(
     for changed in files:
         filename = changed.get("filename")
         if not isinstance(filename, str):
-            return False, "changed file has no filename")
+            return False, "changed file has no filename"
         if filename in FORBIDDEN_EXACT:
             return False, f"forbidden file changed: {filename}"
         if filename.startswith(FORBIDDEN_PREFIXES):
