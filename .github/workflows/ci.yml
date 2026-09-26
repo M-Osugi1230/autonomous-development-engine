@@ -23,7 +23,7 @@ jobs:
           python-version: "3.11"
 
       - name: Compile
-        run: python -m compileall -q src scripts tests
+        run: python -m compileall -q src scripts tests .github/trusted
 
       - name: Unit tests
         env:
