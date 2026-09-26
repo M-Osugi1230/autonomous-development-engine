@@ -12,7 +12,7 @@
         "poll_interval_seconds": 15
       },
       "depends_on": [],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "decision_id": null
     },
     {
@@ -28,7 +28,7 @@
       "depends_on": [
         "vertical-slice-037"
       ],
-      "status": "PENDING",
+      "status": "RUNNING",
       "decision_id": null
     },
     {
