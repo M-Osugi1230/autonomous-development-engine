@@ -2,6 +2,7 @@
 
 from .acceptance import AcceptanceReport, CheckResult, build_report
 from .checkpoint import CheckpointState, TaskCheckpoint
+from .checkpoint_runtime import CheckpointedCycleExecution, run_checkpointed_cycle
 from .checkpoint_store import CheckpointStore
 from .checkpoint_transition import (
     checkpoint_for_completed,
@@ -36,6 +37,7 @@ __all__ = [
     "CheckResult",
     "CheckpointState",
     "CheckpointStore",
+    "CheckpointedCycleExecution",
     "CycleFailed",
     "CyclePaused",
     "CycleResult",
@@ -70,6 +72,7 @@ __all__ = [
     "map_repair_execution",
     "monitor_cycle_session",
     "plan_repair",
+    "run_checkpointed_cycle",
     "run_cycle",
     "run_cycle_with_repair",
     "start_cycle_session",
