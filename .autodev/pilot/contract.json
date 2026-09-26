@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "pilot_id": "one-minute-cli-command-guard-001",
+  "target": {
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "base_branch": "main",
+    "baseline_sha": "46d2d473305ca8c904f90c78bc8f8aabf3fd7319"
+  },
+  "goal": "Make mistyped CLI command names fail fast instead of being interpreted as experiment IDs while preserving the existing numeric experiment-id shorthand.",
+  "safety": {
+    "allowed_path_prefixes": [
+      "src/thought_pipeline/cli.py",
+      "tests/test_cli.py"
+    ],
+    "forbidden_path_prefixes": [
+      ".env",
+      ".github",
+      "assets",
+      "config",
+      "content",
+      "output",
+      "pipeline.py",
+      "pyproject.toml",
+      "requirements.txt",
+      "templates"
+    ],
+    "allowed_actions": [
+      "CREATE_BRANCH",
+      "MODIFY_FILES",
+      "OPEN_PULL_REQUEST",
+      "READ",
+      "RUN_VALIDATION"
+    ],
+    "max_tasks": 1,
+    "max_consecutive_failures": 1,
+    "require_human_activation": true
+  },
+  "provider_policy": {
+    "allowed_provider_ids": [
+      "jules",
+      "github-copilot"
+    ],
+    "preferred_provider_ids": [
+      "jules",
+      "github-copilot"
+    ],
+    "allow_fallback_before_session": true,
+    "sticky_after_session": true
+  },
+  "acceptance_checks": [
+    {
+      "check_id": "compile",
+      "command": "python -m compileall -q src pipeline.py",
+      "timeout_seconds": 120
+    },
+    {
+      "check_id": "validate",
+      "command": "python pipeline.py validate",
+      "timeout_seconds": 180
+    },
+    {
+      "check_id": "tests",
+      "command": "python -m pytest -q",
+      "timeout_seconds": 300
+    },
+    {
+      "check_id": "offline-generate",
+      "command": "python pipeline.py 001 --offline --output-root /tmp/ade-pilot-output --overwrite",
+      "timeout_seconds": 300
+    }
+  ]
+}
