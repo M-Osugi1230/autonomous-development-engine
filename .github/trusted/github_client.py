@@ -114,7 +114,7 @@ class GitHubClient:
         path: str,
         payload: dict[str, Any],
         *,
-        sha: str,
+        sha: str | None,
         message: str,
         branch: str = "main",
     ) -> None:
@@ -122,15 +122,39 @@ class GitHubClient:
             payload, indent=2, ensure_ascii=False, sort_keys=True
         ) + "\n"
         encoded = base64.b64encode(content.encode("utf-8")).decode("ascii")
+        request_payload: dict[str, Any] = {
+            "message": message,
+            "content": encoded,
+            "branch": branch,
+        }
+        if sha is not None:
+            request_payload["sha"] = sha
         self._request(
             "PUT",
             f"/repos/{self.repository}/contents/{path}",
-            {
-                "message": message,
-                "content": encoded,
-                "sha": sha,
-                "branch": branch,
-            },
+            request_payload,
+        )
+
+    def upsert_json_file(
+        self,
+        path: str,
+        payload: dict[str, Any],
+        *,
+        message: str,
+        branch: str = "main",
+    ) -> None:
+        sha: str | None = None
+        try:
+            _, sha = self.get_json_file(path, ref=branch)
+        except GitHubError as exc:
+            if "GitHub HTTP 404:" not in str(exc):
+                raise
+        self.put_json_file(
+            path,
+            payload,
+            sha=sha,
+            message=message,
+            branch=branch,
         )
 
     def dispatch(self, event_type: str, payload: dict[str, Any] | None = None) -> None:
