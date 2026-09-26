@@ -44,6 +44,10 @@ Evidence: immutable decision lifecycle models, atomic persistence, a fixed safet
 ## Phase 8 — Mission Control 🚧
 Mobile-first project health, decisions, preview, and activity feed.
 
+Read-only core ✅: safe snapshot aggregation, mobile-first static HTML, deterministic artifact build, read-only GitHub Actions delivery, and end-to-end leakage checks are CI-proven.
+
+Remaining: durable activity feed and safe latest-output / preview metadata before Phase 8 is closed.
+
 ## Phase 9 — Task DAG
 Continue independent work while another task waits for human input.
 
