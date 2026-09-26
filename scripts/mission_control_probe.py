@@ -6,6 +6,9 @@ from pathlib import Path
 from typing import Any
 
 from ade import (
+    ActivityEvent,
+    ActivityKind,
+    ActivityStore,
     CheckpointState,
     CheckpointStore,
     DecisionPriority,
@@ -13,6 +16,9 @@ from ade import (
     DecisionRequest,
     DecisionStore,
     FailureKind,
+    PreviewKind,
+    PreviewManifest,
+    PreviewStore,
     TaskCheckpoint,
     build_mission_control_snapshot,
     render_mission_control,
@@ -22,6 +28,7 @@ from build_mission_control import build_artifacts
 
 SECRET_LIKE_PROVIDER_VALUE = "ghp_123456789012345678901234567890123456"
 RAW_DECISION_CONTEXT = "private-context-must-not-render"
+PREVIEW_URL = "https://github.com/M-Osugi1230/autonomous-development-engine/pull/36"
 
 
 def _write_json(path: Path, payload: Any) -> None:
@@ -112,6 +119,36 @@ def _build_fixture(root: Path) -> None:
         ]
     )
 
+    ActivityStore(autodev / "activity.json").save(
+        [
+            ActivityEvent(
+                event_id="evt-started",
+                kind=ActivityKind.TASK_STARTED,
+                occurred_at="2026-09-26T00:58:00+00:00",
+                summary="Started task 5",
+                task_id="task-5",
+            ),
+            ActivityEvent(
+                event_id="evt-human-wait",
+                kind=ActivityKind.HUMAN_WAIT,
+                occurred_at="2026-09-26T00:59:00+00:00",
+                summary="Waiting for a human decision",
+                task_id="task-5",
+            ),
+        ]
+    )
+
+    PreviewStore(autodev / "preview.json").save(
+        PreviewManifest(
+            preview_id="preview-pr-36",
+            kind=PreviewKind.PULL_REQUEST,
+            title="Review trusted observability PR",
+            url=PREVIEW_URL,
+            task_id="task-5",
+            updated_at="2026-09-26T01:00:00+00:00",
+        )
+    )
+
 
 def run_probe() -> dict[str, Any]:
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -146,6 +183,18 @@ def run_probe() -> dict[str, Any]:
         if decision.question != "Approve the irreversible production migration?":
             raise AssertionError("open decision question mismatch")
 
+        if [event.event_id for event in snapshot.activity] != [
+            "evt-human-wait",
+            "evt-started",
+        ]:
+            raise AssertionError("activity feed ordering mismatch")
+        if snapshot.preview is None:
+            raise AssertionError("latest preview is missing")
+        if snapshot.preview.preview_id != "preview-pr-36":
+            raise AssertionError("latest preview id mismatch")
+        if snapshot.preview.url != PREVIEW_URL:
+            raise AssertionError("latest preview URL mismatch")
+
         expected_warning = "telemetry metrics lag project iteration"
         if expected_warning not in snapshot.warnings:
             raise AssertionError("stale telemetry warning is missing")
@@ -168,9 +217,14 @@ def run_probe() -> dict[str, Any]:
                 raise AssertionError(f"sensitive fixture value leaked: {forbidden}")
 
         lowered = artifact_html.lower()
-        for forbidden in ("<script", "http://", "https://", "@import", " src="):
+        for forbidden in ("<script", "http://", "javascript:", "@import", " src="):
             if forbidden in lowered:
                 raise AssertionError(f"unsafe HTML token found: {forbidden}")
+        if PREVIEW_URL not in artifact_html:
+            raise AssertionError("validated preview URL is missing from HTML")
+        without_preview_url = artifact_html.replace(PREVIEW_URL, "")
+        if "https://" in without_preview_url.lower():
+            raise AssertionError("unexpected HTTPS URL found in HTML")
 
         if reloaded.get("project_id") != "mission-control-probe":
             raise AssertionError("snapshot.json reload project id mismatch")
@@ -179,6 +233,12 @@ def run_probe() -> dict[str, Any]:
         open_decisions = reloaded.get("open_decisions")
         if not isinstance(open_decisions, list) or len(open_decisions) != 1:
             raise AssertionError("snapshot.json open decision mismatch")
+        activity = reloaded.get("activity")
+        if not isinstance(activity, list) or len(activity) != 2:
+            raise AssertionError("snapshot.json activity mismatch")
+        preview = reloaded.get("preview")
+        if not isinstance(preview, dict) or preview.get("preview_id") != "preview-pr-36":
+            raise AssertionError("snapshot.json preview mismatch")
 
         return {
             "ok": True,
@@ -188,6 +248,8 @@ def run_probe() -> dict[str, Any]:
             "queue_depth": snapshot.queue_depth,
             "open_decision_id": decision.decision_id,
             "warning_count": len(snapshot.warnings),
+            "activity_count": len(snapshot.activity),
+            "preview_id": snapshot.preview.preview_id if snapshot.preview is not None else None,
             "artifact_files": sorted([html_path.name, snapshot_path.name]),
         }
 
