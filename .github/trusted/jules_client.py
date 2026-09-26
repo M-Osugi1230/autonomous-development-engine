@@ -20,6 +20,10 @@ class JulesQuota(JulesError):
     pass
 
 
+class JulesPrecondition(JulesError):
+    pass
+
+
 class JulesClient:
     DEFAULT_BASE_URL = "https://jules.googleapis.com/v1alpha"
 
@@ -69,7 +73,9 @@ class JulesClient:
                 raise JulesUnauthorized(message) from exc
             if exc.code == 429:
                 raise JulesQuota(message) from exc
-            raise JulesError(message) from exc
+            if exc.code == 412:
+                raise JulesPrecondition(f"HTTP 412: {message}") from exc
+            raise JulesError(f"HTTP {exc.code}: {message}") from exc
         except URLError as exc:
             raise JulesError(f"network error: {exc.reason}") from exc
 
