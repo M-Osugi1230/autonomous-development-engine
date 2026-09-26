@@ -1,15 +1,4 @@
 {
   "schema_version": 1,
-  "tasks": [
-    {
-      "schema_version": 1,
-      "task_id": "vertical-slice-036",
-      "title": "Prove trusted DAG dispatch path end to end",
-      "prompt": "Add a deterministic trusted-controller probe proving DAG-backed selection dispatches an independent runnable task while another branch is HUMAN_WAIT, preserves FIFO fallback compatibility, and never dispatches blocked descendants. Keep the proof offline.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    }
-  ]
+  "tasks": []
 }
