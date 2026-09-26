@@ -49,6 +49,30 @@ class TrustedJulesClientTests(unittest.TestCase):
         self.assertIn("HTTP 412", str(ctx.exception))
         self.assertIn("Precondition check failed", str(ctx.exception))
 
+    def test_http_400_precondition_maps_to_precondition(self) -> None:
+        module = load_jules_client()
+        client = module.JulesClient(api_key="test-key", base_url="https://example.invalid")
+
+        def failing_urlopen(*args, **kwargs):
+            raise make_http_error(400, "Precondition check failed.")
+
+        module.urlopen = failing_urlopen
+        with self.assertRaises(module.JulesPrecondition) as ctx:
+            client._request("POST", "sessions", payload={"prompt": "x"})
+        self.assertIn("HTTP 400", str(ctx.exception))
+
+    def test_other_http_400_remains_generic_error(self) -> None:
+        module = load_jules_client()
+        client = module.JulesClient(api_key="test-key", base_url="https://example.invalid")
+
+        def failing_urlopen(*args, **kwargs):
+            raise make_http_error(400, "Invalid session ID format")
+
+        module.urlopen = failing_urlopen
+        with self.assertRaises(module.JulesError) as ctx:
+            client._request("GET", "sessions")
+        self.assertNotIsInstance(ctx.exception, module.JulesPrecondition)
+
     def test_http_429_maps_to_quota(self) -> None:
         module = load_jules_client()
         client = module.JulesClient(api_key="test-key", base_url="https://example.invalid")
