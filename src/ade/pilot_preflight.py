@@ -181,9 +181,14 @@ def run_pilot_preflight(
     )
 
     availability = _availability_map(provider_availability)
+    eligible_provider_ids = (
+        contract.provider_policy.allowed_provider_ids
+        if contract.provider_policy.allow_fallback_before_session
+        else contract.provider_policy.preferred_provider_ids
+    )
     available_allowed = [
         provider_id
-        for provider_id in contract.provider_policy.allowed_provider_ids
+        for provider_id in eligible_provider_ids
         if (
             provider_id in availability
             and availability[provider_id].availability is ProviderAvailability.AVAILABLE

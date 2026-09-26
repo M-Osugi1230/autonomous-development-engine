@@ -144,6 +144,87 @@ class PilotPreflightTests(unittest.TestCase):
         )
         self.assertEqual(provider_check.status, PreflightCheckStatus.FAIL)
 
+    def test_disabled_pre_session_fallback_ignores_available_non_preferred_provider(self) -> None:
+        base = contract()
+        strict = PilotContract(
+            pilot_id=base.pilot_id,
+            target=base.target,
+            goal=base.goal,
+            safety=base.safety,
+            provider_policy=PilotProviderPolicy(
+                allowed_provider_ids=("jules", "github-copilot"),
+                preferred_provider_ids=("jules",),
+                allow_fallback_before_session=False,
+            ),
+            acceptance_checks=base.acceptance_checks,
+        )
+        report = run_pilot_preflight(
+            strict,
+            observed_repository="owner/repo",
+            observed_base_branch="main",
+            observed_baseline_sha="a" * 40,
+            provider_availability=(
+                ProviderAvailabilitySnapshot(
+                    provider_id="jules",
+                    availability=ProviderAvailability.QUOTA_PAUSED,
+                    reason="quota",
+                ),
+                ProviderAvailabilitySnapshot(
+                    provider_id="github-copilot",
+                    availability=ProviderAvailability.AVAILABLE,
+                ),
+            ),
+            acceptance_command_readiness={
+                "unit-tests": True,
+                "compile": True,
+            },
+        )
+
+        self.assertFalse(report.passed)
+        provider_check = next(
+            check
+            for check in report.checks
+            if check.kind is PreflightCheckKind.PROVIDER_AVAILABILITY
+        )
+        self.assertEqual(provider_check.status, PreflightCheckStatus.FAIL)
+
+    def test_disabled_pre_session_fallback_accepts_available_preferred_provider(self) -> None:
+        base = contract()
+        strict = PilotContract(
+            pilot_id=base.pilot_id,
+            target=base.target,
+            goal=base.goal,
+            safety=base.safety,
+            provider_policy=PilotProviderPolicy(
+                allowed_provider_ids=("jules", "github-copilot"),
+                preferred_provider_ids=("jules",),
+                allow_fallback_before_session=False,
+            ),
+            acceptance_checks=base.acceptance_checks,
+        )
+        report = run_pilot_preflight(
+            strict,
+            observed_repository="owner/repo",
+            observed_base_branch="main",
+            observed_baseline_sha="a" * 40,
+            provider_availability=(
+                ProviderAvailabilitySnapshot(
+                    provider_id="jules",
+                    availability=ProviderAvailability.AVAILABLE,
+                ),
+                ProviderAvailabilitySnapshot(
+                    provider_id="github-copilot",
+                    availability=ProviderAvailability.AVAILABLE,
+                ),
+            ),
+            acceptance_command_readiness={
+                "unit-tests": True,
+                "compile": True,
+            },
+        )
+
+        self.assertTrue(report.passed)
+
     def test_missing_acceptance_readiness_fails_only_that_check(self) -> None:
         report = run_pilot_preflight(
             contract(),
