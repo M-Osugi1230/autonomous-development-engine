@@ -33,6 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_GITHUB_OWNER: M-Osugi1230
           ADE_GITHUB_REPO: autonomous-development-engine
+          ADE_JULES_DAILY_TASK_LIMIT: "15"
         run: python .github/trusted/jules_resume.py
 
       - name: Upload resume result
