@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "task_id": "vertical-slice-040",
-  "title": "Add provider availability cooldown state",
-  "prompt": "Continue Phase 10 by adding durable provider availability/cooldown models and a small atomic store. Represent quota pause resume_after, temporary backoff, unauthorized state, and healthy availability without credentials or provider session IDs. Add pure evaluation against an injected timezone-aware now and atomic human-readable JSON persistence with tests for due/not-due cooldowns, invalid timestamps, round-trip, and secret rejection.",
+  "task_id": "vertical-slice-041",
+  "title": "Add routed cycle execution",
+  "prompt": "Continue Phase 10 by adding provider-agnostic routed cycle execution that selects an eligible registered provider using the deterministic router, runs the existing cycle/checkpoint machinery, records provider_id in the returned execution metadata, and preserves sticky resume: a checkpoint with an existing provider/session must resume on that same provider rather than silently switching providers. Only a new/replanned task may select another provider. Add focused offline tests for primary success, quota fallback before session creation, sticky resume, unavailable sticky provider producing an explicit wait/replan outcome, and no eligible provider.",
   "starting_branch": "main",
   "auto_create_pr": true,
   "timeout_seconds": 1800,
