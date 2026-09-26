@@ -59,6 +59,7 @@ from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, d
 from .repair_planner import RepairPlan, plan_repair
 from .repair_runtime import RepairExecution, map_repair_execution, run_cycle_with_repair
 from .resume import ResumeAction, ResumeDecision, decide_resume
+from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
 
 __all__ = [
     "AcceptanceReport",
