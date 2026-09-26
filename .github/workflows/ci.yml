@@ -32,3 +32,8 @@ jobs:
 
       - name: Trusted DAG dispatch proof
         run: python .github/trusted/dag_dispatch_probe.py
+
+      - name: Multi-provider routing proof
+        env:
+          PYTHONPATH: src
+        run: python scripts/multi_provider_probe.py
