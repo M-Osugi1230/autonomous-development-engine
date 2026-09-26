@@ -61,7 +61,7 @@
         "vertical-slice-038",
         "vertical-slice-039"
       ],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "decision_id": null
     },
     {
@@ -77,7 +77,7 @@
       "depends_on": [
         "vertical-slice-040"
       ],
-      "status": "PENDING",
+      "status": "RUNNING",
       "decision_id": null
     },
     {
