@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "preview": {
+    "preview_id": "mission-control-run-36209157470",
+    "kind": "ACTION_ARTIFACT",
+    "title": "Open latest Mission Control artifact run",
+    "url": "https://github.com/M-Osugi1230/autonomous-development-engine/actions/runs/36209157470",
+    "task_id": "vertical-slice-026",
+    "updated_at": "2026-09-26T01:39:32+00:00"
+  }
+}
