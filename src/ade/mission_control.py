@@ -4,11 +4,16 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
+from .activity import ActivityEvent
+from .activity_store import ActivityStore
 from .checkpoint import CheckpointState, SECRET_PATTERNS
 from .checkpoint_store import CheckpointStore
 from .decision_store import DecisionStore
 from .decisions import DecisionRecord, DecisionStatus
+from .preview import PreviewManifest, SAFE_PREVIEW_HOSTS
+from .preview_store import PreviewStore
 from .state import StateStore
 
 
@@ -88,6 +93,103 @@ class MissionDecisionSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class MissionActivitySummary:
+    event_id: str
+    kind: str
+    occurred_at: str
+    summary: str
+    task_id: str | None = None
+
+    def __post_init__(self) -> None:
+        for field_name in ("event_id", "kind", "occurred_at", "summary"):
+            value = getattr(self, field_name)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{field_name} must be a non-empty string")
+        if self.task_id is not None and (
+            not isinstance(self.task_id, str) or not self.task_id.strip()
+        ):
+            raise ValueError("task_id must be a non-empty string or None")
+
+    @classmethod
+    def from_event(cls, event: ActivityEvent) -> "MissionActivitySummary":
+        if not isinstance(event, ActivityEvent):
+            raise ValueError("event must be an ActivityEvent")
+        return cls(
+            event_id=_redact_display_text(event.event_id),
+            kind=event.kind.value,
+            occurred_at=event.occurred_at,
+            summary=_redact_display_text(event.summary),
+            task_id=(
+                _redact_display_text(event.task_id)
+                if event.task_id is not None
+                else None
+            ),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "event_id": self.event_id,
+            "kind": self.kind,
+            "occurred_at": self.occurred_at,
+            "summary": self.summary,
+            "task_id": self.task_id,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class MissionPreviewSummary:
+    preview_id: str
+    kind: str
+    title: str
+    url: str
+    task_id: str
+    updated_at: str
+
+    def __post_init__(self) -> None:
+        for field_name in (
+            "preview_id",
+            "kind",
+            "title",
+            "url",
+            "task_id",
+            "updated_at",
+        ):
+            value = getattr(self, field_name)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{field_name} must be a non-empty string")
+        parsed = urlparse(self.url)
+        if parsed.scheme != "https" or parsed.hostname not in SAFE_PREVIEW_HOSTS:
+            raise ValueError("preview url must be an allowed HTTPS URL")
+        if parsed.username is not None or parsed.password is not None:
+            raise ValueError("preview url must not contain credentials")
+        if parsed.query or parsed.fragment:
+            raise ValueError("preview url must not contain query or fragment")
+
+    @classmethod
+    def from_manifest(cls, preview: PreviewManifest) -> "MissionPreviewSummary":
+        if not isinstance(preview, PreviewManifest):
+            raise ValueError("preview must be a PreviewManifest")
+        return cls(
+            preview_id=_redact_display_text(preview.preview_id),
+            kind=preview.kind.value,
+            title=_redact_display_text(preview.title),
+            url=preview.url,
+            task_id=_redact_display_text(preview.task_id),
+            updated_at=preview.updated_at,
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "preview_id": self.preview_id,
+            "kind": self.kind,
+            "title": self.title,
+            "url": self.url,
+            "task_id": self.task_id,
+            "updated_at": self.updated_at,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class MissionCheckpointSummary:
     task_id: str
     state: str
@@ -157,6 +259,8 @@ class MissionControlSnapshot:
     open_decisions: tuple[MissionDecisionSummary, ...]
     telemetry: MissionTelemetrySummary
     warnings: tuple[str, ...]
+    activity: tuple[MissionActivitySummary, ...] = ()
+    preview: MissionPreviewSummary | None = None
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -180,6 +284,14 @@ class MissionControlSnapshot:
             raise ValueError("queue_exhausted must be a bool")
         object.__setattr__(self, "open_decisions", tuple(self.open_decisions))
         object.__setattr__(self, "warnings", tuple(self.warnings))
+        object.__setattr__(self, "activity", tuple(self.activity))
+        for item in self.activity:
+            if not isinstance(item, MissionActivitySummary):
+                raise ValueError("activity must contain MissionActivitySummary values")
+        if self.preview is not None and not isinstance(
+            self.preview, MissionPreviewSummary
+        ):
+            raise ValueError("preview must be a MissionPreviewSummary or None")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -200,6 +312,8 @@ class MissionControlSnapshot:
             "open_decisions": [decision.to_dict() for decision in self.open_decisions],
             "telemetry": self.telemetry.to_dict(),
             "warnings": list(self.warnings),
+            "activity": [event.to_dict() for event in self.activity],
+            "preview": self.preview.to_dict() if self.preview is not None else None,
         }
 
 
@@ -282,6 +396,17 @@ def build_mission_control_snapshot(
         if record.status is DecisionStatus.OPEN
     )
 
+    activity = tuple(
+        MissionActivitySummary.from_event(event)
+        for event in ActivityStore(autodev / "activity.json").recent(20)
+    )
+    preview_manifest = PreviewStore(autodev / "preview.json").load()
+    preview = (
+        MissionPreviewSummary.from_manifest(preview_manifest)
+        if preview_manifest is not None
+        else None
+    )
+
     warnings: list[str] = []
     if telemetry.cycles_completed < state.iteration:
         warnings.append("telemetry metrics lag project iteration")
@@ -332,4 +457,6 @@ def build_mission_control_snapshot(
         open_decisions=open_decisions,
         telemetry=telemetry,
         warnings=tuple(warnings),
+        activity=activity,
+        preview=preview,
     )
