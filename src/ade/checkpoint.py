@@ -35,6 +35,7 @@ class TaskCheckpoint:
     attempt: int
     replan_count: int
     provider_session_id: str | None = None
+    provider_id: str | None = None
     last_failure_kind: FailureKind | None = None
     last_error: str | None = None
     resume_after: str | None = None
@@ -58,6 +59,14 @@ class TaskCheckpoint:
         if self.provider_session_id is not None:
             if not isinstance(self.provider_session_id, str) or not self.provider_session_id.strip():
                 raise ValueError("provider_session_id must be a non-empty string or None")
+
+        if self.provider_id is not None:
+            if not isinstance(self.provider_id, str) or not self.provider_id:
+                raise ValueError("provider_id must be a non-empty string or None")
+            if self.provider_id != self.provider_id.strip():
+                raise ValueError(
+                    "provider_id must not contain leading or trailing whitespace"
+                )
 
         if self.last_failure_kind is not None:
             try:
@@ -125,6 +134,7 @@ class TaskCheckpoint:
             "attempt": self.attempt,
             "replan_count": self.replan_count,
             "provider_session_id": self.provider_session_id,
+            "provider_id": self.provider_id,
             "last_failure_kind": self.last_failure_kind.value if self.last_failure_kind is not None else None,
             "last_error": self.last_error,
             "resume_after": self.resume_after,
@@ -146,6 +156,7 @@ class TaskCheckpoint:
             attempt=payload["attempt"],
             replan_count=payload["replan_count"],
             provider_session_id=payload.get("provider_session_id"),
+            provider_id=payload.get("provider_id"),
             last_failure_kind=payload.get("last_failure_kind"),
             last_error=payload.get("last_error"),
             resume_after=payload.get("resume_after"),
