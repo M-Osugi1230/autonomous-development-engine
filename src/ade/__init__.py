@@ -70,6 +70,13 @@ from .pilot_activation import (
     require_pilot_target_write_activation,
 )
 from .pilot_activation_store import PilotActivationStore
+from .pilot_dry_run import (
+    DryRunCheckStatus,
+    PilotDryRunOperation,
+    PilotDryRunOperationResult,
+    PilotDryRunReport,
+    run_pilot_dry_run,
+)
 from .pilot_preflight import (
     PilotPreflightCheck,
     PilotPreflightReport,
@@ -136,6 +143,7 @@ __all__ = [
     "DecisionResponse",
     "DecisionStatus",
     "DecisionStore",
+    "DryRunCheckStatus",
     "FailureKind",
     "HumanInputRequired",
     "GitHubCopilotProvider",
@@ -157,6 +165,9 @@ __all__ = [
     "PilotPreflightReport",
     "PreflightCheckKind",
     "PreflightCheckStatus",
+    "PilotDryRunOperation",
+    "PilotDryRunOperationResult",
+    "PilotDryRunReport",
     "PilotProviderPolicy",
     "PilotSafetyEnvelope",
     "PilotTarget",
@@ -222,6 +233,7 @@ __all__ = [
     "run_checkpointed_cycle",
     "run_cycle",
     "run_cycle_with_repair",
+    "run_pilot_dry_run",
     "run_pilot_preflight",
     "run_routed_cycle",
     "start_cycle_session",

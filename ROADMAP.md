@@ -51,8 +51,12 @@ Continue independent work while another task waits for human input.
 
 Build order: immutable DAG model -> atomic store + pure runnable scheduler -> validated transitions -> HUMAN_WAIT branch-bypass proof -> trusted controller integration behind FIFO fallback -> trusted dispatch proof.\n\nEvidence: graph invariants, atomic persistence, dependency-safe scheduling, HUMAN_WAIT isolation, trusted-controller integration, FIFO fallback, and the real trusted dispatch path are all CI-proven.
 
-## Phase 10 — Multi-provider Routing
+## Phase 10 — Multi-provider Routing ✅
 Add additional hosted/local providers behind the same interface.
 
 ## Phase 11 — Production Project Pilot
 Run ADE against a real project with explicit acceptance criteria.
+
+Build order: immutable pilot contract -> atomic contract store -> read-only preflight -> contract-bound human activation -> pure dry-run enforcement -> one bounded production PR -> final evidence record.
+
+Current status: the contract, preflight, activation gate, and no-write dry-run safety proof are implemented. The remaining milestone is the first bounded production pilot PR and its final evidence package.

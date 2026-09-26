@@ -107,8 +107,8 @@
 - [x] Provider policy explicitly permits pre-session fallback while requiring sticky provider identity after a session exists.
 - [x] Acceptance checks are deterministic commands with bounded timeouts and unique IDs.
 - [x] A pilot contract can be atomically persisted and loaded without normalization drift.
-- [ ] A read-only preflight proves target repository, base branch, baseline SHA, provider availability, and acceptance-command readiness before any write.
-- [ ] Human activation is persisted when the contract requires it; absence of activation prevents all target writes.
-- [ ] A dry-run probe proves path/action enforcement and produces evidence without modifying the target repository.
+- [x] A read-only preflight proves target repository, base branch, baseline SHA, provider availability, and acceptance-command readiness before any write.
+- [x] Human activation is persisted when the contract requires it; absence of activation prevents all target writes.
+- [x] A dry-run probe proves path/action enforcement and produces evidence without modifying the target repository.
 - [ ] One bounded production pilot creates a reviewable pull request against the selected target and passes every declared acceptance check.
 - [ ] Final pilot evidence records baseline SHA, final head SHA, PR URL, CI evidence, provider identity, and rollback boundary.
