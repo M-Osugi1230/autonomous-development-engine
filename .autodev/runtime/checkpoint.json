@@ -2,9 +2,9 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "9693436653550166948",
+  "provider_session_id": "3414926147375774636",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "vertical-slice-014"
+  "state": "RUNNING",
+  "task_id": "vertical-slice-015"
 }
