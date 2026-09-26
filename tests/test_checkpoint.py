@@ -31,6 +31,29 @@ class TaskCheckpointTests(unittest.TestCase):
         self.assertEqual(restored, ckpt)
         self.assertEqual(restored.to_dict(), expected_dict)
 
+    def test_provider_id_is_backward_compatible_and_round_trips(self):
+        legacy = TaskCheckpoint(
+            task_id="legacy-task",
+            state=CheckpointState.RUNNING,
+            attempt=0,
+            replan_count=0,
+            provider_session_id="legacy-session",
+        )
+        self.assertNotIn("provider_id", legacy.to_dict())
+        self.assertIsNone(TaskCheckpoint.from_dict(legacy.to_dict()).provider_id)
+
+        routed = TaskCheckpoint(
+            task_id="routed-task",
+            state=CheckpointState.RUNNING,
+            attempt=0,
+            replan_count=0,
+            provider_session_id="routed-session",
+            provider_id="jules",
+        )
+        payload = routed.to_dict()
+        self.assertEqual(payload["provider_id"], "jules")
+        self.assertEqual(TaskCheckpoint.from_dict(payload), routed)
+
     def test_quota_pause_state(self):
         ckpt = TaskCheckpoint(
             task_id="task-quota",
