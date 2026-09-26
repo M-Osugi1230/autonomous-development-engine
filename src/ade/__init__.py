@@ -62,6 +62,7 @@ from .resume import ResumeAction, ResumeDecision, decide_resume
 from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
 from .task_graph_store import TaskGraphStore
 from .task_scheduler import next_runnable_task, runnable_tasks
+from .task_graph_transition import resume_task_after_decision, transition_task
 
 __all__ = [
     "AcceptanceReport",
@@ -131,9 +132,11 @@ __all__ = [
     "next_runnable_task",
     "plan_repair",
     "render_mission_control",
+    "resume_task_after_decision",
     "runnable_tasks",
     "run_checkpointed_cycle",
     "run_cycle",
     "run_cycle_with_repair",
     "start_cycle_session",
+    "transition_task",
 ]
