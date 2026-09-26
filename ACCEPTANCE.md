@@ -69,3 +69,17 @@
 - [x] Mission Control includes a durable project activity feed.
 - [x] Mission Control includes safe latest-output / preview metadata for human review.
 - [x] Phase 8 activity + preview behavior is proven end to end under CI.
+
+
+## Phase 9 — Task DAG
+
+- [ ] An immutable task-graph model represents bounded coding tasks and dependency edges.
+- [ ] Graph validation rejects duplicate IDs, missing dependencies, self-dependencies, and cycles.
+- [ ] Task graph state is atomically persisted in a human-readable repository ledger.
+- [ ] Runnable selection is deterministic and selects only tasks whose dependencies are COMPLETED.
+- [ ] HUMAN_WAIT blocks only dependent descendants; independent branches remain runnable.
+- [ ] FAILED nodes block their descendants and are never silently bypassed.
+- [ ] Task state transitions are immutable, explicit, and reject illegal transitions.
+- [ ] An offline end-to-end probe proves independent progress while another branch waits for a human.
+- [ ] Trusted controller DAG selection is introduced behind a FIFO fallback and cannot dispatch blocked tasks.
+- [ ] The trusted DAG dispatch path is proven under CI before FIFO migration is considered complete.
