@@ -43,9 +43,11 @@ from .interrupt_policy import (
     decide_interrupt,
 )
 from .mission_control import (
+    MissionActivitySummary,
     MissionCheckpointSummary,
     MissionControlSnapshot,
     MissionDecisionSummary,
+    MissionPreviewSummary,
     MissionTelemetrySummary,
     build_mission_control_snapshot,
 )
@@ -85,9 +87,11 @@ __all__ = [
     "FailureKind",
     "HumanInputRequired",
     "HumanInterruptCoordinator",
+    "MissionActivitySummary",
     "MissionCheckpointSummary",
     "MissionControlSnapshot",
     "MissionDecisionSummary",
+    "MissionPreviewSummary",
     "MissionTelemetrySummary",
     "PreviewKind",
     "PreviewManifest",
