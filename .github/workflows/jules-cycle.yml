@@ -5,11 +5,6 @@ on:
   repository_dispatch:
     types:
       - ade_next_cycle
-  push:
-    branches:
-      - main
-    paths:
-      - ".autodev/cycle-task.json"
 
 permissions:
   contents: write
