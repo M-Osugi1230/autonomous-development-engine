@@ -3,6 +3,14 @@
 from .acceptance import AcceptanceReport, CheckResult, build_report
 from .checkpoint import CheckpointState, TaskCheckpoint
 from .checkpoint_store import CheckpointStore
+from .checkpoint_transition import (
+    checkpoint_for_completed,
+    checkpoint_for_repair_plan,
+    checkpoint_for_session,
+    checkpoint_from_completed,
+    checkpoint_from_repair_plan,
+    checkpoint_from_session,
+)
 from .cycle import (
     CycleFailed,
     CyclePaused,
@@ -50,6 +58,12 @@ __all__ = [
     "TaskCheckpoint",
     "TaskStatus",
     "build_report",
+    "checkpoint_for_completed",
+    "checkpoint_for_repair_plan",
+    "checkpoint_for_session",
+    "checkpoint_from_completed",
+    "checkpoint_from_repair_plan",
+    "checkpoint_from_session",
     "decide_repair",
     "decide_resume",
     "health_snapshot",
