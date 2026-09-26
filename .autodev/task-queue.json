@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-019",
-      "title": "Add deterministic human interrupt policy",
-      "prompt": "Continue Phase 7 by adding a deterministic autonomy/interrupt policy. Create src/ade/interrupt_policy.py with enums for DecisionKind and InterruptDisposition plus an immutable InterruptPolicy. Cover at minimum destructive_or_irreversible, credential_or_secret, external_side_effect, specification_ambiguity, user_preference, and routine_reversible kinds. The default policy must require HUMAN_WAIT for destructive/irreversible actions, credential/secret access, and externally consequential side effects; routine reversible work must PROCEED; specification ambiguity and user preference must be deterministic and configurable without confidence scores or probabilistic thresholds. Keep the module pure and provider-agnostic. Export its public API from ade.__init__. Add focused standard-library unittest coverage for every kind, policy overrides, invalid configuration, and deterministic repeated decisions. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-020",
       "title": "Add human interrupt coordinator",
       "prompt": "Continue Phase 7 by adding a provider-agnostic HumanInterruptCoordinator in src/ade/human_interrupt.py. It must combine InterruptPolicy and DecisionStore without performing network calls. Given a DecisionKind and DecisionRequest, it should deterministically either PROCEED without creating a record or enqueue exactly one OPEN decision and return HUMAN_WAIT. Provide methods to resolve a queued decision with DecisionResponse and to retrieve a resolved response. Enforce decision_id consistency, preserve idempotency across repeated calls, and never auto-resolve HUMAN_WAIT. Keep destructive/external/credential decisions human-owned. Export the public coordinator API from ade.__init__. Add focused standard-library unittest coverage for proceed path, human-wait path, repeat/idempotent request, resolve/retrieve, conflicting resolution, and policy override behavior. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
