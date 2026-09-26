@@ -1,10 +1,10 @@
 {
   "attempt": 0,
-  "last_error": "Precondition check failed.",
-  "last_failure_kind": "PROVIDER_ERROR",
+  "last_error": null,
+  "last_failure_kind": null,
   "provider_session_id": null,
   "replan_count": 0,
   "resume_after": null,
-  "state": "FAILED",
+  "state": "COMPLETED",
   "task_id": "vertical-slice-016"
 }
