@@ -34,6 +34,49 @@ def _parse_due(value: object) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
+def decide_checkpoint_action(
+    checkpoint: dict[str, Any],
+    *,
+    now: datetime,
+) -> tuple[str, str | None]:
+    if not isinstance(checkpoint, dict):
+        raise ValueError("checkpoint must be a JSON object")
+    if not isinstance(now, datetime):
+        raise ValueError("now must be a datetime")
+    if now.tzinfo is None or now.utcoffset() is None:
+        raise ValueError("now must be timezone-aware")
+
+    state = checkpoint.get("state")
+    if not isinstance(state, str):
+        raise ValueError("checkpoint state must be a string")
+
+    session_id = checkpoint.get("provider_session_id")
+    if session_id is not None and (
+        not isinstance(session_id, str) or not session_id.strip()
+    ):
+        raise ValueError("provider_session_id must be a non-empty string or null")
+
+    if state in {"COMPLETED", "FAILED", "HUMAN_WAIT", "REPLAN"}:
+        return "NOOP", session_id
+
+    if state == "RUNNING":
+        if not session_id:
+            raise ValueError("RUNNING checkpoint requires provider_session_id")
+        return "MONITOR", session_id
+
+    if state == "PAUSED_QUOTA":
+        due = _parse_due(checkpoint.get("resume_after"))
+        if due is None:
+            return "WAIT", session_id
+        if now.astimezone(UTC) < due:
+            return "WAIT", session_id
+        if session_id:
+            return "MONITOR", session_id
+        return "START_NEW", None
+
+    raise ValueError(f"unsupported checkpoint state: {state}")
+
+
 def main() -> int:
     owner = os.environ.get("ADE_GITHUB_OWNER", "M-Osugi1230")
     repo = os.environ.get("ADE_GITHUB_REPO", "autonomous-development-engine")
@@ -53,25 +96,26 @@ def main() -> int:
             )
             return 0
 
-        state = checkpoint.get("state")
-        if not isinstance(state, str):
-            raise ValueError("checkpoint state must be a string")
+        now = datetime.now(UTC)
+        action, session_id = decide_checkpoint_action(checkpoint, now=now)
 
-        if state in {"COMPLETED", "FAILED", "HUMAN_WAIT", "REPLAN"}:
-            print(f"NOOP: checkpoint state {state} is not auto-resumable")
+        if action == "NOOP":
+            print(f"NOOP: checkpoint state {checkpoint.get('state')} is not auto-resumable")
+            return 0
+
+        if action == "WAIT":
+            due = _parse_due(checkpoint.get("resume_after"))
+            if due is None:
+                print("WAIT: quota checkpoint has no resume_after")
+            else:
+                print(f"WAIT: quota resume is due at {due.isoformat()}")
             return 0
 
         client = JulesClient()
         gh = GitHubClient()
-        session_id = checkpoint.get("provider_session_id")
-        if session_id is not None and (
-            not isinstance(session_id, str) or not session_id.strip()
-        ):
-            raise ValueError("provider_session_id must be a non-empty string or null")
 
-        if state == "RUNNING":
-            if not session_id:
-                raise ValueError("RUNNING checkpoint requires provider_session_id")
+        if action == "MONITOR":
+            assert session_id is not None
             print(f"RESUME: monitoring existing Jules session {session_id}")
             return monitor_existing(
                 client,
@@ -80,23 +124,7 @@ def main() -> int:
                 session_id=session_id,
             )
 
-        if state == "PAUSED_QUOTA":
-            due = _parse_due(checkpoint.get("resume_after"))
-            if due is None:
-                print("WAIT: quota checkpoint has no resume_after")
-                return 0
-            now = datetime.now(UTC)
-            if now < due:
-                print(f"WAIT: quota resume is due at {due.isoformat()}")
-                return 0
-            if session_id:
-                print(f"RESUME: quota window elapsed; monitoring session {session_id}")
-                return monitor_existing(
-                    client,
-                    gh,
-                    task=task,
-                    session_id=session_id,
-                )
+        if action == "START_NEW":
             print("RESUME: quota window elapsed; starting a new Jules session")
             return run_new_cycle(
                 task=task,
@@ -106,13 +134,14 @@ def main() -> int:
                 repo=repo,
             )
 
-        raise ValueError(f"unsupported checkpoint state: {state}")
+        raise RuntimeError(f"unhandled resume action: {action}")
 
     except (
         JulesUnauthorized,
         JulesError,
         GitHubError,
         ValueError,
+        RuntimeError,
         OSError,
         json.JSONDecodeError,
     ) as exc:
