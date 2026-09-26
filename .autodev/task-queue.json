@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-032",
-      "title": "Add atomic task graph store and runnable scheduler",
-      "prompt": "Continue Phase 9 with atomic TaskGraph persistence and a pure deterministic scheduler that selects only PENDING tasks whose dependencies are COMPLETED. HUMAN_WAIT and FAILED nodes must block only their descendants, not independent branches. Preserve graph order as the deterministic tie-breaker. Add focused standard-library tests.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-033",
       "title": "Add validated task graph transitions",
       "prompt": "Add pure immutable task graph transitions for PENDING -> RUNNING -> COMPLETED/FAILED and RUNNING -> HUMAN_WAIT, plus HUMAN_WAIT -> PENDING only after explicit human resolution. Reject illegal transitions and dependency violations. Add deterministic tests.",
