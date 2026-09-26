@@ -93,7 +93,7 @@
 - [x] Quota-paused or temporarily unavailable providers can be skipped before session creation.
 - [x] Unauthorized or disabled providers are never selected automatically.
 - [x] Provider availability/cooldown state is durable, explicit, and evaluated against injected time.
-- [ ] Existing provider sessions are sticky across crash/resume and are never silently migrated.
-- [ ] Routed execution returns explicit no-provider/wait/replan outcomes instead of opaque failure.
-- [ ] A deterministic two-provider failover/resume probe passes under CI.
-- [ ] At least one additional concrete provider adapter is available behind the common interface before Phase 10 is closed.
+- [x] Existing provider sessions are sticky across crash/resume and are never silently migrated.
+- [x] Routed execution returns explicit no-provider/wait/replan outcomes instead of opaque failure.
+- [x] A deterministic two-provider failover/resume probe passes under CI.
+- [x] At least one additional concrete provider adapter is available behind the common interface before Phase 10 is closed.
