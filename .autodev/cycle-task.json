@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "task_id": "vertical-slice-038",
-  "title": "Add deterministic provider registry",
-  "prompt": "Continue Phase 10 by adding src/ade/provider_registry.py. Implement an immutable/provider-agnostic ProviderRegistry that registers ProviderDescriptor plus an already-constructed CodingAgentProvider instance, rejects duplicate provider IDs, exposes descriptors without secrets, and returns deterministic candidates filtered by enabled state and RoutingRequest requirements. The registry must never construct providers or read credentials. Add tests for duplicate IDs, disabled providers, required capabilities, allow-list filtering, preference order, deterministic fallback order, and no mutation. Export from ade.__init__. No dependencies.",
+  "task_id": "vertical-slice-039",
+  "title": "Add deterministic provider routing policy",
+  "prompt": "Continue Phase 10 by adding a pure routing policy in src/ade/provider_router.py. Given a ProviderRegistry, RoutingRequest, and explicit availability snapshots, choose the first eligible provider deterministically. Availability must distinguish AVAILABLE, QUOTA_PAUSED, TEMPORARILY_UNAVAILABLE, UNAUTHORIZED, and DISABLED. Never route to unauthorized or disabled providers. Quota/temporary states may be skipped for another eligible provider. If no provider is eligible return an explicit immutable decision rather than raising an opaque error. Add tests for preferred provider, quota fallback, temporary fallback, unauthorized exclusion, no candidate, and deterministic repeated selection. Export public API.",
   "starting_branch": "main",
   "auto_create_pr": true,
   "timeout_seconds": 1800,
