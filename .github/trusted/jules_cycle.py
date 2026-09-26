@@ -20,6 +20,7 @@ from jules_client import (
 TASK_PATH = Path(".autodev/cycle-task.json")
 RESULT_PATH = Path(".autodev/runtime/jules-session.json")
 CHECKPOINT_PATH = ".autodev/runtime/checkpoint.json"
+STATE_PATH = ".autodev/state.json"
 QUOTA_RETRY_DELAY = timedelta(hours=1)
 
 
@@ -66,6 +67,39 @@ def _persist_checkpoint(gh: GitHubClient, payload: dict[str, Any]) -> None:
         CHECKPOINT_PATH,
         payload,
         message=f"checkpoint: {payload['task_id']} {payload['state']}",
+    )
+
+
+def _set_project_status(
+    gh: GitHubClient,
+    *,
+    task_id: str,
+    status: str,
+    metadata_updates: dict[str, Any] | None = None,
+    clear_pause_metadata: bool = False,
+) -> None:
+    state, state_sha = gh.get_json_file(STATE_PATH)
+    current_task_id = state.get("current_task_id")
+    if current_task_id != task_id:
+        raise RuntimeError(
+            f"project state current_task_id {current_task_id!r} does not match {task_id!r}"
+        )
+
+    state["status"] = status
+    state["updated_at"] = datetime.now(UTC).isoformat()
+    metadata = dict(state.get("metadata", {}))
+    if clear_pause_metadata:
+        metadata.pop("pause_reason", None)
+        metadata.pop("resume_after", None)
+    if metadata_updates:
+        metadata.update(metadata_updates)
+    state["metadata"] = metadata
+
+    gh.put_json_file(
+        STATE_PATH,
+        state,
+        sha=state_sha,
+        message=f"state: {task_id} {status.lower()}",
     )
 
 
@@ -163,6 +197,15 @@ def _quota_pause(
         resume_after=resume_after,
     )
     _persist_checkpoint(gh, payload)
+    _set_project_status(
+        gh,
+        task_id=task_id,
+        status="PAUSED_QUOTA",
+        metadata_updates={
+            "pause_reason": "jules-rolling-quota",
+            "resume_after": resume_after,
+        },
+    )
     _write_result({**payload, "state": "PAUSED_QUOTA"})
     print(f"Jules quota exhausted; resume after {resume_after}", file=sys.stderr)
     return 20
@@ -209,6 +252,12 @@ def _handle_precondition(
         last_error=error,
     )
     _persist_checkpoint(gh, checkpoint)
+    _set_project_status(
+        gh,
+        task_id=task_id,
+        status="BLOCKED",
+        metadata_updates={"pause_reason": "provider-precondition"},
+    )
     _write_result({"task_id": task_id, "state": "REPLAN", "error": error})
     print(f"Jules precondition requires replan: {error}", file=sys.stderr)
     return 22
@@ -223,6 +272,12 @@ def monitor_existing(
     session_url: str | None = None,
 ) -> int:
     task_id = str(task["task_id"])
+    _set_project_status(
+        gh,
+        task_id=task_id,
+        status="RUNNING",
+        clear_pause_metadata=True,
+    )
     timeout_seconds = int(task.get("timeout_seconds", 1800))
     poll_interval_seconds = int(task.get("poll_interval_seconds", 15))
     if timeout_seconds < 60:
@@ -264,6 +319,12 @@ def monitor_existing(
                     last_error=error,
                 )
                 _persist_checkpoint(gh, checkpoint)
+                _set_project_status(
+                    gh,
+                    task_id=task_id,
+                    status="FAILED",
+                    metadata_updates={"pause_reason": "provider-cycle-failed"},
+                )
                 _write_result(checkpoint)
                 print(error, file=sys.stderr)
                 return 1
@@ -277,6 +338,12 @@ def monitor_existing(
                     last_error="Jules session requires human input",
                 )
                 _persist_checkpoint(gh, checkpoint)
+                _set_project_status(
+                    gh,
+                    task_id=task_id,
+                    status="HUMAN_WAIT",
+                    metadata_updates={"pause_reason": "human-input-required"},
+                )
                 _write_result(checkpoint)
                 print(f"Jules session requires human input: {session_id}", file=sys.stderr)
                 return 21
@@ -290,6 +357,12 @@ def monitor_existing(
                     last_error="Jules session entered PAUSED state",
                 )
                 _persist_checkpoint(gh, checkpoint)
+                _set_project_status(
+                    gh,
+                    task_id=task_id,
+                    status="BLOCKED",
+                    metadata_updates={"pause_reason": "provider-replan"},
+                )
                 _write_result(checkpoint)
                 print(f"Jules session paused: {session_id}", file=sys.stderr)
                 return 22
