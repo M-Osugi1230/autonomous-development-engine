@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from html import escape
+from string import Template
 
 from .mission_control import MissionControlSnapshot
 
@@ -82,9 +83,7 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
 
     telemetry = snapshot.telemetry
     completed_total = snapshot.completed_tasks + snapshot.failed_tasks
-    status_label = _text(snapshot.project_status)
-
-    return """<!doctype html>
+    template = Template("""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -168,12 +167,12 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
   <header>
     <div class="eyebrow">Autonomous Development Engine</div>
     <h1>Mission Control</h1>
-    <p class="subtitle">{project_id}</p>
+    <p class="subtitle">$project_id</p>
     <div class="status-row" aria-label="Project summary">
-      <div class="card stat"><strong>{status}</strong><span>Status</span></div>
-      <div class="card stat"><strong>{iteration}</strong><span>Iteration</span></div>
-      <div class="card stat"><strong>{completed}</strong><span>Completed tasks</span></div>
-      <div class="card stat"><strong>{queue_depth}</strong><span>Queued tasks</span></div>
+      <div class="card stat"><strong>$status</strong><span>Status</span></div>
+      <div class="card stat"><strong>$iteration</strong><span>Iteration</span></div>
+      <div class="card stat"><strong>$completed</strong><span>Completed tasks</span></div>
+      <div class="card stat"><strong>$queue_depth</strong><span>Queued tasks</span></div>
     </div>
   </header>
 
@@ -181,53 +180,54 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
     <section class="card" aria-labelledby="project-heading">
       <h2 id="project-heading">Project</h2>
       <dl class="detail-grid">
-        <div><dt>Phase</dt><dd>{phase}</dd></div>
-        <div><dt>Milestone</dt><dd>{milestone}</dd></div>
-        <div><dt>Current task</dt><dd>{current_task}</dd></div>
-        <div><dt>State updated</dt><dd>{state_updated}</dd></div>
-        <div><dt>Queue exhausted</dt><dd>{queue_exhausted}</dd></div>
-        <div><dt>Failed tasks</dt><dd>{failed}</dd></div>
+        <div><dt>Phase</dt><dd>$phase</dd></div>
+        <div><dt>Milestone</dt><dd>$milestone</dd></div>
+        <div><dt>Current task</dt><dd>$current_task</dd></div>
+        <div><dt>State updated</dt><dd>$state_updated</dd></div>
+        <div><dt>Queue exhausted</dt><dd>$queue_exhausted</dd></div>
+        <div><dt>Failed tasks</dt><dd>$failed</dd></div>
       </dl>
     </section>
 
     <section class="card" aria-labelledby="checkpoint-heading">
       <h2 id="checkpoint-heading">Checkpoint</h2>
-      {checkpoint}
+      $checkpoint
     </section>
 
     <section class="card" aria-labelledby="telemetry-heading">
       <h2 id="telemetry-heading">Telemetry</h2>
       <dl class="detail-grid">
-        <div><dt>Cycles started</dt><dd>{cycles_started}</dd></div>
-        <div><dt>Cycles completed</dt><dd>{cycles_completed}</dd></div>
-        <div><dt>Repair attempts</dt><dd>{repair_attempts}</dd></div>
-        <div><dt>Human interrupts</dt><dd>{human_interrupts}</dd></div>
-        <div><dt>Quota pauses</dt><dd>{quota_pauses}</dd></div>
-        <div><dt>Failure ledger</dt><dd>{failure_ledger}</dd></div>
+        <div><dt>Cycles started</dt><dd>$cycles_started</dd></div>
+        <div><dt>Cycles completed</dt><dd>$cycles_completed</dd></div>
+        <div><dt>Repair attempts</dt><dd>$repair_attempts</dd></div>
+        <div><dt>Human interrupts</dt><dd>$human_interrupts</dd></div>
+        <div><dt>Quota pauses</dt><dd>$quota_pauses</dd></div>
+        <div><dt>Failure ledger</dt><dd>$failure_ledger</dd></div>
       </dl>
     </section>
 
     <section class="card" aria-labelledby="warnings-heading">
       <h2 id="warnings-heading">Warnings</h2>
-      {warnings}
+      $warnings
     </section>
 
     <section class="wide" aria-labelledby="decisions-heading">
       <h2 id="decisions-heading">Open human decisions</h2>
       <div class="decision-list">
-        {decisions}
+        $decisions
       </div>
     </section>
   </main>
 
   <footer>
-    Read-only snapshot · {completed_total} terminal task outcomes recorded
+    Read-only snapshot · $completed_total terminal task outcomes recorded
   </footer>
 </body>
 </html>
-""".format(
+""")
+    return template.substitute(
         project_id=_text(snapshot.project_id),
-        status=status_label,
+        status=_text(snapshot.project_status),
         iteration=_text(snapshot.iteration),
         completed=_text(snapshot.completed_tasks),
         queue_depth=_text(snapshot.queue_depth),
