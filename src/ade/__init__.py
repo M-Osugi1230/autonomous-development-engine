@@ -55,6 +55,7 @@ from .mission_control_html import render_mission_control
 from .models import ProjectState, ProjectStatus, TaskStatus
 from .preview import PreviewKind, PreviewManifest
 from .preview_store import PreviewStore
+from .provider_registry import ProviderRegistration, ProviderRegistry
 from .provider_routing import (
     ProviderCapability,
     ProviderCostClass,
@@ -110,6 +111,8 @@ __all__ = [
     "ProviderCapability",
     "ProviderCostClass",
     "ProviderDescriptor",
+    "ProviderRegistration",
+    "ProviderRegistry",
     "RoutingRequest",
     "ProjectState",
     "ProjectStatus",
