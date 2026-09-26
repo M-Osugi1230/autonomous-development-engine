@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "task_id": "vertical-slice-017",
-  "title": "Add human decision lifecycle models",
-  "prompt": "Start Phase 7 by extending ADE's human-decision domain model while preserving existing DecisionRequest compatibility. In src/ade/decisions.py add deterministic serialization/deserialization for DecisionRequest and add immutable validated DecisionStatus (OPEN, RESOLVED, CANCELLED), DecisionResponse, and DecisionRecord types. A DecisionResponse must support human free-text while optionally carrying a selected_option; if selected_option is provided it must belong to the request's options when the record is resolved. A DecisionRecord must contain the request, status, and optional response with strict consistency rules: OPEN has no response, RESOLVED requires a matching response, CANCELLED has no response. Add to_dict/from_dict round-tripping with no timestamps generated internally, no secrets, and no mutation of caller dictionaries. Export the new public types from ade.__init__. Add focused standard-library unittest coverage for backward-compatible DecisionRequest construction, round-trip serialization, free-text response, selected-option validation, open/resolved/cancelled consistency, mismatched decision IDs, and invalid payloads. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
+  "task_id": "vertical-slice-036",
+  "title": "Prove trusted DAG dispatch path end to end",
+  "prompt": "Add a deterministic trusted-controller probe proving DAG-backed selection dispatches an independent runnable task while another branch is HUMAN_WAIT, preserves FIFO fallback compatibility, and never dispatches blocked descendants. Keep the proof offline.",
   "starting_branch": "main",
   "auto_create_pr": true,
   "timeout_seconds": 1800,
