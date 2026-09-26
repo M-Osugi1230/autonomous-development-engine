@@ -21,6 +21,7 @@ class TaskCheckpointTests(unittest.TestCase):
             "attempt": 1,
             "replan_count": 0,
             "provider_session_id": "session-xyz",
+            "provider_id": None,
             "last_failure_kind": "CYCLE_TIMEOUT",
             "last_error": "Cycle timed out after 300s",
             "resume_after": None,
