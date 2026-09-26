@@ -1,4 +1,55 @@
 {
   "schema_version": 1,
-  "tasks": []
+  "tasks": [
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-032",
+      "title": "Add atomic task graph store and runnable scheduler",
+      "prompt": "Continue Phase 9 with atomic TaskGraph persistence and a pure deterministic scheduler that selects only PENDING tasks whose dependencies are COMPLETED. HUMAN_WAIT and FAILED nodes must block only their descendants, not independent branches. Preserve graph order as the deterministic tie-breaker. Add focused standard-library tests.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-033",
+      "title": "Add validated task graph transitions",
+      "prompt": "Add pure immutable task graph transitions for PENDING -> RUNNING -> COMPLETED/FAILED and RUNNING -> HUMAN_WAIT, plus HUMAN_WAIT -> PENDING only after explicit human resolution. Reject illegal transitions and dependency violations. Add deterministic tests.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-034",
+      "title": "Prove independent branch progress during HUMAN_WAIT",
+      "prompt": "Add an offline Phase 9 DAG probe proving one branch can enter HUMAN_WAIT while an independent branch remains runnable and completes; descendants of the waiting branch remain blocked; after explicit resolution and completion the dependent node becomes runnable. No network calls or dependencies.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-035",
+      "title": "Integrate DAG selection into trusted controller behind fallback",
+      "prompt": "Integrate the proven TaskGraph scheduler into the trusted controller without removing the existing FIFO queue fallback. The trusted path must never dispatch a task with incomplete dependencies and must keep HUMAN_WAIT branches isolated. Add security and regression tests before enabling any DAG-backed dispatch.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    },
+    {
+      "schema_version": 1,
+      "task_id": "vertical-slice-036",
+      "title": "Prove trusted DAG dispatch path end to end",
+      "prompt": "Add a deterministic trusted-controller probe proving DAG-backed selection dispatches an independent runnable task while another branch is HUMAN_WAIT, preserves FIFO fallback compatibility, and never dispatches blocked descendants. Keep the proof offline.",
+      "starting_branch": "main",
+      "auto_create_pr": true,
+      "timeout_seconds": 1800,
+      "poll_interval_seconds": 15
+    }
+  ]
 }
