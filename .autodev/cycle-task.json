@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "task_id": "vertical-slice-036",
-  "title": "Prove trusted DAG dispatch path end to end",
-  "prompt": "Add a deterministic trusted-controller probe proving DAG-backed selection dispatches an independent runnable task while another branch is HUMAN_WAIT, preserves FIFO fallback compatibility, and never dispatches blocked descendants. Keep the proof offline.",
+  "task_id": "vertical-slice-037",
+  "title": "Add provider capability and descriptor models",
+  "prompt": "Start Phase 10 by adding provider-agnostic immutable models for provider identity and capabilities. Create src/ade/provider_routing.py with ProviderCapability values for at least GITHUB_SOURCE, AUTO_CREATE_PR, PLAN_APPROVAL, INTERACTIVE_MESSAGE, RESUME_SESSION, HOSTED_EXECUTION, and LOCAL_EXECUTION; a validated ProviderDescriptor containing provider_id, display_name, capabilities, priority, enabled, and optional cost_class; and a RoutingRequest containing required_capabilities plus optional allowed_provider_ids and preferred_provider_ids. Serialization must be deterministic and secret-free. Do not instantiate providers or read environment variables in these models. Export the public API from ade.__init__. Add focused stdlib tests for round-trip, capability normalization, duplicate/invalid capability rejection, stable provider IDs, preference validation, immutable caller inputs, and deterministic ordering. Do not add dependencies. Run PYTHONPATH=src python -m unittest discover -s tests -v.",
   "starting_branch": "main",
   "auto_create_pr": true,
   "timeout_seconds": 1800,
