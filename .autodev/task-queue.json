@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-041",
-      "title": "Add routed cycle execution",
-      "prompt": "Continue Phase 10 by adding provider-agnostic routed cycle execution that selects an eligible registered provider using the deterministic router, runs the existing cycle/checkpoint machinery, records provider_id in the returned execution metadata, and preserves sticky resume: a checkpoint with an existing provider/session must resume on that same provider rather than silently switching providers. Only a new/replanned task may select another provider. Add focused offline tests for primary success, quota fallback before session creation, sticky resume, unavailable sticky provider producing an explicit wait/replan outcome, and no eligible provider.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-042",
       "title": "Prove multi-provider failover under CI",
       "prompt": "Finish the Phase 10 routing core with an offline deterministic probe using two fake CodingAgentProvider implementations. Prove preferred-provider selection, quota-before-session fallback to a second provider, no failover after a provider session has been created, sticky crash resume to the original provider, and explicit no-provider outcome. Print compact JSON and run it explicitly in CI. Do not add real credentials or external network calls.",
