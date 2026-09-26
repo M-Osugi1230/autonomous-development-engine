@@ -33,6 +33,7 @@ from .decisions import (
     DecisionStatus,
 )
 from .health import health_snapshot
+from .human_interrupt import HumanInterruptCoordinator
 from .interrupt_policy import (
     DecisionKind,
     InterruptDisposition,
@@ -68,6 +69,7 @@ __all__ = [
     "DecisionStore",
     "FailureKind",
     "HumanInputRequired",
+    "HumanInterruptCoordinator",
     "ProjectState",
     "ProjectStatus",
     "RepairDisposition",
