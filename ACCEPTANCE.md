@@ -41,4 +41,4 @@
 - [x] An existing provider session can be monitored after process restart without creating a duplicate session.
 - [x] Runtime lifecycle transitions persist RUNNING and terminal/resumable checkpoint states.
 - [x] A crash/restart continuation path is proven end-to-end under CI.
-- [ ] A due quota-paused checkpoint can trigger a later cloud resume without a local machine.
+- [x] A due quota-paused checkpoint can trigger a later cloud resume without a local machine.
