@@ -24,7 +24,13 @@ from .cycle import (
     run_cycle,
     start_cycle_session,
 )
-from .decisions import DecisionPriority, DecisionRequest
+from .decisions import (
+    DecisionPriority,
+    DecisionRecord,
+    DecisionRequest,
+    DecisionResponse,
+    DecisionStatus,
+)
 from .health import health_snapshot
 from .models import ProjectState, ProjectStatus, TaskStatus
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
@@ -45,7 +51,10 @@ __all__ = [
     "CycleTask",
     "CycleTimedOut",
     "DecisionPriority",
+    "DecisionRecord",
     "DecisionRequest",
+    "DecisionResponse",
+    "DecisionStatus",
     "FailureKind",
     "HumanInputRequired",
     "ProjectState",
