@@ -24,6 +24,7 @@ from .cycle import (
     run_cycle,
     start_cycle_session,
 )
+from .decision_store import DecisionStore
 from .decisions import (
     DecisionPriority,
     DecisionRecord,
@@ -55,6 +56,7 @@ __all__ = [
     "DecisionRequest",
     "DecisionResponse",
     "DecisionStatus",
+    "DecisionStore",
     "FailureKind",
     "HumanInputRequired",
     "ProjectState",
