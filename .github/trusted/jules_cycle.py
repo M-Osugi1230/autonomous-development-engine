@@ -9,7 +9,13 @@ from pathlib import Path
 from typing import Any
 
 from github_client import GitHubClient, GitHubError
-from jules_client import JulesClient, JulesError, JulesQuota, JulesUnauthorized
+from jules_client import (
+    JulesClient,
+    JulesError,
+    JulesPrecondition,
+    JulesQuota,
+    JulesUnauthorized,
+)
 
 TASK_PATH = Path(".autodev/cycle-task.json")
 RESULT_PATH = Path(".autodev/runtime/jules-session.json")
@@ -283,6 +289,24 @@ def main() -> int:
             print("Jules quota exhausted before GitHub checkpoint client initialized", file=sys.stderr)
             return 20
         return _quota_pause(gh, task_id=task_id, session_id=session_id, exc=exc)
+    except JulesPrecondition as exc:
+        error = _safe_error(exc)
+        try:
+            gh
+        except UnboundLocalError:
+            gh = None
+        if gh is not None and task_id != "unknown":
+            checkpoint = _checkpoint(
+                task_id,
+                "REPLAN",
+                session_id=session_id,
+                last_failure_kind="PROVIDER_ERROR",
+                last_error=error,
+            )
+            _persist_checkpoint(gh, checkpoint)
+        _write_result({"task_id": task_id, "state": "REPLAN", "error": error})
+        print(f"Jules precondition requires replan: {error}", file=sys.stderr)
+        return 22
     except (
         JulesUnauthorized,
         JulesError,
