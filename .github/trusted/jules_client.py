@@ -73,8 +73,10 @@ class JulesClient:
                 raise JulesUnauthorized(message) from exc
             if exc.code == 429:
                 raise JulesQuota(message) from exc
-            if exc.code == 412:
-                raise JulesPrecondition(f"HTTP 412: {message}") from exc
+            if exc.code == 412 or (
+                exc.code == 400 and message.strip().lower() == "precondition check failed."
+            ):
+                raise JulesPrecondition(f"HTTP {exc.code}: {message}") from exc
             raise JulesError(f"HTTP {exc.code}: {message}") from exc
         except URLError as exc:
             raise JulesError(f"network error: {exc.reason}") from exc
@@ -112,6 +114,38 @@ class JulesClient:
         if not isinstance(sources, list):
             raise JulesError("sources response has invalid shape")
         return [item for item in sources if isinstance(item, dict)]
+
+    def list_sessions(
+        self,
+        *,
+        page_size: int = 100,
+        max_pages: int = 10,
+    ) -> list[dict[str, Any]]:
+        if type(page_size) is not int or not 1 <= page_size <= 100:
+            raise ValueError("page_size must be an integer between 1 and 100")
+        if type(max_pages) is not int or max_pages < 1:
+            raise ValueError("max_pages must be a positive integer")
+
+        sessions: list[dict[str, Any]] = []
+        page_token: str | None = None
+        for _ in range(max_pages):
+            query: dict[str, str | int] = {"pageSize": page_size}
+            if page_token:
+                query["pageToken"] = page_token
+            payload = self._request("GET", "sessions", query=query)
+            page = payload.get("sessions", [])
+            if not isinstance(page, list):
+                raise JulesError("sessions response has invalid shape")
+            sessions.extend(item for item in page if isinstance(item, dict))
+
+            token = payload.get("nextPageToken")
+            if token is None or token == "":
+                return sessions
+            if not isinstance(token, str):
+                raise JulesError("sessions nextPageToken has invalid shape")
+            page_token = token
+
+        raise JulesError("sessions pagination exceeded max_pages")
 
     def find_github_source(self, owner: str, repo: str) -> dict[str, Any] | None:
         for source in self.list_sources():
