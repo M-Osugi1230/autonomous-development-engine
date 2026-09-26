@@ -82,4 +82,18 @@
 - [x] Task state transitions are immutable, explicit, and reject illegal transitions.
 - [x] An offline end-to-end probe proves independent progress while another branch waits for a human.
 - [x] Trusted controller DAG selection is introduced behind a FIFO fallback and cannot dispatch blocked tasks.
-- [ ] The trusted DAG dispatch path is proven under CI before FIFO migration is considered complete.
+- [x] The trusted DAG dispatch path is proven under CI before FIFO migration is considered complete.
+
+
+## Phase 10 — Multi-provider Routing
+
+- [ ] Provider identity and capabilities are immutable, validated, and provider-agnostic.
+- [ ] A registry holds configured provider instances without constructing them or reading credentials.
+- [ ] Routing filters required capabilities and chooses candidates deterministically.
+- [ ] Quota-paused or temporarily unavailable providers can be skipped before session creation.
+- [ ] Unauthorized or disabled providers are never selected automatically.
+- [ ] Provider availability/cooldown state is durable, explicit, and evaluated against injected time.
+- [ ] Existing provider sessions are sticky across crash/resume and are never silently migrated.
+- [ ] Routed execution returns explicit no-provider/wait/replan outcomes instead of opaque failure.
+- [ ] A deterministic two-provider failover/resume probe passes under CI.
+- [ ] At least one additional concrete provider adapter is available behind the common interface before Phase 10 is closed.
