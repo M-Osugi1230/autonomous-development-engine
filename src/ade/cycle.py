@@ -67,6 +67,44 @@ class CycleTask:
 
 
 @dataclass(frozen=True, slots=True)
+class CycleSession:
+    task_id: str
+    session_id: str
+    session_url: str | None = None
+
+    def __post_init__(self) -> None:
+        self.validate()
+
+    def validate(self) -> None:
+        if not isinstance(self.task_id, str) or not self.task_id.strip():
+            raise ValueError("task_id must not be empty")
+        if not isinstance(self.session_id, str) or not self.session_id.strip():
+            raise ValueError("session_id must not be empty")
+        if self.session_url is not None:
+            if not isinstance(self.session_url, str) or not self.session_url.strip():
+                raise ValueError("session_url must be a non-empty string or None")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "task_id": self.task_id,
+            "session_id": self.session_id,
+            "session_url": self.session_url,
+        }
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> "CycleSession":
+        if not isinstance(payload, dict):
+            raise ValueError("payload must be a dictionary")
+        if "task_id" not in payload or "session_id" not in payload:
+            raise ValueError("payload missing required keys task_id or session_id")
+        return cls(
+            task_id=str(payload["task_id"]),
+            session_id=str(payload["session_id"]),
+            session_url=payload.get("session_url"),
+        )
+
+
+@dataclass(frozen=True, slots=True)
 class CycleResult:
     task_id: str
     session_id: str
@@ -103,15 +141,15 @@ def _pull_request_url(session: dict[str, Any]) -> str | None:
     return None
 
 
-def run_cycle(
+def start_cycle_session(
     provider: CodingAgentProvider,
     *,
     task: CycleTask,
     source_name: str,
-    sleeper: Callable[[float], None] = sleep,
-    clock: Callable[[], float] = monotonic,
-) -> CycleResult:
+) -> CycleSession:
     task.validate()
+    if not isinstance(source_name, str) or not source_name.strip():
+        raise ValueError("source_name must not be empty")
 
     session = provider.create_session(
         prompt=task.prompt,
@@ -123,13 +161,35 @@ def run_cycle(
     )
     session_id = _session_id(session)
     session_url = session.get("url")
-    if not isinstance(session_url, str):
+    if not isinstance(session_url, str) or not session_url.strip():
         session_url = None
+
+    return CycleSession(
+        task_id=task.task_id,
+        session_id=session_id,
+        session_url=session_url,
+    )
+
+
+def monitor_cycle_session(
+    provider: CodingAgentProvider,
+    *,
+    task: CycleTask,
+    session: CycleSession,
+    sleeper: Callable[[float], None] = sleep,
+    clock: Callable[[], float] = monotonic,
+) -> CycleResult:
+    task.validate()
+    session.validate()
+    if session.task_id != task.task_id:
+        raise ValueError(
+            f"session task_id '{session.task_id}' does not match task task_id '{task.task_id}'"
+        )
 
     deadline = clock() + task.timeout_seconds
 
     while True:
-        current = provider.get_session(session_id)
+        current = provider.get_session(session.session_id)
         state = current.get("state")
         if not isinstance(state, str):
             raise CycleError("provider returned a session without state")
@@ -137,20 +197,38 @@ def run_cycle(
         if state == "COMPLETED":
             return CycleResult(
                 task_id=task.task_id,
-                session_id=session_id,
-                session_url=session_url,
+                session_id=session.session_id,
+                session_url=session.session_url,
                 state=state,
                 pull_request_url=_pull_request_url(current),
             )
 
         if state == "FAILED":
-            raise CycleFailed(f"session {session_id} failed")
+            raise CycleFailed(f"session {session.session_id} failed")
         if state == "AWAITING_USER_FEEDBACK":
-            raise HumanInputRequired(f"session {session_id} requires human input")
+            raise HumanInputRequired(f"session {session.session_id} requires human input")
         if state == "PAUSED":
-            raise CyclePaused(f"session {session_id} is paused")
+            raise CyclePaused(f"session {session.session_id} is paused")
 
         if clock() >= deadline:
-            raise CycleTimedOut(f"session {session_id} exceeded timeout")
+            raise CycleTimedOut(f"session {session.session_id} exceeded timeout")
 
         sleeper(task.poll_interval_seconds)
+
+
+def run_cycle(
+    provider: CodingAgentProvider,
+    *,
+    task: CycleTask,
+    source_name: str,
+    sleeper: Callable[[float], None] = sleep,
+    clock: Callable[[], float] = monotonic,
+) -> CycleResult:
+    session = start_cycle_session(provider, task=task, source_name=source_name)
+    return monitor_cycle_session(
+        provider,
+        task=task,
+        session=session,
+        sleeper=sleeper,
+        clock=clock,
+    )
