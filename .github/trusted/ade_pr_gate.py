@@ -8,6 +8,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from dag_controller import (
+    TrustedDagError,
+    advance_managed_graph,
+    graph_contains_task,
+    graph_has_unfinished_work,
+)
 from github_client import GitHubClient, GitHubError
 from observability import record_merged_pr
 
@@ -23,6 +29,7 @@ FORBIDDEN_PREFIXES = (
     ".github/",
     ".autodev/",
 )
+TASK_GRAPH_PATH = ".autodev/task-graph.json"
 JULES_PROVENANCE_MARKER = "PR created automatically by Jules for task"
 JULES_TASK_URL = re.compile(r"https://jules\.google\.com/task/\d+")
 
@@ -51,6 +58,7 @@ def evaluate_jules_pull_request(
     head = pull_request.get("head")
     if not isinstance(head, dict):
         return False, "pull request head is missing"
+
     head_repo = head.get("repo")
     if not isinstance(head_repo, dict) or head_repo.get("full_name") != repository:
         return False, "head repository is not the ADE repository"
@@ -73,7 +81,7 @@ def evaluate_jules_pull_request(
     for changed in files:
         filename = changed.get("filename")
         if not isinstance(filename, str):
-            return False, "changed file has no filename"
+            return False, "changed file has no filename")
         if filename in FORBIDDEN_EXACT:
             return False, f"forbidden file changed: {filename}"
         if filename.startswith(FORBIDDEN_PREFIXES):
@@ -82,15 +90,75 @@ def evaluate_jules_pull_request(
     return True, "Jules provenance and change scope are allowed"
 
 
-def advance_queue(api: GitHubClient) -> str | None:
+def _optional_task_graph(
+    api: GitHubClient,
+) -> tuple[dict[str, Any], str] | None:
+    try:
+        return api.get_json_file(TASK_GRAPH_PATH)
+    except GitHubError as exc:
+        if "GitHub HTTP 404:" in str(exc):
+            return None
+        raise
+
+
+def _remove_queue_task(
+    tasks: list[Any],
+    *,
+    task_id: str,
+) -> list[Any]:
+    result: list[Any] = []
+    removed = False
+    for candidate in tasks:
+        if not isinstance(candidate, dict):
+            raise RuntimeError("queued task must be an object")
+        candidate_id = candidate.get("task_id")
+        if not removed and candidate_id == task_id:
+            removed = True
+            continue
+        result.append(candidate)
+    return result
+
+
+def _pop_fifo(tasks: list[Any]) -> tuple[dict[str, Any] | None, list[Any]]:
+    if not tasks:
+        return None, []
+    candidate = tasks[0]
+    if not isinstance(candidate, dict):
+        raise RuntimeError("queued task must be an object")
+    return candidate, list(tasks[1:])
+
+
+def advance_queue(
+    api: GitHubClient,
+    *,
+    completed_task_id: str | None = None,
+) -> str | None:
     current_task, current_sha = api.get_json_file(".autodev/cycle-task.json")
     state, state_sha = api.get_json_file(".autodev/state.json")
     queue, queue_sha = api.get_json_file(".autodev/task-queue.json")
 
-    current_task_id = str(current_task["task_id"])
+    state_current = state.get("current_task_id")
+    if completed_task_id is None:
+        completed_task_id = (
+            state_current
+            if isinstance(state_current, str) and state_current.strip()
+            else current_task.get("task_id")
+        )
+    if not isinstance(completed_task_id, str) or not completed_task_id.strip():
+        raise RuntimeError("completed task id is missing")
+
+    if (
+        isinstance(state_current, str)
+        and state_current.strip()
+        and state_current != completed_task_id
+    ):
+        raise RuntimeError(
+            "project state current_task_id does not match completed task"
+        )
+
     completed = list(state.get("completed_task_ids", []))
-    if current_task_id not in completed:
-        completed.append(current_task_id)
+    if completed_task_id not in completed:
+        completed.append(completed_task_id)
 
     state["completed_task_ids"] = completed
     state["iteration"] = int(state.get("iteration", 0)) + 1
@@ -99,47 +167,106 @@ def advance_queue(api: GitHubClient) -> str | None:
     tasks = queue.get("tasks", [])
     if not isinstance(tasks, list):
         raise RuntimeError("task queue tasks must be a list")
+    remaining_queue = list(tasks)
 
     next_task: dict[str, Any] | None = None
-    if tasks:
-        candidate = tasks.pop(0)
-        if not isinstance(candidate, dict):
-            raise RuntimeError("queued task must be an object")
-        next_task = candidate
-    queue["tasks"] = tasks
+    scheduler = "fifo"
+    dag_blocked = False
+    graph_result = _optional_task_graph(api)
+
+    if graph_result is not None:
+        graph, graph_sha = graph_result
+        if graph_contains_task(graph, completed_task_id):
+            scheduler = "dag"
+            updated_graph, next_task = advance_managed_graph(
+                graph,
+                completed_task_id=completed_task_id,
+            )
+            if next_task is not None:
+                next_task_id = next_task.get("task_id")
+                if not isinstance(next_task_id, str) or not next_task_id.strip():
+                    raise TrustedDagError(
+                        "selected DAG task has no valid task_id"
+                    )
+                remaining_queue = _remove_queue_task(
+                    remaining_queue,
+                    task_id=next_task_id,
+                )
+            elif graph_has_unfinished_work(updated_graph):
+                dag_blocked = True
+            else:
+                next_task, remaining_queue = _pop_fifo(remaining_queue)
+                if next_task is not None:
+                    scheduler = "fifo"
+
+            api.put_json_file(
+                TASK_GRAPH_PATH,
+                updated_graph,
+                sha=graph_sha,
+                message=f"graph: complete {completed_task_id}",
+            )
+
+    if scheduler == "fifo" and graph_result is None:
+        next_task, remaining_queue = _pop_fifo(remaining_queue)
+    elif (
+        scheduler == "fifo"
+        and graph_result is not None
+        and next_task is None
+        and not dag_blocked
+    ):
+        # The graph exists but does not manage the current task.
+        graph, _ = graph_result
+        if not graph_contains_task(graph, completed_task_id):
+            next_task, remaining_queue = _pop_fifo(remaining_queue)
+
+    queue["tasks"] = remaining_queue
 
     metadata = dict(state.get("metadata", {}))
-    state["status"] = "READY"
+    metadata["scheduler"] = scheduler
+    metadata["dag_blocked"] = dag_blocked
+
     if next_task is None:
         state["current_task_id"] = None
-        metadata["queue_exhausted"] = True
+        if dag_blocked:
+            state["status"] = "BLOCKED"
+            metadata["queue_exhausted"] = False
+        else:
+            state["status"] = "READY"
+            metadata["queue_exhausted"] = not bool(remaining_queue)
     else:
-        state["current_task_id"] = str(next_task["task_id"])
+        next_task_id = next_task.get("task_id")
+        if not isinstance(next_task_id, str) or not next_task_id.strip():
+            raise RuntimeError("next task has no valid task_id")
+        state["status"] = "READY"
+        state["current_task_id"] = next_task_id
         metadata["queue_exhausted"] = False
+
     state["metadata"] = metadata
 
     api.put_json_file(
         ".autodev/state.json",
         state,
         sha=state_sha,
-        message=f"state: complete {current_task_id}",
+        message=f"state: complete {completed_task_id}",
     )
     api.put_json_file(
         ".autodev/task-queue.json",
         queue,
         sha=queue_sha,
-        message=f"queue: advance after {current_task_id}",
+        message=f"queue: advance after {completed_task_id}",
     )
 
     if next_task is not None:
+        next_task_id = str(next_task["task_id"])
         api.put_json_file(
             ".autodev/cycle-task.json",
             next_task,
             sha=current_sha,
-            message=f"task: activate {next_task['task_id']}",
+            message=f"task: activate {next_task_id}",
         )
-        api.dispatch("ade_next_cycle", {"task_id": str(next_task["task_id"])})
-        return str(next_task["task_id"])
+        api.dispatch("ade_next_cycle", {"task_id": next_task_id})
+        return next_task_id
+
     return None
 
 
@@ -167,6 +294,14 @@ def main() -> int:
 
         api = GitHubClient()
         pr = api.get_pull_request(pr_number)
+
+        if pr.get("state") != "open":
+            if pr.get("merged_at"):
+                print(f"SKIP: PR #{pr_number} is already merged")
+                return 0
+            print(f"SKIP: PR #{pr_number} is already closed")
+            return 0
+
         files = api.list_pull_request_files(pr_number)
         allowed, reason = evaluate_jules_pull_request(
             repository=api.repository,
@@ -177,10 +312,10 @@ def main() -> int:
             print(f"HUMAN_WAIT: PR #{pr_number}: {reason}", file=sys.stderr)
             return 2
 
-        current_task, _ = api.get_json_file(".autodev/cycle-task.json")
-        current_task_id = current_task.get("task_id")
+        state, _ = api.get_json_file(".autodev/state.json")
+        current_task_id = state.get("current_task_id")
         if not isinstance(current_task_id, str) or not current_task_id.strip():
-            raise RuntimeError("current cycle task has no valid task_id")
+            raise RuntimeError("project state has no valid current_task_id")
 
         head = pr.get("head", {})
         expected_sha = head.get("sha")
@@ -194,7 +329,10 @@ def main() -> int:
             )
 
         print(f"MERGED: Jules PR #{pr_number}")
-        next_task_id = advance_queue(api)
+        next_task_id = advance_queue(
+            api,
+            completed_task_id=current_task_id,
+        )
 
         try:
             pr_url = pr.get("html_url")
@@ -215,12 +353,19 @@ def main() -> int:
             )
 
         if next_task_id is None:
-            print("QUEUE COMPLETE: no pending autonomous tasks")
+            print("NO DISPATCH: no safe runnable autonomous task")
         else:
             print(f"DISPATCHED: next autonomous task {next_task_id}")
         return 0
 
-    except (GitHubError, RuntimeError, ValueError, KeyError, json.JSONDecodeError) as exc:
+    except (
+        GitHubError,
+        TrustedDagError,
+        RuntimeError,
+        ValueError,
+        KeyError,
+        json.JSONDecodeError,
+    ) as exc:
         print(f"ADE PR gate failed: {exc}", file=sys.stderr)
         return 1
 
