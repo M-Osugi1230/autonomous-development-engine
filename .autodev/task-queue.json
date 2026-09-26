@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-020",
-      "title": "Add human interrupt coordinator",
-      "prompt": "Continue Phase 7 by adding a provider-agnostic HumanInterruptCoordinator in src/ade/human_interrupt.py. It must combine InterruptPolicy and DecisionStore without performing network calls. Given a DecisionKind and DecisionRequest, it should deterministically either PROCEED without creating a record or enqueue exactly one OPEN decision and return HUMAN_WAIT. Provide methods to resolve a queued decision with DecisionResponse and to retrieve a resolved response. Enforce decision_id consistency, preserve idempotency across repeated calls, and never auto-resolve HUMAN_WAIT. Keep destructive/external/credential decisions human-owned. Export the public coordinator API from ade.__init__. Add focused standard-library unittest coverage for proceed path, human-wait path, repeat/idempotent request, resolve/retrieve, conflicting resolution, and policy override behavior. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, scripts, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-021",
       "title": "Prove Phase 7 human decision lifecycle",
       "prompt": "Finish the Phase 7 core with a deterministic offline human-decision lifecycle probe. Add scripts/human_decision_probe.py using the public Phase 7 APIs. In a temporary DecisionStore, prove that routine reversible work proceeds without creating an open decision; a destructive/irreversible request creates exactly one OPEN decision and returns HUMAN_WAIT; repeating the same request is idempotent; a simulated human response resolves it; reloading the store preserves the resolution; and the resolved response can be retrieved without changing it. Print one compact JSON success record and exit 0; invariant failures must exit nonzero without tracebacks or secrets. Add focused standard-library unittest coverage. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v and PYTHONPATH=src python scripts/human_decision_probe.py before finishing.",
