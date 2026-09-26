@@ -41,12 +41,10 @@ Ask only for decisions that exceed configured autonomy thresholds.
 
 Evidence: immutable decision lifecycle models, atomic persistence, a fixed safety boundary for high-risk actions, idempotent HUMAN_WAIT handling, explicit human resolution, and an end-to-end offline lifecycle probe all pass under CI.
 
-## Phase 8 — Mission Control 🚧
+## Phase 8 — Mission Control ✅
 Mobile-first project health, decisions, preview, and activity feed.
 
-Read-only core ✅: safe snapshot aggregation, mobile-first static HTML, deterministic artifact build, read-only GitHub Actions delivery, and end-to-end leakage checks are CI-proven.
-
-Remaining: durable activity feed and safe latest-output / preview metadata before Phase 8 is closed.
+Evidence: safe repository-backed snapshot aggregation, mobile-first static HTML, deterministic artifact build, read-only GitHub Actions delivery, durable activity ledger, allowlisted latest-preview metadata, trusted PR observability updates, and end-to-end leakage/security checks all pass under CI.
 
 ## Phase 9 — Task DAG
 Continue independent work while another task waits for human input.
