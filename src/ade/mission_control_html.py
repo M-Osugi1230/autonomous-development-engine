@@ -77,6 +77,62 @@ def _warnings(snapshot: MissionControlSnapshot) -> str:
     return f'<ul class="warning-list">{items}</ul>'
 
 
+def _preview_card(snapshot: MissionControlSnapshot) -> str:
+    preview = snapshot.preview
+    if preview is None:
+        return '<p class="empty">No latest output registered.</p>'
+
+    return """
+    <dl class="detail-grid">
+      <div><dt>Type</dt><dd>{kind}</dd></div>
+      <div><dt>Task</dt><dd>{task}</dd></div>
+      <div><dt>Updated</dt><dd>{updated}</dd></div>
+    </dl>
+    <p class="preview-action">
+      <a class="preview-link" href="{url}" target="_blank" rel="noopener noreferrer">
+        {title}
+      </a>
+    </p>
+    """.format(
+        kind=_text(preview.kind),
+        task=_text(preview.task_id),
+        updated=_text(preview.updated_at),
+        url=_text(preview.url),
+        title=_text(preview.title),
+    )
+
+
+def _activity_feed(snapshot: MissionControlSnapshot) -> str:
+    if not snapshot.activity:
+        return '<p class="empty">No activity recorded yet.</p>'
+
+    items: list[str] = []
+    for event in snapshot.activity:
+        task = (
+            f'<span class="activity-task">{_text(event.task_id)}</span>'
+            if event.task_id is not None
+            else ""
+        )
+        items.append(
+            """
+            <li class="activity-item">
+              <div class="activity-meta">
+                <span>{time}</span>
+                <span>{kind}</span>
+                {task}
+              </div>
+              <div class="activity-summary">{summary}</div>
+            </li>
+            """.format(
+                time=_text(event.occurred_at),
+                kind=_text(event.kind),
+                task=task,
+                summary=_text(event.summary),
+            )
+        )
+    return '<ol class="activity-list">' + "".join(items) + "</ol>"
+
+
 def render_mission_control(snapshot: MissionControlSnapshot) -> str:
     if not isinstance(snapshot, MissionControlSnapshot):
         raise ValueError("snapshot must be a MissionControlSnapshot")
@@ -155,6 +211,28 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
     .options, .warning-list { padding-left: 20px; margin-bottom: 0; }
     .warning-list { margin-top: 0; }
     .ok-message { margin-bottom: 0; }
+    .preview-action { margin: 14px 0 0; }
+    .preview-link { overflow-wrap: anywhere; }
+    .activity-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+    .activity-item {
+      border-bottom: 1px solid color-mix(in srgb, CanvasText 10%, transparent);
+      padding-bottom: 10px;
+    }
+    .activity-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: .72rem;
+      opacity: .68;
+      margin-bottom: 4px;
+    }
+    .activity-summary { overflow-wrap: anywhere; }
     footer { padding-block: 16px 28px; opacity: .62; font-size: .8rem; }
     @media (min-width: 680px) {
       .status-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -194,6 +272,11 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
       $checkpoint
     </section>
 
+    <section class="card" aria-labelledby="preview-heading">
+      <h2 id="preview-heading">Latest output</h2>
+      $preview
+    </section>
+
     <section class="card" aria-labelledby="telemetry-heading">
       <h2 id="telemetry-heading">Telemetry</h2>
       <dl class="detail-grid">
@@ -216,6 +299,11 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
       <div class="decision-list">
         $decisions
       </div>
+    </section>
+
+    <section class="wide card" aria-labelledby="activity-heading">
+      <h2 id="activity-heading">Activity</h2>
+      $activity
     </section>
   </main>
 
@@ -246,5 +334,7 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
         failure_ledger=_text(snapshot.failure_ledger_count),
         warnings=_warnings(snapshot),
         decisions=_decision_cards(snapshot),
+        preview=_preview_card(snapshot),
+        activity=_activity_feed(snapshot),
         completed_total=_text(completed_total),
     )
