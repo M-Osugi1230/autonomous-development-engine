@@ -46,8 +46,10 @@ Mobile-first project health, decisions, preview, and activity feed.
 
 Evidence: safe repository-backed snapshot aggregation, mobile-first static HTML, deterministic artifact build, read-only GitHub Actions delivery, durable activity ledger, allowlisted latest-preview metadata, trusted PR observability updates, and end-to-end leakage/security checks all pass under CI.
 
-## Phase 9 — Task DAG
+## Phase 9 — Task DAG 🚧
 Continue independent work while another task waits for human input.
+
+Build order: immutable DAG model -> atomic store + pure runnable scheduler -> validated transitions -> HUMAN_WAIT branch-bypass proof -> trusted controller integration behind FIFO fallback -> trusted dispatch proof.
 
 ## Phase 10 — Multi-provider Routing
 Add additional hosted/local providers behind the same interface.
