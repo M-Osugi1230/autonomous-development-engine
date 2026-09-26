@@ -26,7 +26,7 @@ repository task
 
 It also has a bounded repair layer that classifies failures and can take deterministic retry, replan, quota-pause, human-wait, or terminal-fail dispositions. Crash-safe checkpoint continuation and cloud-only quota resume routing are proven under CI.
 
-Phase 7 adds a durable human-decision queue: routine reversible work can proceed automatically, while destructive/irreversible, credential/secret, and externally consequential actions enter HUMAN_WAIT and require an explicit persisted human response.
+ADE now also has a durable human-decision queue, a read-only Mission Control surface, dependency-aware DAG scheduling, and deterministic multi-provider routing. Provider sessions are sticky after creation, while new work can route around quota-paused providers before a session exists.
 
 ## Repository layout
 
@@ -48,4 +48,4 @@ Never commit provider API keys. The Jules key is read only from the `JULES_API_K
 
 ## Current milestone
 
-Phase 8: Mission Control. The next milestone is a mobile-first, read-only operational view of project health, checkpoints, open human decisions, recent activity, and preview links before any remote control actions are added.
+Phase 11: Production Project Pilot. The immediate goal is to freeze a machine-readable pilot contract and safety envelope before ADE is allowed to modify a real target repository.
