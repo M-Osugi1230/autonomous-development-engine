@@ -229,7 +229,7 @@ def evaluate_availability(
     )
 
 
-def evaluate_state(
+def evaluate_provider_availability_state(
     state: ProviderAvailabilityState,
     *,
     now: datetime,
