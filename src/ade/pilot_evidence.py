@@ -81,6 +81,9 @@ class PilotFinalEvidence:
     contract_fingerprint: str
     target_repository: str
     baseline_sha: str
+    base_branch: str
+    pull_request_base_sha: str
+    changed_paths: tuple[str, ...]
     final_head_sha: str
     pull_request_url: str
     ci_evidence_urls: tuple[str, ...]
@@ -104,6 +107,36 @@ class PilotFinalEvidence:
             raise ValueError("target_repository must be in OWNER/REPO form")
         if not isinstance(self.baseline_sha, str) or not _SHA.fullmatch(self.baseline_sha):
             raise ValueError("baseline_sha must be a lowercase Git SHA")
+        if not isinstance(self.base_branch, str) or not self.base_branch.strip():
+            raise ValueError("base_branch must be a non-empty string")
+        if (
+            not isinstance(self.pull_request_base_sha, str)
+            or not _SHA.fullmatch(self.pull_request_base_sha)
+        ):
+            raise ValueError("pull_request_base_sha must be a lowercase Git SHA")
+        if self.pull_request_base_sha != self.baseline_sha:
+            raise ValueError("pull_request_base_sha must equal the frozen baseline SHA")
+
+        raw_paths = self.changed_paths
+        if not isinstance(raw_paths, tuple):
+            try:
+                raw_paths = tuple(raw_paths)
+            except TypeError as exc:
+                raise ValueError("changed_paths must be iterable") from exc
+        if not raw_paths:
+            raise ValueError("changed_paths must not be empty")
+        normalized_paths: list[str] = []
+        for path in raw_paths:
+            if not isinstance(path, str) or not path.strip():
+                raise ValueError("changed_paths must contain non-empty strings")
+            normalized = path.strip()
+            if normalized.startswith("/") or normalized.startswith("../") or "/../" in normalized:
+                raise ValueError("changed_paths must be repository-relative paths")
+            normalized_paths.append(normalized)
+        if len(set(normalized_paths)) != len(normalized_paths):
+            raise ValueError("changed_paths must not contain duplicates")
+        object.__setattr__(self, "changed_paths", tuple(normalized_paths))
+
         if not isinstance(self.final_head_sha, str) or not _SHA.fullmatch(self.final_head_sha):
             raise ValueError("final_head_sha must be a lowercase Git SHA")
         if self.final_head_sha == self.baseline_sha:
@@ -181,6 +214,9 @@ class PilotFinalEvidence:
             "contract_fingerprint": self.contract_fingerprint,
             "target_repository": self.target_repository,
             "baseline_sha": self.baseline_sha,
+            "base_branch": self.base_branch,
+            "pull_request_base_sha": self.pull_request_base_sha,
+            "changed_paths": list(self.changed_paths),
             "final_head_sha": self.final_head_sha,
             "pull_request_url": self.pull_request_url,
             "ci_evidence_urls": list(self.ci_evidence_urls),
@@ -202,12 +238,18 @@ class PilotFinalEvidence:
         ci_urls = payload.get("ci_evidence_urls")
         if not isinstance(ci_urls, list):
             raise ValueError("ci_evidence_urls must be a list")
+        changed_paths = payload.get("changed_paths")
+        if not isinstance(changed_paths, list):
+            raise ValueError("changed_paths must be a list")
         return cls(
             schema_version=payload.get("schema_version"),
             pilot_id=payload.get("pilot_id"),
             contract_fingerprint=payload.get("contract_fingerprint"),
             target_repository=payload.get("target_repository"),
             baseline_sha=payload.get("baseline_sha"),
+            base_branch=payload.get("base_branch"),
+            pull_request_base_sha=payload.get("pull_request_base_sha"),
+            changed_paths=tuple(changed_paths),
             final_head_sha=payload.get("final_head_sha"),
             pull_request_url=payload.get("pull_request_url"),
             ci_evidence_urls=tuple(ci_urls),
@@ -223,6 +265,9 @@ class PilotFinalEvidence:
 def build_pilot_final_evidence(
     contract: PilotContract,
     *,
+    base_branch: str,
+    pull_request_base_sha: str,
+    changed_paths: Iterable[str],
     final_head_sha: str,
     pull_request_url: str,
     ci_evidence_urls: Iterable[str],
@@ -234,6 +279,23 @@ def build_pilot_final_evidence(
         raise TypeError("contract must be a PilotContract")
     if provider_id not in contract.provider_policy.allowed_provider_ids:
         raise ValueError("provider_id is not allowed by the pilot contract")
+    if base_branch != contract.target.base_branch:
+        raise ValueError("pull request base branch does not match the pilot contract")
+    normalized_base_sha = pull_request_base_sha.lower()
+    if normalized_base_sha != contract.target.baseline_sha:
+        raise ValueError("pull request base SHA does not match the frozen baseline")
+
+    normalized_paths = tuple(changed_paths)
+    if not normalized_paths:
+        raise ValueError("changed_paths must not be empty")
+    disallowed_paths = [
+        path for path in normalized_paths if not contract.safety.path_allowed(path)
+    ]
+    if disallowed_paths:
+        raise ValueError(
+            f"pull request changed paths outside the pilot safety envelope: {disallowed_paths}"
+        )
+
     expected_ids = {check.check_id for check in contract.acceptance_checks}
     if set(acceptance_results) != expected_ids:
         raise ValueError("acceptance_results must exactly match contract check IDs")
@@ -251,6 +313,9 @@ def build_pilot_final_evidence(
         contract_fingerprint=pilot_contract_fingerprint(contract),
         target_repository=contract.target.repository,
         baseline_sha=contract.target.baseline_sha,
+        base_branch=base_branch,
+        pull_request_base_sha=normalized_base_sha,
+        changed_paths=normalized_paths,
         final_head_sha=final_head_sha.lower(),
         pull_request_url=pull_request_url,
         ci_evidence_urls=tuple(ci_evidence_urls),
