@@ -47,6 +47,7 @@ from .mission_control import (
     MissionTelemetrySummary,
     build_mission_control_snapshot,
 )
+from .mission_control_html import render_mission_control
 from .models import ProjectState, ProjectStatus, TaskStatus
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
 from .repair_planner import RepairPlan, plan_repair
@@ -107,6 +108,7 @@ __all__ = [
     "map_repair_execution",
     "monitor_cycle_session",
     "plan_repair",
+    "render_mission_control",
     "run_checkpointed_cycle",
     "run_cycle",
     "run_cycle_with_repair",
