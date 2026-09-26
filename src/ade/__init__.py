@@ -60,6 +60,8 @@ from .repair_planner import RepairPlan, plan_repair
 from .repair_runtime import RepairExecution, map_repair_execution, run_cycle_with_repair
 from .resume import ResumeAction, ResumeDecision, decide_resume
 from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
+from .task_graph_store import TaskGraphStore
+from .task_scheduler import next_runnable_task, runnable_tasks
 
 __all__ = [
     "AcceptanceReport",
@@ -109,6 +111,7 @@ __all__ = [
     "ResumeDecision",
     "TaskCheckpoint",
     "TaskGraph",
+    "TaskGraphStore",
     "TaskNode",
     "TaskStatus",
     "build_mission_control_snapshot",
@@ -125,8 +128,10 @@ __all__ = [
     "health_snapshot",
     "map_repair_execution",
     "monitor_cycle_session",
+    "next_runnable_task",
     "plan_repair",
     "render_mission_control",
+    "runnable_tasks",
     "run_checkpointed_cycle",
     "run_cycle",
     "run_cycle_with_repair",
