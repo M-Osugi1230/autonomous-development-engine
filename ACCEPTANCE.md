@@ -97,3 +97,18 @@
 - [x] Routed execution returns explicit no-provider/wait/replan outcomes instead of opaque failure.
 - [x] A deterministic two-provider failover/resume probe passes under CI.
 - [x] At least one additional concrete provider adapter is available behind the common interface before Phase 10 is closed.
+
+
+## Phase 11 — Production Project Pilot
+
+- [x] A versioned immutable pilot contract identifies the target repository, base branch, and baseline commit SHA.
+- [x] The pilot safety envelope has explicit path allowlists, path denylists, allowed actions, task limits, and failure limits.
+- [x] The first production pilot cannot express a direct MERGE action and requires READ, validation, and pull-request creation capabilities.
+- [x] Provider policy explicitly permits pre-session fallback while requiring sticky provider identity after a session exists.
+- [x] Acceptance checks are deterministic commands with bounded timeouts and unique IDs.
+- [ ] A pilot contract can be atomically persisted and loaded without normalization drift.
+- [ ] A read-only preflight proves target repository, base branch, baseline SHA, provider availability, and acceptance-command readiness before any write.
+- [ ] Human activation is persisted when the contract requires it; absence of activation prevents all target writes.
+- [ ] A dry-run probe proves path/action enforcement and produces evidence without modifying the target repository.
+- [ ] One bounded production pilot creates a reviewable pull request against the selected target and passes every declared acceptance check.
+- [ ] Final pilot evidence records baseline SHA, final head SHA, PR URL, CI evidence, provider identity, and rollback boundary.
