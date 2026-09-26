@@ -1,6 +1,8 @@
 """Autonomous Development Engine core package."""
 
 from .acceptance import AcceptanceReport, CheckResult, build_report
+from .activity import ActivityEvent, ActivityKind
+from .activity_store import ActivityStore
 from .checkpoint import CheckpointState, TaskCheckpoint
 from .checkpoint_runtime import CheckpointedCycleExecution, run_checkpointed_cycle
 from .checkpoint_store import CheckpointStore
@@ -56,6 +58,9 @@ from .resume import ResumeAction, ResumeDecision, decide_resume
 
 __all__ = [
     "AcceptanceReport",
+    "ActivityEvent",
+    "ActivityKind",
+    "ActivityStore",
     "CheckResult",
     "CheckpointState",
     "CheckpointStore",
