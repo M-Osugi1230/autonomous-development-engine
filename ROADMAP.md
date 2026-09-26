@@ -32,6 +32,7 @@ Current build order:
 4. resumable provider-session primitives
 5. checkpoint lifecycle transitions
 6. checkpoint-aware runtime continuation
+7. cloud-only quota-resume proof
 
 ## Phase 7 — Human Decision Queue
 Ask only for decisions that exceed configured autonomy thresholds.
