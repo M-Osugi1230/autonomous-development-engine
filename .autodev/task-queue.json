@@ -1,15 +1,4 @@
 {
   "schema_version": 1,
-  "tasks": [
-    {
-      "auto_create_pr": true,
-      "poll_interval_seconds": 15,
-      "prompt": "Finish the Phase 6 core proof with a deterministic crash/restart continuation probe. Using the public checkpoint, checkpoint store, cycle-session, resume-policy, checkpoint-transition, and checkpoint-runtime APIs created in vertical-slice-010 through vertical-slice-015, add scripts/checkpoint_resume_probe.py and focused standard-library tests. The probe must use a fake provider and a temporary CheckpointStore, simulate an interruption only after a RUNNING checkpoint with provider_session_id has been durably saved, then perform a second invocation that loads that checkpoint and completes by monitoring the same provider session without creating a duplicate session. Assert exactly one provider create_session call across both invocations, a persisted RUNNING checkpoint exists between invocations, the resumed execution reaches COMPLETED, and the final persisted checkpoint is COMPLETED. Print one compact JSON success record and exit 0; invariant failures must exit nonzero without secrets or tracebacks. Keep the probe deterministic and offline. Do not add dependencies. Do not modify GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, pyproject.toml, .github/workflows, or any .autodev files. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v and PYTHONPATH=src python scripts/checkpoint_resume_probe.py before finishing.",
-      "schema_version": 1,
-      "starting_branch": "main",
-      "task_id": "vertical-slice-016",
-      "timeout_seconds": 1800,
-      "title": "Prove crash-restart continuation under CI"
-    }
-  ]
+  "tasks": []
 }
