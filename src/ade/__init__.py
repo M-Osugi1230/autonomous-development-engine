@@ -33,6 +33,12 @@ from .decisions import (
     DecisionStatus,
 )
 from .health import health_snapshot
+from .interrupt_policy import (
+    DecisionKind,
+    InterruptDisposition,
+    InterruptPolicy,
+    decide_interrupt,
+)
 from .models import ProjectState, ProjectStatus, TaskStatus
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
 from .repair_planner import RepairPlan, plan_repair
@@ -51,6 +57,9 @@ __all__ = [
     "CycleSession",
     "CycleTask",
     "CycleTimedOut",
+    "DecisionKind",
+    "InterruptDisposition",
+    "InterruptPolicy",
     "DecisionPriority",
     "DecisionRecord",
     "DecisionRequest",
@@ -77,6 +86,7 @@ __all__ = [
     "checkpoint_from_completed",
     "checkpoint_from_repair_plan",
     "checkpoint_from_session",
+    "decide_interrupt",
     "decide_repair",
     "decide_resume",
     "health_snapshot",
