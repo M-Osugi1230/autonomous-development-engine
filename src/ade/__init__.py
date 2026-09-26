@@ -55,6 +55,7 @@ from .mission_control_html import render_mission_control
 from .models import ProjectState, ProjectStatus, TaskStatus
 from .preview import PreviewKind, PreviewManifest
 from .preview_store import PreviewStore
+from .providers.github_copilot import GitHubCopilotProvider
 from .provider_availability import (
     ProviderAvailabilityRecord,
     ProviderAvailabilityState,
@@ -113,6 +114,7 @@ __all__ = [
     "DecisionStore",
     "FailureKind",
     "HumanInputRequired",
+    "GitHubCopilotProvider",
     "GraphTaskStatus",
     "HumanInterruptCoordinator",
     "MissionActivitySummary",
