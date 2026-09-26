@@ -17,17 +17,17 @@
     "vertical-slice-015",
     "vertical-slice-016"
   ],
-  "current_task_id": null,
+  "current_task_id": "vertical-slice-017",
   "failed_task_ids": [],
   "iteration": 16,
   "metadata": {
-    "milestone": "quota-resume-cloud-proof",
-    "phase": "phase6-pause-resume",
-    "queue_exhausted": true
+    "milestone": "decision-lifecycle-core",
+    "phase": "phase7-human-decision",
+    "queue_exhausted": false
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
   "status": "READY",
-  "updated_at": "2026-09-26T00:25:42+00:00"
+  "updated_at": "2026-09-26T00:31:00+00:00"
 }
