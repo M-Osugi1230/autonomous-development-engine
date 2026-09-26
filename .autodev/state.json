@@ -30,13 +30,14 @@
     "vertical-slice-028",
     "vertical-slice-029",
     "vertical-slice-030",
-    "vertical-slice-031"
+    "vertical-slice-031",
+    "vertical-slice-032"
   ],
-  "current_task_id": "vertical-slice-032",
+  "current_task_id": "vertical-slice-033",
   "failed_task_ids": [],
-  "iteration": 31,
+  "iteration": 32,
   "metadata": {
-    "milestone": "dag-store-scheduler",
+    "milestone": "dag-transitions",
     "phase": "phase9-task-dag",
     "queue_exhausted": false,
     "manual_progress_during_provider_quota": true
@@ -45,5 +46,5 @@
   "provider": "jules",
   "schema_version": 1,
   "status": "READY",
-  "updated_at": "2026-09-26T01:48:00+00:00"
+  "updated_at": "2026-09-26T01:51:00+00:00"
 }
