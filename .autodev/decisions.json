@@ -1,4 +1,43 @@
 {
   "schema_version": 1,
-  "decisions": []
+  "decisions": [
+    {
+      "request": {
+        "decision_id": "phase11-pilot-activation-one-minute-cli-command-guard-001",
+        "question": "Activate the frozen Phase 11 production pilot against M-Osugi1230/one-minute-thought-experiments at baseline 46d2d473305ca8c904f90c78bc8f8aabf3fd7319?",
+        "options": [
+          "ACTIVATE",
+          "CANCEL"
+        ],
+        "priority": "P0",
+        "blocking_task_id": "one-minute-cli-command-guard-001",
+        "context": {
+          "pilot_id": "one-minute-cli-command-guard-001",
+          "contract_fingerprint": "2f974171aa9cb95b29e23c4f4187156c11dfd3a871a1a13ec3c106f05a9b19af",
+          "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+          "base_branch": "main",
+          "baseline_sha": "46d2d473305ca8c904f90c78bc8f8aabf3fd7319",
+          "goal": "Make mistyped CLI command names fail fast instead of being interpreted as experiment IDs while preserving the existing numeric experiment-id shorthand.",
+          "allowed_paths": [
+            "src/thought_pipeline/cli.py",
+            "tests/test_cli.py"
+          ],
+          "max_tasks": 1,
+          "max_consecutive_failures": 1,
+          "allowed_providers": [
+            "jules",
+            "github-copilot"
+          ],
+          "acceptance_check_ids": [
+            "compile",
+            "validate",
+            "tests",
+            "offline-generate"
+          ]
+        }
+      },
+      "status": "OPEN",
+      "response": null
+    }
+  ]
 }
