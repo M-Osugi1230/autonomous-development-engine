@@ -35,6 +35,7 @@ class TaskCheckpoint:
     attempt: int
     replan_count: int
     provider_session_id: str | None = None
+    provider_id: str | None = None
     last_failure_kind: FailureKind | None = None
     last_error: str | None = None
     resume_after: str | None = None
@@ -58,6 +59,14 @@ class TaskCheckpoint:
         if self.provider_session_id is not None:
             if not isinstance(self.provider_session_id, str) or not self.provider_session_id.strip():
                 raise ValueError("provider_session_id must be a non-empty string or None")
+
+        if self.provider_id is not None:
+            if not isinstance(self.provider_id, str) or not self.provider_id:
+                raise ValueError("provider_id must be a non-empty string or None")
+            if self.provider_id != self.provider_id.strip():
+                raise ValueError(
+                    "provider_id must not contain leading or trailing whitespace"
+                )
 
         if self.last_failure_kind is not None:
             try:
@@ -119,7 +128,7 @@ class TaskCheckpoint:
                 raise ValueError(f"PAUSED_QUOTA state cannot have failure kind {self.last_failure_kind}")
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "task_id": self.task_id,
             "state": self.state.value,
             "attempt": self.attempt,
@@ -129,6 +138,9 @@ class TaskCheckpoint:
             "last_error": self.last_error,
             "resume_after": self.resume_after,
         }
+        if self.provider_id is not None:
+            payload["provider_id"] = self.provider_id
+        return payload
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> TaskCheckpoint:
@@ -146,6 +158,7 @@ class TaskCheckpoint:
             attempt=payload["attempt"],
             replan_count=payload["replan_count"],
             provider_session_id=payload.get("provider_session_id"),
+            provider_id=payload.get("provider_id"),
             last_failure_kind=payload.get("last_failure_kind"),
             last_error=payload.get("last_error"),
             resume_after=payload.get("resume_after"),
