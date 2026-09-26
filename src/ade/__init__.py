@@ -62,6 +62,14 @@ from .pilot import (
     PilotTarget,
 )
 from .pilot_store import PilotContractStore
+from .pilot_activation import (
+    PilotActivation,
+    build_pilot_activation,
+    pilot_contract_fingerprint,
+    pilot_target_writes_allowed,
+    require_pilot_target_write_activation,
+)
+from .pilot_activation_store import PilotActivationStore
 from .pilot_preflight import (
     PilotPreflightCheck,
     PilotPreflightReport,
@@ -140,6 +148,8 @@ __all__ = [
     "MissionPreviewSummary",
     "MissionTelemetrySummary",
     "PilotAcceptanceCheck",
+    "PilotActivation",
+    "PilotActivationStore",
     "PilotAction",
     "PilotContract",
     "PilotContractStore",
@@ -184,6 +194,7 @@ __all__ = [
     "TaskNode",
     "TaskStatus",
     "build_mission_control_snapshot",
+    "build_pilot_activation",
     "build_report",
     "checkpoint_for_completed",
     "checkpoint_for_repair_plan",
@@ -200,8 +211,11 @@ __all__ = [
     "map_repair_execution",
     "monitor_cycle_session",
     "next_runnable_task",
+    "pilot_contract_fingerprint",
+    "pilot_target_writes_allowed",
     "plan_repair",
     "render_mission_control",
+    "require_pilot_target_write_activation",
     "resume_task_after_decision",
     "route_provider",
     "runnable_tasks",
