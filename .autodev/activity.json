@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "events": [
+    {
+      "event_id": "phase8-read-only-core-complete",
+      "kind": "MILESTONE",
+      "occurred_at": "2026-09-26T01:30:08+00:00",
+      "summary": "Completed the Phase 8 read-only Mission Control core",
+      "task_id": "vertical-slice-026"
+    },
+    {
+      "event_id": "phase8-trusted-observability-enabled",
+      "kind": "MILESTONE",
+      "occurred_at": "2026-09-26T01:39:25+00:00",
+      "summary": "Enabled trusted Mission Control activity and preview updates",
+      "task_id": "vertical-slice-026"
+    }
+  ]
+}
