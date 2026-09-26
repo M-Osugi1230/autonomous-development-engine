@@ -3,16 +3,6 @@
   "tasks": [
     {
       "schema_version": 1,
-      "task_id": "vertical-slice-024",
-      "title": "Add deterministic Mission Control build CLI",
-      "prompt": "Continue Phase 8 by adding scripts/build_mission_control.py. It must build the read-only Mission Control from repository state using the public snapshot builder and HTML renderer, writing dist/mission-control/index.html and dist/mission-control/snapshot.json by default, with optional CLI paths for tests. Use only the standard library. Writes must be atomic, create parent directories, use deterministic pretty JSON with a trailing newline, and never copy secrets or raw decision context. Exit nonzero with concise errors and no traceback. Add focused unittest coverage using a temporary repository fixture. Do not add dependencies or network calls. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15
-    },
-    {
-      "schema_version": 1,
       "task_id": "vertical-slice-025",
       "title": "Build Mission Control as a read-only GitHub artifact",
       "prompt": "Continue Phase 8 by adding a GitHub Actions workflow that builds Mission Control on pushes to main affecting ADE state/core/dashboard files and on workflow_dispatch, then uploads dist/mission-control as an artifact. The workflow must use contents: read only, must not receive JULES_API_KEY or a write-capable token, and must not deploy to Pages or any external host. Reuse scripts/build_mission_control.py. Keep the workflow isolated from privileged trusted runners. Add any deterministic workflow contract tests needed to prove no secret environment or write permission is present. Do not add dependencies. Run exactly PYTHONPATH=src python -m unittest discover -s tests -v before finishing.",
