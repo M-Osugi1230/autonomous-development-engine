@@ -53,6 +53,14 @@ from .mission_control import (
 )
 from .mission_control_html import render_mission_control
 from .models import ProjectState, ProjectStatus, TaskStatus
+from .pilot import (
+    PilotAcceptanceCheck,
+    PilotAction,
+    PilotContract,
+    PilotProviderPolicy,
+    PilotSafetyEnvelope,
+    PilotTarget,
+)
 from .preview import PreviewKind, PreviewManifest
 from .preview_store import PreviewStore
 from .providers.github_copilot import GitHubCopilotProvider
@@ -123,6 +131,12 @@ __all__ = [
     "MissionDecisionSummary",
     "MissionPreviewSummary",
     "MissionTelemetrySummary",
+    "PilotAcceptanceCheck",
+    "PilotAction",
+    "PilotContract",
+    "PilotProviderPolicy",
+    "PilotSafetyEnvelope",
+    "PilotTarget",
     "PreviewKind",
     "PreviewManifest",
     "PreviewStore",
