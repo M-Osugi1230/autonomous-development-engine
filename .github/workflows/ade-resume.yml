@@ -1,0 +1,44 @@
+name: ADE Resume Watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-jules-cycle
+  cancel-in-progress: false
+
+jobs:
+  resume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Resume eligible checkpoint
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_GITHUB_OWNER: M-Osugi1230
+          ADE_GITHUB_REPO: autonomous-development-engine
+        run: python .github/trusted/jules_resume.py
+
+      - name: Upload resume result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-resume-result
+          path: .autodev/runtime/jules-session.json
+          if-no-files-found: ignore
