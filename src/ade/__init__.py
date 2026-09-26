@@ -56,6 +56,14 @@ from .models import ProjectState, ProjectStatus, TaskStatus
 from .preview import PreviewKind, PreviewManifest
 from .preview_store import PreviewStore
 from .provider_registry import ProviderRegistration, ProviderRegistry
+from .provider_router import (
+    ProviderAvailability,
+    ProviderAvailabilitySnapshot,
+    RoutingDecision,
+    RoutingOutcome,
+    RoutingSkip,
+    route_provider,
+)
 from .provider_routing import (
     ProviderCapability,
     ProviderCostClass,
@@ -108,12 +116,17 @@ __all__ = [
     "PreviewKind",
     "PreviewManifest",
     "PreviewStore",
+    "ProviderAvailability",
+    "ProviderAvailabilitySnapshot",
     "ProviderCapability",
     "ProviderCostClass",
     "ProviderDescriptor",
     "ProviderRegistration",
     "ProviderRegistry",
+    "RoutingDecision",
+    "RoutingOutcome",
     "RoutingRequest",
+    "RoutingSkip",
     "ProjectState",
     "ProjectStatus",
     "RepairDisposition",
@@ -146,6 +159,7 @@ __all__ = [
     "plan_repair",
     "render_mission_control",
     "resume_task_after_decision",
+    "route_provider",
     "runnable_tasks",
     "run_checkpointed_cycle",
     "run_cycle",
