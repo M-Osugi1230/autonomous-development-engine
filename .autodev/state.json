@@ -83,6 +83,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "READY",
-  "updated_at": "2026-09-27T06:57:55.656248+00:00"
+  "status": "RUNNING",
+  "updated_at": "2026-09-27T06:58:11.196392+00:00"
 }
