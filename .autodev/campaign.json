@@ -7,6 +7,10 @@
     "vertical-slice-044",
     "vertical-slice-045"
   ],
-  "status": "RUNNING",
-  "completed_task_ids": []
+  "status": "COMPLETED",
+  "completed_task_ids": [
+    "vertical-slice-043",
+    "vertical-slice-044",
+    "vertical-slice-045"
+  ]
 }
