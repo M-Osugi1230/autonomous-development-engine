@@ -158,10 +158,20 @@
 
 ## Phase 16 — Goal → Plan → Execution
 
-- [ ] A high-level development goal can be converted into a bounded validated task graph without manually authoring each CycleTask.
-- [ ] Planner output includes explicit acceptance criteria, dependency edges, allowed paths, and human-only boundaries before execution.
-- [ ] Invalid, cyclic, over-broad, or destructive plans are rejected before provider dispatch.
-- [ ] Identical normalized goal + repository context produces a stable plan fingerprint and restart resumes the accepted plan.
-- [ ] The trusted controller executes an accepted generated plan through the existing campaign/DAG/recovery gates without weakening them.
-- [ ] A deterministic planning probe proves validation, cycle rejection, scope rejection, and stable fingerprints.
-- [ ] A real bounded goal is planned and completed through at least two generated tasks without manually writing their task prompts.
+- [x] A high-level development goal can be converted into a bounded validated task graph without manually authoring each provider prompt.
+- [x] Planner output includes explicit acceptance criteria, dependency edges, allowed paths, and human-only boundaries before execution.
+- [x] Invalid, cyclic, over-broad, or destructive plans are rejected before provider dispatch.
+- [x] Identical normalized goal + bounded work items produce a stable plan fingerprint and accepted-plan reload rejects drift.
+- [x] The trusted controller executes an accepted generated plan through the existing campaign/DAG/recovery gates without weakening them.
+- [x] Deterministic planning tests prove validation, cycle rejection, scope rejection, stable fingerprints, and compilation.
+- [x] Real campaign `phase16-goal-campaign-001` completed two generated tasks through PR #103 and PR #104 with no manually authored provider prompts and no manual dispatch between tasks.
+
+## Phase 17 — Production Graduation
+
+- [ ] A production-graduation campaign runs at least three dependency-linked tasks through trusted PR/CI advancement.
+- [ ] The graduation evidence includes a real autonomous recovery path, restart/resume evidence, and a bounded HUMAN_WAIT/escalation proof.
+- [ ] Duplicate dispatch/session and stale recovery protections remain green under the final CI suite.
+- [ ] Mission Control reports the graduation campaign lifecycle and terminal state without exposing secrets.
+- [ ] All durable state, campaign evidence, acceptance, and roadmap records reconcile to the same terminal outcome.
+- [ ] No unresolved safety-critical defect remains in provider dispatch, lease, PR provenance/scope, CI gate, recovery, or plan validation.
+- [ ] ADE v1.0 is marked Production Graduated only after the complete final CI/proof suite is green and structured graduation evidence is persisted.
