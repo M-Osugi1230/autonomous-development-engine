@@ -1,9 +1,0 @@
-{
-  "schema_version": 1,
-  "pilot_id": "one-minute-cli-command-guard-002",
-  "contract_fingerprint": "b3752515c268eecaf6c58cb8193116e43dbe2c329f4670eb97842f2d16007fbc",
-  "provider_id": "jules",
-  "baseline_sha": "9fb55ba7c7f59ead4577b63e92cc26ec7c0a64c4",
-  "requested_by": "M-Osugi1230",
-  "requested_at": "2026-09-27T02:20:00Z"
-}
