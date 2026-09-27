@@ -285,7 +285,12 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
       </dl>
     </section>
 
-    <section class="card" aria-labelledby="campaign-heading">\n      <h2 id="campaign-heading">Campaign</h2>\n      $campaign\n    </section>\n\n    <section class="card" aria-labelledby="checkpoint-heading">
+    <section class="card" aria-labelledby="campaign-heading">
+      <h2 id="campaign-heading">Campaign</h2>
+      $campaign
+    </section>
+
+    <section class="card" aria-labelledby="checkpoint-heading">
       <h2 id="checkpoint-heading">Checkpoint</h2>
       $checkpoint
     </section>
@@ -333,7 +338,9 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
 """)
     return template.substitute(
         project_id=_text(snapshot.project_id),
-        status=_text(snapshot.project_status),\n        lifecycle_status=_text(snapshot.lifecycle_status),\n        campaign=_campaign_card(snapshot),
+        status=_text(snapshot.project_status),
+        lifecycle_status=_text(snapshot.lifecycle_status),
+        campaign=_campaign_card(snapshot),
         iteration=_text(snapshot.iteration),
         completed=_text(snapshot.completed_tasks),
         queue_depth=_text(snapshot.queue_depth),
