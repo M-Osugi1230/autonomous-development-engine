@@ -47,17 +47,17 @@
     "vertical-slice-044",
     "vertical-slice-045"
   ],
-  "current_task_id": "vertical-slice-046",
+  "current_task_id": "phase16-goal-001",
   "failed_task_ids": [],
   "iteration": 45,
   "metadata": {
-    "campaign_id": "phase15-recovery-campaign-001",
+    "campaign_id": "phase16-goal-campaign-001",
     "dag_blocked": false,
     "manual_progress_during_provider_quota": true,
     "milestone": "phase12-complete",
     "next_required_human_action": null,
-    "next_system_action": "run-recovery-proof",
-    "phase": "phase15-recovery-proof",
+    "next_system_action": "run-generated-goal-campaign",
+    "phase": "phase16-goal-proof",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
     "pilot_activated_at": "2026-09-26T14:09:22Z",
@@ -81,7 +81,8 @@
     "queue_exhausted": true,
     "recovery_action": "REPAIR",
     "recovery_failure": "CI_FAILURE",
-    "scheduler": "dag"
+    "scheduler": "dag",
+    "plan_source": "scripts/phase16_goal_fixture.py"
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",

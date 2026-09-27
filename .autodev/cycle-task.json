@@ -1,7 +1,7 @@
 {
-  "task_id": "vertical-slice-046",
-  "title": "Add recovery status summary",
-  "prompt": "Add a small pure helper in src/ade/recovery_summary.py that summarizes a RecoveryRecord into a secret-free dictionary with task_id, failure, action, retry/repair/rebase/replan counts, and repeated_failures. Add focused stdlib tests. IMPORTANT recovery proof: on your first implementation, intentionally make exactly one test assertion fail while keeping code syntactically valid; create the PR. If this task is dispatched again after CI failure, inspect the existing task branch/PR and repair that failing test or implementation so the same PR becomes green. Do not change .github, .autodev, GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, or pyproject.toml.",
+  "task_id": "phase16-goal-001",
+  "title": "Implement text normalization utility",
+  "prompt": "Goal: Add a small reusable text normalization utility and prove it with focused tests. Outcome: Add a pure normalize_text helper that trims surrounding whitespace and collapses internal whitespace.\nAllowed paths: src/ade/text_normalization.py\nAcceptance: normalize_text is pure and deterministic; empty or whitespace-only input returns an empty string\nDo not modify files outside the allowed paths.",
   "starting_branch": "main",
   "auto_create_pr": true,
   "timeout_seconds": 1800,
