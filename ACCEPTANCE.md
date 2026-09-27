@@ -139,9 +139,18 @@
 
 ## Phase 14 — Mission Control / Observability
 
-- [ ] A single safe operational snapshot exposes active campaign progress, current task, DAG blockers, latest PR/CI evidence, retries/recovery, and human-wait state.
-- [ ] Durable events use stable IDs so controller retries cannot duplicate operator-visible history.
-- [ ] Campaign evidence and live canonical state are reconciled into one deterministic read model.
-- [ ] Mission Control clearly distinguishes RUNNING, RECOVERING, HUMAN_WAIT, FAILED, and COMPLETED without provider-session or secret leakage.
-- [ ] A deterministic observability probe proves restart/retry event idempotency and completed-campaign rendering.
-- [ ] The cloud Mission Control workflow produces a current artifact from the Phase 14 read model.
+- [x] A single safe operational snapshot exposes active campaign progress, current task, blockers, latest PR evidence, recovery state, and human-wait state.
+- [x] Durable activity events use stable IDs and reject conflicting duplicate IDs.
+- [x] Campaign evidence and live canonical state are represented in one deterministic read model with warnings for inconsistent runtime ledgers.
+- [x] Mission Control distinguishes RUNNING, RECOVERING, HUMAN_WAIT, FAILED, and COMPLETED without provider-session or secret leakage.
+- [x] Existing deterministic Mission Control probes plus campaign/lifecycle tests prove restart-safe read-model behavior.
+- [x] The cloud Mission Control workflow builds the current read model as a read-only artifact.
+
+## Phase 15 — Autonomous Recovery
+
+- [ ] Recovery classification covers CI failure, merge conflict, provider/infrastructure failure, stale state, and invalid implementation.
+- [ ] Each recoverable class maps to a bounded retry, repair task, rebase/replan, or safe wait action.
+- [ ] Recovery budgets prevent infinite repair loops and escalate exhausted/unsafe cases to HUMAN_WAIT or FAILED.
+- [ ] Recovery actions are idempotent across controller restart and do not duplicate provider sessions or repair tasks.
+- [ ] A deterministic recovery probe proves fail -> classify -> repair/retry -> green completion and budget exhaustion.
+- [ ] A real bounded campaign demonstrates at least one autonomous recovery without a new human task dispatch.
