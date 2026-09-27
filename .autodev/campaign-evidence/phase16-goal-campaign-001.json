@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "campaign_id": "phase16-goal-campaign-001",
+  "goal": "Add a small reusable text normalization utility and prove it with focused tests.",
+  "plan_source": "scripts/phase16_goal_fixture.py",
+  "initial_dispatch_run": 36351587666,
+  "tasks": [
+    {
+      "task_id": "phase16-goal-001",
+      "pull_request": 103,
+      "ci_run": 36351773123,
+      "merge_commit": "61bed91f8c718ec6f3a5a0a732e75ae3c2a3df8b"
+    },
+    {
+      "task_id": "phase16-goal-002",
+      "dispatch_run": 36351801679,
+      "pull_request": 104,
+      "ci_run": 36351932698,
+      "merge_commit": "f78bbd99921dd5ffddfeb027f5e6a25c60727729"
+    }
+  ],
+  "terminal_status": "COMPLETED",
+  "manual_task_prompts": false,
+  "manual_dispatch_between_tasks": false
+}
