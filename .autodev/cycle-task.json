@@ -1,10 +1,10 @@
 {
   "auto_create_pr": true,
   "poll_interval_seconds": 15,
-  "prompt": "Add a pure campaign status derivation helper that maps campaign task membership plus TaskGraph states to RUNNING, HUMAN_WAIT, FAILED, or COMPLETED without side effects. Add focused tests for partial progress, complete, human wait, failure, and unrelated graph tasks. Do not change trusted workflows or .autodev files.",
+  "prompt": "Add a deterministic, secret-free campaign evidence summary model/function reporting campaign id, goal, completed/total task counts, terminal status, and ordered task ids. Add focused stdlib tests for deterministic serialization and secret-free output. Do not change trusted workflows or .autodev files.",
   "schema_version": 1,
   "starting_branch": "main",
-  "task_id": "vertical-slice-044",
+  "task_id": "vertical-slice-045",
   "timeout_seconds": 1800,
-  "title": "Add campaign status derivation"
+  "title": "Add campaign evidence summary"
 }
