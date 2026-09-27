@@ -33,6 +33,11 @@ jobs:
       - name: Trusted DAG dispatch proof
         run: python .github/trusted/dag_dispatch_probe.py
 
+      - name: Execution lease duplicate-dispatch proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/execution_lease_probe.py
+
       - name: Multi-provider routing proof
         env:
           PYTHONPATH: src
