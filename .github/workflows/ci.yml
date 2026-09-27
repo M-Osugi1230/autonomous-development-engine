@@ -48,6 +48,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/long_run_campaign_probe.py
 
+      - name: Mission Control observability proof
+        env:
+          PYTHONPATH: src
+        run: python scripts/mission_control_probe.py
+
       - name: Multi-provider routing proof
         env:
           PYTHONPATH: src

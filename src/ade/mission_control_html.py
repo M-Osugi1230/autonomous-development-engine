@@ -133,6 +133,24 @@ def _activity_feed(snapshot: MissionControlSnapshot) -> str:
     return '<ol class="activity-list">' + "".join(items) + "</ol>"
 
 
+def _campaign_card(snapshot: MissionControlSnapshot) -> str:
+    campaign = snapshot.campaign
+    if campaign is None:
+        return '<p class="empty">No active campaign.</p>'
+    return """<dl class="detail-grid">
+      <div><dt>Campaign</dt><dd>{campaign_id}</dd></div>
+      <div><dt>Goal</dt><dd>{goal}</dd></div>
+      <div><dt>Status</dt><dd>{status}</dd></div>
+      <div><dt>Progress</dt><dd>{completed} / {total}</dd></div>
+    </dl>""".format(
+        campaign_id=_text(campaign.get("campaign_id")),
+        goal=_text(campaign.get("goal")),
+        status=_text(campaign.get("status")),
+        completed=_text(campaign.get("completed_tasks")),
+        total=_text(campaign.get("total_tasks")),
+    )
+
+
 def render_mission_control(snapshot: MissionControlSnapshot) -> str:
     if not isinstance(snapshot, MissionControlSnapshot):
         raise ValueError("snapshot must be a MissionControlSnapshot")
@@ -247,7 +265,7 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
     <h1>Mission Control</h1>
     <p class="subtitle">$project_id</p>
     <div class="status-row" aria-label="Project summary">
-      <div class="card stat"><strong>$status</strong><span>Status</span></div>
+      <div class="card stat"><strong>$lifecycle_status</strong><span>Lifecycle</span></div>
       <div class="card stat"><strong>$iteration</strong><span>Iteration</span></div>
       <div class="card stat"><strong>$completed</strong><span>Completed tasks</span></div>
       <div class="card stat"><strong>$queue_depth</strong><span>Queued tasks</span></div>
@@ -265,6 +283,11 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
         <div><dt>Queue exhausted</dt><dd>$queue_exhausted</dd></div>
         <div><dt>Failed tasks</dt><dd>$failed</dd></div>
       </dl>
+    </section>
+
+    <section class="card" aria-labelledby="campaign-heading">
+      <h2 id="campaign-heading">Campaign</h2>
+      $campaign
     </section>
 
     <section class="card" aria-labelledby="checkpoint-heading">
@@ -316,6 +339,8 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
     return template.substitute(
         project_id=_text(snapshot.project_id),
         status=_text(snapshot.project_status),
+        lifecycle_status=_text(snapshot.lifecycle_status),
+        campaign=_campaign_card(snapshot),
         iteration=_text(snapshot.iteration),
         completed=_text(snapshot.completed_tasks),
         queue_depth=_text(snapshot.queue_depth),
