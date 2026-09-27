@@ -262,6 +262,7 @@ class MissionControlSnapshot:
     activity: tuple[MissionActivitySummary, ...] = ()
     preview: MissionPreviewSummary | None = None
     campaign: dict[str, Any] | None = None
+    lifecycle_status: str = "RUNNING"
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -316,6 +317,7 @@ class MissionControlSnapshot:
             "activity": [event.to_dict() for event in self.activity],
             "preview": self.preview.to_dict() if self.preview is not None else None,
             "campaign": self.campaign,
+            "lifecycle_status": self.lifecycle_status,
         }
 
 
