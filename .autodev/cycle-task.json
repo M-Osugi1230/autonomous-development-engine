@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
-  "task_id": "vertical-slice-043",
-  "title": "Add durable campaign store",
-  "prompt": "Add src/ade/campaign_store.py with atomic human-readable JSON persistence for AutonomousCampaign using the repository's existing atomic-store conventions. Add focused stdlib tests for round-trip, missing file, invalid payload, atomic replacement, and no caller mutation. Export public API if appropriate. Do not change trusted workflows or .autodev files.",
-  "starting_branch": "main",
   "auto_create_pr": true,
+  "poll_interval_seconds": 15,
+  "prompt": "Add a pure campaign status derivation helper that maps campaign task membership plus TaskGraph states to RUNNING, HUMAN_WAIT, FAILED, or COMPLETED without side effects. Add focused tests for partial progress, complete, human wait, failure, and unrelated graph tasks. Do not change trusted workflows or .autodev files.",
+  "schema_version": 1,
+  "starting_branch": "main",
+  "task_id": "vertical-slice-044",
   "timeout_seconds": 1800,
-  "poll_interval_seconds": 15
+  "title": "Add campaign status derivation"
 }
