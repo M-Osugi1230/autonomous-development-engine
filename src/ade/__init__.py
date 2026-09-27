@@ -3,6 +3,7 @@
 from .acceptance import AcceptanceReport, CheckResult, build_report
 from .activity import ActivityEvent, ActivityKind
 from .campaign import AutonomousCampaign, CampaignStatus
+from .campaign_runtime import complete_campaign_task, derive_campaign_status
 from .campaign_store import CampaignStore, DEFAULT_CAMPAIGN_PATH
 from .activity_store import ActivityStore
 from .checkpoint import CheckpointState, TaskCheckpoint
@@ -229,7 +230,9 @@ __all__ = [
     "checkpoint_from_completed",
     "checkpoint_from_repair_plan",
     "checkpoint_from_session",
+    "complete_campaign_task",
     "decide_interrupt",
+    "derive_campaign_status",
     "decide_repair",
     "decide_resume",
     "evaluate_availability",
