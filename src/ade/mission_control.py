@@ -430,7 +430,7 @@ def build_mission_control_snapshot(
     if state.status.value == "HUMAN_WAIT" and not open_decisions:
         warnings.append("project is HUMAN_WAIT but no open human decision exists")
 
-    metadata = state.metadata if isinstance(state.metadata, dict) else {}
+    campaign_payload = None\n    campaign_path = autodev / "campaign.json"\n    if campaign_path.exists():\n        raw_campaign = _load_json_object(campaign_path, label="campaign")\n        task_ids = raw_campaign.get("task_ids", [])\n        completed_ids = raw_campaign.get("completed_task_ids", [])\n        if raw_campaign.get("schema_version") != 1 or not isinstance(task_ids, list) or not isinstance(completed_ids, list):\n            raise ValueError("invalid campaign read model")\n        campaign_payload = {\n            "campaign_id": _redact_display_text(str(raw_campaign.get("campaign_id", ""))),\n            "goal": _redact_display_text(str(raw_campaign.get("goal", ""))),\n            "status": str(raw_campaign.get("status", "RUNNING")),\n            "completed_tasks": len(completed_ids),\n            "total_tasks": len(task_ids),\n        }\n\n    metadata = state.metadata if isinstance(state.metadata, dict) else {}
     queue_exhausted_value = metadata.get("queue_exhausted", False)
     queue_exhausted = (
         queue_exhausted_value if type(queue_exhausted_value) is bool else False
