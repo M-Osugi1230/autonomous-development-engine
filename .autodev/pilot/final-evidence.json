@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "pilot_id": "one-minute-cli-command-guard-002",
+  "contract_fingerprint": "b3752515c268eecaf6c58cb8193116e43dbe2c329f4670eb97842f2d16007fbc",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "baseline_sha": "9fb55ba7c7f59ead4577b63e92cc26ec7c0a64c4",
+  "base_branch": "main",
+  "pull_request_base_sha": "9fb55ba7c7f59ead4577b63e92cc26ec7c0a64c4",
+  "changed_paths": [
+    "src/thought_pipeline/cli.py",
+    "tests/test_cli.py"
+  ],
+  "final_head_sha": "954eabde5048a1a2f82f70af62143fe4588884d9",
+  "pull_request_url": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/3",
+  "ci_evidence_urls": [
+    "https://github.com/M-Osugi1230/one-minute-thought-experiments/actions/runs/36289093079",
+    "https://github.com/M-Osugi1230/one-minute-thought-experiments/actions/runs/36289467287"
+  ],
+  "provider_id": "jules",
+  "acceptance_checks": [
+    {
+      "check_id": "compile",
+      "command": "python -m compileall -q src pipeline.py",
+      "passed": true
+    },
+    {
+      "check_id": "validate",
+      "command": "python pipeline.py validate",
+      "passed": true
+    },
+    {
+      "check_id": "tests",
+      "command": "python -m pytest -q",
+      "passed": true
+    },
+    {
+      "check_id": "offline-generate",
+      "command": "python pipeline.py 001 --offline --output-root /tmp/ade-pilot-output --overwrite",
+      "passed": true
+    }
+  ],
+  "rollback_boundary_sha": "9fb55ba7c7f59ead4577b63e92cc26ec7c0a64c4",
+  "completed_at": "2026-09-27T02:45:00Z"
+}
