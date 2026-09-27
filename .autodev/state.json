@@ -63,16 +63,16 @@
     "pilot_id": "one-minute-cli-command-guard-002",
     "pilot_provider": "jules",
     "pilot_target_repository": "M-Osugi1230/one-minute-thought-experiments",
-    "queue_exhausted": true,
-    "scheduler": "dag",
-    "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_baseline_sha": "46d2d473305ca8c904f90c78bc8f8aabf3fd7319",
+    "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
+    "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot."
+    "queue_exhausted": true,
+    "scheduler": "dag"
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
   "status": "RUNNING",
-  "updated_at": "2026-09-26T23:53:42.836514+00:00"
+  "updated_at": "2026-09-27T02:34:04.169224+00:00"
 }
