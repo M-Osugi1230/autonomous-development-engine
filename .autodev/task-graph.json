@@ -2,15 +2,18 @@
   "schema_version": 1,
   "tasks": [
     {
-      "task_id": "vertical-slice-046",
-      "title": "Add recovery status summary",
-      "prompt": "Add a small pure helper in src/ade/recovery_summary.py that summarizes a RecoveryRecord into a secret-free dictionary with task_id, failure, action, retry/repair/rebase/replan counts, and repeated_failures. Add focused stdlib tests. IMPORTANT recovery proof: on your first implementation, intentionally make exactly one test assertion fail while keeping code syntactically valid; create the PR. If this task is dispatched again after CI failure, inspect the existing task branch/PR and repair that failing test or implementation so the same PR becomes green. Do not change .github, .autodev, GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, or pyproject.toml.",
-      "starting_branch": "main",
-      "auto_create_pr": true,
-      "timeout_seconds": 1800,
-      "poll_interval_seconds": 15,
+      "task": {
+        "task_id": "vertical-slice-046",
+        "title": "Add recovery status summary",
+        "prompt": "Add a small pure helper in src/ade/recovery_summary.py that summarizes a RecoveryRecord into a secret-free dictionary with task_id, failure, action, retry/repair/rebase/replan counts, and repeated_failures. Add focused stdlib tests. IMPORTANT recovery proof: on your first implementation, intentionally make exactly one test assertion fail while keeping code syntactically valid; create the PR. If this task is dispatched again after CI failure, inspect the existing task branch/PR and repair that failing test or implementation so the same PR becomes green. Do not change .github, .autodev, GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, or pyproject.toml.",
+        "starting_branch": "main",
+        "auto_create_pr": true,
+        "timeout_seconds": 1800,
+        "poll_interval_seconds": 15
+      },
+      "depends_on": [],
       "status": "RUNNING",
-      "depends_on": []
+      "decision_id": null
     }
   ]
 }
