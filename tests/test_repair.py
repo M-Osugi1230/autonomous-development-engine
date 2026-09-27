@@ -278,3 +278,13 @@ class TestRepairPrimitives(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    def test_operational_recovery_kinds_replan_then_fail(self) -> None:
+        for kind in (
+            FailureKind.CI_FAILURE,
+            FailureKind.MERGE_CONFLICT,
+            FailureKind.STALE_STATE,
+            FailureKind.INVALID_IMPLEMENTATION,
+        ):
+            self.assertEqual(decide_repair(kind, 0, 0), RepairDisposition.REPLAN)
+            self.assertEqual(decide_repair(kind, 0, 1), RepairDisposition.FAIL)
+
