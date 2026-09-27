@@ -60,3 +60,11 @@ Run ADE against a real project with explicit acceptance criteria.
 Build order: immutable pilot contract -> atomic contract store -> read-only preflight -> contract-bound human activation -> pure dry-run enforcement -> one bounded production PR -> final evidence record.
 
 Evidence: the original pilot was truthfully recorded as baseline-blocked, the target baseline was repaired independently, and successor pilot `one-minute-cli-command-guard-002` produced reviewable target PR #3 from the newly frozen baseline. Its two-file scope, base SHA, target CI, deterministic compile acceptance, provider identity, and rollback boundary are recorded in `.autodev/pilot/final-evidence.json`. The target production PR remains intentionally unmerged.
+
+
+## Phase 12 — Production Hardening
+Make autonomous execution safe under duplicate dispatches, transient infrastructure failures, stale state, and interrupted controllers.
+
+Build order: execution lease/idempotency boundary -> stale-lease recovery -> transient GitHub/provider retry classification -> duplicate-dispatch proof -> interruption/timeout fault-injection proof -> production hardening evidence.
+
+Current status: Phase 12 started after the successful Phase 11 production pilot. The first milestone is a provider-agnostic execution lease that prevents two trusted runners from starting the same task concurrently while allowing deterministic stale-lease recovery.
