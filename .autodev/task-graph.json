@@ -2,50 +2,50 @@
   "schema_version": 1,
   "tasks": [
     {
+      "decision_id": null,
+      "depends_on": [],
+      "status": "COMPLETED",
       "task": {
-        "task_id": "vertical-slice-043",
-        "title": "Add durable campaign store",
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
         "prompt": "Add src/ade/campaign_store.py with atomic human-readable JSON persistence for AutonomousCampaign using the repository's existing atomic-store conventions. Add focused stdlib tests for round-trip, missing file, invalid payload, atomic replacement, and no caller mutation. Export public API if appropriate. Do not change trusted workflows or .autodev files.",
         "starting_branch": "main",
-        "auto_create_pr": true,
+        "task_id": "vertical-slice-043",
         "timeout_seconds": 1800,
-        "poll_interval_seconds": 15
-      },
-      "depends_on": [],
-      "status": "RUNNING",
-      "decision_id": null
+        "title": "Add durable campaign store"
+      }
     },
     {
-      "task": {
-        "task_id": "vertical-slice-044",
-        "title": "Add campaign status derivation",
-        "prompt": "Add a pure campaign status derivation helper that maps campaign task membership plus TaskGraph states to RUNNING, HUMAN_WAIT, FAILED, or COMPLETED without side effects. Add focused tests for partial progress, complete, human wait, failure, and unrelated graph tasks. Do not change trusted workflows or .autodev files.",
-        "starting_branch": "main",
-        "auto_create_pr": true,
-        "timeout_seconds": 1800,
-        "poll_interval_seconds": 15
-      },
+      "decision_id": null,
       "depends_on": [
         "vertical-slice-043"
       ],
-      "status": "PENDING",
-      "decision_id": null
+      "status": "RUNNING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Add a pure campaign status derivation helper that maps campaign task membership plus TaskGraph states to RUNNING, HUMAN_WAIT, FAILED, or COMPLETED without side effects. Add focused tests for partial progress, complete, human wait, failure, and unrelated graph tasks. Do not change trusted workflows or .autodev files.",
+        "starting_branch": "main",
+        "task_id": "vertical-slice-044",
+        "timeout_seconds": 1800,
+        "title": "Add campaign status derivation"
+      }
     },
     {
-      "task": {
-        "task_id": "vertical-slice-045",
-        "title": "Add campaign evidence summary",
-        "prompt": "Add a deterministic, secret-free campaign evidence summary model/function reporting campaign id, goal, completed/total task counts, terminal status, and ordered task ids. Add focused stdlib tests for deterministic serialization and secret-free output. Do not change trusted workflows or .autodev files.",
-        "starting_branch": "main",
-        "auto_create_pr": true,
-        "timeout_seconds": 1800,
-        "poll_interval_seconds": 15
-      },
+      "decision_id": null,
       "depends_on": [
         "vertical-slice-044"
       ],
       "status": "PENDING",
-      "decision_id": null
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Add a deterministic, secret-free campaign evidence summary model/function reporting campaign id, goal, completed/total task counts, terminal status, and ordered task ids. Add focused stdlib tests for deterministic serialization and secret-free output. Do not change trusted workflows or .autodev files.",
+        "starting_branch": "main",
+        "task_id": "vertical-slice-045",
+        "timeout_seconds": 1800,
+        "title": "Add campaign evidence summary"
+      }
     }
   ]
 }
