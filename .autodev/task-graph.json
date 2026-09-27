@@ -37,7 +37,7 @@
         "phase17-final-001",
         "phase17-final-002"
       ],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
