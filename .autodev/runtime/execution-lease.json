@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-09-27T21:24:10.912185+00:00",
+  "acquired_at": "2026-09-27T21:27:39.108682+00:00",
   "attempt": 1,
-  "expires_at": "2026-09-27T22:14:10.912185+00:00",
-  "owner_id": "github-actions:36351587666:1",
+  "expires_at": "2026-09-27T22:17:39.108682+00:00",
+  "owner_id": "github-actions:36351801679:1",
   "schema_version": 1,
-  "task_id": "phase16-goal-001"
+  "task_id": "phase16-goal-002"
 }
