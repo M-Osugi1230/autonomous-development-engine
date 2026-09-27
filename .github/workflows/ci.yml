@@ -53,6 +53,11 @@ jobs:
           PYTHONPATH: src
         run: python scripts/mission_control_probe.py
 
+      - name: Autonomous recovery fault proof
+        env:
+          PYTHONPATH: src
+        run: python scripts/recovery_fault_probe.py
+
       - name: Multi-provider routing proof
         env:
           PYTHONPATH: src
