@@ -110,5 +110,5 @@
 - [x] A read-only preflight proves target repository, base branch, baseline SHA, provider availability, and acceptance-command readiness before any write.
 - [x] Human activation is persisted when the contract requires it; absence of activation prevents all target writes.
 - [x] A dry-run probe proves path/action enforcement and produces evidence without modifying the target repository.
-- [ ] One bounded production pilot creates a reviewable pull request against the selected target and passes every declared acceptance check.
-- [ ] Final pilot evidence records baseline SHA, final head SHA, PR URL, CI evidence, provider identity, and rollback boundary.
+- [x] One bounded production pilot creates a reviewable pull request against the selected target and passes every declared acceptance check.
+- [x] Final pilot evidence records baseline SHA, final head SHA, PR URL, CI evidence, provider identity, and rollback boundary.

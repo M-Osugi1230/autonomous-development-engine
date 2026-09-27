@@ -54,9 +54,9 @@ Build order: immutable DAG model -> atomic store + pure runnable scheduler -> va
 ## Phase 10 — Multi-provider Routing ✅
 Add additional hosted/local providers behind the same interface.
 
-## Phase 11 — Production Project Pilot
+## Phase 11 — Production Project Pilot ✅
 Run ADE against a real project with explicit acceptance criteria.
 
 Build order: immutable pilot contract -> atomic contract store -> read-only preflight -> contract-bound human activation -> pure dry-run enforcement -> one bounded production PR -> final evidence record.
 
-Current status: the contract, preflight, activation gate, and no-write dry-run safety proof are implemented. The remaining milestone is the first bounded production pilot PR and its final evidence package.
+Evidence: the original pilot was truthfully recorded as baseline-blocked, the target baseline was repaired independently, and successor pilot `one-minute-cli-command-guard-002` produced reviewable target PR #3 from the newly frozen baseline. Its two-file scope, base SHA, target CI, deterministic compile acceptance, provider identity, and rollback boundary are recorded in `.autodev/pilot/final-evidence.json`. The target production PR remains intentionally unmerged.

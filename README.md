@@ -48,4 +48,4 @@ Never commit provider API keys. The Jules key is read only from the `JULES_API_K
 
 ## Current milestone
 
-Phase 11: Production Project Pilot. The pilot contract, read-only preflight, contract-bound human activation gate, and no-write dry-run safety proof are complete. The next step is an explicitly human-activated bounded pilot against a selected real target repository; no target write is allowed before that activation.
+Phase 11: Production Project Pilot is complete. A bounded Jules pilot produced a reviewable two-file pull request against the frozen production baseline, all declared acceptance checks passed, and durable final evidence records the PR, CI, provider, baseline, final head, and rollback boundary. The target production PR remains intentionally unmerged for human review.
