@@ -63,6 +63,16 @@ jobs:
           PYTHONPATH: src
         run: python scripts/multi_provider_probe.py
 
+      - name: Checkpoint restart proof
+        env:
+          PYTHONPATH: src
+        run: python scripts/checkpoint_resume_probe.py
+
+      - name: Human decision boundary proof
+        env:
+          PYTHONPATH: src
+        run: python scripts/human_decision_probe.py
+
       - name: Production Graduation audit
         env:
           PYTHONPATH: src
