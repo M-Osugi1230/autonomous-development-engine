@@ -1,10 +1,10 @@
 {
   "attempt": 0,
-  "last_error": "current lease belongs to another task",
-  "last_failure_kind": "PROVIDER_ERROR",
-  "provider_session_id": null,
+  "last_error": null,
+  "last_failure_kind": null,
+  "provider_session_id": "7145672220850055720",
   "replan_count": 0,
   "resume_after": null,
-  "state": "FAILED",
+  "state": "RUNNING",
   "task_id": "vertical-slice-044"
 }
