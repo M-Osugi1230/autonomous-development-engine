@@ -14,6 +14,10 @@ class FailureKind(StrEnum):
     CYCLE_FAILED = "CYCLE_FAILED"
     PROVIDER_ERROR = "PROVIDER_ERROR"
     VALIDATION_ERROR = "VALIDATION_ERROR"
+    CI_FAILURE = "CI_FAILURE"
+    MERGE_CONFLICT = "MERGE_CONFLICT"
+    STALE_STATE = "STALE_STATE"
+    INVALID_IMPLEMENTATION = "INVALID_IMPLEMENTATION"
     UNKNOWN = "UNKNOWN"
 
 
@@ -97,7 +101,7 @@ def decide_repair(
             return RepairDisposition.REPLAN
         return RepairDisposition.FAIL
 
-    if kind is FailureKind.VALIDATION_ERROR:
+    if kind in (FailureKind.VALIDATION_ERROR, FailureKind.CI_FAILURE, FailureKind.MERGE_CONFLICT, FailureKind.STALE_STATE, FailureKind.INVALID_IMPLEMENTATION):
         if replan_count < policy.max_replans:
             return RepairDisposition.REPLAN
         return RepairDisposition.FAIL
