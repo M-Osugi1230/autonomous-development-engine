@@ -68,3 +68,11 @@ Make autonomous execution safe under duplicate dispatches, transient infrastruct
 Build order: execution lease/idempotency boundary -> stale-lease recovery -> transient GitHub/provider retry classification -> duplicate-dispatch proof -> interruption/timeout fault-injection proof -> production hardening evidence.
 
 Completed: trusted execution now has a provider-agnostic persisted lease, duplicate-dispatch suppression before provider session creation, deterministic stale-lease recovery, bounded transient GitHub retry, and CI fault-injection proofs for interruption, timeout, stale checkpoint isolation, and delayed-controller overlap.
+
+
+## Phase 13 — Long-running Autonomous Development
+Prove that ADE can own a bounded multi-task campaign rather than only one coding cycle at a time.
+
+Build order: durable campaign identity/progress -> campaign-aware DAG advancement -> restart-safe continuation -> bounded multi-task simulation -> real multi-PR campaign proof -> completion evidence.
+
+Current status: started. Existing DAG scheduling and PR-gate dispatch already provide the execution backbone; Phase 13 adds an explicit campaign boundary and proves continuity across many autonomous cycles.
