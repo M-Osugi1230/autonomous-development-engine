@@ -38,6 +38,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/execution_lease_probe.py
 
+      - name: Production fault-injection proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/fault_injection_probe.py
+
       - name: Multi-provider routing proof
         env:
           PYTHONPATH: src
