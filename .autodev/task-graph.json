@@ -2,51 +2,51 @@
   "schema_version": 1,
   "tasks": [
     {
+      "decision_id": null,
+      "depends_on": [],
+      "status": "COMPLETED",
       "task": {
-        "task_id": "phase17-final-001",
-        "title": "Add graduation metadata model",
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
         "prompt": "Goal: Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code. Outcome: Add a pure graduation_metadata helper returning a deterministic dictionary for version, status, and completed phase count.\nAllowed paths: src/ade/graduation.py\nAcceptance: helper is pure and deterministic; invalid empty version or status is rejected\nDo not modify files outside the allowed paths.",
         "starting_branch": "main",
-        "auto_create_pr": true,
+        "task_id": "phase17-final-001",
         "timeout_seconds": 1800,
-        "poll_interval_seconds": 15
-      },
-      "depends_on": [],
-      "status": "RUNNING",
-      "decision_id": null
+        "title": "Add graduation metadata model"
+      }
     },
     {
-      "task": {
-        "task_id": "phase17-final-002",
-        "title": "Prove graduation metadata",
-        "prompt": "Goal: Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code. Outcome: Add focused stdlib tests for the graduation_metadata helper including valid and invalid inputs.\nAllowed paths: tests/test_graduation.py\nAcceptance: focused tests cover deterministic output; invalid input behavior is tested\nDo not modify files outside the allowed paths.",
-        "starting_branch": "main",
-        "auto_create_pr": true,
-        "timeout_seconds": 1800,
-        "poll_interval_seconds": 15
-      },
+      "decision_id": null,
       "depends_on": [
         "phase17-final-001"
       ],
-      "status": "PENDING",
-      "decision_id": null
+      "status": "RUNNING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code. Outcome: Add focused stdlib tests for the graduation_metadata helper including valid and invalid inputs.\nAllowed paths: tests/test_graduation.py\nAcceptance: focused tests cover deterministic output; invalid input behavior is tested\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "phase17-final-002",
+        "timeout_seconds": 1800,
+        "title": "Prove graduation metadata"
+      }
     },
     {
-      "task": {
-        "task_id": "phase17-final-003",
-        "title": "Add graduation summary helper",
-        "prompt": "Goal: Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code. Outcome: Extend the graduation module with a pure graduation_summary helper that formats the validated metadata into one stable human-readable line.\nAllowed paths: src/ade/graduation.py\nAcceptance: summary output is deterministic; existing graduation metadata behavior remains unchanged\nDo not modify files outside the allowed paths.",
-        "starting_branch": "main",
-        "auto_create_pr": true,
-        "timeout_seconds": 1800,
-        "poll_interval_seconds": 15
-      },
+      "decision_id": null,
       "depends_on": [
         "phase17-final-001",
         "phase17-final-002"
       ],
       "status": "PENDING",
-      "decision_id": null
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code. Outcome: Extend the graduation module with a pure graduation_summary helper that formats the validated metadata into one stable human-readable line.\nAllowed paths: src/ade/graduation.py\nAcceptance: summary output is deterministic; existing graduation metadata behavior remains unchanged\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "phase17-final-003",
+        "timeout_seconds": 1800,
+        "title": "Add graduation summary helper"
+      }
     }
   ]
 }
