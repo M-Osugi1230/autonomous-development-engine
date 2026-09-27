@@ -125,3 +125,14 @@
 - [x] A deterministic duplicate-dispatch probe proves at-most-one provider-session creation under CI.
 - [x] Fault-injection tests prove safe recovery from controller interruption, API timeout, stale checkpoint, and delayed CI.
 - [x] Phase 12 hardening evidence is persisted and all hardening probes pass under CI.
+
+
+## Phase 13 — Long-running Autonomous Development
+
+- [ ] A durable campaign records one goal, its bounded task set, status, and completed progress.
+- [ ] DAG advancement updates campaign progress atomically with task completion and next-task selection.
+- [ ] Restarting the controller from persisted state resumes the same campaign without replaying completed tasks.
+- [ ] HUMAN_WAIT, FAILED, and BLOCKED descendants stop only the unsafe path and preserve campaign evidence.
+- [ ] A deterministic long-run probe completes a dependency graph across at least five task transitions with interruption/restart injection.
+- [ ] A bounded real campaign produces multiple sequential PR/CI cycles without manual dispatch between safe tasks.
+- [ ] Final campaign evidence records goal, task sequence, PRs, CI, interruptions/recovery, and terminal status.
