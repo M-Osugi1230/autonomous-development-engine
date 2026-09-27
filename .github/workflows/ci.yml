@@ -43,6 +43,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/fault_injection_probe.py
 
+      - name: Long-running campaign restart proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/long_run_campaign_probe.py
+
       - name: Multi-provider routing proof
         env:
           PYTHONPATH: src
