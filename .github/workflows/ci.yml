@@ -62,3 +62,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/multi_provider_probe.py
+
+      - name: Production Graduation audit
+        env:
+          PYTHONPATH: src
+        run: python scripts/graduation_audit.py
