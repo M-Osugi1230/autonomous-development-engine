@@ -165,6 +165,31 @@ class MissionControlSnapshotTests(unittest.TestCase):
         self.assertNotIn("resolved-context-must-not-render", serialized)
         self.assertNotIn("must-not-render", serialized)
 
+    def test_snapshot_exposes_safe_campaign_progress(self) -> None:
+        self.write_base_fixture()
+        self.write_json(
+            "campaign.json",
+            {
+                "schema_version": 1,
+                "campaign_id": "campaign-1",
+                "goal": "Complete bounded work",
+                "task_ids": ["task-4", "task-5"],
+                "status": "RUNNING",
+                "completed_task_ids": ["task-4"],
+            },
+        )
+        snapshot = build_mission_control_snapshot(self.root)
+        self.assertEqual(
+            snapshot.campaign,
+            {
+                "campaign_id": "campaign-1",
+                "goal": "Complete bounded work",
+                "status": "RUNNING",
+                "completed_tasks": 1,
+                "total_tasks": 2,
+            },
+        )
+
     def test_stale_metrics_warning_is_derived_from_state(self) -> None:
         self.write_base_fixture()
 

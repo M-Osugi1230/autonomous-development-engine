@@ -261,6 +261,7 @@ class MissionControlSnapshot:
     warnings: tuple[str, ...]
     activity: tuple[MissionActivitySummary, ...] = ()
     preview: MissionPreviewSummary | None = None
+    campaign: dict[str, Any] | None = None
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -314,6 +315,7 @@ class MissionControlSnapshot:
             "warnings": list(self.warnings),
             "activity": [event.to_dict() for event in self.activity],
             "preview": self.preview.to_dict() if self.preview is not None else None,
+            "campaign": self.campaign,
         }
 
 
@@ -430,6 +432,22 @@ def build_mission_control_snapshot(
     if state.status.value == "HUMAN_WAIT" and not open_decisions:
         warnings.append("project is HUMAN_WAIT but no open human decision exists")
 
+    campaign_payload = None
+    campaign_path = autodev / "campaign.json"
+    if campaign_path.exists():
+        raw_campaign = _load_json_object(campaign_path, label="campaign")
+        task_ids = raw_campaign.get("task_ids", [])
+        completed_ids = raw_campaign.get("completed_task_ids", [])
+        if raw_campaign.get("schema_version") != 1 or not isinstance(task_ids, list) or not isinstance(completed_ids, list):
+            raise ValueError("invalid campaign read model")
+        campaign_payload = {
+            "campaign_id": _redact_display_text(str(raw_campaign.get("campaign_id", ""))),
+            "goal": _redact_display_text(str(raw_campaign.get("goal", ""))),
+            "status": str(raw_campaign.get("status", "RUNNING")),
+            "completed_tasks": len(completed_ids),
+            "total_tasks": len(task_ids),
+        }
+
     metadata = state.metadata if isinstance(state.metadata, dict) else {}
     queue_exhausted_value = metadata.get("queue_exhausted", False)
     queue_exhausted = (
@@ -459,4 +477,5 @@ def build_mission_control_snapshot(
         warnings=tuple(warnings),
         activity=activity,
         preview=preview,
+        campaign=campaign_payload,
     )
