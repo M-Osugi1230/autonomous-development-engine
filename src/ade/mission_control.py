@@ -262,6 +262,7 @@ class MissionControlSnapshot:
     activity: tuple[MissionActivitySummary, ...] = ()
     preview: MissionPreviewSummary | None = None
     campaign: dict[str, Any] | None = None
+    lifecycle_status: str = "RUNNING"
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -316,6 +317,7 @@ class MissionControlSnapshot:
             "activity": [event.to_dict() for event in self.activity],
             "preview": self.preview.to_dict() if self.preview is not None else None,
             "campaign": self.campaign,
+            "lifecycle_status": self.lifecycle_status,
         }
 
 
@@ -454,6 +456,16 @@ def build_mission_control_snapshot(
         queue_exhausted_value if type(queue_exhausted_value) is bool else False
     )
 
+    lifecycle_status = "RUNNING"
+    if open_decisions or state.status.value == "HUMAN_WAIT":
+        lifecycle_status = "HUMAN_WAIT"
+    elif state.failed_task_ids or state.status.value == "FAILED":
+        lifecycle_status = "FAILED"
+    elif campaign_payload is not None and campaign_payload.get("status") == "COMPLETED":
+        lifecycle_status = "COMPLETED"
+    elif checkpoint is not None and checkpoint.state.value in {"PAUSED_QUOTA", "REPLAN"}:
+        lifecycle_status = "RECOVERING"
+
     return MissionControlSnapshot(
         project_id=_redact_display_text(state.project_id),
         project_status=state.status.value,
@@ -478,4 +490,5 @@ def build_mission_control_snapshot(
         activity=activity,
         preview=preview,
         campaign=campaign_payload,
+        lifecycle_status=lifecycle_status,
     )

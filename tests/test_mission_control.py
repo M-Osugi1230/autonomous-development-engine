@@ -190,6 +190,30 @@ class MissionControlSnapshotTests(unittest.TestCase):
             },
         )
 
+    def test_completed_campaign_sets_completed_lifecycle(self) -> None:
+        self.write_base_fixture()
+        self.write_json(
+            "campaign.json",
+            {
+                "schema_version": 1,
+                "campaign_id": "campaign-1",
+                "goal": "Complete bounded work",
+                "task_ids": ["task-4", "task-5"],
+                "status": "COMPLETED",
+                "completed_task_ids": ["task-4", "task-5"],
+            },
+        )
+        state = json.loads((self.autodev / "state.json").read_text(encoding="utf-8"))
+        state["status"] = "READY"
+        state["current_task_id"] = None
+        state["failed_task_ids"] = []
+        self.write_json("state.json", state)
+        self.write_json("failures.json", {"schema_version": 1, "failures": []})
+        (self.autodev / "runtime" / "checkpoint.json").unlink()
+        DecisionStore(self.autodev / "decisions.json").save([])
+        snapshot = build_mission_control_snapshot(self.root)
+        self.assertEqual(snapshot.lifecycle_status, "COMPLETED")
+
     def test_stale_metrics_warning_is_derived_from_state(self) -> None:
         self.write_base_fixture()
 
