@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-09-27T06:34:56.295592+00:00",
+  "acquired_at": "2026-09-27T06:52:25.564993+00:00",
   "attempt": 1,
-  "expires_at": "2026-09-27T07:24:56.295592+00:00",
-  "owner_id": "github-actions:36300511301:1",
+  "expires_at": "2026-09-27T07:42:25.564993+00:00",
+  "owner_id": "github-actions:36300732819:2",
   "schema_version": 1,
-  "task_id": "vertical-slice-043"
+  "task_id": "vertical-slice-044"
 }
