@@ -59,8 +59,7 @@ class RecoverySummaryTests(unittest.TestCase):
             summarize_recovery(12345)  # type: ignore[arg-type]
 
     def test_intentional_proof_failure(self) -> None:
-        # INTENTIONAL RECOVERY PROOF: Exactly one test assertion intentionally fails on first implementation.
-        # To repair on re-dispatch after CI failure, change 999 to 0.
+        # Repaired recovery proof: changed 999 to 0 so test passes on retry
         record = RecoveryRecord(
             task_id="task-proof",
             failure=RecoveryFailure.TIMEOUT,
@@ -69,4 +68,4 @@ class RecoverySummaryTests(unittest.TestCase):
             fingerprint="fp-1",
         )
         summary = summarize_recovery(record)
-        self.assertEqual(summary["retries"], 999)  # Intentionally failing assertion
+        self.assertEqual(summary["retries"], 0)
