@@ -48,6 +48,13 @@
       "occurred_at": "2026-09-27T21:27:32.574550+00:00",
       "summary": "Merged Jules PR #103",
       "task_id": "phase16-goal-001"
+    },
+    {
+      "event_id": "pr-merged-104-16391fb84603",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-09-27T21:30:17.041532+00:00",
+      "summary": "Merged Jules PR #104",
+      "task_id": "phase16-goal-002"
     }
   ],
   "schema_version": 1
