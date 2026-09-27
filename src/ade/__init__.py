@@ -2,6 +2,8 @@
 
 from .acceptance import AcceptanceReport, CheckResult, build_report
 from .activity import ActivityEvent, ActivityKind
+from .campaign import AutonomousCampaign, CampaignStatus
+from .campaign_store import CampaignStore, DEFAULT_CAMPAIGN_PATH
 from .activity_store import ActivityStore
 from .checkpoint import CheckpointState, TaskCheckpoint
 from .checkpoint_runtime import CheckpointedCycleExecution, run_checkpointed_cycle
@@ -128,6 +130,10 @@ from .task_graph_transition import resume_task_after_decision, transition_task
 __all__ = [
     "AcceptanceReport",
     "ActivityEvent",
+    "AutonomousCampaign",
+    "CampaignStatus",
+    "CampaignStore",
+    "DEFAULT_CAMPAIGN_PATH",
     "ActivityKind",
     "ActivityStore",
     "CheckResult",
