@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "campaign_id": "phase13-production-campaign-001",
+  "goal": "Prove multiple sequential trusted PR/CI cycles can advance without manual dispatch between safe tasks.",
+  "terminal_status": "COMPLETED",
+  "task_sequence": [
+    "vertical-slice-043",
+    "vertical-slice-044",
+    "vertical-slice-045"
+  ],
+  "pull_requests": [
+    {
+      "task_id": "vertical-slice-043",
+      "number": 76,
+      "head_sha": "416864fffbce1be6710bcf6abd5c14e6f383c717",
+      "ci_run_id": 36300714081
+    },
+    {
+      "task_id": "vertical-slice-044",
+      "number": 78,
+      "head_sha": "2b0e49b1bc9b842e49662ea9d34a21e12d66dcae",
+      "ci_run_id": 36301630319
+    },
+    {
+      "task_id": "vertical-slice-045",
+      "number": 79,
+      "head_sha": "0841c89cb71aaf2acff17aa30fa290f659ff6a1b",
+      "ci_run_id": 36301912247
+    }
+  ],
+  "dispatch_runs": [
+    {
+      "task_id": "vertical-slice-043",
+      "run_id": 36300511301,
+      "event": "workflow_dispatch"
+    },
+    {
+      "task_id": "vertical-slice-044",
+      "run_id": 36300732819,
+      "event": "repository_dispatch",
+      "recovery": "run attempt 2 after cross-task lease defect fix"
+    },
+    {
+      "task_id": "vertical-slice-045",
+      "run_id": 36301652258,
+      "event": "repository_dispatch"
+    }
+  ],
+  "interruptions_and_recovery": [
+    {
+      "kind": "CROSS_TASK_LEASE_HANDOFF",
+      "observed_on": "vertical-slice-044",
+      "repair_pr": 77,
+      "outcome": "RECOVERED"
+    },
+    {
+      "kind": "CAMPAIGN_PROGRESS_DRIFT",
+      "observed_after": "vertical-slice-045",
+      "repair_pr": 80,
+      "outcome": "RECONCILED"
+    }
+  ],
+  "manual_dispatch_between_safe_tasks": false,
+  "notes": "Initial campaign start was an explicit workflow_dispatch. Subsequent safe task transitions were repository_dispatch from the trusted PR gate. Task 044 required retry of its already-created repository_dispatch run after the lease defect was repaired; no new manual task dispatch was created."
+}
