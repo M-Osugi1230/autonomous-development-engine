@@ -261,6 +261,7 @@ class MissionControlSnapshot:
     warnings: tuple[str, ...]
     activity: tuple[MissionActivitySummary, ...] = ()
     preview: MissionPreviewSummary | None = None
+    campaign: dict[str, Any] | None = None
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -314,6 +315,7 @@ class MissionControlSnapshot:
             "warnings": list(self.warnings),
             "activity": [event.to_dict() for event in self.activity],
             "preview": self.preview.to_dict() if self.preview is not None else None,
+            "campaign": self.campaign,
         }
 
 
@@ -475,4 +477,5 @@ def build_mission_control_snapshot(
         warnings=tuple(warnings),
         activity=activity,
         preview=preview,
+        campaign=campaign_payload,
     )
