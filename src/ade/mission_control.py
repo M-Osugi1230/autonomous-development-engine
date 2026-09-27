@@ -456,7 +456,17 @@ def build_mission_control_snapshot(
         queue_exhausted_value if type(queue_exhausted_value) is bool else False
     )
 
-    lifecycle_status = "RUNNING"\n    if open_decisions or state.status.value == "HUMAN_WAIT":\n        lifecycle_status = "HUMAN_WAIT"\n    elif state.failed_task_ids or state.status.value == "FAILED":\n        lifecycle_status = "FAILED"\n    elif campaign_payload is not None and campaign_payload.get("status") == "COMPLETED":\n        lifecycle_status = "COMPLETED"\n    elif checkpoint is not None and checkpoint.state.value in {"PAUSED_QUOTA", "REPLAN"}:\n        lifecycle_status = "RECOVERING"\n\n    return MissionControlSnapshot(
+    lifecycle_status = "RUNNING"
+    if open_decisions or state.status.value == "HUMAN_WAIT":
+        lifecycle_status = "HUMAN_WAIT"
+    elif state.failed_task_ids or state.status.value == "FAILED":
+        lifecycle_status = "FAILED"
+    elif campaign_payload is not None and campaign_payload.get("status") == "COMPLETED":
+        lifecycle_status = "COMPLETED"
+    elif checkpoint is not None and checkpoint.state.value in {"PAUSED_QUOTA", "REPLAN"}:
+        lifecycle_status = "RECOVERING"
+
+    return MissionControlSnapshot(
         project_id=_redact_display_text(state.project_id),
         project_status=state.status.value,
         iteration=state.iteration,
