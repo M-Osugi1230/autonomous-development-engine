@@ -8,6 +8,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+from ade.execution_lease_store import claim_execution
+
 from github_client import GitHubClient, GitHubError
 from jules_client import (
     JulesClient,
@@ -436,6 +439,16 @@ def main() -> int:
         task_id = str(task["task_id"])
         client = JulesClient()
         gh = GitHubClient()
+        run_id = os.environ.get("GITHUB_RUN_ID", "manual")
+        run_attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "1")
+        owner_id = f"github-actions:{run_id}:{run_attempt}"
+        try:
+            claim_execution(gh, task_id=task_id, owner_id=owner_id, now=datetime.now(UTC), ttl=timedelta(minutes=50))
+        except RuntimeError as exc:
+            if "live execution lease" in str(exc):
+                print(f"NOOP: duplicate dispatch blocked for {task_id}")
+                return 0
+            raise
         return run_new_cycle(task=task, client=client, gh=gh, owner=owner, repo=repo)
 
     except JulesQuota as exc:
