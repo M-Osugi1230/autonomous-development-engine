@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "pilot_id": "one-minute-cli-command-guard-001",
+  "pilot_id": "one-minute-cli-command-guard-002",
   "target": {
     "repository": "M-Osugi1230/one-minute-thought-experiments",
     "base_branch": "main",
-    "baseline_sha": "46d2d473305ca8c904f90c78bc8f8aabf3fd7319"
+    "baseline_sha": "9fb55ba7c7f59ead4577b63e92cc26ec7c0a64c4"
   },
   "goal": "Make mistyped CLI command names fail fast instead of being interpreted as experiment IDs while preserving the existing numeric experiment-id shorthand.",
   "safety": {

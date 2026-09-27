@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "pilot_id": "one-minute-cli-command-guard-001",
-  "contract_fingerprint": "2f974171aa9cb95b29e23c4f4187156c11dfd3a871a1a13ec3c106f05a9b19af",
+  "pilot_id": "one-minute-cli-command-guard-002",
+  "contract_fingerprint": "b3752515c268eecaf6c58cb8193116e43dbe2c329f4670eb97842f2d16007fbc",
   "provider_id": "jules",
-  "baseline_sha": "46d2d473305ca8c904f90c78bc8f8aabf3fd7319",
+  "baseline_sha": "9fb55ba7c7f59ead4577b63e92cc26ec7c0a64c4",
   "requested_by": "M-Osugi1230",
-  "requested_at": "2026-09-26T14:20:56Z"
+  "requested_at": "2026-09-27T02:20:00Z"
 }

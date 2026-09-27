@@ -39,7 +39,7 @@ class Phase11ProductionWorkflowContractTests(unittest.TestCase):
     def test_staged_task_matches_the_frozen_pilot(self) -> None:
         self.assertEqual(
             self.task["task_id"],
-            "one-minute-cli-command-guard-001",
+            "one-minute-cli-command-guard-002",
         )
         self.assertEqual(self.task["starting_branch"], "main")
         self.assertIs(self.task["auto_create_pr"], True)

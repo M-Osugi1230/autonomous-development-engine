@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "task_id": "one-minute-cli-command-guard-001",
-  "title": "Production pilot: guard CLI command shorthand",
+  "task_id": "one-minute-cli-command-guard-002",
+  "title": "Production pilot successor: guard CLI command shorthand",
   "prompt": "Execute the activated Phase 11 production pilot. Goal: make mistyped CLI command names fail fast instead of being interpreted as experiment IDs while preserving the existing numeric experiment-id shorthand. You may modify ONLY src/thought_pipeline/cli.py and tests/test_cli.py. Do not modify any other file, including workflows, dependencies, content, configuration, generated output, templates, pipeline.py, pyproject.toml, or requirements.txt. Preserve `python pipeline.py 001 --offline` as shorthand for generate. A mistyped or unknown command such as `valdate` must fail as an invalid command rather than being treated as an experiment id. Preserve all existing valid commands and behavior. Add focused regression tests in tests/test_cli.py. Do not merge the pull request. Before finishing run: python -m compileall -q src pipeline.py ; python pipeline.py validate ; python -m pytest -q ; python pipeline.py 001 --offline --output-root /tmp/ade-pilot-output --overwrite.",
   "starting_branch": "main",
   "auto_create_pr": true,
