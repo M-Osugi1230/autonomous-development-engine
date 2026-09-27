@@ -42,7 +42,13 @@ def acquire_lease(*, task_id: str, owner_id: str, now: datetime, ttl: timedelta,
         raise ValueError("ttl must be positive")
     if current is not None:
         if current.task_id != task_id:
-            raise ValueError("current lease belongs to another task")
+            return ExecutionLease(
+                task_id=task_id,
+                owner_id=owner_id,
+                attempt=1,
+                acquired_at=now,
+                expires_at=now + ttl,
+            )
         if current.is_live(now):
             if current.owner_id == owner_id:
                 return current
