@@ -206,7 +206,9 @@ class MissionControlSnapshotTests(unittest.TestCase):
         state = json.loads((self.autodev / "state.json").read_text(encoding="utf-8"))
         state["status"] = "READY"
         state["current_task_id"] = None
+        state["failed_task_ids"] = []
         self.write_json("state.json", state)
+        self.write_json("failures.json", {"schema_version": 1, "failures": []})
         (self.autodev / "runtime" / "checkpoint.json").unlink()
         DecisionStore(self.autodev / "decisions.json").save([])
         snapshot = build_mission_control_snapshot(self.root)
