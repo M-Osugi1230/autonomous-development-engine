@@ -9,6 +9,8 @@ REQUIRED_PROOFS=(
  "Mission Control observability proof",
  "Autonomous recovery fault proof",
  "Multi-provider routing proof",
+ "Checkpoint restart proof",
+ "Human decision boundary proof",
 )
 
 def audit(root:Path)->dict[str,object]:
