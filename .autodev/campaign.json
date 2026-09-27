@@ -2,11 +2,12 @@
   "campaign_id": "phase17-production-graduation-001",
   "completed_task_ids": [
     "phase17-final-001",
-    "phase17-final-002"
+    "phase17-final-002",
+    "phase17-final-003"
   ],
   "goal": "Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code.",
   "schema_version": 1,
-  "status": "RUNNING",
+  "status": "COMPLETED",
   "task_ids": [
     "phase17-final-001",
     "phase17-final-002",
