@@ -3,7 +3,13 @@ from __future__ import annotations
 import base64
 import json
 import os
+import time
 from typing import Any
+
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+from ade.infrastructure_retry import InfrastructureFailure, RetryPolicy, classify_github_error, retry_delay
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -20,6 +26,8 @@ class GitHubClient:
         token: str | None = None,
         api_url: str = "https://api.github.com",
         timeout_seconds: float = 30.0,
+        retry_policy: RetryPolicy | None = None,
+        sleep=time.sleep,
     ) -> None:
         self.repository = repository or os.environ.get("GITHUB_REPOSITORY", "")
         self.token = token or os.environ.get("GITHUB_TOKEN", "")
@@ -29,38 +37,36 @@ class GitHubClient:
             raise ValueError("GITHUB_TOKEN is required")
         self.api_url = api_url.rstrip("/")
         self.timeout_seconds = timeout_seconds
+        self.retry_policy = retry_policy or RetryPolicy()
+        self.sleep = sleep
 
-    def _request(
-        self,
-        method: str,
-        path: str,
-        payload: dict[str, Any] | None = None,
-    ) -> Any:
+    def _request(self, method: str, path: str, payload: dict[str, Any] | None = None) -> Any:
+        last_error: GitHubError | None = None
+        for attempt in range(1, self.retry_policy.max_attempts + 1):
+            try:
+                return self._request_once(method, path, payload)
+            except GitHubError as exc:
+                last_error = exc
+                if classify_github_error(str(exc)) != InfrastructureFailure.RETRYABLE or attempt >= self.retry_policy.max_attempts:
+                    raise
+                self.sleep(retry_delay(self.retry_policy, attempt))
+        assert last_error is not None
+        raise last_error
+
+    def _request_once(self, method: str, path: str, payload: dict[str, Any] | None = None) -> Any:
         url = f"{self.api_url}{path}"
         body = None if payload is None else json.dumps(payload).encode("utf-8")
-        headers = {
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {self.token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
-        if body is not None:
-            headers["Content-Type"] = "application/json"
+        headers = {"Accept": "application/vnd.github+json", "Authorization": f"Bearer {self.token}", "X-GitHub-Api-Version": "2022-11-28"}
+        if body is not None: headers["Content-Type"] = "application/json"
         request = Request(url, data=body, headers=headers, method=method.upper())
         try:
-            with urlopen(request, timeout=self.timeout_seconds) as response:
-                raw = response.read()
+            with urlopen(request, timeout=self.timeout_seconds) as response: raw = response.read()
         except HTTPError as exc:
-            raw = exc.read().decode("utf-8", errors="replace")
-            raise GitHubError(f"GitHub HTTP {exc.code}: {raw[:1000]}") from exc
-        except URLError as exc:
-            raise GitHubError(f"GitHub network error: {exc.reason}") from exc
-
-        if not raw:
-            return {}
-        try:
-            return json.loads(raw.decode("utf-8"))
-        except json.JSONDecodeError as exc:
-            raise GitHubError("GitHub returned invalid JSON") from exc
+            raw = exc.read().decode("utf-8", errors="replace"); raise GitHubError(f"GitHub HTTP {exc.code}: {raw[:1000]}") from exc
+        except URLError as exc: raise GitHubError(f"GitHub network error: {exc.reason}") from exc
+        if not raw: return {}
+        try: return json.loads(raw.decode("utf-8"))
+        except json.JSONDecodeError as exc: raise GitHubError("GitHub returned invalid JSON") from exc
 
     def get_pull_request(self, number: int) -> dict[str, Any]:
         payload = self._request("GET", f"/repos/{self.repository}/pulls/{number}")
