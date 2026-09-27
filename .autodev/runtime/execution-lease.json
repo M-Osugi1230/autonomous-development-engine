@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-09-27T23:25:18.609356+00:00",
+  "acquired_at": "2026-09-27T23:28:52.164680+00:00",
   "attempt": 1,
-  "expires_at": "2026-09-28T00:15:18.609356+00:00",
-  "owner_id": "github-actions:36358625830:1",
+  "expires_at": "2026-09-28T00:18:52.164680+00:00",
+  "owner_id": "github-actions:36358824551:1",
   "schema_version": 1,
-  "task_id": "phase17-final-001"
+  "task_id": "phase17-final-002"
 }
