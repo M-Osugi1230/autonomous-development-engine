@@ -1,10 +1,10 @@
 {
   "auto_create_pr": true,
   "poll_interval_seconds": 15,
-  "prompt": "Goal: Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code. Outcome: Add focused stdlib tests for the graduation_metadata helper including valid and invalid inputs.\nAllowed paths: tests/test_graduation.py\nAcceptance: focused tests cover deterministic output; invalid input behavior is tested\nDo not modify files outside the allowed paths.",
+  "prompt": "Goal: Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code. Outcome: Extend the graduation module with a pure graduation_summary helper that formats the validated metadata into one stable human-readable line.\nAllowed paths: src/ade/graduation.py\nAcceptance: summary output is deterministic; existing graduation metadata behavior remains unchanged\nDo not modify files outside the allowed paths.",
   "schema_version": 1,
   "starting_branch": "main",
-  "task_id": "phase17-final-002",
+  "task_id": "phase17-final-003",
   "timeout_seconds": 1800,
-  "title": "Prove graduation metadata"
+  "title": "Add graduation summary helper"
 }
