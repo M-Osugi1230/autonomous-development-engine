@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "campaign_id": "phase15-recovery-campaign-001",
+  "task_id": "vertical-slice-046",
+  "terminal_outcome": "RECOVERED_TO_GREEN_AND_MERGED",
+  "initial_dispatch_run": 36339820600,
+  "initial_ci_run": 36340050301,
+  "initial_ci_conclusion": "failure",
+  "recovery_action": "REPAIR",
+  "recovery_dispatch_run": 36340074840,
+  "repaired_ci_run": 36340221681,
+  "repaired_ci_conclusion": "success",
+  "pull_request": 94,
+  "pull_request_merged": true,
+  "post_merge_issue": {
+    "kind": "ACTIVATION_GRAPH_SERIALIZATION",
+    "gate_run": 36340231322,
+    "repair_pr": 95,
+    "affects_recovery_proof": false
+  },
+  "human_dispatch_between_failure_and_green": false
+}
