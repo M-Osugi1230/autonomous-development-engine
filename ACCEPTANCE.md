@@ -129,10 +129,19 @@
 
 ## Phase 13 — Long-running Autonomous Development
 
-- [ ] A durable campaign records one goal, its bounded task set, status, and completed progress.
-- [ ] DAG advancement updates campaign progress atomically with task completion and next-task selection.
-- [ ] Restarting the controller from persisted state resumes the same campaign without replaying completed tasks.
-- [ ] HUMAN_WAIT, FAILED, and BLOCKED descendants stop only the unsafe path and preserve campaign evidence.
-- [ ] A deterministic long-run probe completes a dependency graph across at least five task transitions with interruption/restart injection.
-- [ ] A bounded real campaign produces multiple sequential PR/CI cycles without manual dispatch between safe tasks.
-- [ ] Final campaign evidence records goal, task sequence, PRs, CI, interruptions/recovery, and terminal status.
+- [x] A durable campaign records one goal, its bounded task set, status, and completed progress.
+- [x] DAG advancement persists campaign progress with task completion and next-task selection, with deterministic reconciliation after interrupted multi-file updates.
+- [x] Restarting the controller from persisted state resumes the same campaign without replaying completed tasks.
+- [x] HUMAN_WAIT, FAILED, and BLOCKED descendants stop only the unsafe path and preserve campaign evidence.
+- [x] A deterministic long-run probe completes a dependency graph across at least five task transitions with interruption/restart injection.
+- [x] A bounded real campaign produces multiple sequential PR/CI cycles without manual dispatch between safe tasks.
+- [x] Final campaign evidence records goal, task sequence, PRs, CI, interruptions/recovery, and terminal status.
+
+## Phase 14 — Mission Control / Observability
+
+- [ ] A single safe operational snapshot exposes active campaign progress, current task, DAG blockers, latest PR/CI evidence, retries/recovery, and human-wait state.
+- [ ] Durable events use stable IDs so controller retries cannot duplicate operator-visible history.
+- [ ] Campaign evidence and live canonical state are reconciled into one deterministic read model.
+- [ ] Mission Control clearly distinguishes RUNNING, RECOVERING, HUMAN_WAIT, FAILED, and COMPLETED without provider-session or secret leakage.
+- [ ] A deterministic observability probe proves restart/retry event idempotency and completed-campaign rendering.
+- [ ] The cloud Mission Control workflow produces a current artifact from the Phase 14 read model.
