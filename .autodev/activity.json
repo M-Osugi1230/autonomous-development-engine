@@ -27,6 +27,13 @@
       "occurred_at": "2026-09-27T06:39:18.222222+00:00",
       "summary": "Merged Jules PR #76",
       "task_id": "vertical-slice-043"
+    },
+    {
+      "event_id": "pr-merged-78-2b0e49b1bc9b",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-09-27T06:57:59.223179+00:00",
+      "summary": "Merged Jules PR #78",
+      "task_id": "vertical-slice-044"
     }
   ],
   "schema_version": 1
