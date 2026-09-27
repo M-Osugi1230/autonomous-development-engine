@@ -16,6 +16,8 @@ from dag_controller import (
 )
 from github_client import GitHubClient, GitHubError
 from observability import record_merged_pr
+from recovery_controller import apply_project_status, plan_and_persist
+from ade.recovery import RecoveryAction, RecoveryFailure
 
 FORBIDDEN_EXACT = {
     "GOAL.md",
@@ -310,7 +312,22 @@ def main() -> int:
             print("SKIP: CI run was not triggered by a pull request")
             return 0
         if workflow_run.get("conclusion") != "success":
-            print("WAIT: CI is not green; no merge attempted")
+            pull_requests = workflow_run.get("pull_requests", [])
+            if isinstance(pull_requests, list) and len(pull_requests) == 1:
+                api = GitHubClient()
+                state, _ = api.get_json_file(".autodev/state.json")
+                task_id = state.get("current_task_id")
+                if isinstance(task_id, str) and task_id.strip():
+                    detail = "ci:" + str(workflow_run.get("id")) + ":" + str(workflow_run.get("conclusion"))
+                    record = plan_and_persist(api, task_id=task_id, failure=RecoveryFailure.CI_FAILURE, detail=detail)
+                    apply_project_status(api, record)
+                    if record.action is RecoveryAction.REPAIR:
+                        api.dispatch("ade_next_cycle", {"task_id": task_id, "recovery": "repair"})
+                        print("RECOVERY: dispatched repair for " + task_id)
+                    else:
+                        print("RECOVERY: " + task_id + " -> " + record.action.value)
+                    return 0
+            print("WAIT: CI is not green; no managed recovery target")
             return 0
 
         pull_requests = workflow_run.get("pull_requests", [])
