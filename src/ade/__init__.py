@@ -2,7 +2,12 @@
 
 from .acceptance import AcceptanceReport, CheckResult, build_report
 from .activity import ActivityEvent, ActivityKind
-from .campaign import AutonomousCampaign, CampaignStatus
+from .campaign import (
+    AutonomousCampaign,
+    CampaignEvidenceSummary,
+    CampaignStatus,
+    summarize_campaign_evidence,
+)
 from .campaign_runtime import complete_campaign_task, derive_campaign_status
 from .campaign_store import CampaignStore, DEFAULT_CAMPAIGN_PATH
 from .activity_store import ActivityStore
@@ -132,6 +137,7 @@ __all__ = [
     "AcceptanceReport",
     "ActivityEvent",
     "AutonomousCampaign",
+    "CampaignEvidenceSummary",
     "CampaignStatus",
     "CampaignStore",
     "DEFAULT_CAMPAIGN_PATH",
@@ -256,5 +262,6 @@ __all__ = [
     "run_pilot_preflight",
     "run_routed_cycle",
     "start_cycle_session",
+    "summarize_campaign_evidence",
     "transition_task",
 ]
