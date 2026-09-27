@@ -23,7 +23,7 @@ class ExecutionLeaseTests(unittest.TestCase):
         self.assertEqual(reclaimed.attempt, 2)
         self.assertEqual(reclaimed.owner_id, "run-2")
 
-    def test_stale_owner_cannot_renew_or_release(self):
+    def test_next_task_replaces_previous_global_lease(self):\n        lease = acquire_lease(task_id="t1", owner_id="run-1", now=self.now, ttl=timedelta(minutes=10))\n        next_lease = acquire_lease(task_id="t2", owner_id="run-2", now=self.now + timedelta(minutes=1), ttl=timedelta(minutes=10), current=lease)\n        self.assertEqual((next_lease.task_id, next_lease.owner_id, next_lease.attempt), ("t2", "run-2", 1))\n\n    def test_stale_owner_cannot_renew_or_release(self):
         lease = acquire_lease(task_id="t1", owner_id="run-1", now=self.now, ttl=timedelta(minutes=10))
         with self.assertRaises(RuntimeError): renew_lease(lease, owner_id="run-2", now=self.now + timedelta(minutes=1), ttl=timedelta(minutes=10))
         with self.assertRaises(RuntimeError): release_lease(lease, owner_id="run-2")
