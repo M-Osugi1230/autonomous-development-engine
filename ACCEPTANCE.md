@@ -148,10 +148,20 @@
 
 ## Phase 15 — Autonomous Recovery
 
-- [ ] Recovery classification distinguishes CI failure, merge conflict, provider/infrastructure failure, timeout, and invalid implementation.
-- [ ] Each recoverable failure maps to a bounded retry, repair, rebase, or replan action with explicit budgets.
-- [ ] Recovery never bypasses trusted scope, acceptance, provenance, lease, or human-decision gates.
-- [ ] Repeated identical failures terminate or enter HUMAN_WAIT instead of looping indefinitely.
-- [ ] Restart during recovery resumes the same recovery attempt without duplicate provider sessions or duplicate PR actions.
-- [ ] Deterministic fault scenarios prove CI repair, transient infrastructure retry, merge-conflict handling, and terminal escalation.
-- [ ] A real bounded campaign demonstrates at least one autonomous failure-to-green recovery path.
+- [x] Recovery classification distinguishes CI failure, merge conflict, provider/infrastructure failure, timeout, and invalid implementation.
+- [x] Each recoverable failure maps to a bounded retry, repair, rebase, or replan action with explicit budgets.
+- [x] Recovery never bypasses trusted scope, acceptance, provenance, lease, or human-decision gates.
+- [x] Repeated identical failures terminate or enter HUMAN_WAIT instead of looping indefinitely.
+- [x] Restart during recovery preserves the same bounded recovery progress without duplicate provider sessions or duplicate PR actions.
+- [x] Deterministic fault scenarios prove CI repair, transient infrastructure retry, merge-conflict handling, and terminal escalation.
+- [x] Real campaign `phase15-recovery-campaign-001` demonstrated managed CI failure → durable REPAIR → autonomous repository_dispatch → repaired CI green → trusted merge on PR #94.
+
+## Phase 16 — Goal → Plan → Execution
+
+- [ ] A high-level development goal can be converted into a bounded validated task graph without manually authoring each CycleTask.
+- [ ] Planner output includes explicit acceptance criteria, dependency edges, allowed paths, and human-only boundaries before execution.
+- [ ] Invalid, cyclic, over-broad, or destructive plans are rejected before provider dispatch.
+- [ ] Identical normalized goal + repository context produces a stable plan fingerprint and restart resumes the accepted plan.
+- [ ] The trusted controller executes an accepted generated plan through the existing campaign/DAG/recovery gates without weakening them.
+- [ ] A deterministic planning probe proves validation, cycle rejection, scope rejection, and stable fingerprints.
+- [ ] A real bounded goal is planned and completed through at least two generated tasks without manually writing their task prompts.
