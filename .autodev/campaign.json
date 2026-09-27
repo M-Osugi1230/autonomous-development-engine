@@ -1,16 +1,10 @@
 {
   "schema_version": 1,
-  "campaign_id": "phase13-production-campaign-001",
-  "goal": "Prove multiple sequential trusted PR/CI cycles can advance without manual dispatch between safe tasks.",
+  "campaign_id": "phase15-recovery-campaign-001",
+  "goal": "Prove a managed CI failure triggers bounded autonomous repair and returns the same task to green.",
   "task_ids": [
-    "vertical-slice-043",
-    "vertical-slice-044",
-    "vertical-slice-045"
+    "vertical-slice-046"
   ],
-  "status": "COMPLETED",
-  "completed_task_ids": [
-    "vertical-slice-043",
-    "vertical-slice-044",
-    "vertical-slice-045"
-  ]
+  "status": "RUNNING",
+  "completed_task_ids": []
 }
