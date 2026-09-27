@@ -116,12 +116,12 @@
 
 ## Phase 12 — Production Hardening
 
-- [ ] A provider-agnostic execution lease gives each task attempt a unique owner and bounded expiry.
-- [ ] Duplicate dispatches cannot create a second provider session while a live lease exists.
-- [ ] An expired lease can be reclaimed deterministically without corrupting task state.
-- [ ] Lease acquire/renew/release transitions reject stale owners and invalid time movement.
-- [ ] Transient GitHub/provider failures are distinguished from terminal configuration or safety failures.
-- [ ] Trusted execution uses bounded retry/backoff for retryable infrastructure failures without duplicating provider sessions.
-- [ ] A deterministic duplicate-dispatch probe proves at-most-one provider-session creation under CI.
-- [ ] Fault-injection tests prove safe recovery from controller interruption, API timeout, stale checkpoint, and delayed CI.
-- [ ] Phase 12 hardening evidence is persisted and all hardening probes pass under CI.
+- [x] A provider-agnostic execution lease gives each task attempt a unique owner and bounded expiry.
+- [x] Duplicate dispatches cannot create a second provider session while a live lease exists.
+- [x] An expired lease can be reclaimed deterministically without corrupting task state.
+- [x] Lease acquire/renew/release transitions reject stale owners and invalid time movement.
+- [x] Transient GitHub/provider failures are distinguished from terminal configuration or safety failures.
+- [x] Trusted execution uses bounded retry/backoff for retryable infrastructure failures without duplicating provider sessions.
+- [x] A deterministic duplicate-dispatch probe proves at-most-one provider-session creation under CI.
+- [x] Fault-injection tests prove safe recovery from controller interruption, API timeout, stale checkpoint, and delayed CI.
+- [x] Phase 12 hardening evidence is persisted and all hardening probes pass under CI.
