@@ -208,6 +208,7 @@ class MissionControlSnapshotTests(unittest.TestCase):
         state["current_task_id"] = None
         self.write_json("state.json", state)
         (self.autodev / "runtime" / "checkpoint.json").unlink()
+        DecisionStore(self.autodev / "decisions.json").save([])
         snapshot = build_mission_control_snapshot(self.root)
         self.assertEqual(snapshot.lifecycle_status, "COMPLETED")
 
