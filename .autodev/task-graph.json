@@ -2,34 +2,34 @@
   "schema_version": 1,
   "tasks": [
     {
+      "decision_id": null,
+      "depends_on": [],
+      "status": "COMPLETED",
       "task": {
-        "task_id": "phase16-goal-001",
-        "title": "Implement text normalization utility",
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
         "prompt": "Goal: Add a small reusable text normalization utility and prove it with focused tests. Outcome: Add a pure normalize_text helper that trims surrounding whitespace and collapses internal whitespace.\nAllowed paths: src/ade/text_normalization.py\nAcceptance: normalize_text is pure and deterministic; empty or whitespace-only input returns an empty string\nDo not modify files outside the allowed paths.",
         "starting_branch": "main",
-        "auto_create_pr": true,
+        "task_id": "phase16-goal-001",
         "timeout_seconds": 1800,
-        "poll_interval_seconds": 15
-      },
-      "depends_on": [],
-      "status": "RUNNING",
-      "decision_id": null
+        "title": "Implement text normalization utility"
+      }
     },
     {
-      "task": {
-        "task_id": "phase16-goal-002",
-        "title": "Prove text normalization behavior",
-        "prompt": "Goal: Add a small reusable text normalization utility and prove it with focused tests. Outcome: Add focused stdlib unit tests for normalize_text covering normal, repeated whitespace, newline, and empty inputs.\nAllowed paths: tests/test_text_normalization.py\nAcceptance: focused tests cover the required normalization cases; full repository tests remain green\nDo not modify files outside the allowed paths.",
-        "starting_branch": "main",
-        "auto_create_pr": true,
-        "timeout_seconds": 1800,
-        "poll_interval_seconds": 15
-      },
+      "decision_id": null,
       "depends_on": [
         "phase16-goal-001"
       ],
-      "status": "PENDING",
-      "decision_id": null
+      "status": "RUNNING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Add a small reusable text normalization utility and prove it with focused tests. Outcome: Add focused stdlib unit tests for normalize_text covering normal, repeated whitespace, newline, and empty inputs.\nAllowed paths: tests/test_text_normalization.py\nAcceptance: focused tests cover the required normalization cases; full repository tests remain green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "phase16-goal-002",
+        "timeout_seconds": 1800,
+        "title": "Prove text normalization behavior"
+      }
     }
   ]
 }
