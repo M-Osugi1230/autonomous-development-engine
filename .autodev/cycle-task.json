@@ -1,10 +1,9 @@
 {
-  "auto_create_pr": true,
-  "poll_interval_seconds": 15,
-  "prompt": "Add a deterministic, secret-free campaign evidence summary model/function reporting campaign id, goal, completed/total task counts, terminal status, and ordered task ids. Add focused stdlib tests for deterministic serialization and secret-free output. Do not change trusted workflows or .autodev files.",
-  "schema_version": 1,
+  "task_id": "vertical-slice-046",
+  "title": "Add recovery status summary",
+  "prompt": "Add a small pure helper in src/ade/recovery_summary.py that summarizes a RecoveryRecord into a secret-free dictionary with task_id, failure, action, retry/repair/rebase/replan counts, and repeated_failures. Add focused stdlib tests. IMPORTANT recovery proof: on your first implementation, intentionally make exactly one test assertion fail while keeping code syntactically valid; create the PR. If this task is dispatched again after CI failure, inspect the existing task branch/PR and repair that failing test or implementation so the same PR becomes green. Do not change .github, .autodev, GOAL.md, SPEC.md, ACCEPTANCE.md, ROADMAP.md, README.md, or pyproject.toml.",
   "starting_branch": "main",
-  "task_id": "vertical-slice-045",
+  "auto_create_pr": true,
   "timeout_seconds": 1800,
-  "title": "Add campaign evidence summary"
+  "poll_interval_seconds": 15
 }
