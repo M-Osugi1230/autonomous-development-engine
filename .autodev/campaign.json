@@ -1,11 +1,13 @@
 {
-  "schema_version": 1,
   "campaign_id": "phase16-goal-campaign-001",
+  "completed_task_ids": [
+    "phase16-goal-001"
+  ],
   "goal": "Add a small reusable text normalization utility and prove it with focused tests.",
+  "schema_version": 1,
+  "status": "RUNNING",
   "task_ids": [
     "phase16-goal-001",
     "phase16-goal-002"
-  ],
-  "status": "RUNNING",
-  "completed_task_ids": []
+  ]
 }
