@@ -30,6 +30,7 @@ FORBIDDEN_PREFIXES = (
     ".autodev/",
 )
 TASK_GRAPH_PATH = ".autodev/task-graph.json"
+CAMPAIGN_PATH = ".autodev/campaign.json"
 JULES_PROVENANCE_MARKER = "PR created automatically by Jules for task"
 JULES_TASK_URL = re.compile(r"https://jules\.google\.com/task/\d+")
 
@@ -242,6 +243,34 @@ def advance_queue(
         metadata["queue_exhausted"] = False
 
     state["metadata"] = metadata
+
+    try:
+        campaign, campaign_sha = api.get_json_file(CAMPAIGN_PATH)
+    except GitHubError as exc:
+        if "GitHub HTTP 404:" in str(exc):
+            campaign = None
+            campaign_sha = None
+        else:
+            raise
+    if campaign is not None:
+        campaign_tasks = campaign.get("task_ids", [])
+        if completed_task_id in campaign_tasks:
+            campaign_completed = list(campaign.get("completed_task_ids", []))
+            if completed_task_id not in campaign_completed:
+                campaign_completed.append(completed_task_id)
+            campaign["completed_task_ids"] = campaign_completed
+            if len(campaign_completed) == len(campaign_tasks):
+                campaign["status"] = "COMPLETED"
+            elif dag_blocked:
+                campaign["status"] = "HUMAN_WAIT"
+            else:
+                campaign["status"] = "RUNNING"
+            api.put_json_file(
+                CAMPAIGN_PATH,
+                campaign,
+                sha=campaign_sha,
+                message=f"campaign: complete {completed_task_id}",
+            )
 
     api.put_json_file(
         ".autodev/state.json",
