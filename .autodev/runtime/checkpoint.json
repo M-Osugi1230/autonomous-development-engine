@@ -2,9 +2,9 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "12033264348363645220",
+  "provider_session_id": "2496098906643755126",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "one-minute-cli-command-guard-001"
+  "state": "RUNNING",
+  "task_id": "one-minute-cli-command-guard-002"
 }
