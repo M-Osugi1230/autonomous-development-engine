@@ -40,3 +40,25 @@ def graduation_metadata(
         "status": status.strip(),
         "completed_phase_count": completed_phase_count,
     }
+
+
+def graduation_summary(
+    version: str,
+    status: str,
+    completed_phase_count: int = 17,
+) -> str:
+    """Return a deterministic single-line summary string for graduation metadata.
+
+    Args:
+        version: Non-empty release or version string (e.g. "1.0.0").
+        status: Non-empty status string (e.g. "GRADUATED").
+        completed_phase_count: Non-negative integer representing completed phase count.
+
+    Returns:
+        A formatted human-readable string summarizing the graduation status.
+
+    Raises:
+        ValueError: If version or status is empty or whitespace-only, or if types/counts are invalid.
+    """
+    meta = graduation_metadata(version, status, completed_phase_count)
+    return f"ADE v{meta['version']} status: {meta['status']} (completed phases: {meta['completed_phase_count']})"
