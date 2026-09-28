@@ -173,6 +173,7 @@ def evaluate_zero_touch_start(
     if not _same_cycle_task(cycle_task, current.task):
         raise ValueError("cycle task does not match current task graph node")
 
+    checkpoint: TaskCheckpoint | None = None
     if checkpoint_payload is not None:
         checkpoint = TaskCheckpoint.from_dict(checkpoint_payload)
         if checkpoint.task_id == task_id:
@@ -194,7 +195,12 @@ def evaluate_zero_touch_start(
         if lease.is_live(now):
             if lease.task_id == task_id:
                 return StartDecision(StartDisposition.NOOP, "active-execution-lease", task_id=task_id, **base)
-            return StartDecision(StartDisposition.BLOCKED, "different-live-execution-lease", task_id=task_id, **base)
+            if not (
+                checkpoint is not None
+                and checkpoint.task_id == lease.task_id
+                and checkpoint.state is CheckpointState.COMPLETED
+            ):
+                return StartDecision(StartDisposition.BLOCKED, "different-live-execution-lease", task_id=task_id, **base)
 
     last_dispatch = _receipt_dispatch_time(
         receipt_payload,
