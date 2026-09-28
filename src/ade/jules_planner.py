@@ -210,6 +210,10 @@ def _step_paths(
         parsed = PurePosixPath(candidate)
         if ".." in parsed.parts or str(parsed) != candidate:
             continue
+        # Execution scope must be exact files, not broad directories. This also
+        # prevents trusted roots mentioned in prose from becoming executable scope.
+        if "." not in parsed.name:
+            continue
         if not any(_path_within(candidate, prefix) for prefix in allowed_path_prefixes):
             continue
         if candidate not in paths:
@@ -286,6 +290,30 @@ def _goal_from_planner_prompt(prompt: str) -> str:
     if not goal:
         raise JulesPlannerError("trusted planner prompt goal is empty")
     return goal
+
+
+def _jules_repository_plan_prompt(
+    *,
+    original_prompt: str,
+    allowed_path_prefixes: tuple[str, ...],
+) -> str:
+    goal = _goal_from_planner_prompt(original_prompt)
+    roots = ", ".join(allowed_path_prefixes)
+    return (
+        "Analyze the repository and produce the implementation plan itself. "
+        "Do not implement code, do not modify repository files, do not create a branch or pull request, "
+        "and stop for plan approval. "
+        "The plan must contain bounded implementation steps for the requested Goal, not steps about "
+        "writing JSON, formatting a response, pre-commit chores, or reviewing the plan. "
+        "Every implementation step must name the exact repository-relative file path or paths it would "
+        "change, preferably in backticks, and those files must be inside these trusted roots: "
+        f"{roots}. "
+        "Use a separate test step with exact test file paths when tests are needed. "
+        "Each step description should state the concrete outcome and deterministic acceptance behavior. "
+        "Do not request secrets, deployment, external side effects, destructive actions, workflow changes, "
+        "or .autodev changes. "
+        f"Goal: {goal}"
+    )
 
 
 def _structured_followup(original_prompt: str) -> str:
@@ -403,8 +431,16 @@ class JulesPlanningProvider:
         if not isinstance(prompt, str) or not prompt.strip():
             raise ValueError("planner prompt must be non-empty")
 
+        provider_prompt = (
+            _jules_repository_plan_prompt(
+                original_prompt=prompt,
+                allowed_path_prefixes=self._config.allowed_path_prefixes,
+            )
+            if self._config.allowed_path_prefixes
+            else prompt
+        )
         session = self._client.create_session(
-            prompt=prompt,
+            prompt=provider_prompt,
             source=self._config.source_name,
             starting_branch=self._config.starting_branch,
             title=self._config.title,
