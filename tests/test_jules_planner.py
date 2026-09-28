@@ -7,6 +7,7 @@ from ade.jules_planner import (
     JulesPlannerConfig,
     JulesPlannerError,
     JulesPlanningProvider,
+    derive_proposal_from_plan_steps,
     extract_structured_proposal,
     latest_plan_steps,
 )
@@ -92,6 +93,88 @@ class JulesPlannerTests(unittest.TestCase):
                 {"title": "Add tests", "description": "Allowed path: tests/test_helper.py"},
             ),
         )
+
+    def test_derives_proposal_from_realistic_plan_steps(self):
+        steps = (
+            {
+                "title": "Create string summary helper module in `src/ade/string_summary.py`.",
+                "description": (
+                    "Implement a pure helper that validates non-empty strings and returns "
+                    "a deterministic dictionary. Allowed path: `src/ade/string_summary.py`"
+                ),
+            },
+            {
+                "title": "Create focused stdlib unit tests in `tests/test_string_summary.py`.",
+                "description": (
+                    "Cover valid inputs and invalid empty strings. "
+                    "Allowed path: `tests/test_string_summary.py`"
+                ),
+            },
+            {
+                "title": "Complete pre commit steps.",
+                "description": "Ensure testing and review are done.",
+            },
+        )
+        proposal = derive_proposal_from_plan_steps(
+            goal="Add helper",
+            steps=steps,
+            allowed_path_prefixes=("src/ade", "tests"),
+        )
+        self.assertIsNotNone(proposal)
+        assert proposal is not None
+        self.assertEqual(len(proposal["tasks"]), 2)
+        self.assertEqual(
+            proposal["tasks"][0]["allowed_paths"],
+            ["src/ade/string_summary.py"],
+        )
+        self.assertEqual(
+            proposal["tasks"][1]["allowed_paths"],
+            ["tests/test_string_summary.py"],
+        )
+        self.assertEqual(
+            proposal["tasks"][1]["depends_on"],
+            ["jules-step-001"],
+        )
+
+    def test_plan_steps_are_used_before_unreliable_followup(self):
+        activities = [{
+            "planGenerated": {
+                "plan": {
+                    "steps": [
+                        {
+                            "title": "Add helper in `src/ade/helper.py`",
+                            "description": "Implement pure helper at `src/ade/helper.py`",
+                        },
+                        {
+                            "title": "Add tests in `tests/test_helper.py`",
+                            "description": "Add focused tests at `tests/test_helper.py`",
+                        },
+                    ]
+                }
+            }
+        }]
+        client = FakeClient(
+            initial_activities=activities,
+            states=["AWAITING_PLAN_APPROVAL"],
+        )
+        provider = JulesPlanningProvider(
+            client,
+            JulesPlannerConfig(
+                source_name="sources/github/example/repo",
+                poll_interval_seconds=0.001,
+                max_plan_polls=3,
+                max_structured_polls=3,
+                allowed_path_prefixes=("src/ade", "tests"),
+            ),
+            sleeper=lambda _: None,
+        )
+        result = provider.propose(
+            "You are an untrusted planning component. Goal: Add helper. "
+            "Trusted writable roots: src/ade, tests. Maximum tasks: 8"
+        )
+        self.assertEqual(len(result["tasks"]), 2)
+        self.assertEqual(client.sent, [])
+        self.assertEqual(provider.last_proposal_mode, "derived-plan-steps")
 
     def test_plan_only_session_never_auto_executes_or_creates_pr(self):
         client = FakeClient(

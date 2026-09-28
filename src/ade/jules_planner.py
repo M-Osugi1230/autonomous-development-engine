@@ -2,12 +2,22 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
+from pathlib import PurePosixPath
+import re
 import time
 from typing import Any, Callable, Protocol
 
 
 class JulesPlannerError(RuntimeError):
     """A planning-only Jules session failed or violated the planning boundary."""
+
+
+_REQUIRED_HUMAN_BOUNDARIES = (
+    "destructive or irreversible operation",
+    "credential or secret access",
+    "externally consequential side effect",
+)
+_PATH_TOKEN = re.compile(r"`([^`]+)`|((?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+)")
 
 
 class JulesPlannerClient(Protocol):
@@ -47,6 +57,8 @@ class JulesPlannerConfig:
     max_plan_polls: int = 120
     max_structured_polls: int = 36
     activity_404_retries: int = 6
+    allowed_path_prefixes: tuple[str, ...] = ()
+    required_human_boundaries: tuple[str, ...] = _REQUIRED_HUMAN_BOUNDARIES
 
     def __post_init__(self) -> None:
         if not isinstance(self.source_name, str) or not self.source_name.strip():
@@ -64,6 +76,14 @@ class JulesPlannerConfig:
         ):
             if type(value) is not int or value < 1:
                 raise ValueError("planner retry/poll budgets must be positive integers")
+        for prefix in self.allowed_path_prefixes:
+            if not isinstance(prefix, str) or not prefix.strip():
+                raise ValueError("allowed_path_prefixes must contain non-empty strings")
+            path = PurePosixPath(prefix)
+            if prefix.startswith("/") or ".." in path.parts or str(path) != prefix.rstrip("/"):
+                raise ValueError(f"invalid allowed planner path prefix: {prefix}")
+        if not self.required_human_boundaries:
+            raise ValueError("required_human_boundaries must not be empty")
 
 
 def _session_id(session: dict[str, Any]) -> str:
@@ -165,6 +185,106 @@ def latest_plan_steps(
     return tuple(steps)
 
 
+def _path_within(path: str, prefix: str) -> bool:
+    normalized = prefix.rstrip("/")
+    return path == normalized or path.startswith(normalized + "/")
+
+
+def _step_paths(
+    step: dict[str, str],
+    *,
+    allowed_path_prefixes: tuple[str, ...],
+) -> tuple[str, ...]:
+    if not allowed_path_prefixes:
+        return ()
+    text = f"{step.get('title', '')} {step.get('description', '')}"
+    paths: list[str] = []
+    for match in _PATH_TOKEN.finditer(text):
+        candidate = (match.group(1) or match.group(2) or "").strip()
+        candidate = candidate.rstrip(".,;:)")
+        if not candidate or candidate.startswith("/"):
+            continue
+        parsed = PurePosixPath(candidate)
+        if ".." in parsed.parts or str(parsed) != candidate:
+            continue
+        if not any(_path_within(candidate, prefix) for prefix in allowed_path_prefixes):
+            continue
+        if candidate not in paths:
+            paths.append(candidate)
+    return tuple(paths)
+
+
+def derive_proposal_from_plan_steps(
+    *,
+    goal: str,
+    steps: tuple[dict[str, str], ...],
+    allowed_path_prefixes: tuple[str, ...],
+    required_human_boundaries: tuple[str, ...] = _REQUIRED_HUMAN_BOUNDARIES,
+) -> dict[str, Any] | None:
+    if not isinstance(goal, str) or not goal.strip():
+        raise ValueError("goal must be non-empty")
+    if not allowed_path_prefixes:
+        return None
+
+    tasks: list[dict[str, Any]] = []
+    previous_key: str | None = None
+    for index, step in enumerate(steps, 1):
+        paths = _step_paths(
+            step,
+            allowed_path_prefixes=allowed_path_prefixes,
+        )
+        if not paths:
+            continue
+        title = " ".join(str(step.get("title", "")).split())
+        description = " ".join(str(step.get("description", "")).split())
+        if not title:
+            continue
+        outcome = description or title
+        key = f"jules-step-{len(tasks) + 1:03d}"
+        dependencies = [previous_key] if previous_key is not None else []
+        acceptance = [
+            outcome,
+            "Repository CI remains green",
+        ]
+        tasks.append(
+            {
+                "key": key,
+                "title": title,
+                "outcome": outcome,
+                "depends_on": dependencies,
+                "allowed_paths": list(paths),
+                "acceptance": acceptance,
+                "human_only": False,
+                "human_reason": None,
+            }
+        )
+        previous_key = key
+
+    if not tasks:
+        return None
+    return {
+        "schema_version": 1,
+        "goal": " ".join(goal.split()),
+        "tasks": tasks,
+        "human_boundaries": list(required_human_boundaries),
+    }
+
+
+def _goal_from_planner_prompt(prompt: str) -> str:
+    marker = "Goal: "
+    start = prompt.find(marker)
+    if start < 0:
+        raise JulesPlannerError("trusted planner prompt does not contain Goal")
+    start += len(marker)
+    end = prompt.find(". Trusted writable roots:", start)
+    if end < 0:
+        raise JulesPlannerError("trusted planner prompt goal boundary is missing")
+    goal = prompt[start:end].strip()
+    if not goal:
+        raise JulesPlannerError("trusted planner prompt goal is empty")
+    return goal
+
+
 def _structured_followup(original_prompt: str) -> str:
     return (
         "Remain in planning-only mode. Do NOT approve the plan, implement code, modify files, "
@@ -193,6 +313,7 @@ class JulesPlanningProvider:
         self._sleep = sleeper
         self.last_plan_steps: tuple[dict[str, str], ...] = ()
         self.last_observed_state: str | None = None
+        self.last_proposal_mode: str | None = None
 
     def _activities(self, session_id: str) -> list[dict[str, Any]]:
         last_error: Exception | None = None
@@ -277,7 +398,19 @@ class JulesPlanningProvider:
         self.last_plan_steps = latest_plan_steps(activities)
         immediate = extract_structured_proposal(activities)
         if immediate is not None:
+            self.last_proposal_mode = "structured"
             return immediate
+
+        if self._config.allowed_path_prefixes:
+            derived = derive_proposal_from_plan_steps(
+                goal=_goal_from_planner_prompt(prompt),
+                steps=self.last_plan_steps,
+                allowed_path_prefixes=self._config.allowed_path_prefixes,
+                required_human_boundaries=self._config.required_human_boundaries,
+            )
+            if derived is not None:
+                self.last_proposal_mode = "derived-plan-steps"
+                return derived
 
         before_messages = _agent_messages(activities)
         self._client.send_message(session_id, _structured_followup(prompt))
@@ -291,4 +424,5 @@ class JulesPlanningProvider:
         self.last_observed_state = final_state if isinstance(final_state, str) else None
         if final_state == "IN_PROGRESS":
             raise JulesPlannerError("Jules planner crossed execution boundary after follow-up")
+        self.last_proposal_mode = "followup-structured"
         return proposal
