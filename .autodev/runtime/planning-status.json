@@ -1,13 +1,10 @@
 {
-  "accepted_plan_fingerprint": "97239156c40d4086d4ee684e605e1cfa7cdd0c69cfd2e6089c49e69ceff04920",
-  "attempt": 3,
-  "campaign_id": "v1.2-external-goal-campaign-001",
-  "first_task_id": "v12ext-001",
-  "proposal_fingerprint": "49345c953c1e3b5d31c6a71ad55d65d251bf10628e74a6ae65f3c7d24a55cf0b",
-  "reason": "trusted-plan-accepted",
-  "request_fingerprint": "4c9a1441be3adfaf4e7a76caf08a72ece224e1c6731dc247edf38e300e5cf89c",
-  "request_id": "v1.2-external-goal-proof-001",
+  "attempt": 1,
+  "detail": "planning-only session began implementation without approval",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "16e2c66694dbd0840a48fbef2fda8f3ce3459e0ce8c33ff6faaf765bbf5af664",
+  "request_id": "v1.2-external-goal-proof-002",
   "schema_version": 1,
-  "state": "ACCEPTED",
-  "updated_at": "2026-09-28T17:55:58.530697+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-09-28T23:32:50.457326+00:00"
 }
