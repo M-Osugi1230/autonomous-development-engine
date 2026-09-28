@@ -75,4 +75,25 @@ Prove that ADE can own a bounded multi-task campaign rather than only one coding
 
 Build order: durable campaign identity/progress -> campaign-aware DAG advancement -> restart-safe continuation -> bounded multi-task simulation -> real multi-PR campaign proof -> completion evidence.
 
-Current status: started. Existing DAG scheduling and PR-gate dispatch already provide the execution backbone; Phase 13 adds an explicit campaign boundary and proves continuity across many autonomous cycles.
+Completed: durable campaigns, restart-safe continuation, multi-task execution, and real multi-PR evidence are Production Graduated in v1.0.
+
+
+## Phase 14 — Mission Control / Observability ✅
+Campaign lifecycle, recovery, current task, and operator-visible status are reconciled into a safe read model and artifact.
+
+## Phase 15 — Autonomous Recovery ✅
+Bounded recovery classifies failures and performs trusted repair/retry/rebase/replan without bypassing scope, provenance, lease, CI, or human-decision gates.
+
+## Phase 16 — Goal → Plan → Execution ✅
+High-level goals can be converted from bounded work items into validated DevelopmentPlans, accepted with tamper-evident fingerprints, compiled into Campaign/Task DAG state, and executed through the trusted controller.
+
+## Phase 17 — Production Graduation ✅
+The three-task production graduation Campaign completed through PR/CI/trusted merge with no failed tasks, and the final deterministic proof suite is green.
+
+## ADE v1.1 — Zero-Touch Start
+Remove the remaining initial GitHub Actions click while preserving the existing trusted controller, lease, recovery, HUMAN_WAIT, and evidence boundaries.
+
+Build order: freeze acceptance -> pure start eligibility/duplicate-suppression model -> trusted bootstrap -> push/watchdog workflow -> structured dispatch receipt -> Mission Control visibility -> deterministic CI proof -> real multi-task Campaign proof.
+
+## ADE v1.2 — Autonomous Planner
+Generate bounded DevelopmentPlans from a high-level Goal using repository-aware AI planning, then require deterministic trusted validation before AcceptedPlan/Campaign creation. AI planner output is never directly executable.
