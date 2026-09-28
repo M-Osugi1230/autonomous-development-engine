@@ -175,3 +175,20 @@
 - [x] Durable campaign, DAG, structured graduation evidence, acceptance, and roadmap reconcile to the same terminal outcome.
 - [x] The final graduation audit reports no unresolved required safety-proof gap across provider routing, lease, CI/recovery, human boundary, restart, observability, and plan execution.
 - [x] ADE v1.0 Production Graduation is declared only when the final CI suite and structured graduation audit are green.
+
+
+## ADE v1.1 — Zero-Touch Start
+
+- [ ] A persisted AcceptedPlan with a valid fingerprint is required before any initial Campaign dispatch.
+- [ ] AcceptedPlan, Campaign, Task DAG, current cycle task, and project state must reconcile to the same bounded work before dispatch.
+- [ ] Merging or otherwise persisting a new AcceptedPlan on main can trigger the initial Campaign automatically without a human GitHub Actions click.
+- [ ] A cloud watchdog retries a missed/failed initial dispatch without requiring a local machine or chat-session memory.
+- [ ] HUMAN_WAIT, FAILED/BLOCKED state, or an unresolved unsafe path prevents zero-touch start.
+- [ ] A live execution lease prevents duplicate provider-session creation; a live lease for another task blocks the start rather than being overwritten.
+- [ ] A non-terminal checkpoint/recovery state never creates a fresh provider session; recovery remains owned by the existing recovery/resume path.
+- [ ] GitHub event replay and duplicate start attempts are suppressed by a durable, campaign/task/fingerprint-bound dispatch receipt plus the existing execution lease.
+- [ ] A stale dispatch receipt may be retried only when no live lease or current recovery/checkpoint proves work is already active or complete.
+- [ ] Every automatic-start decision emits structured evidence, and successful dispatch persists a secret-free audit receipt.
+- [ ] Mission Control exposes the latest zero-touch start receipt without provider-session identifiers or secrets.
+- [ ] CI contains a deterministic Zero-Touch Start proof covering dispatch, duplicate suppression, HUMAN_WAIT, active lease, recovery, and stale-retry behavior.
+- [ ] A real multi-task Campaign proves AcceptedPlan -> automatic initial dispatch -> PR -> CI -> trusted merge -> automatic next task without a manual initial workflow click.
