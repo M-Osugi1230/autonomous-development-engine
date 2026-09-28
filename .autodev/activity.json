@@ -76,6 +76,13 @@
       "occurred_at": "2026-09-27T23:36:03.466008+00:00",
       "summary": "Merged Jules PR #112",
       "task_id": "phase17-final-003"
+    },
+    {
+      "event_id": "pr-merged-116-d9ee71acc23a",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-09-28T09:15:00.486388+00:00",
+      "summary": "Merged Jules PR #116",
+      "task_id": "v1-1-zero-touch-001"
     }
   ],
   "schema_version": 1
