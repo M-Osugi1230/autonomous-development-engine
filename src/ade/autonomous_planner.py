@@ -9,6 +9,7 @@ import re
 from typing import Any, Protocol
 
 from .accepted_plan import AcceptedPlan
+from .checkpoint import SECRET_PATTERNS
 from .development_plan import DevelopmentPlan, PlannedTask
 
 
@@ -278,6 +279,9 @@ def _bounded_text(value: str, policy: PlannerPolicy, *, label: str) -> str:
     normalized = _normalize_text(value)
     if len(normalized) > policy.max_text_chars:
         raise PlannerValidationError(f"{label} exceeds trusted text budget")
+    for pattern in SECRET_PATTERNS:
+        if pattern.search(normalized):
+            raise PlannerValidationError(f"{label} contains a forbidden secret pattern")
     return normalized
 
 
@@ -290,7 +294,7 @@ def _human_wait_reasons(
     for task in proposal.tasks:
         if task.human_only:
             reason = (
-                _normalize_text(task.human_reason)
+                _bounded_text(task.human_reason, policy, label=f"task {task.key} human_reason")
                 if task.human_reason is not None and task.human_reason.strip()
                 else f"{task.key} marked human_only"
             )

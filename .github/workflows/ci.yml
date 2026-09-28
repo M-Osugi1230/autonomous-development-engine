@@ -53,6 +53,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/jules_planner_adapter_probe.py
 
+      - name: Autonomous Planner activation proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/autonomous_planner_cycle_probe.py
+
       - name: Production fault-injection proof
         env:
           PYTHONPATH: src
