@@ -58,6 +58,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/autonomous_planner_cycle_probe.py
 
+      - name: Remote Repository Loop proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/remote_execution_probe.py
+
       - name: Production fault-injection proof
         env:
           PYTHONPATH: src
