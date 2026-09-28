@@ -401,15 +401,16 @@ class JulesPlanningProvider:
             self.last_proposal_mode = "structured"
             return immediate
 
-        derived = derive_proposal_from_plan_steps(
-            goal=_goal_from_planner_prompt(prompt),
-            steps=self.last_plan_steps,
-            allowed_path_prefixes=self._config.allowed_path_prefixes,
-            required_human_boundaries=self._config.required_human_boundaries,
-        )
-        if derived is not None:
-            self.last_proposal_mode = "derived-plan-steps"
-            return derived
+        if self._config.allowed_path_prefixes:
+            derived = derive_proposal_from_plan_steps(
+                goal=_goal_from_planner_prompt(prompt),
+                steps=self.last_plan_steps,
+                allowed_path_prefixes=self._config.allowed_path_prefixes,
+                required_human_boundaries=self._config.required_human_boundaries,
+            )
+            if derived is not None:
+                self.last_proposal_mode = "derived-plan-steps"
+                return derived
 
         before_messages = _agent_messages(activities)
         self._client.send_message(session_id, _structured_followup(prompt))
