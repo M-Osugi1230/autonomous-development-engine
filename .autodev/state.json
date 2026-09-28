@@ -92,6 +92,8 @@
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
     "queue_exhausted": false,
+    "recovery_action": "REPAIR",
+    "recovery_failure": "CI_FAILURE",
     "scheduler": "dag",
     "target_base_branch": "main",
     "target_repository": "M-Osugi1230/one-minute-thought-experiments"
@@ -99,6 +101,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
+  "status": "READY",
   "updated_at": "2026-09-28T22:38:20.943490+00:00"
 }
