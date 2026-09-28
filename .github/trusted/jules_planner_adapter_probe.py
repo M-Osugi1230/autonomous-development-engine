@@ -54,8 +54,16 @@ class RecordingJulesClient(JulesClient):
                                 "plan": {
                                     "steps": [
                                         {
-                                            "title": "Add helper",
-                                            "description": "Add src/ade/helper.py",
+                                            "title": "Add helper in `src/ade/helper.py`",
+                                            "description": "Implement a pure helper at `src/ade/helper.py`",
+                                        },
+                                        {
+                                            "title": "Add tests in `tests/test_helper.py`",
+                                            "description": "Add focused tests at `tests/test_helper.py`",
+                                        },
+                                        {
+                                            "title": "Complete pre commit steps",
+                                            "description": "Verify and review the change",
                                         }
                                     ]
                                 }
