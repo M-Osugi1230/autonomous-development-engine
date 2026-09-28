@@ -179,16 +179,16 @@
 
 ## ADE v1.1 — Zero-Touch Start
 
-- [ ] A persisted AcceptedPlan with a valid fingerprint is required before any initial Campaign dispatch.
-- [ ] AcceptedPlan, Campaign, Task DAG, current cycle task, and project state must reconcile to the same bounded work before dispatch.
-- [ ] Merging or otherwise persisting a new AcceptedPlan on main can trigger the initial Campaign automatically without a human GitHub Actions click.
-- [ ] A cloud watchdog retries a missed/failed initial dispatch without requiring a local machine or chat-session memory.
-- [ ] HUMAN_WAIT, FAILED/BLOCKED state, or an unresolved unsafe path prevents zero-touch start.
-- [ ] A live execution lease prevents duplicate provider-session creation; a live lease for another task blocks the start rather than being overwritten.
-- [ ] A non-terminal checkpoint/recovery state never creates a fresh provider session; recovery remains owned by the existing recovery/resume path.
-- [ ] GitHub event replay and duplicate start attempts are suppressed by a durable, campaign/task/fingerprint-bound dispatch receipt plus the existing execution lease.
-- [ ] A stale dispatch receipt may be retried only when no live lease or current recovery/checkpoint proves work is already active or complete.
-- [ ] Every automatic-start decision emits structured evidence, and successful dispatch persists a secret-free audit receipt.
-- [ ] Mission Control exposes the latest zero-touch start receipt without provider-session identifiers or secrets.
-- [ ] CI contains a deterministic Zero-Touch Start proof covering dispatch, duplicate suppression, HUMAN_WAIT, active lease, recovery, and stale-retry behavior.
-- [ ] A real multi-task Campaign proves AcceptedPlan -> automatic initial dispatch -> PR -> CI -> trusted merge -> automatic next task without a manual initial workflow click.
+- [x] A persisted AcceptedPlan with a valid fingerprint is required before any initial Campaign dispatch.
+- [x] AcceptedPlan, Campaign, Task DAG, current cycle task, and project state reconcile to the same bounded work before dispatch.
+- [x] Persisting the v1.1 AcceptedPlan on main triggered the initial Campaign automatically from a push event without a human GitHub Actions click.
+- [x] A 15-minute cloud watchdog is configured, and deterministic stale-receipt proof permits retry only when no live execution or recovery owns the task.
+- [x] HUMAN_WAIT, FAILED/BLOCKED state, and unsafe/recovery-owned paths prevent zero-touch start.
+- [x] A live execution lease prevents duplicate provider-session creation; a live lease for another task blocks start.
+- [x] A non-terminal checkpoint/recovery state never creates a fresh provider session.
+- [x] GitHub event replay and duplicate start attempts are suppressed by a durable campaign/task/fingerprint-bound dispatch receipt plus the execution lease.
+- [x] A stale dispatch receipt is retryable only when no live lease or current checkpoint/recovery proves work is active or complete.
+- [x] Automatic-start decisions produce structured artifact evidence; successful dispatch persists a secret-free audit receipt.
+- [x] Mission Control exposes the latest zero-touch receipt without provider-session identifiers or secrets.
+- [x] CI contains deterministic Zero-Touch Start, lease, restart, HUMAN_WAIT, recovery, and Mission Control proofs.
+- [x] Real Campaign `v1.1-zero-touch-proof-001` completed AcceptedPlan -> automatic push-triggered initial dispatch -> PR #116 -> CI -> trusted merge -> automatic Task 2 dispatch -> PR #117 -> CI -> trusted merge with no manual initial workflow click and no failed tasks.
