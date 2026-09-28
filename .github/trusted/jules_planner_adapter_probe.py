@@ -129,6 +129,8 @@ def main() -> int:
     create = next(item for item in client.requests if item[0] == "POST" and item[1] == "sessions")
     assert create[2]["requirePlanApproval"] is True
     assert "automationMode" not in create[2]
+    assert "implementation plan itself" in create[2]["prompt"]
+    assert "exact repository-relative file path" in create[2]["prompt"]
     assert not any(path.endswith(":approvePlan") for _, path, _, _ in client.requests)
     assert not any(path.endswith(":sendMessage") for _, path, _, _ in client.requests)
     assert provider.last_observed_state == "AWAITING_PLAN_APPROVAL"
