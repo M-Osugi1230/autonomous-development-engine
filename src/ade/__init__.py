@@ -83,6 +83,11 @@ from .mission_control import (
 )
 from .mission_control_html import render_mission_control
 from .models import ProjectState, ProjectStatus, TaskStatus
+from .planning_activation import (
+    PlanningActivationBundle,
+    PlanningGoalRequest,
+    build_planning_activation,
+)
 from .pilot import (
     PilotAcceptanceCheck,
     PilotAction,
@@ -209,6 +214,8 @@ __all__ = [
     "PlannerValidationError",
     "PlanningProvider",
     "ValidatedPlannerProposal",
+    "PlanningActivationBundle",
+    "PlanningGoalRequest",
     "PilotAcceptanceCheck",
     "PilotAcceptanceEvidence",
     "PilotActivation",
@@ -265,6 +272,7 @@ __all__ = [
     "StartDisposition",
     "accept_validated_proposal",
     "build_mission_control_snapshot",
+    "build_planning_activation",
     "build_planner_prompt",
     "build_pilot_activation",
     "build_pilot_final_evidence",
