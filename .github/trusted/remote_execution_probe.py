@@ -10,6 +10,7 @@ from ade.remote_execution import (
     RemoteExecutionReceipt,
     execution_target_from_state,
     parse_pull_request_url,
+    receipt_binds_pull_request,
 )
 
 
@@ -36,6 +37,18 @@ def main() -> int:
     assert repository == target
     assert number == 7
     assert RemoteExecutionReceipt.from_dict(receipt.to_dict()) == receipt
+    assert receipt_binds_pull_request(
+        receipt.to_dict(),
+        task_id="v12ext-001",
+        target_repository=target,
+        pull_request_url=receipt.pull_request_url,
+    )
+    assert not receipt_binds_pull_request(
+        receipt.to_dict(),
+        task_id="v12ext-002",
+        target_repository=target,
+        pull_request_url=receipt.pull_request_url,
+    )
 
     try:
         execution_target_from_state(
@@ -52,6 +65,7 @@ def main() -> int:
         "state_bound_target": True,
         "strict_pr_url": True,
         "receipt_round_trip": True,
+        "idempotent_pr_binding": True,
         "unsafe_target_rejected": True,
     }, sort_keys=True))
     return 0
