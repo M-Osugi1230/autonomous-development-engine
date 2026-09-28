@@ -402,6 +402,7 @@ class JulesPlannerTests(unittest.TestCase):
                 source_name="sources/github/example/repo",
                 poll_interval_seconds=0.001,
                 max_plan_polls=4,
+                max_structured_polls=3,
                 allowed_path_prefixes=("src/ade",),
             ),
             sleeper=lambda _: None,
