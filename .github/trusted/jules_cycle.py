@@ -24,6 +24,7 @@ TASK_PATH = Path(".autodev/cycle-task.json")
 RESULT_PATH = Path(".autodev/runtime/jules-session.json")
 CHECKPOINT_PATH = ".autodev/runtime/checkpoint.json"
 STATE_PATH = ".autodev/state.json"
+REMOTE_PR_PATH = ".autodev/runtime/remote-pr.json"
 QUOTA_RETRY_DELAY = timedelta(hours=1)
 
 
@@ -143,6 +144,72 @@ def _load_task() -> dict[str, Any]:
         if not isinstance(value, str) or not value.strip():
             raise ValueError(f"{key} must be a non-empty string")
     return payload
+
+
+def _execution_target(gh: GitHubClient) -> tuple[str, str, str]:
+    state, _ = gh.get_json_file(STATE_PATH)
+    metadata = state.get("metadata", {})
+    target = metadata.get("target_repository") if isinstance(metadata, dict) else None
+    if not isinstance(target, str) or "/" not in target:
+        owner = os.environ.get("ADE_GITHUB_OWNER", "M-Osugi1230")
+        repo = os.environ.get("ADE_GITHUB_REPO", "autonomous-development-engine")
+        target = f"{owner}/{repo}"
+    owner, repo = target.split("/", 1)
+    if not owner.strip() or not repo.strip() or "/" in repo:
+        raise ValueError("target_repository must be owner/repo")
+    return owner.strip(), repo.strip(), f"{owner.strip()}/{repo.strip()}"
+
+
+def _remote_pr_receipt(
+    *,
+    task_id: str,
+    target_repository: str,
+    pull_request_url: str,
+) -> dict[str, Any]:
+    prefix = f"https://github.com/{target_repository}/pull/"
+    if not pull_request_url.startswith(prefix):
+        raise ValueError("provider pull request URL does not match target repository")
+    suffix = pull_request_url.removeprefix(prefix)
+    if not suffix.isdigit() or int(suffix) < 1:
+        raise ValueError("provider pull request URL has invalid pull request number")
+    return {
+        "schema_version": 1,
+        "task_id": task_id,
+        "target_repository": target_repository,
+        "pull_request": int(suffix),
+        "pull_request_url": pull_request_url,
+        "status": "OPEN",
+        "observed_at": datetime.now(UTC).isoformat(),
+    }
+
+
+def _persist_remote_pr(
+    gh: GitHubClient,
+    *,
+    task_id: str,
+    target_repository: str,
+    pull_request_url: str,
+) -> None:
+    if target_repository == gh.repository:
+        return
+    receipt = _remote_pr_receipt(
+        task_id=task_id,
+        target_repository=target_repository,
+        pull_request_url=pull_request_url,
+    )
+    gh.upsert_json_file(
+        REMOTE_PR_PATH,
+        receipt,
+        message=f"remote-pr: observe {task_id} #{receipt['pull_request']}",
+    )
+    gh.dispatch(
+        "ade_remote_target_watch",
+        {
+            "task_id": task_id,
+            "target_repository": target_repository,
+            "pull_request": receipt["pull_request"],
+        },
+    )
 
 
 def _parse_session_time(value: object) -> datetime | None:
@@ -273,6 +340,7 @@ def monitor_existing(
     task: dict[str, Any],
     session_id: str,
     session_url: str | None = None,
+    target_repository: str,
 ) -> int:
     task_id = str(task["task_id"])
     _set_project_status(
@@ -310,6 +378,12 @@ def monitor_existing(
                 print(f"PASS: Jules session completed: {session_id}")
                 if payload["pull_request_url"]:
                     print(f"Pull request: {payload['pull_request_url']}")
+                    _persist_remote_pr(
+                        gh,
+                        task_id=task_id,
+                        target_repository=target_repository,
+                        pull_request_url=str(payload["pull_request_url"]),
+                    )
                 return 0
 
             if state == "FAILED":
@@ -425,12 +499,11 @@ def run_new_cycle(
         task=task,
         session_id=session_id,
         session_url=session_url,
+        target_repository=f"{owner}/{repo}",
     )
 
 
 def main() -> int:
-    owner = os.environ.get("ADE_GITHUB_OWNER", "M-Osugi1230")
-    repo = os.environ.get("ADE_GITHUB_REPO", "autonomous-development-engine")
     task_id = "unknown"
     session_id: str | None = None
 
@@ -439,6 +512,8 @@ def main() -> int:
         task_id = str(task["task_id"])
         client = JulesClient()
         gh = GitHubClient()
+        owner, repo, target_repository = _execution_target(gh)
+        print(f"TARGET: {target_repository}")
         run_id = os.environ.get("GITHUB_RUN_ID", "manual")
         run_attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "1")
         owner_id = f"github-actions:{run_id}:{run_attempt}"
