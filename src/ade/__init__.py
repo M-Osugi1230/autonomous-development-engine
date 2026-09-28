@@ -58,6 +58,14 @@ from .decisions import (
 )
 from .health import health_snapshot
 from .human_interrupt import HumanInterruptCoordinator
+from .jules_planner import (
+    JulesPlannerClient,
+    JulesPlannerConfig,
+    JulesPlannerError,
+    JulesPlanningProvider,
+    extract_structured_proposal,
+    latest_plan_steps,
+)
 from .interrupt_policy import (
     DecisionKind,
     InterruptDisposition,
@@ -184,6 +192,10 @@ __all__ = [
     "GitHubCopilotProvider",
     "GraphTaskStatus",
     "HumanInterruptCoordinator",
+    "JulesPlannerClient",
+    "JulesPlannerConfig",
+    "JulesPlannerError",
+    "JulesPlanningProvider",
     "MissionActivitySummary",
     "MissionCheckpointSummary",
     "MissionControlSnapshot",
@@ -269,10 +281,12 @@ __all__ = [
     "decide_repair",
     "decide_resume",
     "evaluate_availability",
+    "extract_structured_proposal",
     "evaluate_provider_availability_state",
     "evaluate_zero_touch_start",
     "validate_planner_proposal",
     "health_snapshot",
+    "latest_plan_steps",
     "map_repair_execution",
     "monitor_cycle_session",
     "next_runnable_task",
