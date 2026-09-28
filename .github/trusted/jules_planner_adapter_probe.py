@@ -70,8 +70,16 @@ class RecordingJulesClient(JulesClient):
                             "plan": {
                                 "steps": [
                                     {
-                                        "title": "Add helper",
-                                        "description": "Add src/ade/helper.py",
+                                        "title": "Add helper in `src/ade/helper.py`",
+                                        "description": "Implement a pure helper at `src/ade/helper.py`",
+                                    },
+                                    {
+                                        "title": "Add tests in `tests/test_helper.py`",
+                                        "description": "Add focused tests at `tests/test_helper.py`",
+                                    },
+                                    {
+                                        "title": "Complete pre commit steps",
+                                        "description": "Verify and review the change",
                                     }
                                 ]
                             }
@@ -96,25 +104,34 @@ def main() -> int:
             max_plan_polls=3,
             max_structured_polls=3,
             activity_404_retries=2,
+            allowed_path_prefixes=("src/ade", "tests"),
         ),
         sleeper=lambda _: None,
     )
-    result = provider.propose("Trusted planning request")
-    assert result == PROPOSAL
+    result = provider.propose(
+        "You are an untrusted planning component. Goal: Add helper. "
+        "Trusted writable roots: src/ade, tests. Maximum tasks: 8"
+    )
+    assert result["schema_version"] == 1
+    assert result["goal"] == "Add helper"
+    assert len(result["tasks"]) == 2
+    assert result["tasks"][0]["allowed_paths"] == ["src/ade/helper.py"]
+    assert result["tasks"][1]["allowed_paths"] == ["tests/test_helper.py"]
 
     create = next(item for item in client.requests if item[0] == "POST" and item[1] == "sessions")
     assert create[2]["requirePlanApproval"] is True
     assert "automationMode" not in create[2]
     assert not any(path.endswith(":approvePlan") for _, path, _, _ in client.requests)
-    assert any(path.endswith(":sendMessage") for _, path, _, _ in client.requests)
+    assert not any(path.endswith(":sendMessage") for _, path, _, _ in client.requests)
     assert provider.last_observed_state == "AWAITING_PLAN_APPROVAL"
+    assert provider.last_proposal_mode == "derived-plan-steps"
 
     print(json.dumps({
         "ok": True,
         "require_plan_approval": True,
         "auto_create_pr_disabled": True,
         "approve_plan_never_called": True,
-        "structured_followup": True,
+        "plan_step_fallback": True,
         "unapproved_terminal_state": True,
     }, sort_keys=True))
     return 0
