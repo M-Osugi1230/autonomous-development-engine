@@ -246,7 +246,7 @@ def _normalize_text(value: str) -> str:
 def _validate_policy_prefix(prefix: str) -> None:
     if not isinstance(prefix, str) or not prefix.strip():
         raise PlannerValidationError("planner path prefixes must be non-empty strings")
-    if "\" in prefix or prefix.startswith("/"):
+    if "\\" in prefix or prefix.startswith("/"):
         raise PlannerValidationError(f"invalid planner path prefix: {prefix}")
     path = PurePosixPath(prefix)
     if ".." in path.parts or str(path) != prefix.rstrip("/"):
@@ -261,7 +261,7 @@ def _path_within(path: str, prefix: str) -> bool:
 def _validate_path(path: str, policy: PlannerPolicy) -> str:
     if not isinstance(path, str) or not path.strip():
         raise PlannerValidationError("planner paths must be non-empty strings")
-    if "\" in path or path.startswith("/"):
+    if "\\" in path or path.startswith("/"):
         raise PlannerValidationError(f"unsafe planner path: {path}")
     parsed = PurePosixPath(path)
     normalized = str(parsed)
