@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "campaign_id": "phase17-production-graduation-001",
+  "goal": "Add a small graduation metadata utility, prove its deterministic summary, and document its public behavior in code.",
+  "plan_source": "scripts/phase17_graduation_fixture.py",
+  "initial_dispatch_run": 36358625830,
+  "tasks": [
+    {
+      "task_id": "phase17-final-001",
+      "pull_request": 110,
+      "ci_run": 36358799253,
+      "merge_commit": "1779ad7952290b02165507d6a772ff530db4fdd3"
+    },
+    {
+      "task_id": "phase17-final-002",
+      "dispatch_run": 36358824551,
+      "pull_request": 111,
+      "ci_run": 36359000645,
+      "merge_commit": "b3a0e78bfcd02163cde0738533fca18aeed1cfb8"
+    },
+    {
+      "task_id": "phase17-final-003",
+      "dispatch_run": 36359035597,
+      "pull_request": 112,
+      "ci_run": 36359215392,
+      "merge_commit": "245b875bcc24a5b24c4b4f3d82b2fe75d36c2d74"
+    }
+  ],
+  "terminal_status": "COMPLETED",
+  "manual_task_prompts": false,
+  "manual_dispatch_between_tasks": false,
+  "failed_tasks": 0,
+  "graduation_proofs": {
+    "real_recovery_evidence": ".autodev/campaign-evidence/phase15-recovery-campaign-001.json",
+    "goal_execution_evidence": ".autodev/campaign-evidence/phase16-goal-campaign-001.json",
+    "checkpoint_restart_ci": "Checkpoint restart proof",
+    "human_wait_ci": "Human decision boundary proof",
+    "duplicate_dispatch_ci": "Execution lease duplicate-dispatch proof",
+    "mission_control_ci": "Mission Control observability proof"
+  }
+}
