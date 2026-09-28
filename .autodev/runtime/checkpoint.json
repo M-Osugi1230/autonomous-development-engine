@@ -2,9 +2,9 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "13077885846334553452",
+  "provider_session_id": "31805861885106404",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "v1-1-zero-touch-001"
+  "state": "RUNNING",
+  "task_id": "v1-1-zero-touch-002"
 }
