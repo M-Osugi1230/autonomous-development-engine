@@ -52,6 +52,18 @@ def _utc(value: datetime, *, field: str) -> datetime:
     return value.astimezone(UTC)
 
 
+def _same_cycle_task(left: CycleTask, right: CycleTask) -> bool:
+    return (
+        left.task_id == right.task_id
+        and left.title == right.title
+        and " ".join(left.prompt.split()) == " ".join(right.prompt.split())
+        and left.starting_branch == right.starting_branch
+        and left.auto_create_pr == right.auto_create_pr
+        and left.timeout_seconds == right.timeout_seconds
+        and left.poll_interval_seconds == right.poll_interval_seconds
+    )
+
+
 def _lease_from_dict(payload: dict[str, Any]) -> ExecutionLease:
     if payload.get("schema_version") != 1:
         raise ValueError("execution lease schema_version must be 1")
@@ -124,7 +136,7 @@ def evaluate_zero_touch_start(
     if tuple(node.task_id for node in graph.tasks) != expected_campaign.task_ids:
         raise ValueError("task graph IDs do not reconcile with AcceptedPlan")
     for live, expected in zip(graph.tasks, expected_graph.tasks, strict=True):
-        if live.depends_on != expected.depends_on or live.task != expected.task:
+        if live.depends_on != expected.depends_on or not _same_cycle_task(live.task, expected.task):
             raise ValueError(f"task graph drift for {live.task_id}")
 
     fingerprint = accepted.fingerprint
@@ -158,7 +170,7 @@ def evaluate_zero_touch_start(
         raise ValueError("project current task is not present in task graph")
     if current.status is not GraphTaskStatus.RUNNING:
         return StartDecision(StartDisposition.BLOCKED, "current-task-not-running", task_id=task_id, **base)
-    if cycle_task != current.task:
+    if not _same_cycle_task(cycle_task, current.task):
         raise ValueError("cycle task does not match current task graph node")
 
     if checkpoint_payload is not None:
