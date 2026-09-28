@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-09-27T23:32:28.738484+00:00",
+  "acquired_at": "2026-09-28T09:10:50.684026+00:00",
   "attempt": 1,
-  "expires_at": "2026-09-28T00:22:28.738484+00:00",
-  "owner_id": "github-actions:36359035597:1",
+  "expires_at": "2026-09-28T10:00:50.684026+00:00",
+  "owner_id": "github-actions:36401834921:1",
   "schema_version": 1,
-  "task_id": "phase17-final-003"
+  "task_id": "v1-1-zero-touch-001"
 }
