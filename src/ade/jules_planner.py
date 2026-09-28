@@ -376,7 +376,7 @@ class JulesPlanningProvider:
         session_id: str,
         *,
         baseline_message_count: int,
-    ) -> dict[str, Any]:
+    ) -> dict[str, Any] | None:
         for _ in range(self._config.max_structured_polls):
             current = self._client.get_session(session_id)
             state = current.get("state")
@@ -389,6 +389,9 @@ class JulesPlanningProvider:
                 raise JulesPlannerError(f"Jules planner stopped in {state}")
 
             activities = self._activities(session_id)
+            observed_steps = latest_plan_steps(activities)
+            if observed_steps:
+                self.last_plan_steps = observed_steps
             messages = _agent_messages(activities)
             for message in reversed(messages[baseline_message_count:]):
                 payload = _extract_json_object(message)
@@ -397,7 +400,7 @@ class JulesPlanningProvider:
 
             self._sleep(self._config.poll_interval_seconds)
 
-        raise JulesPlannerError("Jules planner did not return a structured proposal in time")
+        return None
 
     def propose(self, prompt: str) -> dict[str, Any]:
         if not isinstance(prompt, str) or not prompt.strip():
@@ -423,22 +426,17 @@ class JulesPlanningProvider:
             self.last_proposal_mode = "structured"
             return immediate
 
-        if self._config.allowed_path_prefixes:
-            derived = derive_proposal_from_plan_steps(
-                goal=_goal_from_planner_prompt(prompt),
-                steps=self.last_plan_steps,
-                allowed_path_prefixes=self._config.allowed_path_prefixes,
-                required_human_boundaries=self._config.required_human_boundaries,
-            )
-            if derived is not None:
-                self.last_proposal_mode = (
-                    "derived-plan-snapshot-after-boundary"
-                    if self.last_execution_boundary_crossed
-                    else "derived-plan-steps"
-                )
-                return derived
-
         if self.last_execution_boundary_crossed:
+            if self._config.allowed_path_prefixes:
+                derived = derive_proposal_from_plan_steps(
+                    goal=_goal_from_planner_prompt(prompt),
+                    steps=self.last_plan_steps,
+                    allowed_path_prefixes=self._config.allowed_path_prefixes,
+                    required_human_boundaries=self._config.required_human_boundaries,
+                )
+                if derived is not None:
+                    self.last_proposal_mode = "derived-plan-snapshot-after-boundary"
+                    return derived
             raise JulesPlannerError(
                 "execution-boundary plan snapshot could not be converted into a trusted proposal"
             )
@@ -449,11 +447,28 @@ class JulesPlanningProvider:
             session_id,
             baseline_message_count=len(before_messages),
         )
+        if proposal is not None:
+            final = self._client.get_session(session_id)
+            final_state = final.get("state")
+            self.last_observed_state = final_state if isinstance(final_state, str) else None
+            if final_state == "IN_PROGRESS":
+                raise JulesPlannerError(
+                    "Jules planner crossed execution boundary after follow-up"
+                )
+            self.last_proposal_mode = "followup-structured"
+            return proposal
 
-        final = self._client.get_session(session_id)
-        final_state = final.get("state")
-        self.last_observed_state = final_state if isinstance(final_state, str) else None
-        if final_state == "IN_PROGRESS":
-            raise JulesPlannerError("Jules planner crossed execution boundary after follow-up")
-        self.last_proposal_mode = "followup-structured"
-        return proposal
+        if self._config.allowed_path_prefixes:
+            derived = derive_proposal_from_plan_steps(
+                goal=_goal_from_planner_prompt(prompt),
+                steps=self.last_plan_steps,
+                allowed_path_prefixes=self._config.allowed_path_prefixes,
+                required_human_boundaries=self._config.required_human_boundaries,
+            )
+            if derived is not None:
+                self.last_proposal_mode = "derived-plan-steps-fallback"
+                return derived
+
+        raise JulesPlannerError(
+            "Jules planner returned neither a structured proposal nor usable plan steps"
+        )
