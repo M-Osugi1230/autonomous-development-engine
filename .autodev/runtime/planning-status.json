@@ -1,0 +1,10 @@
+{
+  "attempt": 1,
+  "detail": "planning-only session crossed execution boundary: IN_PROGRESS",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "4c9a1441be3adfaf4e7a76caf08a72ece224e1c6731dc247edf38e300e5cf89c",
+  "request_id": "v1.2-external-goal-proof-001",
+  "schema_version": 1,
+  "state": "REPLAN",
+  "updated_at": "2026-09-28T17:40:06.607728+00:00"
+}
