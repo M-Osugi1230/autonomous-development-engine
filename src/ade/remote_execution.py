@@ -64,6 +64,27 @@ def parse_pull_request_url(url: str) -> tuple[str, int]:
     return repository, number
 
 
+def receipt_binds_pull_request(
+    payload: dict[str, Any] | None,
+    *,
+    task_id: str,
+    target_repository: str,
+    pull_request_url: str,
+) -> bool:
+    if payload is None or not isinstance(payload, dict):
+        return False
+    try:
+        receipt = RemoteExecutionReceipt.from_dict(payload)
+    except (ValueError, KeyError, TypeError):
+        return False
+    return (
+        receipt.status == "PR_CREATED"
+        and receipt.task_id == task_id
+        and receipt.target_repository == target_repository
+        and receipt.pull_request_url == pull_request_url
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class RemoteExecutionReceipt:
     task_id: str
