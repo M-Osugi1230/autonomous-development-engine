@@ -43,6 +43,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/zero_touch_start_probe.py
 
+      - name: Autonomous Planner proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/autonomous_planner_probe.py
+
       - name: Production fault-injection proof
         env:
           PYTHONPATH: src
