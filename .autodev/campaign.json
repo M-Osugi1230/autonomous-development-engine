@@ -1,11 +1,13 @@
 {
-  "schema_version": 1,
   "campaign_id": "v1.1-zero-touch-proof-001",
+  "completed_task_ids": [
+    "v1-1-zero-touch-001"
+  ],
   "goal": "Add a small zero-touch campaign marker utility and prove it with focused tests.",
+  "schema_version": 1,
+  "status": "RUNNING",
   "task_ids": [
     "v1-1-zero-touch-001",
     "v1-1-zero-touch-002"
-  ],
-  "status": "RUNNING",
-  "completed_task_ids": []
+  ]
 }
