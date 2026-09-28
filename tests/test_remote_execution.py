@@ -6,6 +6,7 @@ from ade.remote_execution import (
     RemoteExecutionReceipt,
     execution_target_from_state,
     parse_pull_request_url,
+    receipt_binds_pull_request,
 )
 
 
@@ -58,6 +59,48 @@ class RemoteExecutionTests(unittest.TestCase):
         ):
             with self.assertRaises(ValueError):
                 parse_pull_request_url(invalid)
+
+    def test_receipt_binding_detects_idempotent_pr_created_receipt(self) -> None:
+        payload = RemoteExecutionReceipt(
+            task_id="v12ext-001",
+            target_repository="M-Osugi1230/one-minute-thought-experiments",
+            pull_request_url=(
+                "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/7"
+            ),
+            recorded_at="2026-09-29T00:00:00+00:00",
+        ).to_dict()
+        self.assertTrue(
+            receipt_binds_pull_request(
+                payload,
+                task_id="v12ext-001",
+                target_repository="M-Osugi1230/one-minute-thought-experiments",
+                pull_request_url=(
+                    "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/7"
+                ),
+            )
+        )
+        self.assertFalse(
+            receipt_binds_pull_request(
+                payload,
+                task_id="v12ext-002",
+                target_repository="M-Osugi1230/one-minute-thought-experiments",
+                pull_request_url=(
+                    "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/7"
+                ),
+            )
+        )
+        merged = dict(payload)
+        merged["status"] = "MERGED"
+        self.assertFalse(
+            receipt_binds_pull_request(
+                merged,
+                task_id="v12ext-001",
+                target_repository="M-Osugi1230/one-minute-thought-experiments",
+                pull_request_url=(
+                    "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/7"
+                ),
+            )
+        )
 
     def test_receipt_round_trip_and_repository_binding(self) -> None:
         receipt = RemoteExecutionReceipt(
