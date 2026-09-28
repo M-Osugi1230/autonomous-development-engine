@@ -168,10 +168,10 @@
 
 ## Phase 17 — Production Graduation
 
-- [ ] A production-graduation campaign runs at least three dependency-linked tasks through trusted PR/CI advancement.
-- [ ] The graduation evidence includes a real autonomous recovery path, restart/resume evidence, and a bounded HUMAN_WAIT/escalation proof.
-- [ ] Duplicate dispatch/session and stale recovery protections remain green under the final CI suite.
-- [ ] Mission Control reports the graduation campaign lifecycle and terminal state without exposing secrets.
-- [ ] All durable state, campaign evidence, acceptance, and roadmap records reconcile to the same terminal outcome.
-- [ ] No unresolved safety-critical defect remains in provider dispatch, lease, PR provenance/scope, CI gate, recovery, or plan validation.
-- [ ] ADE v1.0 is marked Production Graduated only after the complete final CI/proof suite is green and structured graduation evidence is persisted.
+- [x] A production-graduation campaign ran three dependency-linked tasks through trusted PR/CI advancement.
+- [x] Graduation evidence binds the real Phase 15 autonomous recovery path plus mandatory restart/resume and HUMAN_WAIT proof gates.
+- [x] Duplicate dispatch/session and stale recovery protections remain green under the final CI suite.
+- [x] Mission Control observability remains a mandatory green proof and reads the terminal graduation campaign.
+- [x] Durable campaign, DAG, structured graduation evidence, acceptance, and roadmap reconcile to the same terminal outcome.
+- [x] The final graduation audit reports no unresolved required safety-proof gap across provider routing, lease, CI/recovery, human boundary, restart, observability, and plan execution.
+- [x] ADE v1.0 Production Graduation is declared only when the final CI suite and structured graduation audit are green.
