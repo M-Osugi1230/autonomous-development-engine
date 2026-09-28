@@ -164,6 +164,7 @@ class JulesClient:
         starting_branch: str,
         title: str | None,
         auto_create_pr: bool,
+        require_plan_approval: bool = False,
     ) -> dict[str, Any]:
         if not prompt.strip() or not source.strip() or not starting_branch.strip():
             raise ValueError("prompt, source, and starting_branch must be non-empty")
@@ -173,7 +174,7 @@ class JulesClient:
                 "source": source,
                 "githubRepoContext": {"startingBranch": starting_branch},
             },
-            "requirePlanApproval": False,
+            "requirePlanApproval": require_plan_approval,
         }
         if title:
             payload["title"] = title
@@ -186,3 +187,36 @@ class JulesClient:
         if not normalized or "/" in normalized:
             raise ValueError("invalid session_id")
         return self._request("GET", f"sessions/{normalized}")
+
+    def list_activities(
+        self,
+        session_id: str,
+        *,
+        page_size: int = 100,
+    ) -> list[dict[str, Any]]:
+        normalized = session_id.removeprefix("sessions/")
+        if not normalized or "/" in normalized:
+            raise ValueError("invalid session_id")
+        if type(page_size) is not int or not 1 <= page_size <= 100:
+            raise ValueError("page_size must be an integer between 1 and 100")
+        payload = self._request(
+            "GET",
+            f"sessions/{normalized}/activities",
+            query={"pageSize": page_size},
+        )
+        activities = payload.get("activities", [])
+        if not isinstance(activities, list):
+            raise JulesError("activities response has invalid shape")
+        return [item for item in activities if isinstance(item, dict)]
+
+    def send_message(self, session_id: str, prompt: str) -> None:
+        normalized = session_id.removeprefix("sessions/")
+        if not normalized or "/" in normalized:
+            raise ValueError("invalid session_id")
+        if not isinstance(prompt, str) or not prompt.strip():
+            raise ValueError("prompt must be non-empty")
+        self._request(
+            "POST",
+            f"sessions/{normalized}:sendMessage",
+            payload={"prompt": prompt},
+        )
