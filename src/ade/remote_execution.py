@@ -13,6 +13,11 @@ _REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 def validate_repository_name(value: str) -> str:
     if not isinstance(value, str) or _REPOSITORY.fullmatch(value) is None:
         raise ValueError("repository must be owner/name")
+    owner, name = value.split("/", 1)
+    if owner in {".", ".."} or name in {".", ".."}:
+        raise ValueError("repository must be owner/name")
+    if owner.startswith(".") or owner.endswith(".") or name.startswith(".") or name.endswith("."):
+        raise ValueError("repository must be owner/name")
     return value
 
 
