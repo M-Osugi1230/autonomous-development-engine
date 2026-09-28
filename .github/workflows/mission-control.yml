@@ -2,6 +2,9 @@ name: ADE Mission Control
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - ade_mission_control_refresh
   push:
     branches:
       - main
