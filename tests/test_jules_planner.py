@@ -136,6 +136,61 @@ class JulesPlannerTests(unittest.TestCase):
             ["jules-step-001"],
         )
 
+    def test_provider_prompt_requests_repository_implementation_plan_not_json_meta_plan(self):
+        activities = [{
+            "planGenerated": {
+                "plan": {
+                    "steps": [{
+                        "title": "Add helper in `src/ade/helper.py`",
+                        "description": "Implement helper at `src/ade/helper.py`",
+                    }]
+                }
+            }
+        }]
+        client = FakeClient(
+            initial_activities=activities,
+            states=["AWAITING_PLAN_APPROVAL"],
+        )
+        provider = JulesPlanningProvider(
+            client,
+            JulesPlannerConfig(
+                source_name="sources/github/example/repo",
+                poll_interval_seconds=0.001,
+                max_plan_polls=2,
+                allowed_path_prefixes=("src/ade", "tests"),
+            ),
+            sleeper=lambda _: None,
+        )
+        provider.propose(
+            "You are an untrusted planning component. Goal: Add helper. "
+            "Trusted writable roots: src/ade, tests. Maximum tasks: 8"
+        )
+        sent_prompt = client.created[0]["prompt"]
+        self.assertIn("implementation plan itself", sent_prompt)
+        self.assertIn("exact repository-relative file path", sent_prompt)
+        self.assertIn("Goal: Add helper", sent_prompt)
+        self.assertNotIn("Return only one JSON object", sent_prompt)
+
+    def test_directory_roots_in_plan_prose_do_not_become_executable_paths(self):
+        steps = ({
+            "title": "Plan implementation in `src/ade` and `tests`",
+            "description": (
+                "Modify `src/ade/helper.py` and add `tests/test_helper.py`; "
+                "keep all work inside `src/ade` and `tests`."
+            ),
+        },)
+        proposal = derive_proposal_from_plan_steps(
+            goal="Add helper",
+            steps=steps,
+            allowed_path_prefixes=("src/ade", "tests"),
+        )
+        self.assertIsNotNone(proposal)
+        assert proposal is not None
+        self.assertEqual(
+            proposal["tasks"][0]["allowed_paths"],
+            ["src/ade/helper.py", "tests/test_helper.py"],
+        )
+
     def test_plan_steps_are_used_before_unreliable_followup(self):
         activities = [{
             "planGenerated": {
