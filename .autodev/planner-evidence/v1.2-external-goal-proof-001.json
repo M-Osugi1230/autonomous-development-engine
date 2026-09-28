@@ -56,5 +56,19 @@
   "schema_version": 1,
   "task_ids": [
     "v12ext-001"
-  ]
+  ],
+  "outcome": "SUPERSEDED_SAFETY_HARDENING",
+  "superseded": {
+    "reason": "The first live planner proposal encoded planner protocol work and directory-level allowed_paths. The target trusted gate correctly stopped PR #5 before merge. Planner validation and the remote merge gate were hardened before retry.",
+    "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/5",
+    "target_ci_run": 36494042664,
+    "remote_gate_run": 36494086423,
+    "remote_gate_result": "HUMAN_WAIT",
+    "planner_hardening_pr": 126,
+    "remote_gate_hardening_pr": 6,
+    "completed_lease_handoff_pr": 127,
+    "implementation_merged": false,
+    "safety_hardening_complete": true,
+    "ci_validation_path": "phase-branch-push"
+  }
 }
