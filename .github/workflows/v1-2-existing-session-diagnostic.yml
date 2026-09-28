@@ -1,0 +1,34 @@
+name: ADE v1.2 Existing Planner Session Diagnostic
+
+on:
+  push:
+    branches:
+      - v1.2-existing-session-diagnostic
+    paths:
+      - ".github/trusted/v1_2_existing_session_diagnostic.py"
+      - ".github/workflows/v1-2-existing-session-diagnostic.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Inspect existing planner sessions
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+        run: python .github/trusted/v1_2_existing_session_diagnostic.py
+      - name: Upload diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-v1-2-existing-session-diagnostic
+          path: .autodev/runtime/v1-2-session-diagnostic.json
+          if-no-files-found: error
+          retention-days: 3
