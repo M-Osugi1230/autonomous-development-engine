@@ -20,7 +20,7 @@
       "depends_on": [
         "v1-1-zero-touch-001"
       ],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
