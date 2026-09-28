@@ -38,6 +38,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/execution_lease_probe.py
 
+      - name: Zero-Touch Start proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/zero_touch_start_probe.py
+
       - name: Production fault-injection proof
         env:
           PYTHONPATH: src

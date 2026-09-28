@@ -214,6 +214,36 @@ class MissionControlSnapshotTests(unittest.TestCase):
         snapshot = build_mission_control_snapshot(self.root)
         self.assertEqual(snapshot.lifecycle_status, "COMPLETED")
 
+    def test_snapshot_exposes_zero_touch_start_receipt(self) -> None:
+        self.write_base_fixture()
+        self.write_json(
+            "runtime/zero-touch-start.json",
+            {
+                "schema_version": 1,
+                "status": "DISPATCHED",
+                "campaign_id": "campaign-zt",
+                "task_id": "task-5",
+                "plan_fingerprint": "a" * 64,
+                "dispatch_count": 2,
+                "dispatched_at": "2026-09-28T08:00:00+00:00",
+                "source": "push",
+                "run_id": "123",
+            },
+        )
+        snapshot = build_mission_control_snapshot(self.root)
+        self.assertEqual(
+            snapshot.zero_touch_start,
+            {
+                "status": "DISPATCHED",
+                "campaign_id": "campaign-zt",
+                "task_id": "task-5",
+                "dispatched_at": "2026-09-28T08:00:00+00:00",
+                "dispatch_count": 2,
+                "source": "push",
+            },
+        )
+        self.assertNotIn("plan_fingerprint", json.dumps(snapshot.to_dict()))
+
     def test_stale_metrics_warning_is_derived_from_state(self) -> None:
         self.write_base_fixture()
 

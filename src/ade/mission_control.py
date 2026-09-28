@@ -263,6 +263,7 @@ class MissionControlSnapshot:
     preview: MissionPreviewSummary | None = None
     campaign: dict[str, Any] | None = None
     lifecycle_status: str = "RUNNING"
+    zero_touch_start: dict[str, Any] | None = None
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -318,6 +319,7 @@ class MissionControlSnapshot:
             "preview": self.preview.to_dict() if self.preview is not None else None,
             "campaign": self.campaign,
             "lifecycle_status": self.lifecycle_status,
+            "zero_touch_start": self.zero_touch_start,
         }
 
 
@@ -450,6 +452,28 @@ def build_mission_control_snapshot(
             "total_tasks": len(task_ids),
         }
 
+    zero_touch_start_payload = None
+    zero_touch_path = autodev / "runtime" / "zero-touch-start.json"
+    if zero_touch_path.exists():
+        raw_start = _load_json_object(zero_touch_path, label="zero-touch start receipt")
+        if raw_start.get("schema_version") != 1:
+            raise ValueError("invalid zero-touch start receipt schema_version")
+        required_start = ("status", "campaign_id", "task_id", "dispatched_at")
+        if any(not isinstance(raw_start.get(key), str) or not str(raw_start.get(key)).strip() for key in required_start):
+            raise ValueError("invalid zero-touch start receipt")
+        dispatch_count = raw_start.get("dispatch_count")
+        if type(dispatch_count) is not int or dispatch_count < 1:
+            raise ValueError("invalid zero-touch start dispatch_count")
+        source = raw_start.get("source")
+        zero_touch_start_payload = {
+            "status": _redact_display_text(str(raw_start["status"])),
+            "campaign_id": _redact_display_text(str(raw_start["campaign_id"])),
+            "task_id": _redact_display_text(str(raw_start["task_id"])),
+            "dispatched_at": _redact_display_text(str(raw_start["dispatched_at"])),
+            "dispatch_count": dispatch_count,
+            "source": _redact_display_text(source) if isinstance(source, str) and source.strip() else None,
+        }
+
     metadata = state.metadata if isinstance(state.metadata, dict) else {}
     queue_exhausted_value = metadata.get("queue_exhausted", False)
     queue_exhausted = (
@@ -491,4 +515,5 @@ def build_mission_control_snapshot(
         preview=preview,
         campaign=campaign_payload,
         lifecycle_status=lifecycle_status,
+        zero_touch_start=zero_touch_start_payload,
     )

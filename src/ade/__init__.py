@@ -132,6 +132,7 @@ from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
 from .task_graph_store import TaskGraphStore
 from .task_scheduler import next_runnable_task, runnable_tasks
 from .task_graph_transition import resume_task_after_decision, transition_task
+from .zero_touch_start import StartDecision, StartDisposition, evaluate_zero_touch_start
 
 __all__ = [
     "AcceptanceReport",
@@ -226,6 +227,8 @@ __all__ = [
     "TaskGraphStore",
     "TaskNode",
     "TaskStatus",
+    "StartDecision",
+    "StartDisposition",
     "build_mission_control_snapshot",
     "build_pilot_activation",
     "build_pilot_final_evidence",
@@ -243,6 +246,7 @@ __all__ = [
     "decide_resume",
     "evaluate_availability",
     "evaluate_provider_availability_state",
+    "evaluate_zero_touch_start",
     "health_snapshot",
     "map_repair_execution",
     "monitor_cycle_session",

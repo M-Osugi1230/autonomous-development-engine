@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import unittest
 
 from ade import (
@@ -146,6 +147,23 @@ class MissionControlHtmlTests(unittest.TestCase):
 
         html = render_mission_control(without_checkpoint)
         self.assertIn("No checkpoint is present.", html)
+
+    def test_zero_touch_start_receipt_is_rendered(self) -> None:
+        snapshot = replace(
+            make_snapshot(),
+            zero_touch_start={
+                "status": "DISPATCHED",
+                "campaign_id": "campaign-zt",
+                "task_id": "task-5",
+                "dispatched_at": "2026-09-28T08:00:00+00:00",
+                "dispatch_count": 1,
+                "source": "push",
+            },
+        )
+        html = render_mission_control(snapshot)
+        self.assertIn("Zero-touch start", html)
+        self.assertIn("campaign-zt", html)
+        self.assertIn("DISPATCHED", html)
 
     def test_renderer_rejects_non_snapshot_input(self) -> None:
         with self.assertRaises(ValueError):

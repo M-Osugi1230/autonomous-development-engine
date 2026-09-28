@@ -1,0 +1,47 @@
+name: ADE Zero-Touch Start
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".autodev/accepted-plan.json"
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-zero-touch-start
+  cancel-in-progress: false
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate and dispatch eligible Campaign
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/zero_touch_start.py
+
+      - name: Upload zero-touch decision evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-zero-touch-start-result
+          path: .autodev/runtime/zero-touch-start-result.json
+          if-no-files-found: error
+          retention-days: 30

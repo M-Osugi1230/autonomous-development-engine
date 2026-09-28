@@ -151,6 +151,27 @@ def _campaign_card(snapshot: MissionControlSnapshot) -> str:
     )
 
 
+def _zero_touch_start_card(snapshot: MissionControlSnapshot) -> str:
+    start = snapshot.zero_touch_start
+    if start is None:
+        return '<p class="empty">No zero-touch start receipt.</p>'
+    return """<dl class="detail-grid">
+      <div><dt>Status</dt><dd>{status}</dd></div>
+      <div><dt>Campaign</dt><dd>{campaign_id}</dd></div>
+      <div><dt>Task</dt><dd>{task_id}</dd></div>
+      <div><dt>Dispatched</dt><dd>{dispatched_at}</dd></div>
+      <div><dt>Dispatch count</dt><dd>{dispatch_count}</dd></div>
+      <div><dt>Source</dt><dd>{source}</dd></div>
+    </dl>""".format(
+        status=_text(start.get("status")),
+        campaign_id=_text(start.get("campaign_id")),
+        task_id=_text(start.get("task_id")),
+        dispatched_at=_text(start.get("dispatched_at")),
+        dispatch_count=_text(start.get("dispatch_count")),
+        source=_text(start.get("source")),
+    )
+
+
 def render_mission_control(snapshot: MissionControlSnapshot) -> str:
     if not isinstance(snapshot, MissionControlSnapshot):
         raise ValueError("snapshot must be a MissionControlSnapshot")
@@ -290,6 +311,11 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
       $campaign
     </section>
 
+    <section class="card" aria-labelledby="zero-touch-heading">
+      <h2 id="zero-touch-heading">Zero-touch start</h2>
+      $zero_touch_start
+    </section>
+
     <section class="card" aria-labelledby="checkpoint-heading">
       <h2 id="checkpoint-heading">Checkpoint</h2>
       $checkpoint
@@ -341,6 +367,7 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
         status=_text(snapshot.project_status),
         lifecycle_status=_text(snapshot.lifecycle_status),
         campaign=_campaign_card(snapshot),
+        zero_touch_start=_zero_touch_start_card(snapshot),
         iteration=_text(snapshot.iteration),
         completed=_text(snapshot.completed_tasks),
         queue_depth=_text(snapshot.queue_depth),
