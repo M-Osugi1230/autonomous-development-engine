@@ -85,6 +85,27 @@ def main() -> int:
     }
     assert evaluate_zero_touch_start(**lease).reason == "active-execution-lease"
 
+    handoff = dict(base)
+    handoff["lease_payload"] = {
+        "schema_version": 1,
+        "task_id": "previous-proof-task",
+        "owner_id": "run:previous",
+        "attempt": 1,
+        "acquired_at": (now - timedelta(minutes=1)).isoformat(),
+        "expires_at": (now + timedelta(minutes=49)).isoformat(),
+    }
+    handoff["checkpoint_payload"] = {
+        "task_id": "previous-proof-task",
+        "state": "COMPLETED",
+        "attempt": 0,
+        "replan_count": 0,
+        "provider_session_id": "completed-session",
+        "last_failure_kind": None,
+        "last_error": None,
+        "resume_after": None,
+    }
+    assert evaluate_zero_touch_start(**handoff).disposition is StartDisposition.DISPATCH
+
     human = copy.deepcopy(base)
     human["state_payload"]["status"] = "HUMAN_WAIT"
     assert evaluate_zero_touch_start(**human).disposition is StartDisposition.HUMAN_WAIT
@@ -120,6 +141,7 @@ def main() -> int:
         "automatic_dispatch_eligible": True,
         "duplicate_receipt_suppressed": True,
         "live_lease_suppressed": True,
+        "completed_previous_lease_handoff": True,
         "human_wait_blocked": True,
         "recovery_owned": True,
         "stale_watchdog_retry": True,
