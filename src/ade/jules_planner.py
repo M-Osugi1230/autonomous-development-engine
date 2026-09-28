@@ -347,16 +347,22 @@ class JulesPlanningProvider:
                 return state
             if state in {"FAILED", "PAUSED", "AWAITING_USER_FEEDBACK"}:
                 raise JulesPlannerError(f"Jules planner stopped in {state}")
-            if state in {"IN_PROGRESS", "COMPLETED"}:
+            # Jules may report IN_PROGRESS while it is still generating the plan.
+            # The durable safety boundary is AWAITING_PLAN_APPROVAL: ADE never
+            # approves that plan and AUTO_CREATE_PR is disabled for this session.
+            if state == "IN_PROGRESS":
+                self._sleep(self._config.poll_interval_seconds)
+                continue
+            if state == "COMPLETED":
                 if not self._config.allow_plan_snapshot_after_execution_boundary:
                     raise JulesPlannerError(
-                        f"planning-only session crossed execution boundary: {state}"
+                        "planning-only session crossed execution boundary: COMPLETED"
                     )
                 activities = self._activities(session_id)
                 steps = latest_plan_steps(activities)
                 if not steps:
                     raise JulesPlannerError(
-                        f"planning session crossed execution boundary without plan evidence: {state}"
+                        "planning session completed without recoverable plan evidence"
                     )
                 self.last_plan_steps = steps
                 self.last_execution_boundary_crossed = True
