@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.1-zero-touch-proof-001",
+  "campaign_id": "v1.2-external-goal-campaign-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-28T09:10:42.016443+00:00",
-  "plan_fingerprint": "8a28b3354e54c690d7ab3103fe0450b87d0bf68db2ef2ad19d295dbc099f747e",
+  "dispatched_at": "2026-09-28T22:38:06.339959+00:00",
+  "plan_fingerprint": "97239156c40d4086d4ee684e605e1cfa7cdd0c69cfd2e6089c49e69ceff04920",
   "run_attempt": "1",
-  "run_id": "36401818363",
+  "run_id": "36493541167",
   "schema_version": 1,
-  "source": "push",
-  "source_sha": "516c51db97440f1c456198fd7a82d266c01a6d0b",
+  "source": "schedule",
+  "source_sha": "538294a47908318bb7f7b8a8fb926308e4e1b354",
   "status": "DISPATCHED",
-  "task_id": "v1-1-zero-touch-001"
+  "task_id": "v12ext-001"
 }
