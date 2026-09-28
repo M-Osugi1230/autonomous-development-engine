@@ -139,9 +139,13 @@ def _persist_activation(
         "campaign_id": bundle.campaign.campaign_id,
         "task_ids": list(bundle.campaign.task_ids),
         "planning_session_terminal_state": provider.last_observed_state,
-        "provider_proposal_mode": provider.last_proposal_mode,
-        "provider_execution_boundary_crossed": provider.last_execution_boundary_crossed,
-        "planning_only": not provider.last_execution_boundary_crossed,
+        "provider_proposal_mode": getattr(provider, "last_proposal_mode", None),
+        "provider_execution_boundary_crossed": bool(
+            getattr(provider, "last_execution_boundary_crossed", False)
+        ),
+        "planning_only": not bool(
+            getattr(provider, "last_execution_boundary_crossed", False)
+        ),
         "plan_approved": False,
         "implementation_output_accepted": False,
     }
