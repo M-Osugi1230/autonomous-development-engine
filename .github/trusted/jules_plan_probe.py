@@ -74,6 +74,7 @@ Each task should include key, title, outcome, depends_on, allowed_paths, accepta
 Do not request secrets, deployment, external side effects, destructive changes, workflow changes, or .autodev changes.
 """.strip()
 
+    stage = "create_session"
     try:
         session = provider.create_session(
             prompt=prompt,
@@ -89,12 +90,14 @@ Do not request secrets, deployment, external side effects, destructive changes, 
         observed_states: list[str] = []
 
         for _ in range(60):
+            stage = "get_session"
             current = provider.get_session(sid)
             state = current.get("state")
             if isinstance(state, str):
                 terminal_state = state
                 if not observed_states or observed_states[-1] != state:
                     observed_states.append(state)
+            stage = "list_activities"
             activities = provider.list_activities(sid, page_size=100)
             if terminal_state in {
                 "AWAITING_PLAN_APPROVAL",
@@ -125,12 +128,12 @@ Do not request secrets, deployment, external side effects, destructive changes, 
         }, sort_keys=True))
         return 0 if terminal_state not in {"FAILED"} else 1
     except ProviderQuotaError as exc:
-        _write({"schema_version": 1, "ok": False, "state": "PAUSED_QUOTA", "error": str(exc)[:256]})
+        _write({"schema_version": 1, "ok": False, "state": "PAUSED_QUOTA", "stage": stage, "error": str(exc)[:256]})
         print("Jules planner probe hit provider quota")
         return 20
     except ProviderError as exc:
-        _write({"schema_version": 1, "ok": False, "state": "PROVIDER_ERROR", "error": str(exc)[:256]})
-        print(f"Jules planner probe provider error: {str(exc)[:256]}")
+        _write({"schema_version": 1, "ok": False, "state": "PROVIDER_ERROR", "stage": stage, "error": str(exc)[:256]})
+        print(f"Jules planner probe provider error at {stage}: {str(exc)[:256]}")
         return 1
 
 
