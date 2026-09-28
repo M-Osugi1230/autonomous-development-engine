@@ -1,7 +1,7 @@
 {
   "action": "REPAIR",
   "failure": "CI_FAILURE",
-  "fingerprint": "ae97c6fe91659be594dc0f4a4a9bfe4528f83bcbd85cc4f00a976a4257e02b94",
+  "fingerprint": "0ceda20e181127753a543fa85a51c446574a97fa28c03278628d5fc76ba8b10f",
   "progress": {
     "rebases": 0,
     "repairs": 1,
@@ -10,5 +10,5 @@
     "retries": 0
   },
   "schema_version": 1,
-  "task_id": "vertical-slice-046"
+  "task_id": "v12ext-001"
 }
