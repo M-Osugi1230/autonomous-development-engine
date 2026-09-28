@@ -39,33 +39,60 @@ def _task_evidence(task: object) -> bool:
 
 def audit(root: Path) -> dict[str, object]:
     evidence = _load(root, ".autodev/campaign-evidence/v1.1-zero-touch-proof-001.json")
-    accepted = _load(root, ".autodev/accepted-plan.json")
-    campaign = _load(root, ".autodev/campaign.json")
-    graph = _load(root, ".autodev/task-graph.json")
-    state = _load(root, ".autodev/state.json")
-    receipt = _load(root, ".autodev/runtime/zero-touch-start.json")
     ci = (root / ".github/workflows/ci.yml").read_text(encoding="utf-8")
     workflow = (root / ".github/workflows/zero-touch-start.yml").read_text(encoding="utf-8")
     mission = (root / "src/ade/mission_control.py").read_text(encoding="utf-8")
 
     tasks = evidence.get("tasks", [])
-    graph_tasks = graph.get("tasks", [])
-    completed = campaign.get("completed_task_ids", [])
+    snapshot = evidence.get("terminal_snapshot")
+    if not isinstance(snapshot, dict):
+        snapshot = {}
+
+    accepted = snapshot.get("accepted_plan")
+    campaign = snapshot.get("campaign")
+    graph_tasks = snapshot.get("task_graph")
+    state = snapshot.get("state")
+    receipt = snapshot.get("zero_touch_receipt")
+    source_sha = snapshot.get("source_sha")
+
+    accepted = accepted if isinstance(accepted, dict) else {}
+    campaign = campaign if isinstance(campaign, dict) else {}
+    graph_tasks = graph_tasks if isinstance(graph_tasks, list) else []
+    state = state if isinstance(state, dict) else {}
+    receipt = receipt if isinstance(receipt, dict) else {}
+
+    campaign_task_ids = campaign.get("task_ids")
+    completed = campaign.get("completed_task_ids")
+    snapshot_completed = state.get("completed_campaign_task_ids")
     missing_proofs = [name for name in REQUIRED_CI_PROOFS if name not in ci]
 
     checks = {
-        "evidence_schema": evidence.get("schema_version") == 1 and evidence.get("version") == "v1.1",
+        "evidence_schema": evidence.get("schema_version") == 1
+        and evidence.get("version") == "v1.1",
+        "immutable_terminal_snapshot": isinstance(source_sha, str)
+        and SHA40.fullmatch(source_sha) is not None,
         "accepted_plan_validated": accepted.get("status") == "ACCEPTED"
         and accepted.get("fingerprint") == evidence.get("accepted_plan_fingerprint"),
+        "accepted_plan_task_ids": accepted.get("task_ids") == campaign_task_ids
+        and isinstance(campaign_task_ids, list)
+        and len(campaign_task_ids) == 2,
         "campaign_completed": campaign.get("campaign_id") == evidence.get("campaign_id")
         and campaign.get("status") == "COMPLETED",
         "campaign_all_tasks_completed": isinstance(completed, list)
-        and isinstance(campaign.get("task_ids"), list)
-        and completed == campaign.get("task_ids"),
-        "graph_completed": isinstance(graph_tasks, list)
-        and len(graph_tasks) == 2
-        and all(isinstance(node, dict) and node.get("status") == "COMPLETED" for node in graph_tasks),
-        "state_no_failed_tasks": state.get("failed_task_ids") == [] and state.get("current_task_id") is None,
+        and completed == campaign_task_ids,
+        "graph_completed": len(graph_tasks) == 2
+        and [
+            node.get("task_id")
+            for node in graph_tasks
+            if isinstance(node, dict)
+        ] == campaign_task_ids
+        and all(
+            isinstance(node, dict) and node.get("status") == "COMPLETED"
+            for node in graph_tasks
+        ),
+        "state_no_failed_tasks": state.get("failed_task_ids") == []
+        and state.get("current_task_id") is None
+        and snapshot_completed == campaign_task_ids,
         "real_two_task_evidence": isinstance(tasks, list)
         and len(tasks) == 2
         and all(_task_evidence(task) for task in tasks),
@@ -79,11 +106,13 @@ def audit(root: Path) -> dict[str, object]:
         and len(tasks) == 2
         and type(tasks[1].get("dispatch_run")) is int
         and tasks[1]["dispatch_run"] > 0,
-        "receipt_reconciled": receipt.get("status") == "DISPATCHED"
+        "receipt_reconciled": receipt.get("schema_version") == 1
+        and receipt.get("status") == "DISPATCHED"
         and receipt.get("campaign_id") == evidence.get("campaign_id")
         and receipt.get("plan_fingerprint") == evidence.get("accepted_plan_fingerprint")
         and receipt.get("source") == "push"
-        and receipt.get("dispatch_count") == 1,
+        and receipt.get("dispatch_count") == 1
+        and receipt.get("run_id") == str(evidence["initial_start"].get("workflow_run")),
         "watchdog_declared": "schedule:" in workflow and "*/15 * * * *" in workflow,
         "mission_control_receipt": "zero-touch-start.json" in mission,
         "required_ci_proofs": not missing_proofs,
