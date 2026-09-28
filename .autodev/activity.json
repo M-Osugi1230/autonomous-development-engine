@@ -83,6 +83,13 @@
       "occurred_at": "2026-09-28T09:15:00.486388+00:00",
       "summary": "Merged Jules PR #116",
       "task_id": "v1-1-zero-touch-001"
+    },
+    {
+      "event_id": "pr-merged-117-359a59a5e07e",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-09-28T09:18:40.565648+00:00",
+      "summary": "Merged Jules PR #117",
+      "task_id": "v1-1-zero-touch-002"
     }
   ],
   "schema_version": 1
