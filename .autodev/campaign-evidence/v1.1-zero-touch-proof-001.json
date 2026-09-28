@@ -43,5 +43,61 @@
     "human_boundary": "Human decision boundary proof",
     "recovery": "Autonomous recovery fault proof",
     "observability": "Mission Control observability proof"
+  },
+  "terminal_snapshot": {
+    "source_sha": "e34622dfc0e73a6c4d9c742c9ef000164c144454",
+    "accepted_plan": {
+      "status": "ACCEPTED",
+      "fingerprint": "8a28b3354e54c690d7ab3103fe0450b87d0bf68db2ef2ad19d295dbc099f747e",
+      "task_ids": [
+        "v1-1-zero-touch-001",
+        "v1-1-zero-touch-002"
+      ]
+    },
+    "campaign": {
+      "campaign_id": "v1.1-zero-touch-proof-001",
+      "status": "COMPLETED",
+      "task_ids": [
+        "v1-1-zero-touch-001",
+        "v1-1-zero-touch-002"
+      ],
+      "completed_task_ids": [
+        "v1-1-zero-touch-001",
+        "v1-1-zero-touch-002"
+      ]
+    },
+    "task_graph": [
+      {
+        "task_id": "v1-1-zero-touch-001",
+        "status": "COMPLETED",
+        "depends_on": []
+      },
+      {
+        "task_id": "v1-1-zero-touch-002",
+        "status": "COMPLETED",
+        "depends_on": [
+          "v1-1-zero-touch-001"
+        ]
+      }
+    ],
+    "state": {
+      "current_task_id": null,
+      "failed_task_ids": [],
+      "completed_campaign_task_ids": [
+        "v1-1-zero-touch-001",
+        "v1-1-zero-touch-002"
+      ]
+    },
+    "zero_touch_receipt": {
+      "schema_version": 1,
+      "status": "DISPATCHED",
+      "campaign_id": "v1.1-zero-touch-proof-001",
+      "task_id": "v1-1-zero-touch-001",
+      "plan_fingerprint": "8a28b3354e54c690d7ab3103fe0450b87d0bf68db2ef2ad19d295dbc099f747e",
+      "source": "push",
+      "source_sha": "516c51db97440f1c456198fd7a82d266c01a6d0b",
+      "dispatch_count": 1,
+      "run_id": "36401818363"
+    }
   }
 }
