@@ -205,6 +205,16 @@ class AutonomousPlannerTests(unittest.TestCase):
                 policy=policy(),
             )
 
+    def test_secret_like_planner_text_is_rejected(self) -> None:
+        payload = proposal()
+        payload["tasks"][0]["outcome"] = "Use bearer abcdefghijklmnopqrstuvwxyz0123456789-secret"
+        with self.assertRaisesRegex(PlannerValidationError, "secret pattern"):
+            validate_planner_proposal(
+                high_level_goal=GOAL,
+                proposal_payload=payload,
+                policy=policy(),
+            )
+
     def test_human_only_proposal_cannot_be_accepted(self) -> None:
         payload = proposal()
         payload["tasks"][0]["human_only"] = True
