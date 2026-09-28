@@ -60,7 +60,10 @@ def main() -> int:
     validated = validate_planner_proposal(
         high_level_goal=GOAL,
         proposal_payload=payload(),
-        policy=policy,
+        policy=PlannerPolicy(
+            allowed_path_prefixes=("src/ade", "tests"),
+            min_tasks=2,
+        ),
         id_prefix="probe",
     )
     assert validated.disposition is PlannerDisposition.ACCEPTED
@@ -95,6 +98,49 @@ def main() -> int:
     else:
         raise AssertionError("forward dependency was accepted")
 
+    root_scope = payload()
+    root_scope["tasks"][0]["allowed_paths"] = ["src/ade"]
+    try:
+        validate_planner_proposal(
+            high_level_goal=GOAL,
+            proposal_payload=root_scope,
+            policy=policy,
+        )
+    except PlannerValidationError:
+        pass
+    else:
+        raise AssertionError("trusted-root directory scope was accepted")
+
+    meta = payload()
+    meta["tasks"][0]["title"] = "Formulate the JSON proposal"
+    meta["tasks"][0]["outcome"] = "Define tasks matching schema_version and allowed_paths."
+    try:
+        validate_planner_proposal(
+            high_level_goal=GOAL,
+            proposal_payload=meta,
+            policy=policy,
+        )
+    except PlannerValidationError:
+        pass
+    else:
+        raise AssertionError("planner protocol meta-task was accepted")
+
+    one_task = payload()
+    one_task["tasks"] = one_task["tasks"][:1]
+    try:
+        validate_planner_proposal(
+            high_level_goal=GOAL,
+            proposal_payload=one_task,
+            policy=PlannerPolicy(
+                allowed_path_prefixes=("src/ade", "tests"),
+                min_tasks=2,
+            ),
+        )
+    except PlannerValidationError:
+        pass
+    else:
+        raise AssertionError("minimum task budget was bypassed")
+
     human = payload()
     human["tasks"][0]["human_only"] = True
     human["tasks"][0]["human_reason"] = "destructive approval"
@@ -120,6 +166,9 @@ def main() -> int:
         "untrusted_proposal_validated": True,
         "trusted_ids_and_prompts": True,
         "scope_rejection": True,
+        "concrete_file_scope": True,
+        "planner_meta_task_rejection": True,
+        "minimum_task_budget": True,
         "dependency_rejection": True,
         "human_wait": True,
         "stable_fingerprint": True,

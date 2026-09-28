@@ -28,6 +28,8 @@ class PlanningGoalRequest:
     target_repository: str
     base_branch: str
     allowed_path_prefixes: tuple[str, ...]
+    min_tasks: int = 1
+    max_tasks: int = 8
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -45,6 +47,12 @@ class PlanningGoalRequest:
             raise ValueError("target_repository must be owner/name")
         if not isinstance(self.base_branch, str) or not self.base_branch.strip() or "/" in self.base_branch.strip():
             raise ValueError("base_branch must be a simple non-empty branch name")
+        if type(self.min_tasks) is not int or type(self.max_tasks) is not int:
+            raise ValueError("planner task bounds must be integers")
+        if self.min_tasks < 1 or self.max_tasks < 1 or self.min_tasks > self.max_tasks:
+            raise ValueError("planner task bounds are invalid")
+        if self.max_tasks > 8:
+            raise ValueError("planner max_tasks exceeds trusted request budget")
         if not self.allowed_path_prefixes or len(self.allowed_path_prefixes) > 8:
             raise ValueError("allowed_path_prefixes must contain 1..8 entries")
         normalized: list[str] = []
@@ -62,7 +70,7 @@ class PlanningGoalRequest:
         object.__setattr__(self, "allowed_path_prefixes", tuple(normalized))
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload: dict[str, Any] = {
             "schema_version": 1,
             "request_id": self.request_id,
             "campaign_id": self.campaign_id,
@@ -72,6 +80,12 @@ class PlanningGoalRequest:
             "base_branch": self.base_branch,
             "allowed_path_prefixes": list(self.allowed_path_prefixes),
         }
+        # Preserve the v1 request fingerprint when default bounds are used.
+        if self.min_tasks != 1:
+            payload["min_tasks"] = self.min_tasks
+        if self.max_tasks != 8:
+            payload["max_tasks"] = self.max_tasks
+        return payload
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "PlanningGoalRequest":
@@ -86,6 +100,8 @@ class PlanningGoalRequest:
             "target_repository",
             "base_branch",
             "allowed_path_prefixes",
+            "min_tasks",
+            "max_tasks",
         }
         unknown = set(payload) - allowed
         if unknown:
@@ -102,6 +118,8 @@ class PlanningGoalRequest:
             target_repository=str(payload.get("target_repository", "")),
             base_branch=str(payload.get("base_branch", "")),
             allowed_path_prefixes=tuple(str(item) for item in prefixes),
+            min_tasks=int(payload.get("min_tasks", 1)),
+            max_tasks=int(payload.get("max_tasks", 8)),
         )
 
     def fingerprint(self) -> str:
@@ -109,7 +127,11 @@ class PlanningGoalRequest:
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
     def planner_policy(self) -> PlannerPolicy:
-        return PlannerPolicy(allowed_path_prefixes=self.allowed_path_prefixes)
+        return PlannerPolicy(
+            allowed_path_prefixes=self.allowed_path_prefixes,
+            min_tasks=self.min_tasks,
+            max_tasks=self.max_tasks,
+        )
 
 
 @dataclass(frozen=True, slots=True)

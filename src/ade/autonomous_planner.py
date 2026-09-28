@@ -158,10 +158,26 @@ class PlannerPolicy:
         "credentials",
     )
     required_human_boundaries: tuple[str, ...] = _REQUIRED_HUMAN_BOUNDARIES
+    min_tasks: int = 1
     max_tasks: int = 8
     max_paths_per_task: int = 4
     max_acceptance_per_task: int = 6
     max_text_chars: int = 2000
+    require_concrete_file_paths: bool = True
+    extensionless_file_names: tuple[str, ...] = (
+        "Dockerfile",
+        "Makefile",
+        "Procfile",
+    )
+    planner_meta_markers: tuple[str, ...] = (
+        "json proposal",
+        "schema_version",
+        "define tasks",
+        "human_boundaries",
+        "allowed_paths",
+        "acceptance checks",
+        "planning request",
+    )
     sensitive_action_markers: tuple[str, ...] = (
         "delete repository",
         "drop database",
@@ -179,6 +195,7 @@ class PlannerPolicy:
         if not self.allowed_path_prefixes:
             raise PlannerValidationError("planner policy requires allowed_path_prefixes")
         for value in (
+            self.min_tasks,
             self.max_tasks,
             self.max_paths_per_task,
             self.max_acceptance_per_task,
@@ -186,6 +203,10 @@ class PlannerPolicy:
         ):
             if type(value) is not int or value < 1:
                 raise PlannerValidationError("planner policy budgets must be positive integers")
+        if self.min_tasks > self.max_tasks:
+            raise PlannerValidationError("planner policy min_tasks must not exceed max_tasks")
+        if type(self.require_concrete_file_paths) is not bool:
+            raise PlannerValidationError("require_concrete_file_paths must be a bool")
         for prefix in self.allowed_path_prefixes + self.protected_path_prefixes:
             _validate_policy_prefix(prefix)
         if not self.required_human_boundaries:
@@ -196,10 +217,14 @@ class PlannerPolicy:
             "allowed_path_prefixes": list(self.allowed_path_prefixes),
             "protected_path_prefixes": list(self.protected_path_prefixes),
             "required_human_boundaries": list(self.required_human_boundaries),
+            "min_tasks": self.min_tasks,
             "max_tasks": self.max_tasks,
             "max_paths_per_task": self.max_paths_per_task,
             "max_acceptance_per_task": self.max_acceptance_per_task,
             "max_text_chars": self.max_text_chars,
+            "require_concrete_file_paths": self.require_concrete_file_paths,
+            "extensionless_file_names": list(self.extensionless_file_names),
+            "planner_meta_markers": list(self.planner_meta_markers),
             "sensitive_action_markers": list(self.sensitive_action_markers),
         }
 
@@ -270,8 +295,23 @@ def _validate_path(path: str, policy: PlannerPolicy) -> str:
         raise PlannerValidationError(f"planner path must be normalized: {path}")
     if any(_path_within(path, prefix) for prefix in policy.protected_path_prefixes):
         raise PlannerValidationError(f"protected planner path: {path}")
-    if not any(_path_within(path, prefix) for prefix in policy.allowed_path_prefixes):
+    matching_roots = [
+        prefix
+        for prefix in policy.allowed_path_prefixes
+        if _path_within(path, prefix)
+    ]
+    if not matching_roots:
         raise PlannerValidationError(f"planner path outside trusted roots: {path}")
+    if policy.require_concrete_file_paths:
+        if any(path == prefix.rstrip("/") for prefix in matching_roots):
+            raise PlannerValidationError(
+                f"planner path must name a concrete file, not a trusted root: {path}"
+            )
+        basename = parsed.name
+        if not parsed.suffix and basename not in policy.extensionless_file_names:
+            raise PlannerValidationError(
+                f"planner path must name a concrete file: {path}"
+            )
     return path
 
 
@@ -283,6 +323,24 @@ def _bounded_text(value: str, policy: PlannerPolicy, *, label: str) -> str:
         if pattern.search(normalized):
             raise PlannerValidationError(f"{label} contains a forbidden secret pattern")
     return normalized
+
+
+def _validate_task_semantics(
+    *,
+    task: PlannerTaskProposal,
+    goal: str,
+    policy: PlannerPolicy,
+) -> None:
+    task_text = " ".join(
+        [task.title, task.outcome, *task.acceptance]
+    ).casefold()
+    goal_text = goal.casefold()
+    for marker in policy.planner_meta_markers:
+        normalized = marker.casefold().strip()
+        if normalized and normalized in task_text and normalized not in goal_text:
+            raise PlannerValidationError(
+                f"task {task.key} describes planner protocol instead of repository work: {marker}"
+            )
 
 
 def _human_wait_reasons(
@@ -321,8 +379,10 @@ def validate_planner_proposal(
     proposal = PlannerProposal.from_dict(proposal_payload)
     if _bounded_text(proposal.goal, policy, label="proposal goal") != goal:
         raise PlannerValidationError("planner proposal goal does not match the high-level goal")
-    if not proposal.tasks or len(proposal.tasks) > policy.max_tasks:
-        raise PlannerValidationError("planner proposal exceeds trusted task budget or is empty")
+    if len(proposal.tasks) < policy.min_tasks or len(proposal.tasks) > policy.max_tasks:
+        raise PlannerValidationError(
+            "planner proposal violates trusted task-count budget"
+        )
 
     normalized_required = {_normalize_text(item) for item in policy.required_human_boundaries}
     normalized_boundaries = {_normalize_text(item) for item in proposal.human_boundaries}
@@ -339,6 +399,7 @@ def validate_planner_proposal(
         if task.key in keys:
             raise PlannerValidationError(f"duplicate planner task key: {task.key}")
         keys.append(task.key)
+        _validate_task_semantics(task=task, goal=goal, policy=policy)
         _bounded_text(task.title, policy, label=f"task {task.key} title")
         _bounded_text(task.outcome, policy, label=f"task {task.key} outcome")
         if not task.allowed_paths or len(task.allowed_paths) > policy.max_paths_per_task:
@@ -429,10 +490,14 @@ def build_planner_prompt(high_level_goal: str, policy: PlannerPolicy) -> str:
         "Return only one JSON object matching schema_version=1. "
         f"Goal: {goal}. "
         f"Trusted writable roots: {roots}. "
-        f"Maximum tasks: {policy.max_tasks}; maximum paths per task: {policy.max_paths_per_task}; "
+        f"Use between {policy.min_tasks} and {policy.max_tasks} tasks. "
+        f"Maximum paths per task: {policy.max_paths_per_task}; "
         f"maximum acceptance checks per task: {policy.max_acceptance_per_task}. "
+        "Each task must describe repository implementation, tests, or documentation needed to achieve the Goal; "
+        "never create a task about planning, JSON formatting, schemas, or producing the proposal itself. "
         "Each task must contain key, title, outcome, depends_on, allowed_paths, acceptance, "
         "human_only, and human_reason. Dependencies use task keys. "
+        "allowed_paths must name concrete repository files, not directories or trusted root names. "
         "The proposal must include human_boundaries and must include: "
         f"{boundaries}. Mark any task crossing a human-only boundary with human_only=true."
     )

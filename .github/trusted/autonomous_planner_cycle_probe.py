@@ -37,6 +37,8 @@ def main() -> int:
         target_repository="example/target",
         base_branch="main",
         allowed_path_prefixes=("src", "tests"),
+        min_tasks=2,
+        max_tasks=4,
     )
     proposal = {
         "schema_version": 1,
@@ -140,6 +142,7 @@ def main() -> int:
         "secret_free_provider_identity": True,
         "planning_only_evidence": True,
         "fingerprint_reconciled": True,
+        "trusted_task_count_bounds": True,
     }, sort_keys=True))
     return 0
 
