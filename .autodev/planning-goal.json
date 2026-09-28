@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "request_id": "v1.2-external-goal-proof-001",
+  "campaign_id": "v1.2-external-goal-campaign-001",
+  "id_prefix": "v12ext",
+  "goal": "Add a small deterministic utility that normalizes a non-empty experiment label by collapsing surrounding and repeated internal whitespace into a stable normalized value and returns a structured summary, with focused unit-test coverage. Keep the change isolated from CLI behavior, external APIs, deployment, secrets, and irreversible operations.",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "base_branch": "main",
+  "allowed_path_prefixes": [
+    "src/thought_pipeline",
+    "tests"
+  ]
+}
