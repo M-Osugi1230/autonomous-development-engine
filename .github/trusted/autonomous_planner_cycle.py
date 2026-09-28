@@ -248,6 +248,8 @@ def main() -> int:
                 source_name=source_name,
                 starting_branch=request.base_branch,
                 title=f"ADE planner: {request.request_id}",
+                allowed_path_prefixes=request.allowed_path_prefixes,
+                required_human_boundaries=request.planner_policy().required_human_boundaries,
             ),
         )
         result = plan_high_level_goal(
