@@ -67,6 +67,7 @@
     "planner_hardening_pr": 126,
     "remote_gate_hardening_pr": 6,
     "completed_lease_handoff_pr": 127,
-    "implementation_merged": false
+    "implementation_merged": false,
+    "safety_hardening_complete": true
   }
 }
