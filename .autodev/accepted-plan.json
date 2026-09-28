@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "ACCEPTED",
+  "fingerprint": "8a28b3354e54c690d7ab3103fe0450b87d0bf68db2ef2ad19d295dbc099f747e",
+  "plan": {
+    "schema_version": 1,
+    "goal": "Add a small zero-touch campaign marker utility and prove it with focused tests.",
+    "tasks": [
+      {
+        "task_id": "v1-1-zero-touch-001",
+        "title": "Add zero-touch campaign marker",
+        "prompt": "Goal: Add a small zero-touch campaign marker utility and prove it with focused tests. Outcome: Add a pure zero_touch_campaign_marker helper returning a deterministic dictionary with campaign_id, mode, and started flag.",
+        "depends_on": [],
+        "allowed_paths": [
+          "src/ade/zero_touch_campaign.py"
+        ],
+        "acceptance": [
+          "helper is pure and deterministic",
+          "empty campaign_id or mode is rejected"
+        ]
+      },
+      {
+        "task_id": "v1-1-zero-touch-002",
+        "title": "Prove zero-touch campaign marker",
+        "prompt": "Goal: Add a small zero-touch campaign marker utility and prove it with focused tests. Outcome: Add focused stdlib unit tests for zero_touch_campaign_marker covering deterministic output and invalid inputs.",
+        "depends_on": [
+          "v1-1-zero-touch-001"
+        ],
+        "allowed_paths": [
+          "tests/test_zero_touch_campaign.py"
+        ],
+        "acceptance": [
+          "focused tests cover valid deterministic output",
+          "invalid campaign_id and mode behavior is tested",
+          "full repository tests remain green"
+        ]
+      }
+    ],
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ]
+  }
+}
