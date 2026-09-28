@@ -128,6 +128,30 @@ class ZeroTouchStartTests(unittest.TestCase):
         decision = evaluate_zero_touch_start(**args)
         self.assertEqual(decision.disposition, StartDisposition.BLOCKED)
 
+    def test_completed_previous_task_checkpoint_allows_new_task_handoff(self) -> None:
+        args = fixture()
+        args["lease_payload"] = {
+            "schema_version": 1,
+            "task_id": "previous-task",
+            "owner_id": "github-actions:2:1",
+            "attempt": 1,
+            "acquired_at": (NOW - timedelta(minutes=1)).isoformat(),
+            "expires_at": (NOW + timedelta(minutes=49)).isoformat(),
+        }
+        args["checkpoint_payload"] = {
+            "task_id": "previous-task",
+            "state": "COMPLETED",
+            "attempt": 0,
+            "replan_count": 0,
+            "provider_session_id": "completed-previous-session",
+            "last_failure_kind": None,
+            "last_error": None,
+            "resume_after": None,
+        }
+        decision = evaluate_zero_touch_start(**args)
+        self.assertEqual(decision.disposition, StartDisposition.DISPATCH)
+        self.assertEqual(decision.reason, "eligible-zero-touch-start")
+
     def test_human_wait_never_dispatches(self) -> None:
         args = fixture()
         args["state_payload"]["status"] = "HUMAN_WAIT"
