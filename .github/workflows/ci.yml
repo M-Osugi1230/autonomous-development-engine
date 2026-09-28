@@ -48,6 +48,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/autonomous_planner_probe.py
 
+      - name: Jules Planner Adapter proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/jules_planner_adapter_probe.py
+
       - name: Production fault-injection proof
         env:
           PYTHONPATH: src
