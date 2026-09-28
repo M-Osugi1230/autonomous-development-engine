@@ -136,7 +136,55 @@ class JulesPlannerTests(unittest.TestCase):
             ["jules-step-001"],
         )
 
-    def test_plan_steps_are_used_before_unreliable_followup(self):
+    def test_structured_followup_is_preferred_over_plan_step_derivation(self):
+        activities = [{
+            "planGenerated": {
+                "plan": {
+                    "steps": [
+                        {
+                            "title": "Add helper in `src/ade/helper.py`",
+                            "description": "Implement pure helper at `src/ade/helper.py`",
+                        },
+                        {
+                            "title": "Add tests in `tests/test_helper.py`",
+                            "description": "Add focused tests at `tests/test_helper.py`",
+                        },
+                    ]
+                }
+            }
+        }]
+        after = activities + [
+            {"agentMessaged": {"agentMessage": json.dumps(PROPOSAL)}}
+        ]
+        client = FakeClient(
+            initial_activities=activities,
+            post_message_activities=after,
+            states=[
+                "AWAITING_PLAN_APPROVAL",
+                "AWAITING_PLAN_APPROVAL",
+                "AWAITING_PLAN_APPROVAL",
+            ],
+        )
+        provider = JulesPlanningProvider(
+            client,
+            JulesPlannerConfig(
+                source_name="sources/github/example/repo",
+                poll_interval_seconds=0.001,
+                max_plan_polls=3,
+                max_structured_polls=3,
+                allowed_path_prefixes=("src/ade", "tests"),
+            ),
+            sleeper=lambda _: None,
+        )
+        result = provider.propose(
+            "You are an untrusted planning component. Goal: Add helper. "
+            "Trusted writable roots: src/ade, tests. Maximum tasks: 8"
+        )
+        self.assertEqual(result, PROPOSAL)
+        self.assertEqual(len(client.sent), 1)
+        self.assertEqual(provider.last_proposal_mode, "followup-structured")
+
+    def test_plan_steps_are_fallback_when_structured_followup_is_absent(self):
         activities = [{
             "planGenerated": {
                 "plan": {
@@ -155,7 +203,13 @@ class JulesPlannerTests(unittest.TestCase):
         }]
         client = FakeClient(
             initial_activities=activities,
-            states=["AWAITING_PLAN_APPROVAL"],
+            post_message_activities=activities,
+            states=[
+                "AWAITING_PLAN_APPROVAL",
+                "AWAITING_PLAN_APPROVAL",
+                "AWAITING_PLAN_APPROVAL",
+                "AWAITING_PLAN_APPROVAL",
+            ],
         )
         provider = JulesPlanningProvider(
             client,
@@ -173,8 +227,11 @@ class JulesPlannerTests(unittest.TestCase):
             "Trusted writable roots: src/ade, tests. Maximum tasks: 8"
         )
         self.assertEqual(len(result["tasks"]), 2)
-        self.assertEqual(client.sent, [])
-        self.assertEqual(provider.last_proposal_mode, "derived-plan-steps")
+        self.assertEqual(len(client.sent), 1)
+        self.assertEqual(
+            provider.last_proposal_mode,
+            "derived-plan-steps-fallback",
+        )
 
     def test_plan_only_session_never_auto_executes_or_creates_pr(self):
         client = FakeClient(
@@ -330,7 +387,14 @@ class JulesPlannerTests(unittest.TestCase):
         }]
         client = FakeClient(
             initial_activities=activities,
-            states=["IN_PROGRESS", "IN_PROGRESS", "AWAITING_PLAN_APPROVAL"],
+            states=[
+                "IN_PROGRESS",
+                "IN_PROGRESS",
+                "AWAITING_PLAN_APPROVAL",
+                "AWAITING_PLAN_APPROVAL",
+                "AWAITING_PLAN_APPROVAL",
+                "AWAITING_PLAN_APPROVAL",
+            ],
         )
         provider = JulesPlanningProvider(
             client,
@@ -349,6 +413,7 @@ class JulesPlannerTests(unittest.TestCase):
         self.assertEqual(len(result["tasks"]), 1)
         self.assertEqual(provider.last_observed_state, "AWAITING_PLAN_APPROVAL")
         self.assertFalse(provider.last_execution_boundary_crossed)
+        self.assertEqual(provider.last_proposal_mode, "derived-plan-steps-fallback")
 
     def test_completed_execution_boundary_violation_is_rejected(self):
         client = FakeClient(states=["COMPLETED"])
