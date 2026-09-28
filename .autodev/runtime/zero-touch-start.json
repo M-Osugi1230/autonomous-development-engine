@@ -1,0 +1,13 @@
+{
+  "campaign_id": "v1.1-zero-touch-proof-001",
+  "dispatch_count": 1,
+  "dispatched_at": "2026-09-28T09:10:42.016443+00:00",
+  "plan_fingerprint": "8a28b3354e54c690d7ab3103fe0450b87d0bf68db2ef2ad19d295dbc099f747e",
+  "run_attempt": "1",
+  "run_id": "36401818363",
+  "schema_version": 1,
+  "source": "push",
+  "source_sha": "516c51db97440f1c456198fd7a82d266c01a6d0b",
+  "status": "DISPATCHED",
+  "task_id": "v1-1-zero-touch-001"
+}
