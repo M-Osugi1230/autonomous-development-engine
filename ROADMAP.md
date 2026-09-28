@@ -90,10 +90,10 @@ High-level goals can be converted from bounded work items into validated Develop
 ## Phase 17 — Production Graduation ✅
 The three-task production graduation Campaign completed through PR/CI/trusted merge with no failed tasks, and the final deterministic proof suite is green.
 
-## ADE v1.1 — Zero-Touch Start
-Remove the remaining initial GitHub Actions click while preserving the existing trusted controller, lease, recovery, HUMAN_WAIT, and evidence boundaries.
+## ADE v1.1 — Zero-Touch Start ✅
+Removed the remaining initial GitHub Actions click while preserving the existing trusted controller, lease, recovery, HUMAN_WAIT, and evidence boundaries.
 
-Build order: freeze acceptance -> pure start eligibility/duplicate-suppression model -> trusted bootstrap -> push/watchdog workflow -> structured dispatch receipt -> Mission Control visibility -> deterministic CI proof -> real multi-task Campaign proof.
+Evidence: real Campaign `v1.1-zero-touch-proof-001` was activated by AcceptedPlan merge, Zero-Touch Start run `36401818363` dispatched Task 1 from a push trigger, PR #116 and PR #117 both passed CI and merged through the trusted gate, Task 2 was automatically dispatched, and terminal structured evidence is persisted under `.autodev/campaign-evidence/v1.1-zero-touch-proof-001.json`.
 
 ## ADE v1.2 — Autonomous Planner
 Generate bounded DevelopmentPlans from a high-level Goal using repository-aware AI planning, then require deterministic trusted validation before AcceptedPlan/Campaign creation. AI planner output is never directly executable.

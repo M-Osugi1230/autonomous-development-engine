@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "version": "v1.1",
+  "campaign_id": "v1.1-zero-touch-proof-001",
+  "accepted_plan_fingerprint": "8a28b3354e54c690d7ab3103fe0450b87d0bf68db2ef2ad19d295dbc099f747e",
+  "activation": {
+    "pull_request": 115,
+    "ci_run": 36401760294,
+    "merge_commit": "516c51db97440f1c456198fd7a82d266c01a6d0b"
+  },
+  "initial_start": {
+    "workflow_run": 36401818363,
+    "trigger_source": "push",
+    "source_sha": "516c51db97440f1c456198fd7a82d266c01a6d0b",
+    "task_id": "v1-1-zero-touch-001",
+    "dispatch_count": 1,
+    "manual_workflow_dispatch": false
+  },
+  "tasks": [
+    {
+      "task_id": "v1-1-zero-touch-001",
+      "pull_request": 116,
+      "ci_run": 36402221381,
+      "merge_commit": "462a84a4d0507e7ee7beee5bbfbc2072f75c725c"
+    },
+    {
+      "task_id": "v1-1-zero-touch-002",
+      "dispatch_run": 36402282009,
+      "pull_request": 117,
+      "ci_run": 36402603957,
+      "merge_commit": "b5ad70053d8aa6573c13e70774c4f837eee5a8ac"
+    }
+  ],
+  "terminal_status": "COMPLETED",
+  "failed_tasks": 0,
+  "manual_initial_workflow_dispatch": false,
+  "manual_dispatch_between_tasks": false,
+  "audit_receipt": ".autodev/runtime/zero-touch-start.json",
+  "proofs": {
+    "eligibility_and_duplicate_suppression": "Zero-Touch Start proof",
+    "execution_lease": "Execution lease duplicate-dispatch proof",
+    "restart": "Checkpoint restart proof",
+    "human_boundary": "Human decision boundary proof",
+    "recovery": "Autonomous recovery fault proof",
+    "observability": "Mission Control observability proof"
+  }
+}

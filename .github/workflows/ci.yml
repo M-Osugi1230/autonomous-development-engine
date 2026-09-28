@@ -82,3 +82,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/graduation_audit.py
+
+      - name: ADE v1.1 Zero-Touch Graduation audit
+        env:
+          PYTHONPATH: src
+        run: python scripts/v1_1_zero_touch_audit.py
