@@ -251,6 +251,72 @@ class JulesPlannerTests(unittest.TestCase):
         self.assertEqual(provider.propose("Return proposal"), PROPOSAL)
         self.assertEqual(client.activity_calls, 3)
 
+    def test_execution_boundary_plan_snapshot_is_rescued_without_accepting_implementation(self):
+        activities = [{
+            "planGenerated": {
+                "plan": {
+                    "steps": [
+                        {
+                            "title": "Add helper in `src/ade/helper.py`",
+                            "description": "Implement pure helper at `src/ade/helper.py`",
+                        },
+                        {
+                            "title": "Add tests in `tests/test_helper.py`",
+                            "description": "Add focused tests at `tests/test_helper.py`",
+                        },
+                    ]
+                }
+            }
+        }]
+        client = FakeClient(
+            initial_activities=activities,
+            states=["IN_PROGRESS", "IN_PROGRESS"],
+        )
+        provider = JulesPlanningProvider(
+            client,
+            JulesPlannerConfig(
+                source_name="sources/github/example/repo",
+                poll_interval_seconds=0.001,
+                max_plan_polls=1,
+                allowed_path_prefixes=("src/ade", "tests"),
+                allow_plan_snapshot_after_execution_boundary=True,
+            ),
+            sleeper=lambda _: None,
+        )
+        result = provider.propose(
+            "You are an untrusted planning component. Goal: Add helper. "
+            "Trusted writable roots: src/ade, tests. Maximum tasks: 8"
+        )
+        self.assertEqual(len(result["tasks"]), 2)
+        self.assertTrue(provider.last_execution_boundary_crossed)
+        self.assertEqual(
+            provider.last_proposal_mode,
+            "derived-plan-snapshot-after-boundary",
+        )
+        self.assertEqual(client.sent, [])
+
+    def test_execution_boundary_without_plan_evidence_is_rejected(self):
+        client = FakeClient(
+            initial_activities=[],
+            states=["IN_PROGRESS"],
+        )
+        provider = JulesPlanningProvider(
+            client,
+            JulesPlannerConfig(
+                source_name="sources/github/example/repo",
+                poll_interval_seconds=0.001,
+                max_plan_polls=1,
+                allowed_path_prefixes=("src/ade",),
+                allow_plan_snapshot_after_execution_boundary=True,
+            ),
+            sleeper=lambda _: None,
+        )
+        with self.assertRaisesRegex(JulesPlannerError, "without plan evidence"):
+            provider.propose(
+                "You are an untrusted planning component. Goal: Add helper. "
+                "Trusted writable roots: src/ade. Maximum tasks: 8"
+            )
+
     def test_execution_boundary_violation_is_rejected(self):
         client = FakeClient(states=["IN_PROGRESS"])
         provider = JulesPlanningProvider(
