@@ -1,27 +1,12 @@
 from __future__ import annotations
 
 import json
-import os
-import time
 from pathlib import Path
 from typing import Any
 
-from ade.providers.jules import JulesProvider
-from ade.providers.base import ProviderError, ProviderQuotaError
+from jules_client import JulesClient, JulesError, JulesQuota
 
 OUT = Path(".autodev/runtime/jules-plan-probe.json")
-
-
-def _session_id(session: dict[str, Any]) -> str:
-    value = session.get("id")
-    if isinstance(value, str) and value.strip():
-        return value
-    name = session.get("name")
-    if isinstance(name, str) and name.startswith("sessions/"):
-        value = name.removeprefix("sessions/")
-        if value:
-            return value
-    raise RuntimeError("Jules session did not return an id")
 
 
 def _safe_shape(value: Any, *, depth: int = 0) -> Any:
@@ -43,10 +28,22 @@ def _safe_shape(value: Any, *, depth: int = 0) -> Any:
     if isinstance(value, list):
         return [_safe_shape(item, depth=depth + 1) for item in value[:50]]
     if isinstance(value, str):
-        return value[:12000]
+        return value[:16000]
     if value is None or isinstance(value, (bool, int, float)):
         return value
     return repr(value)[:1000]
+
+
+def _session_id(session: dict[str, Any]) -> str | None:
+    value = session.get("id")
+    if isinstance(value, str) and value.strip():
+        return value
+    name = session.get("name")
+    if isinstance(name, str) and name.startswith("sessions/"):
+        value = name.removeprefix("sessions/")
+        if value:
+            return value
+    return None
 
 
 def _write(payload: dict[str, Any]) -> None:
@@ -55,82 +52,47 @@ def _write(payload: dict[str, Any]) -> None:
 
 
 def main() -> int:
-    owner = os.environ.get("ADE_GITHUB_OWNER", "M-Osugi1230")
-    repo = os.environ.get("ADE_GITHUB_REPO", "autonomous-development-engine")
-    provider = JulesProvider()
-    source = provider.find_github_source(owner, repo)
-    if source is None:
-        raise RuntimeError(f"{owner}/{repo} is not visible to Jules")
-    source_name = source.get("name")
-    if not isinstance(source_name, str) or not source_name.strip():
-        raise RuntimeError("Jules source is missing a resource name")
-
-    prompt = """
-Analyze this repository and create an implementation plan only. Do not modify files and do not create a pull request.
-Goal: Add a small pure helper that summarizes two non-empty strings into a deterministic dictionary, plus focused stdlib tests.
-The final plan should describe 1-3 bounded tasks, dependencies, proposed allowed paths, and deterministic acceptance checks.
-If possible, include one JSON object with fields: schema_version, goal, tasks, human_boundaries.
-Each task should include key, title, outcome, depends_on, allowed_paths, acceptance, human_only, human_reason.
-Do not request secrets, deployment, external side effects, destructive changes, workflow changes, or .autodev changes.
-""".strip()
-
-    stage = "create_session"
+    client = JulesClient()
     try:
-        session = provider.create_session(
-            prompt=prompt,
-            source=source_name,
-            starting_branch="main",
-            title="ADE v1.2 planner probe",
-            auto_create_pr=False,
-            require_plan_approval=True,
-        )
-        sid = _session_id(session)
-        terminal_state = "UNKNOWN"
-        observed_states: list[str] = []
-        last_session: dict[str, Any] = {}
-
-        for _ in range(60):
-            stage = "get_session"
-            current = provider.get_session(sid)
-            last_session = current
-            state = current.get("state")
-            if isinstance(state, str):
-                terminal_state = state
-                if not observed_states or observed_states[-1] != state:
-                    observed_states.append(state)
-            if terminal_state in {
-                "AWAITING_PLAN_APPROVAL",
-                "AWAITING_USER_FEEDBACK",
-                "COMPLETED",
-                "FAILED",
-                "PAUSED",
-            }:
-                break
-            time.sleep(5)
-
-        _write(
-            {
-                "schema_version": 1,
-                "ok": terminal_state not in {"FAILED"},
-                "session_present": True,
-                "state": terminal_state,
-                "observed_states": observed_states,
-                "session": _safe_shape(last_session),
+        sessions = client.list_sessions(page_size=100, max_pages=2)
+        matches: list[dict[str, Any]] = []
+        fallback: list[dict[str, Any]] = []
+        for session in sessions:
+            title = session.get("title")
+            safe_summary = {
+                "title": title if isinstance(title, str) else None,
+                "state": session.get("state"),
+                "createTime": session.get("createTime"),
             }
-        )
+            fallback.append(safe_summary)
+            if isinstance(title, str) and "planner probe" in title.casefold():
+                sid = _session_id(session)
+                if sid is None:
+                    continue
+                current = client.get_session(sid)
+                matches.append(_safe_shape(current))
+
+        payload = {
+            "schema_version": 1,
+            "ok": bool(matches),
+            "mode": "recover-existing-plan-sessions",
+            "matching_sessions": matches[-5:],
+            "recent_session_summaries": _safe_shape(fallback[-20:]),
+        }
+        _write(payload)
         print(json.dumps({
-            "ok": terminal_state not in {"FAILED"},
-            "state": terminal_state,
-            "observed_states": observed_states,
+            "ok": bool(matches),
+            "matching_sessions": len(matches),
+            "total_sessions": len(sessions),
         }, sort_keys=True))
-        return 0 if terminal_state not in {"FAILED"} else 1
-    except ProviderQuotaError as exc:
-        _write({"schema_version": 1, "ok": False, "state": "PAUSED_QUOTA", "stage": stage, "error": str(exc)[:256]})
-        print("Jules planner probe hit provider quota")
+        return 0 if matches else 2
+    except JulesQuota as exc:
+        _write({"schema_version": 1, "ok": False, "state": "PAUSED_QUOTA", "error": str(exc)[:256]})
+        print("Jules session recovery probe hit provider quota")
         return 20
-    except ProviderError as exc:
-        _write({"schema_version": 1, "ok": False, "state": "PROVIDER_ERROR", "stage": stage, "error": str(exc)[:256]})
-        print(f"Jules planner probe provider error at {stage}: {str(exc)[:256]}")
+    except JulesError as exc:
+        _write({"schema_version": 1, "ok": False, "state": "PROVIDER_ERROR", "error": str(exc)[:256]})
+        print(f"Jules session recovery probe error: {str(exc)[:256]}")
         return 1
 
 
