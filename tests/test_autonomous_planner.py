@@ -84,6 +84,7 @@ class AutonomousPlannerTests(unittest.TestCase):
         )
         self.assertEqual(result.accepted_plan.plan.tasks[1].depends_on, ("v12-001",))
         self.assertIn("untrusted planning component", provider.prompts[0])
+        self.assertIn("concrete repository files", provider.prompts[0])
         self.assertNotIn("v12-001", proposal()["tasks"][0]["key"])
 
     def test_validated_plan_compiles_into_existing_campaign_path(self) -> None:
@@ -175,6 +176,42 @@ class AutonomousPlannerTests(unittest.TestCase):
             validate_planner_proposal(
                 high_level_goal=GOAL,
                 proposal_payload=duplicate,
+                policy=policy(),
+            )
+
+    def test_minimum_task_budget_is_enforced(self) -> None:
+        payload = proposal()
+        payload["tasks"] = payload["tasks"][:1]
+        with self.assertRaisesRegex(PlannerValidationError, "task-count budget"):
+            validate_planner_proposal(
+                high_level_goal=GOAL,
+                proposal_payload=payload,
+                policy=PlannerPolicy(
+                    allowed_path_prefixes=("src/ade", "tests"),
+                    min_tasks=2,
+                ),
+            )
+
+    def test_trusted_root_directory_is_not_an_executable_scope(self) -> None:
+        payload = proposal()
+        payload["tasks"][0]["allowed_paths"] = ["src/ade"]
+        with self.assertRaisesRegex(PlannerValidationError, "concrete file"):
+            validate_planner_proposal(
+                high_level_goal=GOAL,
+                proposal_payload=payload,
+                policy=policy(),
+            )
+
+    def test_planner_protocol_meta_task_is_rejected(self) -> None:
+        payload = proposal()
+        payload["tasks"][0]["title"] = "Formulate the JSON proposal"
+        payload["tasks"][0]["outcome"] = (
+            "Define tasks matching schema_version and allowed_paths."
+        )
+        with self.assertRaisesRegex(PlannerValidationError, "planner protocol"):
+            validate_planner_proposal(
+                high_level_goal=GOAL,
+                proposal_payload=payload,
                 policy=policy(),
             )
 
