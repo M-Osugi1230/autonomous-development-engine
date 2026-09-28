@@ -68,6 +68,7 @@
     "remote_gate_hardening_pr": 6,
     "completed_lease_handoff_pr": 127,
     "implementation_merged": false,
-    "safety_hardening_complete": true
+    "safety_hardening_complete": true,
+    "ci_validation_path": "phase-branch-push"
   }
 }
