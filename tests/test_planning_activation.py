@@ -82,6 +82,35 @@ class PlanningActivationTests(unittest.TestCase):
         self.assertEqual(loaded, request)
         self.assertEqual(loaded.fingerprint(), request.fingerprint())
 
+    def test_default_task_bounds_preserve_legacy_request_fingerprint_shape(self):
+        request = self.request()
+        payload = request.to_dict()
+        self.assertNotIn("min_tasks", payload)
+        self.assertNotIn("max_tasks", payload)
+        loaded = PlanningGoalRequest.from_dict(payload)
+        self.assertEqual(loaded.min_tasks, 1)
+        self.assertEqual(loaded.max_tasks, 8)
+        self.assertEqual(loaded.fingerprint(), request.fingerprint())
+
+    def test_custom_task_bounds_flow_into_planner_policy(self):
+        request = PlanningGoalRequest(
+            request_id="v12-proof-bounds",
+            campaign_id="v12-campaign-bounds",
+            id_prefix="v12b",
+            goal="Add a small target helper and focused tests.",
+            target_repository="example/target",
+            base_branch="main",
+            allowed_path_prefixes=("src", "tests"),
+            min_tasks=2,
+            max_tasks=4,
+        )
+        payload = request.to_dict()
+        self.assertEqual(payload["min_tasks"], 2)
+        self.assertEqual(payload["max_tasks"], 4)
+        policy = request.planner_policy()
+        self.assertEqual(policy.min_tasks, 2)
+        self.assertEqual(policy.max_tasks, 4)
+
     def test_activation_builds_running_first_task_and_target_metadata(self):
         request = self.request()
         bundle = build_planning_activation(
