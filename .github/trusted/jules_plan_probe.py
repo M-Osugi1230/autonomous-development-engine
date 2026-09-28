@@ -86,19 +86,18 @@ Do not request secrets, deployment, external side effects, destructive changes, 
         )
         sid = _session_id(session)
         terminal_state = "UNKNOWN"
-        activities: list[dict[str, Any]] = []
         observed_states: list[str] = []
+        last_session: dict[str, Any] = {}
 
         for _ in range(60):
             stage = "get_session"
             current = provider.get_session(sid)
+            last_session = current
             state = current.get("state")
             if isinstance(state, str):
                 terminal_state = state
                 if not observed_states or observed_states[-1] != state:
                     observed_states.append(state)
-            stage = "list_activities"
-            activities = provider.list_activities(sid, page_size=100)
             if terminal_state in {
                 "AWAITING_PLAN_APPROVAL",
                 "AWAITING_USER_FEEDBACK",
@@ -116,15 +115,13 @@ Do not request secrets, deployment, external side effects, destructive changes, 
                 "session_present": True,
                 "state": terminal_state,
                 "observed_states": observed_states,
-                "activity_count": len(activities),
-                "activities": _safe_shape(activities),
+                "session": _safe_shape(last_session),
             }
         )
         print(json.dumps({
             "ok": terminal_state not in {"FAILED"},
             "state": terminal_state,
             "observed_states": observed_states,
-            "activity_count": len(activities),
         }, sort_keys=True))
         return 0 if terminal_state not in {"FAILED"} else 1
     except ProviderQuotaError as exc:
