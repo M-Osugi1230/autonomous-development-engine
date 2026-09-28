@@ -1,0 +1,46 @@
+name: ADE v1.2 Jules Plan Probe
+
+on:
+  push:
+    branches:
+      - v1.2-jules-plan-probe
+    paths:
+      - ".github/trusted/jules_plan_probe.py"
+      - ".github/workflows/v1-2-jules-plan-probe.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ade-v1-2-jules-plan-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout probe branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run plan-only Jules probe
+        env:
+          PYTHONPATH: src
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          ADE_GITHUB_OWNER: M-Osugi1230
+          ADE_GITHUB_REPO: autonomous-development-engine
+        run: python .github/trusted/jules_plan_probe.py
+
+      - name: Upload sanitized planner probe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-v1-2-jules-plan-probe
+          path: .autodev/runtime/jules-plan-probe.json
+          if-no-files-found: error
+          retention-days: 7
