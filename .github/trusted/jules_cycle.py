@@ -10,7 +10,11 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from ade.execution_lease_store import claim_execution
-from ade.remote_execution import RemoteExecutionReceipt, execution_target_from_state
+from ade.remote_execution import (
+    RemoteExecutionReceipt,
+    execution_target_from_state,
+    receipt_binds_pull_request,
+)
 
 from github_client import GitHubClient, GitHubError
 from jules_client import (
@@ -82,6 +86,21 @@ def _persist_remote_execution(
     target_repository: str,
     pull_request_url: str,
 ) -> None:
+    try:
+        existing, _ = gh.get_json_file(REMOTE_EXECUTION_PATH)
+    except GitHubError as exc:
+        if "GitHub HTTP 404:" not in str(exc):
+            raise
+        existing = None
+
+    if receipt_binds_pull_request(
+        existing,
+        task_id=task_id,
+        target_repository=target_repository,
+        pull_request_url=pull_request_url,
+    ):
+        return
+
     receipt = RemoteExecutionReceipt(
         task_id=task_id,
         target_repository=target_repository,
@@ -319,8 +338,20 @@ def monitor_existing(
             if not isinstance(state, str):
                 raise RuntimeError("Jules returned a session without state")
 
+            observed_pull_request_url = _pull_request_url(current)
+            if (
+                target_repository != gh.repository
+                and observed_pull_request_url is not None
+            ):
+                _persist_remote_execution(
+                    gh,
+                    task_id=task_id,
+                    target_repository=target_repository,
+                    pull_request_url=observed_pull_request_url,
+                )
+
             if state == "COMPLETED":
-                pull_request_url = _pull_request_url(current)
+                pull_request_url = observed_pull_request_url
                 if target_repository != gh.repository and pull_request_url is None:
                     raise RuntimeError(
                         "external repository Jules session completed without a pull request"
@@ -335,13 +366,6 @@ def monitor_existing(
                     "target_repository": target_repository,
                     "pull_request_url": pull_request_url,
                 }
-                if target_repository != gh.repository and pull_request_url is not None:
-                    _persist_remote_execution(
-                        gh,
-                        task_id=task_id,
-                        target_repository=target_repository,
-                        pull_request_url=pull_request_url,
-                    )
                 _write_result(payload)
                 print(f"PASS: Jules session completed: {session_id}")
                 if pull_request_url:
