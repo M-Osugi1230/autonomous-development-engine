@@ -23,6 +23,16 @@ PROPOSAL = {
             "acceptance": ["helper is deterministic"],
             "human_only": False,
             "human_reason": None,
+        },
+        {
+            "key": "tests",
+            "title": "Add helper tests",
+            "outcome": "Add focused tests",
+            "depends_on": ["helper"],
+            "allowed_paths": ["tests/test_helper.py"],
+            "acceptance": ["focused tests pass"],
+            "human_only": False,
+            "human_reason": None,
         }
     ],
     "human_boundaries": [
@@ -130,16 +140,16 @@ def main() -> int:
     assert create[2]["requirePlanApproval"] is True
     assert "automationMode" not in create[2]
     assert not any(path.endswith(":approvePlan") for _, path, _, _ in client.requests)
-    assert not any(path.endswith(":sendMessage") for _, path, _, _ in client.requests)
+    assert any(path.endswith(":sendMessage") for _, path, _, _ in client.requests)
     assert provider.last_observed_state == "AWAITING_PLAN_APPROVAL"
-    assert provider.last_proposal_mode == "derived-plan-steps"
+    assert provider.last_proposal_mode == "followup-structured"
 
     print(json.dumps({
         "ok": True,
         "require_plan_approval": True,
         "auto_create_pr_disabled": True,
         "approve_plan_never_called": True,
-        "plan_step_fallback": True,
+        "structured_followup_preferred": True,
         "unapproved_terminal_state": True,
     }, sort_keys=True))
     return 0
