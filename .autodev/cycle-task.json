@@ -1,10 +1,10 @@
 {
   "auto_create_pr": true,
   "poll_interval_seconds": 15,
-  "prompt": "Goal: Add a small zero-touch campaign marker utility and prove it with focused tests. Outcome: Add focused stdlib unit tests for zero_touch_campaign_marker covering deterministic output and invalid inputs.\nAllowed paths: tests/test_zero_touch_campaign.py\nAcceptance: focused tests cover valid deterministic output; invalid campaign_id and mode behavior is tested; full repository tests remain green\nDo not modify files outside the allowed paths.",
+  "prompt": "Goal: Add a small deterministic utility that normalizes a non-empty experiment label by collapsing surrounding and repeated internal whitespace into a stable normalized value and returns a structured summary, with focused unit-test coverage. Keep the change isolated from CLI behavior, external APIs, deployment, secrets, and irreversible operations.\nOutcome: - Define tasks to implement the deterministic experiment label normalization utility and tests within `src/thought_pipeline` and `tests`. - Ensure the JSON object strictly complies with schema_version=1 specifications, including keys, allowed paths, acceptance checks, task dependencies, and human_boundaries.\nAllowed paths: src/thought_pipeline, tests\nAcceptance: - Define tasks to implement the deterministic experiment label normalization utility and tests within `src/thought_pipeline` and `tests`. - Ensure the JSON object strictly complies with schema_version=1 specifications, including keys, allowed paths, acceptance checks, task dependencies, and human_boundaries.; Repository CI remains green\nDo not modify files outside the allowed paths.",
   "schema_version": 1,
   "starting_branch": "main",
-  "task_id": "v1-1-zero-touch-002",
+  "task_id": "v12ext-001",
   "timeout_seconds": 1800,
-  "title": "Prove zero-touch campaign marker"
+  "title": "Formulate the JSON proposal matching schema_version=1."
 }
