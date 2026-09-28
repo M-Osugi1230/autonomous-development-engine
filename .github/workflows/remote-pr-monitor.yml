@@ -1,0 +1,48 @@
+name: ADE Remote PR Monitor
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".autodev/runtime/remote-execution.json"
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-remote-pr-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Observe remote PR and advance Campaign
+        env:
+          PYTHONPATH: src
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/remote_pr_monitor.py
+
+      - name: Upload remote monitor evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-remote-pr-monitor-result
+          path: .autodev/runtime/remote-monitor-result.json
+          if-no-files-found: error
+          retention-days: 30

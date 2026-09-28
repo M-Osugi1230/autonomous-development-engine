@@ -10,6 +10,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from ade.execution_lease_store import claim_execution
+from ade.remote_execution import RemoteExecutionReceipt, execution_target_from_state
 
 from github_client import GitHubClient, GitHubError
 from jules_client import (
@@ -24,6 +25,7 @@ TASK_PATH = Path(".autodev/cycle-task.json")
 RESULT_PATH = Path(".autodev/runtime/jules-session.json")
 CHECKPOINT_PATH = ".autodev/runtime/checkpoint.json"
 STATE_PATH = ".autodev/state.json"
+REMOTE_EXECUTION_PATH = ".autodev/runtime/remote-execution.json"
 QUOTA_RETRY_DELAY = timedelta(hours=1)
 
 
@@ -70,6 +72,26 @@ def _persist_checkpoint(gh: GitHubClient, payload: dict[str, Any]) -> None:
         CHECKPOINT_PATH,
         payload,
         message=f"checkpoint: {payload['task_id']} {payload['state']}",
+    )
+
+
+def _persist_remote_execution(
+    gh: GitHubClient,
+    *,
+    task_id: str,
+    target_repository: str,
+    pull_request_url: str,
+) -> None:
+    receipt = RemoteExecutionReceipt(
+        task_id=task_id,
+        target_repository=target_repository,
+        pull_request_url=pull_request_url,
+        recorded_at=datetime.now(UTC).isoformat(),
+    )
+    gh.upsert_json_file(
+        REMOTE_EXECUTION_PATH,
+        receipt.to_dict(),
+        message=f"remote: PR created for {task_id}",
     )
 
 
@@ -272,6 +294,7 @@ def monitor_existing(
     *,
     task: dict[str, Any],
     session_id: str,
+    target_repository: str,
     session_url: str | None = None,
 ) -> int:
     task_id = str(task["task_id"])
@@ -297,6 +320,11 @@ def monitor_existing(
                 raise RuntimeError("Jules returned a session without state")
 
             if state == "COMPLETED":
+                pull_request_url = _pull_request_url(current)
+                if target_repository != gh.repository and pull_request_url is None:
+                    raise RuntimeError(
+                        "external repository Jules session completed without a pull request"
+                    )
                 checkpoint = _checkpoint(task_id, "COMPLETED", session_id=session_id)
                 _persist_checkpoint(gh, checkpoint)
                 payload = {
@@ -304,12 +332,20 @@ def monitor_existing(
                     "session_id": session_id,
                     "session_url": session_url,
                     "state": state,
-                    "pull_request_url": _pull_request_url(current),
+                    "target_repository": target_repository,
+                    "pull_request_url": pull_request_url,
                 }
+                if target_repository != gh.repository and pull_request_url is not None:
+                    _persist_remote_execution(
+                        gh,
+                        task_id=task_id,
+                        target_repository=target_repository,
+                        pull_request_url=pull_request_url,
+                    )
                 _write_result(payload)
                 print(f"PASS: Jules session completed: {session_id}")
-                if payload["pull_request_url"]:
-                    print(f"Pull request: {payload['pull_request_url']}")
+                if pull_request_url:
+                    print(f"Pull request: {pull_request_url}")
                 return 0
 
             if state == "FAILED":
@@ -397,6 +433,7 @@ def run_new_cycle(
     gh: GitHubClient,
     owner: str,
     repo: str,
+    target_repository: str,
 ) -> int:
     task_id = str(task["task_id"])
     source = client.find_github_source(owner, repo)
@@ -424,6 +461,7 @@ def run_new_cycle(
         gh,
         task=task,
         session_id=session_id,
+        target_repository=target_repository,
         session_url=session_url,
     )
 
@@ -439,6 +477,13 @@ def main() -> int:
         task_id = str(task["task_id"])
         client = JulesClient()
         gh = GitHubClient()
+        state_payload, _ = gh.get_json_file(STATE_PATH)
+        fallback_repository = f"{owner}/{repo}"
+        target_repository = execution_target_from_state(
+            state_payload,
+            fallback_repository=fallback_repository,
+        )
+        owner, repo = target_repository.split("/", 1)
         run_id = os.environ.get("GITHUB_RUN_ID", "manual")
         run_attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "1")
         owner_id = f"github-actions:{run_id}:{run_attempt}"
@@ -449,7 +494,14 @@ def main() -> int:
                 print(f"NOOP: duplicate dispatch blocked for {task_id}")
                 return 0
             raise
-        return run_new_cycle(task=task, client=client, gh=gh, owner=owner, repo=repo)
+        return run_new_cycle(
+            task=task,
+            client=client,
+            gh=gh,
+            owner=owner,
+            repo=repo,
+            target_repository=target_repository,
+        )
 
     except JulesQuota as exc:
         try:
