@@ -38,6 +38,7 @@ class PlannerTaskProposal:
     depends_on: tuple[str, ...]
     allowed_paths: tuple[str, ...]
     acceptance: tuple[str, ...]
+    new_paths: tuple[str, ...] = ()
     human_only: bool = False
     human_reason: str | None = None
 
@@ -74,6 +75,7 @@ class PlannerProposal:
             "depends_on",
             "allowed_paths",
             "acceptance",
+            "new_paths",
             "human_only",
             "human_reason",
         }
@@ -88,12 +90,15 @@ class PlannerProposal:
             depends_on = raw.get("depends_on", [])
             allowed_paths = raw.get("allowed_paths", [])
             acceptance = raw.get("acceptance", [])
+            new_paths = raw.get("new_paths", [])
             if not isinstance(depends_on, list):
                 raise PlannerValidationError(f"planner task {index} depends_on must be a list")
             if not isinstance(allowed_paths, list):
                 raise PlannerValidationError(f"planner task {index} allowed_paths must be a list")
             if not isinstance(acceptance, list):
                 raise PlannerValidationError(f"planner task {index} acceptance must be a list")
+            if not isinstance(new_paths, list):
+                raise PlannerValidationError(f"planner task {index} new_paths must be a list")
             human_only = raw.get("human_only", False)
             if type(human_only) is not bool:
                 raise PlannerValidationError(f"planner task {index} human_only must be a bool")
@@ -108,6 +113,7 @@ class PlannerProposal:
                     depends_on=tuple(str(item) for item in depends_on),
                     allowed_paths=tuple(str(item) for item in allowed_paths),
                     acceptance=tuple(str(item) for item in acceptance),
+                    new_paths=tuple(str(item) for item in new_paths),
                     human_only=human_only,
                     human_reason=human_reason,
                 )
@@ -130,6 +136,7 @@ class PlannerProposal:
                     "depends_on": list(task.depends_on),
                     "allowed_paths": list(task.allowed_paths),
                     "acceptance": [_normalize_text(item) for item in task.acceptance],
+                    "new_paths": list(task.new_paths),
                     "human_only": task.human_only,
                     "human_reason": (
                         _normalize_text(task.human_reason)
@@ -365,14 +372,42 @@ def _human_wait_reasons(
     return tuple(dict.fromkeys(reasons))
 
 
+def _normalize_existing_repository_paths(
+    existing_paths: frozenset[str] | set[str] | tuple[str, ...] | None,
+) -> frozenset[str] | None:
+    if existing_paths is None:
+        return None
+    if not isinstance(existing_paths, (frozenset, set, tuple)):
+        raise PlannerValidationError(
+            "existing_paths must be a set, frozenset, tuple, or null"
+        )
+    normalized: set[str] = set()
+    for raw in existing_paths:
+        if not isinstance(raw, str) or not raw:
+            raise PlannerValidationError(
+                "existing_paths must contain non-empty strings"
+            )
+        if "\\" in raw or raw.startswith("/"):
+            raise PlannerValidationError(f"unsafe existing repository path: {raw}")
+        parsed = PurePosixPath(raw)
+        if "." in parsed.parts or ".." in parsed.parts or str(parsed) != raw:
+            raise PlannerValidationError(
+                f"existing repository path must be normalized: {raw}"
+            )
+        normalized.add(raw)
+    return frozenset(normalized)
+
+
 def validate_planner_proposal(
     *,
     high_level_goal: str,
     proposal_payload: dict[str, Any],
     policy: PlannerPolicy,
     id_prefix: str = "auto",
+    existing_paths: frozenset[str] | set[str] | tuple[str, ...] | None = None,
 ) -> ValidatedPlannerProposal:
     goal = _bounded_text(high_level_goal, policy, label="high-level goal")
+    known_paths = _normalize_existing_repository_paths(existing_paths)
     if not isinstance(id_prefix, str) or not _KEY_PATTERN.fullmatch(id_prefix):
         raise PlannerValidationError("id_prefix must be a safe identifier")
 
@@ -406,8 +441,37 @@ def validate_planner_proposal(
             raise PlannerValidationError(f"task {task.key} violates trusted path budget")
         if not task.acceptance or len(task.acceptance) > policy.max_acceptance_per_task:
             raise PlannerValidationError(f"task {task.key} violates trusted acceptance budget")
-        for path in task.allowed_paths:
+        validated_allowed_paths = tuple(
             _validate_path(path, policy)
+            for path in task.allowed_paths
+        )
+        validated_new_paths = tuple(
+            _validate_path(path, policy)
+            for path in task.new_paths
+        )
+        if len(set(validated_new_paths)) != len(validated_new_paths):
+            raise PlannerValidationError(
+                f"task {task.key} contains duplicate new_paths"
+            )
+        allowed_set = set(validated_allowed_paths)
+        new_set = set(validated_new_paths)
+        if not new_set.issubset(allowed_set):
+            raise PlannerValidationError(
+                f"task {task.key} new_paths must be a subset of allowed_paths"
+            )
+        if known_paths is not None:
+            for path in validated_allowed_paths:
+                exists = path in known_paths
+                declared_new = path in new_set
+                if exists and declared_new:
+                    raise PlannerValidationError(
+                        f"task {task.key} declares existing repository path as new: {path}"
+                    )
+                if not exists and not declared_new:
+                    raise PlannerValidationError(
+                        f"task {task.key} path does not exist in repository snapshot "
+                        f"and is not declared new: {path}"
+                    )
         for item in task.acceptance:
             _bounded_text(item, policy, label=f"task {task.key} acceptance")
 
@@ -523,8 +587,10 @@ def build_planner_prompt(
         "explicitly, and must not combine implementation and tests into the same step. "
         "Do not add generic review, pre-commit, verification, or completion-only plan steps. "
         "Each task must contain key, title, outcome, depends_on, allowed_paths, acceptance, "
-        "human_only, and human_reason. Dependencies use task keys. "
+        "new_paths, human_only, and human_reason. Dependencies use task keys. "
         "allowed_paths must name concrete repository files, not directories or trusted root names. "
+        "new_paths must be a subset of allowed_paths and must list only files that the task explicitly "
+        "intends to create; use an empty list when all allowed_paths already exist. "
         "The proposal must include human_boundaries and must include: "
         f"{boundaries}. Mark any task crossing a human-only boundary with human_only=true."
         + context_suffix
@@ -538,6 +604,7 @@ def plan_high_level_goal(
     policy: PlannerPolicy,
     id_prefix: str = "auto",
     repository_context: str | None = None,
+    existing_paths: frozenset[str] | set[str] | tuple[str, ...] | None = None,
 ) -> AutonomousPlanningResult:
     prompt = build_planner_prompt(
         high_level_goal,
@@ -552,6 +619,7 @@ def plan_high_level_goal(
         proposal_payload=raw,
         policy=policy,
         id_prefix=id_prefix,
+        existing_paths=existing_paths,
     )
     accepted = (
         accept_validated_proposal(validated)
