@@ -441,6 +441,7 @@ def main() -> int:
             policy=request.planner_policy(),
             id_prefix=request.id_prefix,
             repository_context=repository_context.serialized,
+            existing_paths=frozenset(snapshot.paths),
         )
 
         if result.validated.disposition is PlannerDisposition.HUMAN_WAIT:
