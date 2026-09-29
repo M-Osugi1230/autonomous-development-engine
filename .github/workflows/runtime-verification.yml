@@ -1,0 +1,43 @@
+name: ADE Runtime Verification
+
+on:
+  repository_dispatch:
+    types:
+      - ade_runtime_verification
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-runtime-verification-${{ github.event.client_payload.verification_id }}
+  cancel-in-progress: false
+
+jobs:
+  arm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate durable runtime verification receipt
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/runtime_verification_dispatch.py
+
+      - name: Upload runtime verification dispatch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-runtime-verification-dispatch-result
+          path: .autodev/runtime/runtime-verification-dispatch-result.json
+          if-no-files-found: error
+          retention-days: 30
