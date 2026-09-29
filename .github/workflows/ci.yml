@@ -68,6 +68,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/repository_intelligence_probe.py
 
+      - name: Runtime Verification post-merge trigger proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/runtime_verification_trigger_probe.py
+
       - name: Remote Repository Loop proof
         env:
           PYTHONPATH: src

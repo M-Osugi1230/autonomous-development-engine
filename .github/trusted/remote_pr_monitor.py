@@ -14,9 +14,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from ade.remote_execution import RemoteExecutionReceipt
+from ade.runtime_verification_trigger import (
+    RuntimeVerificationReceipt,
+    arm_post_merge_runtime_verification,
+    record_runtime_verification_dispatch,
+    runtime_verification_paths,
+)
 from ade_pr_gate import advance_queue
 from github_client import GitHubClient, GitHubError
 from observability import record_merged_pr
+from runtime_probes import (
+    build_runtime_probe_registry,
+    build_runtime_verification_policy,
+)
 
 RECEIPT_PATH = Path(".autodev/runtime/remote-execution.json")
 RESULT_PATH = Path(".autodev/runtime/remote-monitor-result.json")
@@ -83,6 +93,90 @@ def _persist_merged_receipt(
     )
 
 
+def _runtime_verification_enabled(state: dict[str, Any]) -> bool:
+    metadata = state.get("metadata")
+    if not isinstance(metadata, dict):
+        return False
+    return metadata.get("phase") == "v1.4-runtime-deployment-verification"
+
+
+def _load_runtime_receipt(
+    gh: GitHubClient,
+    *,
+    task_id: str,
+) -> RuntimeVerificationReceipt | None:
+    _, receipt_path = runtime_verification_paths(task_id)
+    try:
+        payload, _ = gh.get_json_file(receipt_path)
+    except GitHubError as exc:
+        if "GitHub HTTP 404:" in str(exc):
+            return None
+        raise
+    return RuntimeVerificationReceipt.from_dict(payload)
+
+
+def _arm_post_merge_runtime_verification(
+    gh: GitHubClient,
+    *,
+    state: dict[str, Any],
+    receipt: RemoteExecutionReceipt,
+    trusted_merge_sha: str,
+) -> RuntimeVerificationReceipt | None:
+    if not _runtime_verification_enabled(state):
+        return None
+
+    registry = build_runtime_probe_registry()
+    policy = build_runtime_verification_policy(receipt.target_repository)
+    existing = _load_runtime_receipt(gh, task_id=receipt.task_id)
+    activation = arm_post_merge_runtime_verification(
+        policy=policy,
+        registry=registry,
+        task_id=receipt.task_id,
+        target_repository=receipt.target_repository,
+        trusted_merge_sha=trusted_merge_sha,
+        existing_receipt=existing,
+    )
+    contract_path, receipt_path = runtime_verification_paths(receipt.task_id)
+
+    gh.upsert_json_file(
+        contract_path,
+        activation.contract.canonical_dict(),
+        message=f"runtime: contract {activation.contract.verification_id}",
+    )
+    if existing != activation.receipt:
+        gh.upsert_json_file(
+            receipt_path,
+            activation.receipt.canonical_dict(),
+            message=f"runtime: arm {activation.receipt.verification_id}",
+        )
+
+    final_receipt = activation.receipt
+    if activation.should_dispatch:
+        gh.dispatch(
+            "ade_runtime_verification",
+            {
+                "task_id": activation.receipt.task_id,
+                "verification_id": activation.receipt.verification_id,
+                "target_repository": activation.receipt.target_repository,
+                "source_sha": activation.receipt.source_sha,
+                "source": "remote-pr-monitor",
+            },
+        )
+        transition = record_runtime_verification_dispatch(
+            contract=activation.contract,
+            registry=registry,
+            receipt=activation.receipt,
+        )
+        final_receipt = transition.receipt
+        if transition.changed:
+            gh.upsert_json_file(
+                receipt_path,
+                final_receipt.canonical_dict(),
+                message=f"runtime: dispatched {final_receipt.verification_id}",
+            )
+    return final_receipt
+
+
 def main() -> int:
     receipt = _load_receipt()
     if receipt is None:
@@ -143,6 +237,22 @@ def main() -> int:
                 head_sha = head.get("sha") if isinstance(head, dict) else None
                 if not isinstance(head_sha, str) or not head_sha:
                     raise RuntimeError("merged target pull request has no head SHA")
+                merge_sha = pr.get("merge_commit_sha")
+                if (
+                    not isinstance(merge_sha, str)
+                    or len(merge_sha) != 40
+                    or any(ch not in "0123456789abcdef" for ch in merge_sha)
+                ):
+                    raise RuntimeError(
+                        "merged target pull request has no valid merge commit SHA"
+                    )
+
+                runtime_receipt = _arm_post_merge_runtime_verification(
+                    gh,
+                    state=state,
+                    receipt=receipt,
+                    trusted_merge_sha=merge_sha,
+                )
 
                 next_task_id = advance_queue(
                     gh,
@@ -167,6 +277,17 @@ def main() -> int:
                     "task_id": receipt.task_id,
                     "target_repository": receipt.target_repository,
                     "pull_request_number": pr_number,
+                    "trusted_merge_sha": merge_sha,
+                    "runtime_verification_id": (
+                        runtime_receipt.verification_id
+                        if runtime_receipt is not None
+                        else None
+                    ),
+                    "runtime_verification_status": (
+                        runtime_receipt.status
+                        if runtime_receipt is not None
+                        else None
+                    ),
                     "next_task_id": next_task_id,
                 }
                 _write(result)
