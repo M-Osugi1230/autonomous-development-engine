@@ -254,10 +254,16 @@ def main() -> int:
                     trusted_merge_sha=merge_sha,
                 )
 
-                next_task_id = advance_queue(
-                    gh,
-                    completed_task_id=receipt.task_id,
-                )
+                if runtime_receipt is None:
+                    next_task_id = advance_queue(
+                        gh,
+                        completed_task_id=receipt.task_id,
+                    )
+                else:
+                    # In v1.4, a trusted merge is not task completion.
+                    # Queue advancement is deferred until runtime verification
+                    # reaches durable VERIFIED evidence.
+                    next_task_id = None
                 try:
                     record_merged_pr(
                         gh,
@@ -288,6 +294,7 @@ def main() -> int:
                         if runtime_receipt is not None
                         else None
                     ),
+                    "queue_advance_deferred": runtime_receipt is not None,
                     "next_task_id": next_task_id,
                 }
                 _write(result)
