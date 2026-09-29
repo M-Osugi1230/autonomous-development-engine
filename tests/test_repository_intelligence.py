@@ -229,6 +229,55 @@ async def run_async():
             ["src/ade/helper.py", "tests/test_helper.py"],
         )
 
+    def test_planner_context_includes_only_safe_content_summary(self) -> None:
+        snapshot = build_repository_snapshot(
+            repository="example/repo",
+            base_branch="main",
+            source_sha=SHA,
+            paths=[
+                "src/ade/a.py",
+                "src/ade/b.py",
+                "tests/test_a.py",
+            ],
+        )
+        content = build_python_content_summary(
+            [
+                (
+                    "src/ade/a.py",
+                    '"""do-not-leak-docstring"""\nimport os\nSECRET = "do-not-leak-secret"\ndef public_api():\n    return SECRET\n',
+                    "1" * 40,
+                ),
+                (
+                    "src/ade/b.py",
+                    "from .a import public_api\nclass Service:\n    pass\n",
+                    "2" * 40,
+                ),
+                (
+                    "tests/test_a.py",
+                    "from ade.a import public_api\ndef test_public_api():\n    assert public_api()\n",
+                    "3" * 40,
+                ),
+            ]
+        )
+        context = planner_repository_context(
+            snapshot,
+            allowed_path_prefixes=("src/ade", "tests"),
+            content_summary=content,
+            max_summary_modules=2,
+        )
+        payload = context.payload
+        self.assertEqual(payload["content_summary_module_count"], 3)
+        self.assertTrue(payload["python_module_summaries_truncated"])
+        self.assertEqual(
+            [item["path"] for item in payload["python_module_summaries"]],
+            ["src/ade/a.py", "src/ade/b.py"],
+        )
+        serialized = context.serialized
+        self.assertNotIn("do-not-leak-docstring", serialized)
+        self.assertNotIn("do-not-leak-secret", serialized)
+        self.assertIn("public_api", serialized)
+        self.assertIn("Service", serialized)
+
     def test_python_source_character_budget_is_enforced(self) -> None:
         with self.assertRaisesRegex(RepositoryIntelligenceError, "character budget"):
             analyze_python_source(
