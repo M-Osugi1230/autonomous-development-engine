@@ -209,4 +209,4 @@
 - [x] A validated AcceptedPlan compiles through the existing Campaign/DAG path and can enter v1.1 Zero-Touch Start without bypassing any v1.0/v1.1 gates.
 - [x] Deterministic CI proofs cover schema rejection, scope rejection, dependency rejection, budget rejection, human-boundary enforcement, stable fingerprinting, and successful compile.
 - [x] A real planning provider produces a plan from a high-level Goal without manually authored per-task work items, and the raw planner proposal is preserved as evidence.
-- [ ] A real external-repository proof completes High-level Goal -> autonomous proposal -> trusted validation -> AcceptedPlan -> automatic Campaign start -> multiple PR/CI/trusted-merge cycles -> terminal Goal Acceptance.
+- [x] A real external-repository proof completes High-level Goal -> autonomous proposal -> trusted validation -> AcceptedPlan -> automatic Campaign start -> multiple PR/CI/trusted-merge cycles -> terminal Goal Acceptance.
