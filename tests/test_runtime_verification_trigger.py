@@ -13,6 +13,7 @@ from ade.runtime_verification_trigger import (
     RuntimeVerificationPolicy,
     RuntimeVerificationReceipt,
     arm_post_merge_runtime_verification,
+    record_runtime_verification_dispatch,
 )
 
 
@@ -184,6 +185,80 @@ class RuntimeVerificationTriggerTests(unittest.TestCase):
             activation.receipt.canonical_dict()
         )
         self.assertEqual(loaded_receipt, activation.receipt)
+
+    def test_dispatch_transition_is_exactly_once(self) -> None:
+        activation = arm_post_merge_runtime_verification(
+            policy=policy(),
+            registry=registry(),
+            task_id="task-001",
+            target_repository="example/target",
+            trusted_merge_sha=SHA_A,
+        )
+        first = record_runtime_verification_dispatch(
+            contract=activation.contract,
+            registry=registry(),
+            receipt=activation.receipt,
+        )
+        self.assertTrue(first.changed)
+        self.assertEqual(first.receipt.status, "DISPATCHED")
+        self.assertEqual(first.receipt.dispatch_count, 1)
+
+        replay = record_runtime_verification_dispatch(
+            contract=activation.contract,
+            registry=registry(),
+            receipt=first.receipt,
+        )
+        self.assertFalse(replay.changed)
+        self.assertEqual(replay.receipt, first.receipt)
+
+    def test_dispatch_rejects_contract_or_registry_drift(self) -> None:
+        trusted_registry = registry()
+        activation = arm_post_merge_runtime_verification(
+            policy=policy(),
+            registry=trusted_registry,
+            task_id="task-001",
+            target_repository="example/target",
+            trusted_merge_sha=SHA_A,
+        )
+        stale_contract = type(activation.contract)(
+            verification_id=f"rv-{SHA_B}",
+            target_repository="example/target",
+            source_sha=SHA_B,
+            environment="production",
+            required_probe_ids=activation.contract.required_probe_ids,
+            max_attempts=2,
+            timeout_seconds=300,
+        )
+        with self.assertRaisesRegex(RuntimeVerificationError, "id drift|source SHA drift"):
+            record_runtime_verification_dispatch(
+                contract=stale_contract,
+                registry=trusted_registry,
+                receipt=activation.receipt,
+            )
+
+        def passed(_: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+            return RuntimeProbeObservation(RuntimeProbeStatus.PASS)
+
+        drifted_registry = TrustedRuntimeProbeRegistry(
+            [
+                RuntimeProbeRegistration(
+                    "offline-cli-smoke",
+                    "offline-cli-smoke-v2",
+                    passed,
+                ),
+                RuntimeProbeRegistration(
+                    "production-import-smoke",
+                    "production-import-smoke-v1",
+                    passed,
+                ),
+            ]
+        )
+        with self.assertRaisesRegex(RuntimeVerificationError, "registry drift"):
+            record_runtime_verification_dispatch(
+                contract=activation.contract,
+                registry=drifted_registry,
+                receipt=activation.receipt,
+            )
 
     def test_receipt_contains_no_executable_or_secret_payload_surface(self) -> None:
         activation = arm_post_merge_runtime_verification(
