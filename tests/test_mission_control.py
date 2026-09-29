@@ -165,6 +165,45 @@ class MissionControlSnapshotTests(unittest.TestCase):
         self.assertNotIn("resolved-context-must-not-render", serialized)
         self.assertNotIn("must-not-render", serialized)
 
+    def test_snapshot_exposes_planner_capacity_wait(self) -> None:
+        self.write_base_fixture()
+        state = json.loads((self.autodev / "state.json").read_text(encoding="utf-8"))
+        state["status"] = "READY"
+        state["current_task_id"] = None
+        state["failed_task_ids"] = []
+        self.write_json("state.json", state)
+        self.write_json("failures.json", {"schema_version": 1, "failures": []})
+        (self.autodev / "runtime" / "checkpoint.json").unlink()
+        DecisionStore(self.autodev / "decisions.json").save([])
+        self.write_json(
+            "runtime/planning-status.json",
+            {
+                "schema_version": 1,
+                "request_id": "v1.2-external-goal-proof-005",
+                "request_fingerprint": "a" * 64,
+                "state": "PAUSED_QUOTA",
+                "attempt": 0,
+                "reason": "planner-provider-capacity",
+                "detail": "private provider detail must not render",
+                "updated_at": "2026-09-29T11:26:18+00:00",
+            },
+        )
+
+        snapshot = build_mission_control_snapshot(self.root)
+
+        self.assertEqual(
+            snapshot.planning,
+            {
+                "request_id": "v1.2-external-goal-proof-005",
+                "state": "PAUSED_QUOTA",
+                "attempt": 0,
+                "reason": "planner-provider-capacity",
+                "updated_at": "2026-09-29T11:26:18+00:00",
+            },
+        )
+        self.assertEqual(snapshot.lifecycle_status, "RECOVERING")
+        self.assertNotIn("private provider detail", json.dumps(snapshot.to_dict()))
+
     def test_snapshot_exposes_safe_campaign_progress(self) -> None:
         self.write_base_fixture()
         self.write_json(
