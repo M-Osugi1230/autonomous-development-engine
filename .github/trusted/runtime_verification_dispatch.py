@@ -78,6 +78,22 @@ def validate_dispatch_payload(
         raise ValueError("runtime verification contract fingerprint mismatch")
 
 
+def _persist_human_wait_receipt(
+    gh: GitHubClient,
+    *,
+    receipt_path: str,
+    receipt: RuntimeVerificationReceipt,
+) -> RuntimeVerificationReceipt:
+    transition = record_runtime_verification_human_wait(receipt)
+    if transition.changed:
+        gh.upsert_json_file(
+            receipt_path,
+            transition.receipt.canonical_dict(),
+            message=f"runtime: human-wait {receipt.verification_id}",
+        )
+    return transition.receipt
+
+
 def main() -> int:
     try:
         event = _event_payload()
