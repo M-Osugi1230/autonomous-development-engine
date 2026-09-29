@@ -1,10 +1,13 @@
 {
-  "attempt": 3,
-  "detail": "planner proposal violates trusted task-count budget",
-  "reason": "planner-failure-budget-exhausted",
-  "request_fingerprint": "16e2c66694dbd0840a48fbef2fda8f3ce3459e0ce8c33ff6faaf765bbf5af664",
-  "request_id": "v1.2-external-goal-proof-002",
+  "accepted_plan_fingerprint": "a07442a60ea1ba213ee84acd0618097b3d8a6636777d4b1ef9bff789068c7249",
+  "attempt": 1,
+  "campaign_id": "v1.2-external-goal-campaign-003",
+  "first_task_id": "v12ext3-001",
+  "proposal_fingerprint": "9867cf5532cb16f57c3587b6903bf229f0a503cc1648fd71a0082f49a30e15bf",
+  "reason": "trusted-plan-accepted",
+  "request_fingerprint": "62a8f3f83c5ac71aa5bdae92e18f6183be01806a673a401d61a07be393433604",
+  "request_id": "v1.2-external-goal-proof-003",
   "schema_version": 1,
-  "state": "HUMAN_WAIT",
-  "updated_at": "2026-09-29T06:55:47.011456+00:00"
+  "state": "ACCEPTED",
+  "updated_at": "2026-09-29T08:25:44.401164+00:00"
 }
