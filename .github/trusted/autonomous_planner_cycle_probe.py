@@ -137,7 +137,12 @@ def main() -> int:
         last_observed_state="AWAITING_PLAN_APPROVAL",
     )
     gh = FakeGitHub()
-    snapshot, content_summary, repository_context = cycle._collect_repository_intelligence(
+    (
+        snapshot,
+        content_summary,
+        relationship_graph,
+        repository_context,
+    ) = cycle._collect_repository_intelligence(
         gh,
         request,
     )
@@ -152,6 +157,21 @@ def main() -> int:
         "tests/test_helper.py",
     ]
     assert repository_context.payload["content_summary_fingerprint"] == content_summary.fingerprint()
+    assert repository_context.payload["relationship_graph_fingerprint"] == relationship_graph.fingerprint()
+    assert repository_context.payload["internal_dependency_edges"] == [
+        {
+            "source_path": "tests/test_helper.py",
+            "target_path": "src/helper.py",
+            "kind": "import",
+        }
+    ]
+    assert repository_context.payload["test_source_links"] == [
+        {
+            "test_path": "tests/test_helper.py",
+            "source_path": "src/helper.py",
+            "reason": "import",
+        }
+    ]
     assert len(repository_context.payload["python_module_summaries"]) == 2
     assert "never persisted raw" not in json.dumps(
         repository_context.payload,
@@ -169,6 +189,7 @@ def main() -> int:
             provider=provider,
             snapshot=snapshot,
             content_summary=content_summary,
+            relationship_graph=relationship_graph,
             repository_context=repository_context,
             attempt=1,
         )
@@ -200,6 +221,7 @@ def main() -> int:
     assert evidence["repository_snapshot_fingerprint"] == snapshot.fingerprint()
     assert evidence["repository_context_fingerprint"] == repository_context.fingerprint
     assert evidence["repository_content_summary_fingerprint"] == content_summary.fingerprint()
+    assert evidence["repository_relationship_graph_fingerprint"] == relationship_graph.fingerprint()
     intelligence = next(
         payload
         for path, payload, _, _ in gh.writes
@@ -208,6 +230,8 @@ def main() -> int:
     assert intelligence["snapshot_fingerprint"] == snapshot.fingerprint()
     assert intelligence["content_summary_fingerprint"] == content_summary.fingerprint()
     assert intelligence["content_summary"] == content_summary.canonical_dict()
+    assert intelligence["relationship_graph_fingerprint"] == relationship_graph.fingerprint()
+    assert intelligence["relationship_graph"] == relationship_graph.canonical_dict()
     assert "never persisted raw" not in json.dumps(intelligence, sort_keys=True)
     assert intelligence["planner_context_fingerprint"] == repository_context.fingerprint
     prepared_state = gh.writes[3][1]
@@ -215,6 +239,7 @@ def main() -> int:
     assert metadata["repository_intelligence_snapshot_fingerprint"] == snapshot.fingerprint()
     assert metadata["repository_intelligence_context_fingerprint"] == repository_context.fingerprint
     assert metadata["repository_intelligence_content_fingerprint"] == content_summary.fingerprint()
+    assert metadata["repository_intelligence_relationship_fingerprint"] == relationship_graph.fingerprint()
     assert metadata["repository_intelligence_source_sha"] == snapshot.source_sha
 
     accepted = gh.writes[-1][1]
@@ -258,6 +283,8 @@ def main() -> int:
         "repository_intelligence_snapshot": True,
         "repository_intelligence_evidence": True,
         "secret_free_ast_content_summary": True,
+        "repository_dependency_graph": True,
+        "test_source_relationships": True,
     }, sort_keys=True))
     return 0
 
