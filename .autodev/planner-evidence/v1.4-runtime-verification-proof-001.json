@@ -1,0 +1,66 @@
+{
+  "accepted_plan_fingerprint": "3fdd6f14778d03f3fa8b38c0472fcbc17713acfc6d1f1b6ce690c22ce80f2a14",
+  "campaign_id": "v1.4-runtime-verification-campaign-001",
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "e4bb792a008504b2c2620275e2351ddd57512b910afefd738a31879823b26119",
+  "proposal": {
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses Unicode whitespace such as non-breaking space and em space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "- Add test coverage in `tests/test_models.py` verifying that Unicode whitespace characters (such as non-breaking space `\\u00a0` and em space `\\u2003`) are collapsed to single plain spaces in `display_label` while preserving stable-key behavior in `normalize_experiment_variant_label`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_models.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "- Add test coverage in `tests/test_models.py` verifying that Unicode whitespace characters (such as non-breaking space `\\u00a0` and em space `\\u2003`) are collapsed to single plain spaces in `display_label` while preserving stable-key behavior in `normalize_experiment_variant_label`.",
+        "title": "Add regression test for Unicode whitespace collapsing in `normalize_experiment_variant_label` in `tests/test_models.py`."
+      }
+    ]
+  },
+  "proposal_fingerprint": "50280bb4fed27f4c2901420d5495ce6a13dca21292a8c2604e7dc0be9a32e241",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 3,
+  "provider_plan_steps_sha256": "27e47e8d9389e2b98eaeb31defff00c56710d116d8a316a8cb09797fcbf49159",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "33353a2a13227a1e9b1087bf8a99ac27cd3065efeb2a71051d5ad7dab9f200d2",
+  "repository_context_fingerprint": "3d59c45fba2d62fbf34ca50d63aae96b4116c2d902edcc5c3b2f7be7f79d8887",
+  "repository_impact_analysis_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "caff7263596359de10ac06b62cc020a1a1903179276e05b2f9c02539b78837ee",
+  "repository_source_sha": "72f658d8a41639cc04d7b2220d1de6b1705a32fb",
+  "request": {
+    "allowed_path_prefixes": [
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "v1.4-runtime-verification-campaign-001",
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses Unicode whitespace such as non-breaking space and em space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "id_prefix": "v14rv1",
+    "max_tasks": 1,
+    "request_id": "v1.4-runtime-verification-proof-001",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "request_fingerprint": "dda84c79656d8f5a0c7cf1bb25fc8a2c6b4b2ee37676ad378270ce132cf0a9b9",
+  "schema_version": 1,
+  "task_ids": [
+    "v14rv1-001"
+  ]
+}
