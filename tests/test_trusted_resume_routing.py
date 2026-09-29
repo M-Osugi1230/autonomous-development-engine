@@ -74,6 +74,33 @@ class TrustedResumeRoutingTests(unittest.TestCase):
         )
         self.assertEqual(action, "NOOP")
 
+
+    def test_external_target_is_preserved_for_quota_resume(self) -> None:
+        module = load_trusted_module("jules_resume.py", "trusted_jules_resume_target_test")
+        target = module.resolve_resume_target(
+            {
+                "metadata": {
+                    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+                }
+            },
+            controller_owner="M-Osugi1230",
+            controller_repo="autonomous-development-engine",
+        )
+        self.assertEqual(
+            target,
+            "M-Osugi1230/one-minute-thought-experiments",
+        )
+
+        fallback = module.resolve_resume_target(
+            {"metadata": {}},
+            controller_owner="M-Osugi1230",
+            controller_repo="autonomous-development-engine",
+        )
+        self.assertEqual(
+            fallback,
+            "M-Osugi1230/autonomous-development-engine",
+        )
+
     def test_cloud_probe_helper(self) -> None:
         module = load_trusted_module("resume_probe.py", "trusted_resume_probe_test")
         result = module.run_probe()
