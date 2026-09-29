@@ -378,7 +378,7 @@ class JulesPlannerTests(unittest.TestCase):
         self.assertEqual(len(result["tasks"]), 1)
         self.assertEqual(provider.last_observed_state, "AWAITING_PLAN_APPROVAL")
         self.assertFalse(provider.last_execution_boundary_crossed)
-        self.assertEqual(provider.last_proposal_mode, "derived-plan-steps-fallback")
+        self.assertEqual(provider.last_proposal_mode, "derived-plan-steps")
 
     def test_completed_execution_boundary_violation_is_rejected(self):
         client = FakeClient(states=["COMPLETED"])
