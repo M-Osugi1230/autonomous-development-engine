@@ -111,6 +111,13 @@
       "occurred_at": "2026-09-29T10:40:18.510957+00:00",
       "summary": "Merged Jules PR #9",
       "task_id": "v12ext4-001"
+    },
+    {
+      "event_id": "pr-merged-11-049b1c8994d4",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-09-29T17:03:29.793327+00:00",
+      "summary": "Merged Jules PR #11",
+      "task_id": "v12ext6-001"
     }
   ],
   "schema_version": 1
