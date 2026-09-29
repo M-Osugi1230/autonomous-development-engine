@@ -93,9 +93,44 @@ class RuntimeProbeRegistryTests(unittest.TestCase):
                     target_repository="example/target",
                     source_sha=SHA,
                     environment="production",
+                    attempt=2,
+                    timeout_seconds=300,
+                    repository_write_authority=False,
+                    credential_authority=False,
+                    network_authority=False,
+                    deployment_authority=False,
                 )
             ],
         )
+
+    def test_registry_never_grants_runtime_authority(self) -> None:
+        seen: list[RuntimeProbeInvocation] = []
+
+        def runner(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+            seen.append(invocation)
+            return RuntimeProbeObservation(RuntimeProbeStatus.PASS)
+
+        registry = TrustedRuntimeProbeRegistry(
+            [RuntimeProbeRegistration("probe-a", "impl-a-v1", runner)]
+        )
+        custom = RuntimeVerificationContract(
+            verification_id="authority-proof",
+            target_repository="example/target",
+            source_sha=SHA,
+            environment="repository",
+            required_probe_ids=("probe-a",),
+            max_attempts=2,
+            timeout_seconds=17,
+        )
+        registry.execute(custom, probe_id="probe-a", attempt=2)
+        self.assertEqual(len(seen), 1)
+        invocation = seen[0]
+        self.assertEqual(invocation.attempt, 2)
+        self.assertEqual(invocation.timeout_seconds, 17)
+        self.assertFalse(invocation.repository_write_authority)
+        self.assertFalse(invocation.credential_authority)
+        self.assertFalse(invocation.network_authority)
+        self.assertFalse(invocation.deployment_authority)
 
     def test_probe_not_required_by_contract_is_rejected(self) -> None:
         def passed(_: RuntimeProbeInvocation) -> RuntimeProbeObservation:

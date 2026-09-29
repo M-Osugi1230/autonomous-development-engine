@@ -5,11 +5,17 @@ import os
 from pathlib import Path
 from typing import Any
 
-from ade.runtime_verification import RuntimeVerificationContract
+from ade.runtime_probe_executor import execute_runtime_verification_bounded
+from ade.runtime_verification import (
+    RuntimeVerificationContract,
+    RuntimeVerificationDisposition,
+)
 from ade.runtime_verification_trigger import (
     RuntimeVerificationReceipt,
     record_runtime_verification_dispatch,
+    record_runtime_verification_report,
     runtime_verification_paths,
+    runtime_verification_report_path,
 )
 from github_client import GitHubClient, GitHubError
 from runtime_probes import build_runtime_probe_registry
@@ -80,31 +86,61 @@ def main() -> int:
         )
 
         registry = build_runtime_probe_registry()
-        transition = record_runtime_verification_dispatch(
+        dispatch_transition = record_runtime_verification_dispatch(
             contract=contract,
             registry=registry,
             receipt=receipt,
         )
-        if transition.changed:
+        active_receipt = dispatch_transition.receipt
+        if dispatch_transition.changed:
             gh.upsert_json_file(
                 receipt_path,
-                transition.receipt.canonical_dict(),
+                active_receipt.canonical_dict(),
                 message=f"runtime: dispatched {receipt.verification_id}",
+            )
+
+        execution = execute_runtime_verification_bounded(
+            contract,
+            registry,
+        )
+        report_path = runtime_verification_report_path(active_receipt.task_id)
+        gh.upsert_json_file(
+            report_path,
+            execution.canonical_dict(),
+            message=f"runtime: report {active_receipt.verification_id}",
+        )
+        completion = record_runtime_verification_report(
+            contract=contract,
+            receipt=active_receipt,
+            report=execution.report,
+        )
+        if completion.changed:
+            gh.upsert_json_file(
+                receipt_path,
+                completion.receipt.canonical_dict(),
+                message=f"runtime: {completion.receipt.status.lower()} {completion.receipt.verification_id}",
             )
 
         result = {
             "schema_version": 1,
-            "state": "DISPATCHED" if transition.receipt.status == "DISPATCHED" else "NOOP",
-            "receipt_changed": transition.changed,
-            "task_id": transition.receipt.task_id,
-            "verification_id": transition.receipt.verification_id,
-            "target_repository": transition.receipt.target_repository,
-            "source_sha": transition.receipt.source_sha,
-            "dispatch_count": transition.receipt.dispatch_count,
-            "probe_execution_enabled": False,
+            "state": completion.receipt.status,
+            "receipt_changed": dispatch_transition.changed or completion.changed,
+            "task_id": completion.receipt.task_id,
+            "verification_id": completion.receipt.verification_id,
+            "target_repository": completion.receipt.target_repository,
+            "source_sha": completion.receipt.source_sha,
+            "dispatch_count": completion.receipt.dispatch_count,
+            "probe_execution_enabled": True,
+            "report_fingerprint": execution.report.fingerprint(),
+            "attempts_by_probe": [
+                {"probe_id": probe_id, "attempts": attempts}
+                for probe_id, attempts in execution.attempts_by_probe
+            ],
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
+        if execution.report.disposition is RuntimeVerificationDisposition.FAILED:
+            return 2
         return 0
     except (GitHubError, ValueError, OSError, json.JSONDecodeError) as exc:
         result = {

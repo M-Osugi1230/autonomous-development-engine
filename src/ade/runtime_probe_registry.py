@@ -19,6 +19,34 @@ class RuntimeProbeInvocation:
     target_repository: str
     source_sha: str
     environment: str
+    attempt: int = 1
+    timeout_seconds: int = 300
+    repository_write_authority: bool = False
+    credential_authority: bool = False
+    network_authority: bool = False
+    deployment_authority: bool = False
+
+    def __post_init__(self) -> None:
+        if type(self.attempt) is not int or self.attempt < 1:
+            raise RuntimeVerificationError(
+                "runtime probe invocation attempt must be positive"
+            )
+        if type(self.timeout_seconds) is not int or not 1 <= self.timeout_seconds <= 900:
+            raise RuntimeVerificationError(
+                "runtime probe invocation timeout must be between 1 and 900"
+            )
+        if any(
+            type(value) is not bool
+            for value in (
+                self.repository_write_authority,
+                self.credential_authority,
+                self.network_authority,
+                self.deployment_authority,
+            )
+        ):
+            raise RuntimeVerificationError(
+                "runtime probe authority flags must be booleans"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -151,6 +179,12 @@ class TrustedRuntimeProbeRegistry:
             target_repository=contract.target_repository,
             source_sha=contract.source_sha,
             environment=contract.environment,
+            attempt=attempt,
+            timeout_seconds=contract.timeout_seconds,
+            repository_write_authority=False,
+            credential_authority=False,
+            network_authority=False,
+            deployment_authority=False,
         )
         try:
             observation = registration.runner(invocation)

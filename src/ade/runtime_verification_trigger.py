@@ -8,7 +8,9 @@ from typing import Any
 from .runtime_probe_registry import TrustedRuntimeProbeRegistry
 from .runtime_verification import (
     RuntimeVerificationContract,
+    RuntimeVerificationDisposition,
     RuntimeVerificationError,
+    RuntimeVerificationReport,
 )
 
 
@@ -26,6 +28,12 @@ def runtime_verification_paths(task_id: str) -> tuple[str, str]:
         raise RuntimeVerificationError("task_id must be a safe identifier")
     prefix = f".autodev/runtime-verification/{task_id}"
     return f"{prefix}/contract.json", f"{prefix}/receipt.json"
+
+
+def runtime_verification_report_path(task_id: str) -> str:
+    contract_path, _ = runtime_verification_paths(task_id)
+    prefix = contract_path.removesuffix("/contract.json")
+    return f"{prefix}/report.json"
 
 
 @dataclass(frozen=True, slots=True)
@@ -356,4 +364,70 @@ def record_runtime_verification_dispatch(
         receipt=receipt,
         changed=False,
     )
+
+@dataclass(frozen=True, slots=True)
+class RuntimeVerificationCompletion:
+    receipt: RuntimeVerificationReceipt
+    changed: bool
+
+
+def record_runtime_verification_report(
+    *,
+    contract: RuntimeVerificationContract,
+    receipt: RuntimeVerificationReceipt,
+    report: RuntimeVerificationReport,
+) -> RuntimeVerificationCompletion:
+    if not isinstance(contract, RuntimeVerificationContract):
+        raise RuntimeVerificationError(
+            "contract must be a RuntimeVerificationContract"
+        )
+    if not isinstance(receipt, RuntimeVerificationReceipt):
+        raise RuntimeVerificationError(
+            "receipt must be a RuntimeVerificationReceipt"
+        )
+    if not isinstance(report, RuntimeVerificationReport):
+        raise RuntimeVerificationError(
+            "report must be a RuntimeVerificationReport"
+        )
+    if receipt.verification_id != contract.verification_id:
+        raise RuntimeVerificationError("runtime verification id drift")
+    if receipt.source_sha != contract.source_sha:
+        raise RuntimeVerificationError("runtime verification source SHA drift")
+    if receipt.contract_fingerprint != contract.fingerprint():
+        raise RuntimeVerificationError("runtime verification contract drift")
+    if report.verification_id != contract.verification_id:
+        raise RuntimeVerificationError("runtime verification report id drift")
+    if report.source_sha != contract.source_sha:
+        raise RuntimeVerificationError("runtime verification report source SHA drift")
+    if report.contract_fingerprint != contract.fingerprint():
+        raise RuntimeVerificationError(
+            "runtime verification report contract drift"
+        )
+
+    if receipt.status in {"VERIFIED", "FAILED", "HUMAN_WAIT"}:
+        return RuntimeVerificationCompletion(receipt=receipt, changed=False)
+    if receipt.status != "DISPATCHED":
+        raise RuntimeVerificationError(
+            "runtime verification report requires DISPATCHED receipt"
+        )
+
+    if report.disposition is RuntimeVerificationDisposition.VERIFIED:
+        status = "VERIFIED"
+    elif report.disposition is RuntimeVerificationDisposition.FAILED:
+        status = "FAILED"
+    else:
+        return RuntimeVerificationCompletion(receipt=receipt, changed=False)
+
+    completed = RuntimeVerificationReceipt(
+        verification_id=receipt.verification_id,
+        task_id=receipt.task_id,
+        target_repository=receipt.target_repository,
+        source_sha=receipt.source_sha,
+        contract_fingerprint=receipt.contract_fingerprint,
+        registry_fingerprint=receipt.registry_fingerprint,
+        policy_fingerprint=receipt.policy_fingerprint,
+        status=status,
+        dispatch_count=receipt.dispatch_count,
+    )
+    return RuntimeVerificationCompletion(receipt=completed, changed=True)
 
