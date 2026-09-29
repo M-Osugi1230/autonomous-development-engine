@@ -1,0 +1,2241 @@
+{
+  "content_summary": {
+    "module_count": 20,
+    "modules": [
+      {
+        "byte_count": 88,
+        "content_sha": "812b581de39ae675a0898b2f8e483a2fd02f1b43",
+        "imports": [],
+        "is_test": false,
+        "module": "thought_pipeline",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 5196,
+        "content_sha": "ff86496abe788fb3004b8a6a5a36da6b426d40cc",
+        "imports": [
+          ".errors",
+          ".models",
+          ".quality",
+          ".timeline",
+          "__future__",
+          "datetime",
+          "hashlib",
+          "json",
+          "pathlib"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.artifacts",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/artifacts.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_json"
+          },
+          {
+            "kind": "function",
+            "name": "_script_markdown"
+          },
+          {
+            "kind": "function",
+            "name": "source_digest"
+          },
+          {
+            "kind": "function",
+            "name": "write_artifacts"
+          }
+        ]
+      },
+      {
+        "byte_count": 1132,
+        "content_sha": "fa86544c0116b6955e5cc0865bbde79e39e4c6a1",
+        "imports": [
+          "dataclasses",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.audience",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/audience.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "AudienceLabelSummary"
+          },
+          {
+            "kind": "function",
+            "name": "normalize_audience_label"
+          }
+        ]
+      },
+      {
+        "byte_count": 11631,
+        "content_sha": "e267d50cfdad7191938aff422de3624d08279842",
+        "imports": [
+          ".errors",
+          ".media",
+          ".models",
+          "__future__",
+          "dataclasses",
+          "hashlib",
+          "json",
+          "os",
+          "pathlib",
+          "platform",
+          "shutil",
+          "subprocess",
+          "typing",
+          "wave"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.audio",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/audio.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "MacOSSystemVoiceProvider"
+          },
+          {
+            "kind": "class",
+            "name": "OpenAIVoiceProvider"
+          },
+          {
+            "kind": "class",
+            "name": "SilentVoiceProvider"
+          },
+          {
+            "kind": "class",
+            "name": "VoiceProvider"
+          },
+          {
+            "kind": "class",
+            "name": "VoiceTrackResult"
+          },
+          {
+            "kind": "function",
+            "name": "_audio_cache_key"
+          },
+          {
+            "kind": "function",
+            "name": "_is_cached_audio_valid"
+          },
+          {
+            "kind": "function",
+            "name": "build_voice_track"
+          },
+          {
+            "kind": "function",
+            "name": "concatenate_scene_wavs"
+          },
+          {
+            "kind": "function",
+            "name": "normalize_wav"
+          },
+          {
+            "kind": "function",
+            "name": "select_voice_provider"
+          },
+          {
+            "kind": "function",
+            "name": "wav_duration"
+          },
+          {
+            "kind": "function",
+            "name": "write_silence_wav"
+          }
+        ]
+      },
+      {
+        "byte_count": 10704,
+        "content_sha": "247db70a80418c00a0aec9b516dce2a39bcd4c35",
+        "imports": [
+          ".core",
+          ".errors",
+          ".models",
+          ".pdca",
+          ".providers",
+          ".quality",
+          ".render",
+          ".repository",
+          "__future__",
+          "argparse",
+          "dotenv",
+          "json",
+          "os",
+          "pathlib",
+          "pydantic",
+          "sys"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.cli",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/cli.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_generate"
+          },
+          {
+            "kind": "function",
+            "name": "_list"
+          },
+          {
+            "kind": "function",
+            "name": "_output_root"
+          },
+          {
+            "kind": "function",
+            "name": "_parser"
+          },
+          {
+            "kind": "function",
+            "name": "_pdca"
+          },
+          {
+            "kind": "function",
+            "name": "_print_report"
+          },
+          {
+            "kind": "function",
+            "name": "_prompt"
+          },
+          {
+            "kind": "function",
+            "name": "_render"
+          },
+          {
+            "kind": "function",
+            "name": "_validate"
+          },
+          {
+            "kind": "function",
+            "name": "main"
+          }
+        ]
+      },
+      {
+        "byte_count": 2701,
+        "content_sha": "28259528633164ab9dcd016a808fd5cc49a42dad",
+        "imports": [
+          ".artifacts",
+          ".errors",
+          ".prompting",
+          ".providers",
+          ".quality",
+          ".repository",
+          ".timeline",
+          "__future__",
+          "dataclasses",
+          "pathlib"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.core",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/core.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "Pipeline"
+          },
+          {
+            "kind": "class",
+            "name": "PipelineResult"
+          }
+        ]
+      },
+      {
+        "byte_count": 625,
+        "content_sha": "c54e44c72411f0f615779c1a491202eacdd7245f",
+        "imports": [],
+        "is_test": false,
+        "module": "thought_pipeline.errors",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/errors.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "ConfigurationError"
+          },
+          {
+            "kind": "class",
+            "name": "ContentNotFoundError"
+          },
+          {
+            "kind": "class",
+            "name": "GenerationError"
+          },
+          {
+            "kind": "class",
+            "name": "PipelineError"
+          },
+          {
+            "kind": "class",
+            "name": "QualityValidationError"
+          }
+        ]
+      },
+      {
+        "byte_count": 992,
+        "content_sha": "75493e45590f496fe8da55b6f64167166d8aa13e",
+        "imports": [
+          ".errors",
+          "__future__",
+          "pathlib",
+          "subprocess"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.media",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/media.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "ffmpeg_executable"
+          },
+          {
+            "kind": "function",
+            "name": "run_media_command"
+          }
+        ]
+      },
+      {
+        "byte_count": 10106,
+        "content_sha": "1c2807b560e8cdf86a42ef750f07dc46634c8932",
+        "imports": [
+          "__future__",
+          "dataclasses",
+          "enum",
+          "pydantic",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.models",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/models.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "BrandConfig"
+          },
+          {
+            "kind": "class",
+            "name": "BrandDuration"
+          },
+          {
+            "kind": "class",
+            "name": "CanvasConfig"
+          },
+          {
+            "kind": "class",
+            "name": "Choice"
+          },
+          {
+            "kind": "class",
+            "name": "ContentRules"
+          },
+          {
+            "kind": "class",
+            "name": "DurationRange"
+          },
+          {
+            "kind": "class",
+            "name": "Experiment"
+          },
+          {
+            "kind": "class",
+            "name": "ExperimentSeriesLabelSummary"
+          },
+          {
+            "kind": "class",
+            "name": "ExperimentTopicLabelSummary"
+          },
+          {
+            "kind": "class",
+            "name": "GeneratedPackage"
+          },
+          {
+            "kind": "class",
+            "name": "HookOption"
+          },
+          {
+            "kind": "class",
+            "name": "LLMConfig"
+          },
+          {
+            "kind": "class",
+            "name": "PaletteConfig"
+          },
+          {
+            "kind": "class",
+            "name": "PhilosophicalFocus"
+          },
+          {
+            "kind": "class",
+            "name": "PromptConfig"
+          },
+          {
+            "kind": "class",
+            "name": "RenderConfig"
+          },
+          {
+            "kind": "class",
+            "name": "SafeAreaConfig"
+          },
+          {
+            "kind": "class",
+            "name": "Scenario"
+          },
+          {
+            "kind": "class",
+            "name": "Scene"
+          },
+          {
+            "kind": "class",
+            "name": "ScenePurpose"
+          },
+          {
+            "kind": "class",
+            "name": "Source"
+          },
+          {
+            "kind": "class",
+            "name": "StrictModel"
+          },
+          {
+            "kind": "class",
+            "name": "SubtitleConfig"
+          },
+          {
+            "kind": "class",
+            "name": "TimelineConfig"
+          },
+          {
+            "kind": "class",
+            "name": "VideoConfig"
+          },
+          {
+            "kind": "class",
+            "name": "VoiceConfig"
+          },
+          {
+            "kind": "class",
+            "name": "VoiceNormalization"
+          },
+          {
+            "kind": "function",
+            "name": "normalize_experiment_series_label"
+          },
+          {
+            "kind": "function",
+            "name": "normalize_experiment_topic_label"
+          }
+        ]
+      },
+      {
+        "byte_count": 11791,
+        "content_sha": "8691b6de1224aecdda4ae0be82288c7bd44c8d6d",
+        "imports": [
+          ".errors",
+          ".models",
+          ".providers",
+          ".repository",
+          ".timeline",
+          "__future__",
+          "csv",
+          "dataclasses",
+          "datetime",
+          "json",
+          "pathlib",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.pdca",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/pdca.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "PdcaResult"
+          },
+          {
+            "kind": "class",
+            "name": "VersionMetrics"
+          },
+          {
+            "kind": "function",
+            "name": "_delta"
+          },
+          {
+            "kind": "function",
+            "name": "_hypotheses"
+          },
+          {
+            "kind": "function",
+            "name": "_markdown"
+          },
+          {
+            "kind": "function",
+            "name": "_metrics"
+          },
+          {
+            "kind": "function",
+            "name": "_optional_json"
+          },
+          {
+            "kind": "function",
+            "name": "_optional_json_list"
+          },
+          {
+            "kind": "function",
+            "name": "_seconds"
+          },
+          {
+            "kind": "function",
+            "name": "_write_log_template"
+          },
+          {
+            "kind": "function",
+            "name": "build_pdca_packet"
+          }
+        ]
+      },
+      {
+        "byte_count": 815,
+        "content_sha": "cfdaedbd5754a1ec9956a502f4618dc04d85f8f3",
+        "imports": [
+          ".models",
+          "__future__",
+          "dataclasses",
+          "yaml"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.prompting",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/prompting.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "BuiltPrompt"
+          },
+          {
+            "kind": "function",
+            "name": "_yaml_text"
+          },
+          {
+            "kind": "function",
+            "name": "build_prompt"
+          }
+        ]
+      },
+      {
+        "byte_count": 3930,
+        "content_sha": "9672607bc776968497210f53e30bf7d82c698f18",
+        "imports": [
+          ".errors",
+          ".models",
+          ".prompting",
+          "__future__",
+          "json",
+          "os",
+          "pathlib",
+          "pydantic",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.providers",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/providers.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "OfflineGoldenProvider"
+          },
+          {
+            "kind": "class",
+            "name": "OpenAIStructuredProvider"
+          },
+          {
+            "kind": "class",
+            "name": "ScriptProvider"
+          },
+          {
+            "kind": "function",
+            "name": "_find_refusal"
+          }
+        ]
+      },
+      {
+        "byte_count": 10125,
+        "content_sha": "ce560c30da03c6a57b0a5051940fe5863a834d1a",
+        "imports": [
+          ".models",
+          "__future__",
+          "dataclasses",
+          "re"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.quality",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/quality.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "ValidationIssue"
+          },
+          {
+            "kind": "class",
+            "name": "ValidationReport"
+          },
+          {
+            "kind": "function",
+            "name": "_normalized"
+          },
+          {
+            "kind": "function",
+            "name": "validate_generated_package"
+          }
+        ]
+      },
+      {
+        "byte_count": 8776,
+        "content_sha": "316af371d4944bab692224c17cf5118539d5ae0f",
+        "imports": [
+          ".audio",
+          ".errors",
+          ".media",
+          ".models",
+          ".quality",
+          ".repository",
+          ".soundbed",
+          ".timeline",
+          ".visuals",
+          "__future__",
+          "dataclasses",
+          "datetime",
+          "json",
+          "pathlib",
+          "pydantic"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.render",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/render.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "RenderResult"
+          },
+          {
+            "kind": "function",
+            "name": "_json"
+          },
+          {
+            "kind": "function",
+            "name": "_write_publish_caption"
+          },
+          {
+            "kind": "function",
+            "name": "encode_video"
+          },
+          {
+            "kind": "function",
+            "name": "render_phase2"
+          }
+        ]
+      },
+      {
+        "byte_count": 4229,
+        "content_sha": "3bd2a2db654f2be60749041fe2575c8864c0170e",
+        "imports": [
+          ".errors",
+          ".models",
+          "__future__",
+          "dataclasses",
+          "pathlib",
+          "pydantic",
+          "typing",
+          "yaml"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.repository",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/repository.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "ExperimentRecord"
+          },
+          {
+            "kind": "class",
+            "name": "ProjectRepository"
+          }
+        ]
+      },
+      {
+        "byte_count": 5290,
+        "content_sha": "790b58e85b80cb8cd2d077f742144c8913643ac3",
+        "imports": [
+          ".timeline",
+          "__future__",
+          "array",
+          "dataclasses",
+          "json",
+          "math",
+          "pathlib",
+          "wave"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.soundbed",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/soundbed.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "SoundCue"
+          },
+          {
+            "kind": "class",
+            "name": "SoundbedResult"
+          },
+          {
+            "kind": "function",
+            "name": "_editorial_cues"
+          },
+          {
+            "kind": "function",
+            "name": "_effect_sample"
+          },
+          {
+            "kind": "function",
+            "name": "_pulse"
+          },
+          {
+            "kind": "function",
+            "name": "build_soundbed"
+          }
+        ]
+      },
+      {
+        "byte_count": 5740,
+        "content_sha": "b83981b77ae7ed8e5e728b0d8280f50c78c69e81",
+        "imports": [
+          ".models",
+          "__future__",
+          "dataclasses",
+          "re"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.timeline",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/timeline.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "SubtitleCue"
+          },
+          {
+            "kind": "class",
+            "name": "TimelineScene"
+          },
+          {
+            "kind": "function",
+            "name": "_compact"
+          },
+          {
+            "kind": "function",
+            "name": "_srt_time"
+          },
+          {
+            "kind": "function",
+            "name": "_subtitle_chunks"
+          },
+          {
+            "kind": "function",
+            "name": "_wrap_lines"
+          },
+          {
+            "kind": "function",
+            "name": "build_srt"
+          },
+          {
+            "kind": "function",
+            "name": "build_subtitle_cues"
+          },
+          {
+            "kind": "function",
+            "name": "build_timeline"
+          },
+          {
+            "kind": "function",
+            "name": "build_timeline_from_durations"
+          }
+        ]
+      },
+      {
+        "byte_count": 22011,
+        "content_sha": "d9942067f06358034f89a9c79649ef4c91f643c0",
+        "imports": [
+          ".errors",
+          ".models",
+          ".timeline",
+          "PIL",
+          "__future__",
+          "dataclasses",
+          "math",
+          "os",
+          "pathlib"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.visuals",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/visuals.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "FontSet"
+          },
+          {
+            "kind": "class",
+            "name": "VisualResult"
+          },
+          {
+            "kind": "function",
+            "name": "_background"
+          },
+          {
+            "kind": "function",
+            "name": "_center_text"
+          },
+          {
+            "kind": "function",
+            "name": "_choice_panel"
+          },
+          {
+            "kind": "function",
+            "name": "_draw_subtitle"
+          },
+          {
+            "kind": "function",
+            "name": "_ease"
+          },
+          {
+            "kind": "function",
+            "name": "_fonts"
+          },
+          {
+            "kind": "function",
+            "name": "_lever"
+          },
+          {
+            "kind": "function",
+            "name": "_person"
+          },
+          {
+            "kind": "function",
+            "name": "_rgb"
+          },
+          {
+            "kind": "function",
+            "name": "_scene_card"
+          },
+          {
+            "kind": "function",
+            "name": "_storyboard"
+          },
+          {
+            "kind": "function",
+            "name": "_template_art"
+          },
+          {
+            "kind": "function",
+            "name": "_track"
+          },
+          {
+            "kind": "function",
+            "name": "_trolley"
+          },
+          {
+            "kind": "function",
+            "name": "_wrap_pixels"
+          },
+          {
+            "kind": "function",
+            "name": "_write_concat"
+          },
+          {
+            "kind": "function",
+            "name": "render_visuals"
+          },
+          {
+            "kind": "function",
+            "name": "resolve_font_path"
+          }
+        ]
+      },
+      {
+        "byte_count": 155,
+        "content_sha": "0e5ee548cc0a3663f6e95a6b3d78fe86f92a972d",
+        "imports": [
+          "__future__",
+          "pathlib",
+          "sys"
+        ],
+        "is_test": true,
+        "module": "tests.conftest",
+        "parse_ok": true,
+        "path": "tests/conftest.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 4130,
+        "content_sha": "4e8b97869eeccc1d30d9e68360956d3eac21b6fb",
+        "imports": [
+          "__future__",
+          "importlib.util",
+          "os",
+          "pathlib",
+          "pytest",
+          "types"
+        ],
+        "is_test": true,
+        "module": "tests.test_ade_remote_gate",
+        "parse_ok": true,
+        "path": "tests/test_ade_remote_gate.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_pr"
+          },
+          {
+            "kind": "function",
+            "name": "test_pr_file_listing_fetches_all_pages"
+          },
+          {
+            "kind": "function",
+            "name": "test_remote_receipt_is_authoritative_task_pr_binding"
+          },
+          {
+            "kind": "function",
+            "name": "test_validate_pr_accepts_only_exact_allowed_files"
+          },
+          {
+            "kind": "function",
+            "name": "test_validate_pr_requires_exact_ci_head_sha"
+          }
+        ]
+      }
+    ],
+    "schema_version": 1
+  },
+  "content_summary_fingerprint": "fea5b0baf91ddc8f5703a927010e30859b84212b6abf54712c553f67537960a0",
+  "impact_analysis": {
+    "affected_paths": [
+      "src/thought_pipeline/artifacts.py",
+      "src/thought_pipeline/audio.py",
+      "src/thought_pipeline/cli.py",
+      "src/thought_pipeline/pdca.py",
+      "src/thought_pipeline/prompting.py",
+      "src/thought_pipeline/providers.py",
+      "src/thought_pipeline/quality.py",
+      "src/thought_pipeline/render.py",
+      "src/thought_pipeline/repository.py",
+      "src/thought_pipeline/timeline.py",
+      "src/thought_pipeline/visuals.py",
+      "src/thought_pipeline/core.py",
+      "src/thought_pipeline/soundbed.py"
+    ],
+    "affected_test_paths": [],
+    "changed_paths": [
+      "src/thought_pipeline/models.py",
+      "tests/test_models.py"
+    ],
+    "entries": [
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "src/thought_pipeline/models.py",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": true,
+        "path": "tests/test_models.py",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/artifacts.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/audio.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/cli.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/pdca.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/prompting.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/providers.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/quality.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/render.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/repository.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/timeline.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 1,
+        "is_test": false,
+        "path": "src/thought_pipeline/visuals.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "distance": 2,
+        "is_test": false,
+        "path": "src/thought_pipeline/core.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/artifacts.py"
+      },
+      {
+        "distance": 2,
+        "is_test": false,
+        "path": "src/thought_pipeline/soundbed.py",
+        "reason": "reverse-import",
+        "via_path": "src/thought_pipeline/timeline.py"
+      }
+    ],
+    "schema_version": 1,
+    "truncated": false
+  },
+  "impact_analysis_fingerprint": "fed3dd7e202af3bd418cdeb603e653932f7937cd94d8080741081bcd3b16ffb7",
+  "planner_context": {
+    "base_branch": "main",
+    "content_summary_fingerprint": "fea5b0baf91ddc8f5703a927010e30859b84212b6abf54712c553f67537960a0",
+    "content_summary_module_count": 20,
+    "dependency_edges_truncated": true,
+    "documentation_paths": [
+      "README.md",
+      "analytics/README.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_7_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_8_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_9_ADDENDUM.md",
+      "docs/TIKTOK_ANALYTICS_AUTOMATION.md"
+    ],
+    "internal_dependency_edge_count": 49,
+    "internal_dependency_edges": [],
+    "known_file_count_within_trusted_roots": 31,
+    "known_files_truncated": false,
+    "known_files_within_trusted_roots": [
+      "src/thought_pipeline/__init__.py",
+      "src/thought_pipeline/artifacts.py",
+      "src/thought_pipeline/audience.py",
+      "src/thought_pipeline/audio.py",
+      "src/thought_pipeline/cli.py",
+      "src/thought_pipeline/core.py",
+      "src/thought_pipeline/errors.py",
+      "src/thought_pipeline/media.py",
+      "src/thought_pipeline/models.py",
+      "src/thought_pipeline/pdca.py",
+      "src/thought_pipeline/prompting.py",
+      "src/thought_pipeline/providers.py",
+      "src/thought_pipeline/quality.py",
+      "src/thought_pipeline/render.py",
+      "src/thought_pipeline/repository.py",
+      "src/thought_pipeline/soundbed.py",
+      "src/thought_pipeline/timeline.py",
+      "src/thought_pipeline/visuals.py",
+      "tests/conftest.py",
+      "tests/test_ade_remote_gate.py",
+      "tests/test_audience.py",
+      "tests/test_audio.py",
+      "tests/test_fast44.py",
+      "tests/test_models.py",
+      "tests/test_openai_provider.py",
+      "tests/test_pdca.py",
+      "tests/test_pipeline.py",
+      "tests/test_quality.py",
+      "tests/test_repository.py",
+      "tests/test_video_encode.py",
+      "tests/test_visuals.py"
+    ],
+    "manifest_paths": [
+      "pyproject.toml",
+      "requirements.txt"
+    ],
+    "python_module_summaries": [
+      {
+        "byte_count": 88,
+        "content_sha": "812b581de39ae675a0898b2f8e483a2fd02f1b43",
+        "imports": [],
+        "is_test": false,
+        "module": "thought_pipeline",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 5196,
+        "content_sha": "ff86496abe788fb3004b8a6a5a36da6b426d40cc",
+        "imports": [
+          ".errors",
+          ".models",
+          ".quality",
+          ".timeline",
+          "__future__",
+          "datetime",
+          "hashlib",
+          "json",
+          "pathlib"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.artifacts",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/artifacts.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_json"
+          },
+          {
+            "kind": "function",
+            "name": "_script_markdown"
+          },
+          {
+            "kind": "function",
+            "name": "source_digest"
+          },
+          {
+            "kind": "function",
+            "name": "write_artifacts"
+          }
+        ]
+      },
+      {
+        "byte_count": 1132,
+        "content_sha": "fa86544c0116b6955e5cc0865bbde79e39e4c6a1",
+        "imports": [
+          "dataclasses",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.audience",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/audience.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "AudienceLabelSummary"
+          },
+          {
+            "kind": "function",
+            "name": "normalize_audience_label"
+          }
+        ]
+      },
+      {
+        "byte_count": 11631,
+        "content_sha": "e267d50cfdad7191938aff422de3624d08279842",
+        "imports": [
+          ".errors",
+          ".media",
+          ".models",
+          "__future__",
+          "dataclasses",
+          "hashlib",
+          "json",
+          "os",
+          "pathlib",
+          "platform",
+          "shutil",
+          "subprocess",
+          "typing",
+          "wave"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.audio",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/audio.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "MacOSSystemVoiceProvider"
+          },
+          {
+            "kind": "class",
+            "name": "OpenAIVoiceProvider"
+          },
+          {
+            "kind": "class",
+            "name": "SilentVoiceProvider"
+          },
+          {
+            "kind": "class",
+            "name": "VoiceProvider"
+          },
+          {
+            "kind": "class",
+            "name": "VoiceTrackResult"
+          },
+          {
+            "kind": "function",
+            "name": "_audio_cache_key"
+          },
+          {
+            "kind": "function",
+            "name": "_is_cached_audio_valid"
+          },
+          {
+            "kind": "function",
+            "name": "build_voice_track"
+          },
+          {
+            "kind": "function",
+            "name": "concatenate_scene_wavs"
+          },
+          {
+            "kind": "function",
+            "name": "normalize_wav"
+          },
+          {
+            "kind": "function",
+            "name": "select_voice_provider"
+          },
+          {
+            "kind": "function",
+            "name": "wav_duration"
+          },
+          {
+            "kind": "function",
+            "name": "write_silence_wav"
+          }
+        ]
+      },
+      {
+        "byte_count": 10704,
+        "content_sha": "247db70a80418c00a0aec9b516dce2a39bcd4c35",
+        "imports": [
+          ".core",
+          ".errors",
+          ".models",
+          ".pdca",
+          ".providers",
+          ".quality",
+          ".render",
+          ".repository",
+          "__future__",
+          "argparse",
+          "dotenv",
+          "json",
+          "os",
+          "pathlib",
+          "pydantic",
+          "sys"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.cli",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/cli.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_generate"
+          },
+          {
+            "kind": "function",
+            "name": "_list"
+          },
+          {
+            "kind": "function",
+            "name": "_output_root"
+          },
+          {
+            "kind": "function",
+            "name": "_parser"
+          },
+          {
+            "kind": "function",
+            "name": "_pdca"
+          },
+          {
+            "kind": "function",
+            "name": "_print_report"
+          },
+          {
+            "kind": "function",
+            "name": "_prompt"
+          },
+          {
+            "kind": "function",
+            "name": "_render"
+          },
+          {
+            "kind": "function",
+            "name": "_validate"
+          },
+          {
+            "kind": "function",
+            "name": "main"
+          }
+        ]
+      },
+      {
+        "byte_count": 2701,
+        "content_sha": "28259528633164ab9dcd016a808fd5cc49a42dad",
+        "imports": [
+          ".artifacts",
+          ".errors",
+          ".prompting",
+          ".providers",
+          ".quality",
+          ".repository",
+          ".timeline",
+          "__future__",
+          "dataclasses",
+          "pathlib"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.core",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/core.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "Pipeline"
+          },
+          {
+            "kind": "class",
+            "name": "PipelineResult"
+          }
+        ]
+      },
+      {
+        "byte_count": 625,
+        "content_sha": "c54e44c72411f0f615779c1a491202eacdd7245f",
+        "imports": [],
+        "is_test": false,
+        "module": "thought_pipeline.errors",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/errors.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "ConfigurationError"
+          },
+          {
+            "kind": "class",
+            "name": "ContentNotFoundError"
+          },
+          {
+            "kind": "class",
+            "name": "GenerationError"
+          },
+          {
+            "kind": "class",
+            "name": "PipelineError"
+          },
+          {
+            "kind": "class",
+            "name": "QualityValidationError"
+          }
+        ]
+      },
+      {
+        "byte_count": 992,
+        "content_sha": "75493e45590f496fe8da55b6f64167166d8aa13e",
+        "imports": [
+          ".errors",
+          "__future__",
+          "pathlib",
+          "subprocess"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.media",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/media.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "ffmpeg_executable"
+          },
+          {
+            "kind": "function",
+            "name": "run_media_command"
+          }
+        ]
+      },
+      {
+        "byte_count": 10106,
+        "content_sha": "1c2807b560e8cdf86a42ef750f07dc46634c8932",
+        "imports": [
+          "__future__",
+          "dataclasses",
+          "enum",
+          "pydantic",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.models",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/models.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "BrandConfig"
+          },
+          {
+            "kind": "class",
+            "name": "BrandDuration"
+          },
+          {
+            "kind": "class",
+            "name": "CanvasConfig"
+          },
+          {
+            "kind": "class",
+            "name": "Choice"
+          },
+          {
+            "kind": "class",
+            "name": "ContentRules"
+          },
+          {
+            "kind": "class",
+            "name": "DurationRange"
+          },
+          {
+            "kind": "class",
+            "name": "Experiment"
+          },
+          {
+            "kind": "class",
+            "name": "ExperimentSeriesLabelSummary"
+          },
+          {
+            "kind": "class",
+            "name": "ExperimentTopicLabelSummary"
+          },
+          {
+            "kind": "class",
+            "name": "GeneratedPackage"
+          },
+          {
+            "kind": "class",
+            "name": "HookOption"
+          },
+          {
+            "kind": "class",
+            "name": "LLMConfig"
+          },
+          {
+            "kind": "class",
+            "name": "PaletteConfig"
+          },
+          {
+            "kind": "class",
+            "name": "PhilosophicalFocus"
+          },
+          {
+            "kind": "class",
+            "name": "PromptConfig"
+          },
+          {
+            "kind": "class",
+            "name": "RenderConfig"
+          },
+          {
+            "kind": "class",
+            "name": "SafeAreaConfig"
+          },
+          {
+            "kind": "class",
+            "name": "Scenario"
+          },
+          {
+            "kind": "class",
+            "name": "Scene"
+          },
+          {
+            "kind": "class",
+            "name": "ScenePurpose"
+          },
+          {
+            "kind": "class",
+            "name": "Source"
+          },
+          {
+            "kind": "class",
+            "name": "StrictModel"
+          },
+          {
+            "kind": "class",
+            "name": "SubtitleConfig"
+          },
+          {
+            "kind": "class",
+            "name": "TimelineConfig"
+          },
+          {
+            "kind": "class",
+            "name": "VideoConfig"
+          },
+          {
+            "kind": "class",
+            "name": "VoiceConfig"
+          },
+          {
+            "kind": "class",
+            "name": "VoiceNormalization"
+          },
+          {
+            "kind": "function",
+            "name": "normalize_experiment_series_label"
+          },
+          {
+            "kind": "function",
+            "name": "normalize_experiment_topic_label"
+          }
+        ]
+      },
+      {
+        "byte_count": 11791,
+        "content_sha": "8691b6de1224aecdda4ae0be82288c7bd44c8d6d",
+        "imports": [
+          ".errors",
+          ".models",
+          ".providers",
+          ".repository",
+          ".timeline",
+          "__future__",
+          "csv",
+          "dataclasses",
+          "datetime",
+          "json",
+          "pathlib",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.pdca",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/pdca.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "PdcaResult"
+          },
+          {
+            "kind": "class",
+            "name": "VersionMetrics"
+          },
+          {
+            "kind": "function",
+            "name": "_delta"
+          },
+          {
+            "kind": "function",
+            "name": "_hypotheses"
+          },
+          {
+            "kind": "function",
+            "name": "_markdown"
+          },
+          {
+            "kind": "function",
+            "name": "_metrics"
+          },
+          {
+            "kind": "function",
+            "name": "_optional_json"
+          },
+          {
+            "kind": "function",
+            "name": "_optional_json_list"
+          },
+          {
+            "kind": "function",
+            "name": "_seconds"
+          },
+          {
+            "kind": "function",
+            "name": "_write_log_template"
+          },
+          {
+            "kind": "function",
+            "name": "build_pdca_packet"
+          }
+        ]
+      },
+      {
+        "byte_count": 815,
+        "content_sha": "cfdaedbd5754a1ec9956a502f4618dc04d85f8f3",
+        "imports": [
+          ".models",
+          "__future__",
+          "dataclasses",
+          "yaml"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.prompting",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/prompting.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "BuiltPrompt"
+          },
+          {
+            "kind": "function",
+            "name": "_yaml_text"
+          },
+          {
+            "kind": "function",
+            "name": "build_prompt"
+          }
+        ]
+      },
+      {
+        "byte_count": 3930,
+        "content_sha": "9672607bc776968497210f53e30bf7d82c698f18",
+        "imports": [
+          ".errors",
+          ".models",
+          ".prompting",
+          "__future__",
+          "json",
+          "os",
+          "pathlib",
+          "pydantic",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.providers",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/providers.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "OfflineGoldenProvider"
+          },
+          {
+            "kind": "class",
+            "name": "OpenAIStructuredProvider"
+          },
+          {
+            "kind": "class",
+            "name": "ScriptProvider"
+          },
+          {
+            "kind": "function",
+            "name": "_find_refusal"
+          }
+        ]
+      },
+      {
+        "byte_count": 10125,
+        "content_sha": "ce560c30da03c6a57b0a5051940fe5863a834d1a",
+        "imports": [
+          ".models",
+          "__future__",
+          "dataclasses",
+          "re"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.quality",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/quality.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "ValidationIssue"
+          },
+          {
+            "kind": "class",
+            "name": "ValidationReport"
+          },
+          {
+            "kind": "function",
+            "name": "_normalized"
+          },
+          {
+            "kind": "function",
+            "name": "validate_generated_package"
+          }
+        ]
+      },
+      {
+        "byte_count": 8776,
+        "content_sha": "316af371d4944bab692224c17cf5118539d5ae0f",
+        "imports": [
+          ".audio",
+          ".errors",
+          ".media",
+          ".models",
+          ".quality",
+          ".repository",
+          ".soundbed",
+          ".timeline",
+          ".visuals",
+          "__future__",
+          "dataclasses",
+          "datetime",
+          "json",
+          "pathlib",
+          "pydantic"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.render",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/render.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "RenderResult"
+          },
+          {
+            "kind": "function",
+            "name": "_json"
+          },
+          {
+            "kind": "function",
+            "name": "_write_publish_caption"
+          },
+          {
+            "kind": "function",
+            "name": "encode_video"
+          },
+          {
+            "kind": "function",
+            "name": "render_phase2"
+          }
+        ]
+      },
+      {
+        "byte_count": 4229,
+        "content_sha": "3bd2a2db654f2be60749041fe2575c8864c0170e",
+        "imports": [
+          ".errors",
+          ".models",
+          "__future__",
+          "dataclasses",
+          "pathlib",
+          "pydantic",
+          "typing",
+          "yaml"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.repository",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/repository.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "ExperimentRecord"
+          },
+          {
+            "kind": "class",
+            "name": "ProjectRepository"
+          }
+        ]
+      },
+      {
+        "byte_count": 5290,
+        "content_sha": "790b58e85b80cb8cd2d077f742144c8913643ac3",
+        "imports": [
+          ".timeline",
+          "__future__",
+          "array",
+          "dataclasses",
+          "json",
+          "math",
+          "pathlib",
+          "wave"
+        ],
+        "is_test": false,
+        "module": "thought_pipeline.soundbed",
+        "parse_ok": true,
+        "path": "src/thought_pipeline/soundbed.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "SoundCue"
+          },
+          {
+            "kind": "class",
+            "name": "SoundbedResult"
+          },
+          {
+            "kind": "function",
+            "name": "_editorial_cues"
+          },
+          {
+            "kind": "function",
+            "name": "_effect_sample"
+          },
+          {
+            "kind": "function",
+            "name": "_pulse"
+          },
+          {
+            "kind": "function",
+            "name": "build_soundbed"
+          }
+        ]
+      }
+    ],
+    "python_module_summaries_truncated": true,
+    "relationship_graph_fingerprint": "281220564efef545022123a8cca32106ce8ca7a21c1c63452664028b36c37a91",
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "schema_version": 1,
+    "snapshot_fingerprint": "2e3c00cef3eed75cd610a66f9f0d3633061e9eed7e7c94f4903c17b20b003319",
+    "source_roots": [
+      "src"
+    ],
+    "source_sha": "0782824b8203728bb13b747bb4c90bddc1ceac23",
+    "test_roots": [
+      "tests"
+    ],
+    "test_source_link_count": 0,
+    "test_source_links": [],
+    "test_source_links_truncated": false,
+    "trusted_writable_roots": [
+      "src/thought_pipeline",
+      "tests"
+    ],
+    "workflow_paths": [
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/tiktok-analytics-ci.yml",
+      ".github/workflows/tiktok-analytics.yml"
+    ]
+  },
+  "planner_context_fingerprint": "7b9649e8d5fe0754e56c3e540b9bb44c5f8ada2235ce8eb61f19634f518196dc",
+  "relationship_graph": {
+    "dependency_edge_count": 49,
+    "dependency_edges": [
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/artifacts.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/artifacts.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/artifacts.py",
+        "target_path": "src/thought_pipeline/quality.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/artifacts.py",
+        "target_path": "src/thought_pipeline/timeline.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/audio.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/audio.py",
+        "target_path": "src/thought_pipeline/media.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/audio.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/cli.py",
+        "target_path": "src/thought_pipeline/core.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/cli.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/cli.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/cli.py",
+        "target_path": "src/thought_pipeline/pdca.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/cli.py",
+        "target_path": "src/thought_pipeline/providers.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/cli.py",
+        "target_path": "src/thought_pipeline/quality.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/cli.py",
+        "target_path": "src/thought_pipeline/render.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/cli.py",
+        "target_path": "src/thought_pipeline/repository.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/core.py",
+        "target_path": "src/thought_pipeline/artifacts.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/core.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/core.py",
+        "target_path": "src/thought_pipeline/prompting.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/core.py",
+        "target_path": "src/thought_pipeline/providers.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/core.py",
+        "target_path": "src/thought_pipeline/quality.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/core.py",
+        "target_path": "src/thought_pipeline/repository.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/core.py",
+        "target_path": "src/thought_pipeline/timeline.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/media.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/pdca.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/pdca.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/pdca.py",
+        "target_path": "src/thought_pipeline/providers.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/pdca.py",
+        "target_path": "src/thought_pipeline/repository.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/pdca.py",
+        "target_path": "src/thought_pipeline/timeline.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/prompting.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/providers.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/providers.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/providers.py",
+        "target_path": "src/thought_pipeline/prompting.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/quality.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/audio.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/media.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/quality.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/repository.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/soundbed.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/timeline.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/render.py",
+        "target_path": "src/thought_pipeline/visuals.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/repository.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/repository.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/soundbed.py",
+        "target_path": "src/thought_pipeline/timeline.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/timeline.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/visuals.py",
+        "target_path": "src/thought_pipeline/errors.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/visuals.py",
+        "target_path": "src/thought_pipeline/models.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "src/thought_pipeline/visuals.py",
+        "target_path": "src/thought_pipeline/timeline.py"
+      }
+    ],
+    "schema_version": 1,
+    "test_source_link_count": 0,
+    "test_source_links": []
+  },
+  "relationship_graph_fingerprint": "281220564efef545022123a8cca32106ce8ca7a21c1c63452664028b36c37a91",
+  "schema_version": 1,
+  "snapshot": {
+    "base_branch": "main",
+    "documentation_paths": [
+      "README.md",
+      "analytics/README.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_7_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_8_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_9_ADDENDUM.md",
+      "docs/TIKTOK_ANALYTICS_AUTOMATION.md"
+    ],
+    "manifest_paths": [
+      "pyproject.toml",
+      "requirements.txt"
+    ],
+    "path_count": 83,
+    "paths": [
+      ".env.example",
+      ".github/trusted/ade_remote_gate.py",
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/tiktok-analytics-ci.yml",
+      ".github/workflows/tiktok-analytics.yml",
+      ".gitignore",
+      "README.md",
+      "analytics/README.md",
+      "analytics/manual/2026-08-31-baseline.json",
+      "assets/fonts/.gitkeep",
+      "assets/icons/.gitkeep",
+      "assets/music/.gitkeep",
+      "assets/sfx/.gitkeep",
+      "cache/.gitkeep",
+      "config/brand.yaml",
+      "config/llm.yaml",
+      "config/prompts.yaml",
+      "config/video.yaml",
+      "config/voice.yaml",
+      "content/experiments.yaml",
+      "content/experiments/001_trolley_problem.yaml",
+      "content/experiments/002_ship_of_theseus.yaml",
+      "content/experiments/003_brain_in_a_vat.yaml",
+      "content/experiments/011_violinist.yaml",
+      "content/experiments/015_five_minute_hypothesis.yaml",
+      "content/experiments/045_prisoners_dilemma.yaml",
+      "content/golden/001.json",
+      "content/golden/carousel/002.json",
+      "content/golden/variants/fast44/001.json",
+      "content/publishing/001_trolley_problem.md",
+      "content/publishing/002_ship_of_theseus.md",
+      "content/publishing/011_violinist.md",
+      "content/publishing/015_five_minute_hypothesis.md",
+      "content/publishing/015_hedgehog_dilemma.md",
+      "content/publishing/045_prisoners_dilemma.md",
+      "content/publishing/_template.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_7_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_8_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_9_ADDENDUM.md",
+      "docs/TIKTOK_ANALYTICS_AUTOMATION.md",
+      "output/.gitkeep",
+      "pipeline.py",
+      "pyproject.toml",
+      "requirements.txt",
+      "scripts/runtime_hygiene.py",
+      "scripts/tiktok_analytics.py",
+      "scripts/tiktok_report.py",
+      "src/thought_pipeline/__init__.py",
+      "src/thought_pipeline/artifacts.py",
+      "src/thought_pipeline/audience.py",
+      "src/thought_pipeline/audio.py",
+      "src/thought_pipeline/cli.py",
+      "src/thought_pipeline/core.py",
+      "src/thought_pipeline/errors.py",
+      "src/thought_pipeline/media.py",
+      "src/thought_pipeline/models.py",
+      "src/thought_pipeline/pdca.py",
+      "src/thought_pipeline/prompting.py",
+      "src/thought_pipeline/providers.py",
+      "src/thought_pipeline/quality.py",
+      "src/thought_pipeline/render.py",
+      "src/thought_pipeline/repository.py",
+      "src/thought_pipeline/soundbed.py",
+      "src/thought_pipeline/timeline.py",
+      "src/thought_pipeline/visuals.py",
+      "templates/binary_choice/template.yaml",
+      "templates/mystery/.gitkeep",
+      "templates/pov/.gitkeep",
+      "tests/conftest.py",
+      "tests/test_ade_remote_gate.py",
+      "tests/test_audience.py",
+      "tests/test_audio.py",
+      "tests/test_fast44.py",
+      "tests/test_models.py",
+      "tests/test_openai_provider.py",
+      "tests/test_pdca.py",
+      "tests/test_pipeline.py",
+      "tests/test_quality.py",
+      "tests/test_repository.py",
+      "tests/test_video_encode.py",
+      "tests/test_visuals.py"
+    ],
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "schema_version": 1,
+    "source_roots": [
+      "src"
+    ],
+    "source_sha": "0782824b8203728bb13b747bb4c90bddc1ceac23",
+    "test_roots": [
+      "tests"
+    ],
+    "workflow_paths": [
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/tiktok-analytics-ci.yml",
+      ".github/workflows/tiktok-analytics.yml"
+    ]
+  },
+  "snapshot_fingerprint": "2e3c00cef3eed75cd610a66f9f0d3633061e9eed7e7c94f4903c17b20b003319"
+}
