@@ -36,6 +36,12 @@ def runtime_verification_report_path(task_id: str) -> str:
     return f"{prefix}/report.json"
 
 
+def runtime_verification_target_path(task_id: str) -> str:
+    contract_path, _ = runtime_verification_paths(task_id)
+    prefix = contract_path.removesuffix("/contract.json")
+    return f"{prefix}/target.json"
+
+
 @dataclass(frozen=True, slots=True)
 class RuntimeVerificationPolicy:
     target_repository: str
