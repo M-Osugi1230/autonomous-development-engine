@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "request_id": "v1.2-external-goal-proof-004",
-  "campaign_id": "v1.2-external-goal-campaign-004",
-  "id_prefix": "v12ext4",
-  "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment audience label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+  "request_id": "v1.2-external-goal-proof-005",
+  "campaign_id": "v1.2-external-goal-campaign-005",
+  "id_prefix": "v12ext5",
+  "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment series label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Implementation must live in a production module under src/thought_pipeline and tests must live only under tests; production modules must not import test-only dependencies. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
   "target_repository": "M-Osugi1230/one-minute-thought-experiments",
   "base_branch": "main",
   "allowed_path_prefixes": [
@@ -11,5 +11,5 @@
     "tests"
   ],
   "min_tasks": 2,
-  "max_tasks": 3
+  "max_tasks": 2
 }
