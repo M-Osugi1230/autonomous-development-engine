@@ -226,3 +226,18 @@
 - [x] Planner validation can require proposed concrete paths to exist in the trusted repository snapshot unless a task explicitly creates a new file.
 - [x] A real external-repository proof demonstrates that repository-aware planning selects grounded implementation/test paths and completes through the existing trusted execution loop.
 
+## ADE v1.4 — Runtime / Deployment Verification
+
+- [x] A versioned RuntimeVerificationContract binds verification to an explicit target repository, exact source SHA, environment, and trusted probe IDs.
+- [x] Runtime verification contracts contain no executable command strings, URLs, headers, credentials, or secret-bearing payload surface.
+- [x] RuntimeProbeResult evidence is source-SHA-bound, attempt-bounded, and restricted to trusted probe IDs.
+- [x] Deterministic evaluation returns PENDING until all required probes report, VERIFIED only when every required probe passes, and FAILED when any required probe fails/errors/skips.
+- [x] Unknown probes, duplicate results, stale source SHAs, invalid identifiers, and attempt-budget violations fail closed.
+- [x] Contract and report fingerprints are deterministic, and the trusted runtime contract probe is exercised by the mandatory unit-test CI stage.
+- [ ] A trusted probe registry maps probe IDs to fixed controller-owned implementations; untrusted planner/provider output cannot supply executable probe definitions.
+- [ ] Post-merge runtime verification automatically binds to the exact trusted merge SHA and persists a durable verification receipt.
+- [ ] Runtime probes execute with bounded timeouts/retries and cannot expand repository, credential, network, or deployment authority.
+- [ ] Deployment-aware verification can distinguish repository runtime, preview/staging, and production targets without assuming deployment success from CI success.
+- [ ] Failed runtime/deployment verification enters bounded recovery or HUMAN_WAIT and never silently marks the Campaign complete.
+- [ ] A real external-repository proof demonstrates merge -> runtime/deployment verification -> durable VERIFIED evidence through the trusted controller.
+
