@@ -191,21 +191,21 @@ def main() -> int:
 
         workspace = prepare_repository_runtime_workspace(contract)
         dependency_fingerprint = workspace.dependency_fingerprint
-        registry = build_runtime_probe_registry(workspace)
-        dispatch_transition = record_runtime_verification_dispatch(
-            contract=contract,
-            registry=registry,
-            receipt=receipt,
-        )
-        active_receipt = dispatch_transition.receipt
-        if dispatch_transition.changed:
-            gh.upsert_json_file(
-                receipt_path,
-                active_receipt.canonical_dict(),
-                message=f"runtime: dispatched {receipt.verification_id}",
-            )
-
         try:
+            registry = build_runtime_probe_registry(workspace)
+            dispatch_transition = record_runtime_verification_dispatch(
+                contract=contract,
+                registry=registry,
+                receipt=receipt,
+            )
+            active_receipt = dispatch_transition.receipt
+            if dispatch_transition.changed:
+                gh.upsert_json_file(
+                    receipt_path,
+                    active_receipt.canonical_dict(),
+                    message=f"runtime: dispatched {receipt.verification_id}",
+                )
+
             execution = execute_runtime_verification_bounded(
                 contract,
                 registry,
