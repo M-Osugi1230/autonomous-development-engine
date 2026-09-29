@@ -20,7 +20,7 @@
       "depends_on": [
         "v12ext6-001"
       ],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
