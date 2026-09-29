@@ -1,0 +1,87 @@
+{
+  "accepted_plan_fingerprint": "1b414c26aeb55986c3cf41dc46089e0251f00b2a941c65251d6ebe30f04442b0",
+  "campaign_id": "v1.3-repository-intelligence-campaign-001",
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "25fc79b9348442469334053643207f73e807f477c018aea3138b9df5ff103c6a",
+  "proposal": {
+    "goal": "Extend the existing thought-experiment model utilities with a small deterministic normalizer for a non-empty experiment variant label. The display label must collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key must use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Add focused unit-test coverage using existing test files. Do not create any new files. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "- Define `ExperimentVariantLabelSummary` as a frozen dataclass containing `display_label` and `key`. - Implement `normalize_experiment_variant_label` in `src/thought_pipeline/models.py` to collapse whitespace, apply Unicode case folding and space-to-hyphen replacement for the key, and validate input types and non-emptiness.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "src/thought_pipeline/models.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "- Define `ExperimentVariantLabelSummary` as a frozen dataclass containing `display_label` and `key`. - Implement `normalize_experiment_variant_label` in `src/thought_pipeline/models.py` to collapse whitespace, apply Unicode case folding and space-to-hyphen replacement for the key, and validate input types and non-emptiness.",
+        "title": "Implement `ExperimentVariantLabelSummary` and `normalize_experiment_variant_label` in `src/thought_pipeline/models.py`."
+      },
+      {
+        "acceptance": [
+          "- Add unit tests in `tests/test_models.py` testing valid normalization, whitespace collapsing, Unicode case folding, immutability of summary object, and rejection of invalid inputs.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_models.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "- Add unit tests in `tests/test_models.py` testing valid normalization, whitespace collapsing, Unicode case folding, immutability of summary object, and rejection of invalid inputs.",
+        "title": "Add unit tests for variant label normalization in `tests/test_models.py`."
+      }
+    ]
+  },
+  "proposal_fingerprint": "9e522fc41393532efcfd057f0d774b4dcfbdf93d93efc661c9618ea6831a76ba",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 2,
+  "provider_plan_steps_sha256": "9ad62ea1c6a742cfbee6908d97d66e16b61430335a8f000812a2d28307392a5e",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "fea5b0baf91ddc8f5703a927010e30859b84212b6abf54712c553f67537960a0",
+  "repository_context_fingerprint": "7b9649e8d5fe0754e56c3e540b9bb44c5f8ada2235ce8eb61f19634f518196dc",
+  "repository_impact_analysis_fingerprint": "fed3dd7e202af3bd418cdeb603e653932f7937cd94d8080741081bcd3b16ffb7",
+  "repository_relationship_graph_fingerprint": "281220564efef545022123a8cca32106ce8ca7a21c1c63452664028b36c37a91",
+  "repository_snapshot_fingerprint": "2e3c00cef3eed75cd610a66f9f0d3633061e9eed7e7c94f4903c17b20b003319",
+  "repository_source_sha": "0782824b8203728bb13b747bb4c90bddc1ceac23",
+  "request": {
+    "allowed_path_prefixes": [
+      "src/thought_pipeline",
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "v1.3-repository-intelligence-campaign-001",
+    "goal": "Extend the existing thought-experiment model utilities with a small deterministic normalizer for a non-empty experiment variant label. The display label must collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key must use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Add focused unit-test coverage using existing test files. Do not create any new files. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+    "id_prefix": "v13ri1",
+    "max_tasks": 2,
+    "min_tasks": 2,
+    "request_id": "v1.3-repository-intelligence-proof-001",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "request_fingerprint": "d872f29fcb6f96ec1e2d61ed862fbeff12d4c7815b41bce9884c405ef3ceb64e",
+  "schema_version": 1,
+  "task_ids": [
+    "v13ri1-001",
+    "v13ri1-002"
+  ]
+}
