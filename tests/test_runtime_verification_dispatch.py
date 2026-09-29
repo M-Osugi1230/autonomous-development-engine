@@ -14,6 +14,9 @@ SHA = "a" * 40
 
 
 def load_module():
+    trusted = str(TRUSTED_DIR)
+    if trusted not in sys.path:
+        sys.path.insert(0, trusted)
     path = TRUSTED_DIR / "runtime_verification_dispatch.py"
     spec = importlib.util.spec_from_file_location(
         "trusted_runtime_verification_dispatch_test",
