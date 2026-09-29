@@ -10,6 +10,7 @@ class RecoveryFailure(StrEnum):
     INFRASTRUCTURE = "INFRASTRUCTURE"
     TIMEOUT = "TIMEOUT"
     INVALID_IMPLEMENTATION = "INVALID_IMPLEMENTATION"
+    RUNTIME_VERIFICATION = "RUNTIME_VERIFICATION"
     HUMAN_REQUIRED = "HUMAN_REQUIRED"
 
 
@@ -50,7 +51,7 @@ def choose_recovery(failure: RecoveryFailure | str, progress: RecoveryProgress, 
     policy = budget or RecoveryBudget()
     if progress.repeated_failures >= 3:
         return RecoveryAction.HUMAN_WAIT
-    if kind is RecoveryFailure.HUMAN_REQUIRED:
+    if kind in {RecoveryFailure.HUMAN_REQUIRED, RecoveryFailure.RUNTIME_VERIFICATION}:
         return RecoveryAction.HUMAN_WAIT
     if kind is RecoveryFailure.INFRASTRUCTURE:
         return RecoveryAction.RETRY if progress.retries < policy.retries else RecoveryAction.FAIL
