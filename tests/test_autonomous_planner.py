@@ -85,6 +85,9 @@ class AutonomousPlannerTests(unittest.TestCase):
         self.assertEqual(result.accepted_plan.plan.tasks[1].depends_on, ("v12-001",))
         self.assertIn("untrusted planning component", provider.prompts[0])
         self.assertIn("concrete repository files", provider.prompts[0])
+        self.assertIn("native approval plan", provider.prompts[0])
+        self.assertIn("exactly one concrete repository file", provider.prompts[0])
+        self.assertIn("must not combine implementation and tests", provider.prompts[0])
         self.assertNotIn("v12-001", proposal()["tasks"][0]["key"])
 
     def test_validated_plan_compiles_into_existing_campaign_path(self) -> None:
