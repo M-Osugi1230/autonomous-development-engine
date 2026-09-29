@@ -345,7 +345,7 @@ def main() -> int:
 
     except (JulesQuota, JulesPrecondition) as exc:
         # Provider capacity is resumable and does not consume the non-quota
-        # planner failure budget. The hourly workflow will retry.
+        # planner failure budget. The scheduled watchdog will retry.
         payload = _status(
             request,
             state="PAUSED_QUOTA",
