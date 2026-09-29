@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "request_id": "v1.2-external-goal-proof-002",
-  "campaign_id": "v1.2-external-goal-campaign-002",
-  "id_prefix": "v12ext2",
+  "request_id": "v1.2-external-goal-proof-003",
+  "campaign_id": "v1.2-external-goal-campaign-003",
+  "id_prefix": "v12ext3",
   "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
   "target_repository": "M-Osugi1230/one-minute-thought-experiments",
   "base_branch": "main",
