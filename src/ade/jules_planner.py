@@ -44,10 +44,6 @@ class JulesPlannerClient(Protocol):
     ) -> list[dict[str, Any]]:
         ...
 
-    def send_message(self, session_id: str, prompt: str) -> None:
-        ...
-
-
 @dataclass(frozen=True, slots=True)
 class JulesPlannerConfig:
     source_name: str
@@ -55,9 +51,7 @@ class JulesPlannerConfig:
     title: str = "ADE autonomous planning"
     poll_interval_seconds: float = 5.0
     max_plan_polls: int = 120
-    max_structured_polls: int = 36
     activity_404_retries: int = 6
-    allow_plan_snapshot_after_execution_boundary: bool = False
     allowed_path_prefixes: tuple[str, ...] = ()
     required_human_boundaries: tuple[str, ...] = _REQUIRED_HUMAN_BOUNDARIES
 
@@ -72,13 +66,10 @@ class JulesPlannerConfig:
             raise ValueError("poll_interval_seconds must be positive")
         for value in (
             self.max_plan_polls,
-            self.max_structured_polls,
             self.activity_404_retries,
         ):
             if type(value) is not int or value < 1:
                 raise ValueError("planner retry/poll budgets must be positive integers")
-        if type(self.allow_plan_snapshot_after_execution_boundary) is not bool:
-            raise ValueError("allow_plan_snapshot_after_execution_boundary must be a bool")
         for prefix in self.allowed_path_prefixes:
             if not isinstance(prefix, str) or not prefix.strip():
                 raise ValueError("allowed_path_prefixes must contain non-empty strings")
@@ -288,19 +279,6 @@ def _goal_from_planner_prompt(prompt: str) -> str:
     return goal
 
 
-def _structured_followup(original_prompt: str) -> str:
-    return (
-        "Remain in planning-only mode. Do NOT approve the plan, implement code, modify files, "
-        "or create a pull request. Reply with exactly one JSON object and no markdown fences. "
-        "The JSON must satisfy the schema and trusted bounds from the original planning request. "
-        "It must include schema_version=1, the exact original goal, tasks with key/title/outcome/"
-        "depends_on/allowed_paths/acceptance/human_only/human_reason, and mandatory human_boundaries. "
-        "Use only repository-relative paths you actually inferred from the repository. "
-        "Original trusted planning request follows:\n\n"
-        + original_prompt
-    )
-
-
 class JulesPlanningProvider:
     """PlanningProvider adapter that never approves or executes a Jules plan."""
 
@@ -354,53 +332,13 @@ class JulesPlanningProvider:
                 self._sleep(self._config.poll_interval_seconds)
                 continue
             if state == "COMPLETED":
-                if not self._config.allow_plan_snapshot_after_execution_boundary:
-                    raise JulesPlannerError(
-                        "planning-only session crossed execution boundary: COMPLETED"
-                    )
-                activities = self._activities(session_id)
-                steps = latest_plan_steps(activities)
-                if not steps:
-                    raise JulesPlannerError(
-                        "planning session completed without recoverable plan evidence"
-                    )
-                self.last_plan_steps = steps
                 self.last_execution_boundary_crossed = True
-                return state
+                raise JulesPlannerError(
+                    "planning-only session crossed execution boundary: COMPLETED"
+                )
             self._sleep(self._config.poll_interval_seconds)
 
         raise JulesPlannerError("Jules planner did not reach plan approval boundary in time")
-
-    def _wait_for_structured_proposal(
-        self,
-        session_id: str,
-        *,
-        baseline_message_count: int,
-    ) -> dict[str, Any] | None:
-        for _ in range(self._config.max_structured_polls):
-            current = self._client.get_session(session_id)
-            state = current.get("state")
-            if not isinstance(state, str):
-                raise JulesPlannerError("Jules planner session returned no state")
-            self.last_observed_state = state
-            if state == "IN_PROGRESS":
-                raise JulesPlannerError("planning-only session began implementation without approval")
-            if state in {"FAILED", "PAUSED"}:
-                raise JulesPlannerError(f"Jules planner stopped in {state}")
-
-            activities = self._activities(session_id)
-            observed_steps = latest_plan_steps(activities)
-            if observed_steps:
-                self.last_plan_steps = observed_steps
-            messages = _agent_messages(activities)
-            for message in reversed(messages[baseline_message_count:]):
-                payload = _extract_json_object(message)
-                if payload is not None:
-                    return payload
-
-            self._sleep(self._config.poll_interval_seconds)
-
-        return None
 
     def propose(self, prompt: str) -> dict[str, Any]:
         if not isinstance(prompt, str) or not prompt.strip():
@@ -421,42 +359,15 @@ class JulesPlanningProvider:
         observed_steps = latest_plan_steps(activities)
         if observed_steps:
             self.last_plan_steps = observed_steps
+        if self.last_execution_boundary_crossed:
+            raise JulesPlannerError(
+                "planning-only session crossed execution boundary before proposal acceptance"
+            )
+
         immediate = extract_structured_proposal(activities)
         if immediate is not None:
             self.last_proposal_mode = "structured"
             return immediate
-
-        if self.last_execution_boundary_crossed:
-            if self._config.allowed_path_prefixes:
-                derived = derive_proposal_from_plan_steps(
-                    goal=_goal_from_planner_prompt(prompt),
-                    steps=self.last_plan_steps,
-                    allowed_path_prefixes=self._config.allowed_path_prefixes,
-                    required_human_boundaries=self._config.required_human_boundaries,
-                )
-                if derived is not None:
-                    self.last_proposal_mode = "derived-plan-snapshot-after-boundary"
-                    return derived
-            raise JulesPlannerError(
-                "execution-boundary plan snapshot could not be converted into a trusted proposal"
-            )
-
-        before_messages = _agent_messages(activities)
-        self._client.send_message(session_id, _structured_followup(prompt))
-        proposal = self._wait_for_structured_proposal(
-            session_id,
-            baseline_message_count=len(before_messages),
-        )
-        if proposal is not None:
-            final = self._client.get_session(session_id)
-            final_state = final.get("state")
-            self.last_observed_state = final_state if isinstance(final_state, str) else None
-            if final_state == "IN_PROGRESS":
-                raise JulesPlannerError(
-                    "Jules planner crossed execution boundary after follow-up"
-                )
-            self.last_proposal_mode = "followup-structured"
-            return proposal
 
         if self._config.allowed_path_prefixes:
             derived = derive_proposal_from_plan_steps(
@@ -466,9 +377,9 @@ class JulesPlanningProvider:
                 required_human_boundaries=self._config.required_human_boundaries,
             )
             if derived is not None:
-                self.last_proposal_mode = "derived-plan-steps-fallback"
+                self.last_proposal_mode = "derived-plan-steps"
                 return derived
 
         raise JulesPlannerError(
-            "Jules planner returned neither a structured proposal nor usable plan steps"
+            "Jules planner returned neither a structured proposal nor usable plan steps at the approval boundary"
         )
