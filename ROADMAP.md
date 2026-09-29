@@ -146,3 +146,6 @@ Slice 003 complete: the trusted Remote PR Monitor now reads the exact target `me
 
 
 Slice 004 complete: runtime probes now execute in isolated child processes with contract-bound hard timeouts and bounded ERROR retries. The child environment is reduced to a small safe allowlist, repository-write/credential/network/deployment authority flags are fixed false by the trusted registry, and expired probe processes are terminated. PASS/FAIL/SKIPPED are terminal per attempt sequence while only ERROR is retried. Durable reports and VERIFIED/FAILED receipt transitions are source-SHA and contract-fingerprint bound.
+
+
+Slice 005 complete: TrustedRuntimeTargetRegistry distinguishes repository, preview, staging, and production runtime targets. Repository runtime is bound directly to the exact trusted merge SHA and explicitly carries no deployment identity. Preview/staging/production require explicit source-SHA-bound deployment IDs from controller-owned adapters, enforce freshness/future-skew limits, and fail closed when deployment observation is unavailable, stale, or source-mismatched. CI/workflow status is not part of target evidence and cannot be used as deployment-success proof.
