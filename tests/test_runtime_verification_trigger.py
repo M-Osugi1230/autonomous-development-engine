@@ -8,12 +8,21 @@ from ade.runtime_probe_registry import (
     RuntimeProbeRegistration,
     TrustedRuntimeProbeRegistry,
 )
-from ade.runtime_verification import RuntimeProbeStatus, RuntimeVerificationError
+from ade.runtime_verification import (
+    RuntimeProbeResult,
+    RuntimeProbeStatus,
+    RuntimeVerificationDisposition,
+    RuntimeVerificationError,
+    RuntimeVerificationReport,
+    evaluate_runtime_verification,
+)
 from ade.runtime_verification_trigger import (
     RuntimeVerificationPolicy,
     RuntimeVerificationReceipt,
     arm_post_merge_runtime_verification,
     record_runtime_verification_dispatch,
+    record_runtime_verification_report,
+    runtime_verification_report_path,
 )
 
 
@@ -283,6 +292,126 @@ class RuntimeVerificationTriggerTests(unittest.TestCase):
                 registry=drifted_registry,
                 receipt=activation.receipt,
             )
+
+    def test_dispatched_receipt_completes_from_verified_report(self) -> None:
+        trusted_registry = registry()
+        activation = arm_post_merge_runtime_verification(
+            policy=policy(),
+            registry=trusted_registry,
+            task_id="task-001",
+            target_repository="example/target",
+            trusted_merge_sha=SHA_A,
+        )
+        dispatched = record_runtime_verification_dispatch(
+            contract=activation.contract,
+            registry=trusted_registry,
+            receipt=activation.receipt,
+        ).receipt
+        report = evaluate_runtime_verification(
+            activation.contract,
+            [
+                RuntimeProbeResult(
+                    probe_id=probe_id,
+                    status=RuntimeProbeStatus.PASS,
+                    source_sha=SHA_A,
+                )
+                for probe_id in activation.contract.required_probe_ids
+            ],
+        )
+        self.assertEqual(
+            report.disposition,
+            RuntimeVerificationDisposition.VERIFIED,
+        )
+        completion = record_runtime_verification_report(
+            contract=activation.contract,
+            receipt=dispatched,
+            report=report,
+        )
+        self.assertTrue(completion.changed)
+        self.assertEqual(completion.receipt.status, "VERIFIED")
+        self.assertEqual(completion.receipt.dispatch_count, 1)
+
+        replay = record_runtime_verification_report(
+            contract=activation.contract,
+            receipt=completion.receipt,
+            report=report,
+        )
+        self.assertFalse(replay.changed)
+        self.assertEqual(replay.receipt, completion.receipt)
+
+    def test_failed_report_marks_receipt_failed(self) -> None:
+        trusted_registry = registry()
+        activation = arm_post_merge_runtime_verification(
+            policy=policy(),
+            registry=trusted_registry,
+            task_id="task-001",
+            target_repository="example/target",
+            trusted_merge_sha=SHA_A,
+        )
+        dispatched = record_runtime_verification_dispatch(
+            contract=activation.contract,
+            registry=trusted_registry,
+            receipt=activation.receipt,
+        ).receipt
+        results = []
+        for index, probe_id in enumerate(activation.contract.required_probe_ids):
+            results.append(
+                RuntimeProbeResult(
+                    probe_id=probe_id,
+                    status=(
+                        RuntimeProbeStatus.FAIL
+                        if index == 0
+                        else RuntimeProbeStatus.PASS
+                    ),
+                    source_sha=SHA_A,
+                )
+            )
+        report = evaluate_runtime_verification(
+            activation.contract,
+            results,
+        )
+        completion = record_runtime_verification_report(
+            contract=activation.contract,
+            receipt=dispatched,
+            report=report,
+        )
+        self.assertTrue(completion.changed)
+        self.assertEqual(completion.receipt.status, "FAILED")
+
+    def test_stale_runtime_report_is_rejected(self) -> None:
+        trusted_registry = registry()
+        activation = arm_post_merge_runtime_verification(
+            policy=policy(),
+            registry=trusted_registry,
+            task_id="task-001",
+            target_repository="example/target",
+            trusted_merge_sha=SHA_A,
+        )
+        dispatched = record_runtime_verification_dispatch(
+            contract=activation.contract,
+            registry=trusted_registry,
+            receipt=activation.receipt,
+        ).receipt
+        stale = RuntimeVerificationReport(
+            verification_id=activation.contract.verification_id,
+            contract_fingerprint=activation.contract.fingerprint(),
+            source_sha=SHA_B,
+            disposition=RuntimeVerificationDisposition.FAILED,
+            results=(),
+            missing_probe_ids=(),
+        )
+        with self.assertRaisesRegex(RuntimeVerificationError, "source SHA drift"):
+            record_runtime_verification_report(
+                contract=activation.contract,
+                receipt=dispatched,
+                report=stale,
+            )
+
+    def test_report_path_is_task_scoped(self) -> None:
+        self.assertEqual(
+            runtime_verification_report_path("task-001"),
+            ".autodev/runtime-verification/task-001/report.json",
+        )
 
     def test_receipt_contains_no_executable_or_secret_payload_surface(self) -> None:
         activation = arm_post_merge_runtime_verification(
