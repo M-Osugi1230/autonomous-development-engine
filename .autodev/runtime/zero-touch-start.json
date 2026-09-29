@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.3-repository-intelligence-campaign-001",
+  "campaign_id": "v1.4-runtime-verification-campaign-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-29T22:16:05.315050+00:00",
-  "plan_fingerprint": "1b414c26aeb55986c3cf41dc46089e0251f00b2a941c65251d6ebe30f04442b0",
+  "dispatched_at": "2026-09-29T23:46:09.672297+00:00",
+  "plan_fingerprint": "3fdd6f14778d03f3fa8b38c0472fcbc17713acfc6d1f1b6ce690c22ce80f2a14",
   "run_attempt": "1",
-  "run_id": "36638534648",
+  "run_id": "36646924453",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "84d3905c2d8e5dfa55f779982c04be5be5ebb1ff",
+  "source_sha": "99d74c50ae75c3b9fb177303dd553234495c14d7",
   "status": "DISPATCHED",
-  "task_id": "v13ri1-001"
+  "task_id": "v14rv1-001"
 }
