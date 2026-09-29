@@ -1,0 +1,37 @@
+name: ADE Autonomous Planner Retry Watchdog
+
+on:
+  repository_dispatch:
+    types:
+      - ade_planner_retry_arm
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-autonomous-planner-retry-${{ github.event.client_payload.request_fingerprint }}
+  cancel-in-progress: true
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Wait bounded retry interval
+        run: sleep 900
+
+      - name: Revalidate planner pause and dispatch retry
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/autonomous_planner_retry.py

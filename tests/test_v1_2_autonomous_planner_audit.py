@@ -127,6 +127,7 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
                     "Autonomous Planner proof",
                     "Jules Planner Adapter proof",
                     "Autonomous Planner activation proof",
+                    "Autonomous Planner capacity retry proof",
                     "Remote Repository Loop proof",
                     "Mission Control observability proof",
                     "Autonomous recovery fault proof",
@@ -151,6 +152,27 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
             'schedule:\n  - cron: "*/15 * * * *"\n',
         )
 
+        _write(
+            root,
+            ".github/workflows/autonomous-planner.yml",
+            "repository_dispatch:\n  types:\n    - ade_planner_retry\n",
+        )
+        _write(
+            root,
+            ".github/workflows/autonomous-planner-retry.yml",
+            (
+                "repository_dispatch:\n"
+                "  types:\n"
+                "    - ade_planner_retry_arm\n"
+                "concurrency:\n"
+                "  cancel-in-progress: true\n"
+                "jobs:\n"
+                "  retry:\n"
+                "    steps:\n"
+                "      - run: sleep 900\n"
+            ),
+        )
+
     def test_complete_terminal_evidence_graduates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -159,6 +181,19 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
             self.assertTrue(result["v1_2_autonomous_planner_graduated"], result)
             self.assertEqual(result["missing_proofs"], [])
             self.assertTrue(all(result["checks"].values()))
+
+    def test_missing_planner_retry_chain_cannot_graduate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._fixture(root, _evidence())
+            _write(
+                root,
+                ".github/workflows/autonomous-planner-retry.yml",
+                "repository_dispatch:\n  types:\n    - ade_planner_retry_arm\n",
+            )
+            result = audit(root)
+            self.assertFalse(result["v1_2_autonomous_planner_graduated"])
+            self.assertFalse(result["checks"]["planner_capacity_retry_chain"])
 
     def test_missing_target_quality_gate_cannot_graduate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

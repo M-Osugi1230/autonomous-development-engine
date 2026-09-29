@@ -88,6 +88,27 @@ def _persist_status(gh: GitHubClient, payload: dict[str, Any]) -> None:
     _write_result(payload)
 
 
+def _arm_capacity_retry(
+    gh: GitHubClient,
+    request: PlanningGoalRequest,
+) -> None:
+    try:
+        gh.dispatch(
+            "ade_planner_retry_arm",
+            {
+                "request_id": request.request_id,
+                "request_fingerprint": request.fingerprint(),
+                "source": "autonomous-planner-capacity-pause",
+            },
+        )
+    except GitHubError as exc:
+        print(
+            "WARNING: planner capacity retry arm failed; cron watchdog remains fallback: "
+            + _safe_error(exc),
+            file=sys.stderr,
+        )
+
+
 def _previous_attempt(request: PlanningGoalRequest) -> tuple[int, dict[str, Any] | None]:
     previous = _optional(STATUS_PATH)
     if previous is None or previous.get("request_fingerprint") != request.fingerprint():
@@ -354,6 +375,7 @@ def main() -> int:
             extra={"detail": _safe_error(exc)},
         )
         _persist_status(gh, payload)
+        _arm_capacity_retry(gh, request)
         print(json.dumps(payload, sort_keys=True))
         return 0
     except JulesUnauthorized as exc:
