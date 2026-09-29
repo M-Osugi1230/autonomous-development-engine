@@ -275,7 +275,7 @@ def arm_post_merge_runtime_verification(
         return RuntimeVerificationActivation(
             contract=contract,
             receipt=existing_receipt,
-            should_dispatch=False,
+            should_dispatch=existing_receipt.status == "ARMED",
         )
 
     return RuntimeVerificationActivation(
