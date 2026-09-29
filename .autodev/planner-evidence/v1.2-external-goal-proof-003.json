@@ -1,0 +1,79 @@
+{
+  "accepted_plan_fingerprint": "a07442a60ea1ba213ee84acd0618097b3d8a6636777d4b1ef9bff789068c7249",
+  "campaign_id": "v1.2-external-goal-campaign-003",
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "81d087d7c2cbb7eb09cdd279f2bcff3de6333097bbd56fd85bffc91691d114bf",
+  "proposal": {
+    "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "src/thought_pipeline/models.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "outcome": "Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`.",
+        "title": "Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`."
+      },
+      {
+        "acceptance": [
+          "Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_quality.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "outcome": "Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`.",
+        "title": "Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`."
+      }
+    ]
+  },
+  "proposal_fingerprint": "9867cf5532cb16f57c3587b6903bf229f0a503cc1648fd71a0082f49a30e15bf",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 2,
+  "provider_plan_steps_sha256": "0fb552fb8ebf57e84f355be5d99d6cba63f9aedf56cfbf950f48653d15a6484b",
+  "provider_proposal_mode": "derived-plan-steps",
+  "request": {
+    "allowed_path_prefixes": [
+      "src/thought_pipeline",
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "v1.2-external-goal-campaign-003",
+    "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+    "id_prefix": "v12ext3",
+    "max_tasks": 3,
+    "min_tasks": 2,
+    "request_id": "v1.2-external-goal-proof-003",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "request_fingerprint": "62a8f3f83c5ac71aa5bdae92e18f6183be01806a673a401d61a07be393433604",
+  "schema_version": 1,
+  "task_ids": [
+    "v12ext3-001",
+    "v12ext3-002"
+  ]
+}
