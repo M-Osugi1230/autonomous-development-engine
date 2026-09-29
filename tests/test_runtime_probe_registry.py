@@ -95,6 +95,7 @@ class RuntimeProbeRegistryTests(unittest.TestCase):
                     environment="production",
                     attempt=2,
                     timeout_seconds=300,
+                    repository_write_authority=False,
                     credential_authority=False,
                     network_authority=False,
                     deployment_authority=False,
@@ -126,6 +127,7 @@ class RuntimeProbeRegistryTests(unittest.TestCase):
         invocation = seen[0]
         self.assertEqual(invocation.attempt, 2)
         self.assertEqual(invocation.timeout_seconds, 17)
+        self.assertFalse(invocation.repository_write_authority)
         self.assertFalse(invocation.credential_authority)
         self.assertFalse(invocation.network_authority)
         self.assertFalse(invocation.deployment_authority)
