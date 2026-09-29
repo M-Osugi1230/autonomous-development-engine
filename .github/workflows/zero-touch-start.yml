@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - ".autodev/accepted-plan.json"
+  repository_dispatch:
+    types:
+      - ade_zero_touch_start
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
