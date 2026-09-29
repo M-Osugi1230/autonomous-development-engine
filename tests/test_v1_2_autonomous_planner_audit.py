@@ -21,15 +21,15 @@ def _write(root: Path, relative: str, content: str) -> None:
 
 
 def _evidence() -> dict:
-    task_ids = ["v12ext4-001", "v12ext4-002"]
+    task_ids = ["v12ext5-001", "v12ext5-002"]
     return {
         "schema_version": 1,
         "version": "v1.2",
-        "request_id": "v1.2-external-goal-proof-004",
-        "campaign_id": "v1.2-external-goal-campaign-004",
+        "request_id": "v1.2-external-goal-proof-005",
+        "campaign_id": "v1.2-external-goal-campaign-005",
         "target_repository": "M-Osugi1230/one-minute-thought-experiments",
         "human_authored_per_task_work_items": False,
-        "accepted_plan_fingerprint": "fingerprint-004",
+        "accepted_plan_fingerprint": "fingerprint-005",
         "planner": {
             "provider": "jules",
             "workflow_run": 101,
@@ -46,17 +46,12 @@ def _evidence() -> dict:
             "manual_workflow_dispatch": False,
         },
         "quota_resume": {
-            "task_id": "v12ext4-002",
-            "paused": True,
-            "resume_after": "2026-09-29T12:25:49+00:00",
-            "manual_resume": False,
-            "resume_run": 103,
-            "external_target_preserved": True,
-            "execution_lease_reclaimed": True,
+            "observed": False,
+            "resume_mode": "not-needed",
         },
         "tasks": [
             {
-                "task_id": "v12ext4-001",
+                "task_id": "v12ext5-001",
                 "jules_cycle_run": 104,
                 "pull_request": 9,
                 "ci_run": 105,
@@ -66,7 +61,7 @@ def _evidence() -> dict:
                 "merge_commit": SHA_C,
             },
             {
-                "task_id": "v12ext4-002",
+                "task_id": "v12ext5-002",
                 "jules_cycle_run": 108,
                 "pull_request": 10,
                 "ci_run": 109,
@@ -83,17 +78,17 @@ def _evidence() -> dict:
             "source_sha": SHA_D,
             "accepted_plan": {
                 "status": "ACCEPTED",
-                "fingerprint": "fingerprint-004",
+                "fingerprint": "fingerprint-005",
             },
             "campaign": {
-                "campaign_id": "v1.2-external-goal-campaign-004",
+                "campaign_id": "v1.2-external-goal-campaign-005",
                 "status": "COMPLETED",
                 "task_ids": task_ids,
                 "completed_task_ids": task_ids,
             },
             "task_graph": [
-                {"task_id": "v12ext4-001", "status": "COMPLETED"},
-                {"task_id": "v12ext4-002", "status": "COMPLETED"},
+                {"task_id": "v12ext5-001", "status": "COMPLETED"},
+                {"task_id": "v12ext5-002", "status": "COMPLETED"},
             ],
             "state": {
                 "current_task_id": None,
@@ -103,7 +98,7 @@ def _evidence() -> dict:
             "remote_execution_receipt": {
                 "schema_version": 1,
                 "status": "MERGED",
-                "task_id": "v12ext4-002",
+                "task_id": "v12ext5-002",
             },
         },
     }
@@ -113,7 +108,7 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
     def _fixture(self, root: Path, evidence: dict) -> None:
         _write(
             root,
-            ".autodev/campaign-evidence/v1.2-autonomous-planner-proof-004.json",
+            ".autodev/campaign-evidence/v1.2-autonomous-planner-proof-005.json",
             json.dumps(evidence, indent=2) + "\n",
         )
         _write(
@@ -169,15 +164,28 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
             self.assertFalse(result["v1_2_autonomous_planner_graduated"])
             self.assertFalse(result["checks"]["campaign_completed"])
 
-    def test_manual_resume_cannot_graduate(self) -> None:
+    def test_observed_quota_requires_automatic_safe_resume(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             evidence = _evidence()
-            evidence["quota_resume"]["manual_resume"] = True
+            evidence["quota_resume"] = {
+                "observed": True,
+                "task_id": "v12ext5-002",
+                "resume_after": "2026-09-29T12:25:49+00:00",
+                "manual_resume": True,
+                "resume_run": 103,
+                "external_target_preserved": True,
+                "execution_lease_reclaimed": True,
+            }
             self._fixture(root, evidence)
             result = audit(root)
             self.assertFalse(result["v1_2_autonomous_planner_graduated"])
-            self.assertFalse(result["checks"]["automatic_quota_resume"])
+            self.assertFalse(result["checks"]["quota_resume_safe"])
+
+            evidence["quota_resume"]["manual_resume"] = False
+            self._fixture(root, evidence)
+            result = audit(root)
+            self.assertTrue(result["checks"]["quota_resume_safe"])
 
     def test_planner_execution_boundary_crossing_cannot_graduate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
