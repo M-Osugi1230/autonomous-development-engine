@@ -16,6 +16,7 @@ from jules_cycle import (
     monitor_existing,
     run_new_cycle,
 )
+from ade.execution_lease_store import claim_execution
 from ade.remote_execution import execution_target_from_state
 
 CHECKPOINT_FILE = Path(".autodev/runtime/checkpoint.json")
@@ -155,6 +156,22 @@ def main() -> int:
             )
 
         if action == "START_NEW":
+            run_id = os.environ.get("GITHUB_RUN_ID", "manual")
+            run_attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "1")
+            owner_id = f"github-actions-resume:{run_id}:{run_attempt}"
+            try:
+                claim_execution(
+                    gh,
+                    task_id=task_id,
+                    owner_id=owner_id,
+                    now=datetime.now(UTC),
+                    ttl=__import__("datetime").timedelta(minutes=50),
+                )
+            except RuntimeError as exc:
+                if "live execution lease" in str(exc):
+                    print(f"NOOP: live execution lease still owns {task_id}")
+                    return 0
+                raise
             print("RESUME: quota window elapsed; starting a new Jules session")
             return run_new_cycle(
                 task=task,
