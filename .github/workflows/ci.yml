@@ -78,6 +78,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python .github/trusted/runtime_probe_executor_probe.py
 
+      - name: Runtime Verification real repository probe proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/runtime_repository_probe.py
+
       - name: Runtime Verification target adapter proof
         env:
           PYTHONPATH: src:.github/trusted

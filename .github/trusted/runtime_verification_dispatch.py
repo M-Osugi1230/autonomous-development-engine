@@ -27,6 +27,7 @@ from github_client import GitHubClient, GitHubError
 from recovery_controller import RECOVERY_PATH, load_recovery
 from runtime_probes import build_runtime_probe_registry
 from runtime_targets import build_runtime_target_registry
+from runtime_workspace import prepare_repository_runtime_workspace
 
 RESULT_PATH = Path(".autodev/runtime/runtime-verification-dispatch-result.json")
 
@@ -188,24 +189,29 @@ def main() -> int:
             message=f"runtime: target {receipt.verification_id}",
         )
 
-        registry = build_runtime_probe_registry()
-        dispatch_transition = record_runtime_verification_dispatch(
-            contract=contract,
-            registry=registry,
-            receipt=receipt,
-        )
-        active_receipt = dispatch_transition.receipt
-        if dispatch_transition.changed:
-            gh.upsert_json_file(
-                receipt_path,
-                active_receipt.canonical_dict(),
-                message=f"runtime: dispatched {receipt.verification_id}",
+        workspace = prepare_repository_runtime_workspace(contract)
+        dependency_fingerprint = workspace.dependency_fingerprint
+        try:
+            registry = build_runtime_probe_registry(workspace)
+            dispatch_transition = record_runtime_verification_dispatch(
+                contract=contract,
+                registry=registry,
+                receipt=receipt,
             )
+            active_receipt = dispatch_transition.receipt
+            if dispatch_transition.changed:
+                gh.upsert_json_file(
+                    receipt_path,
+                    active_receipt.canonical_dict(),
+                    message=f"runtime: dispatched {receipt.verification_id}",
+                )
 
-        execution = execute_runtime_verification_bounded(
-            contract,
-            registry,
-        )
+            execution = execute_runtime_verification_bounded(
+                contract,
+                registry,
+            )
+        finally:
+            workspace.cleanup()
         report_path = runtime_verification_report_path(active_receipt.task_id)
         gh.upsert_json_file(
             report_path,
@@ -249,6 +255,8 @@ def main() -> int:
             "runtime_target_deployment_id": target_resolution.evidence.deployment_id,
             "runtime_target_evidence_fingerprint": target_resolution.evidence.fingerprint(),
             "runtime_target_registry_fingerprint": target_resolution.registry_fingerprint,
+            "runtime_dependency_fingerprint": dependency_fingerprint,
+            "runtime_workspace_source_sha": contract.source_sha,
             "report_fingerprint": execution.report.fingerprint(),
             "attempts_by_probe": [
                 {"probe_id": probe_id, "attempts": attempts}
