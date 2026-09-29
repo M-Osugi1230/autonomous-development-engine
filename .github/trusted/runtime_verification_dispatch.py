@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -16,9 +17,11 @@ from ade.runtime_verification_trigger import (
     record_runtime_verification_report,
     runtime_verification_paths,
     runtime_verification_report_path,
+    runtime_verification_target_path,
 )
 from github_client import GitHubClient, GitHubError
 from runtime_probes import build_runtime_probe_registry
+from runtime_targets import build_runtime_target_registry
 
 RESULT_PATH = Path(".autodev/runtime/runtime-verification-dispatch-result.json")
 
@@ -85,6 +88,20 @@ def main() -> int:
             receipt=receipt,
         )
 
+        target_registry = build_runtime_target_registry(
+            contract.target_repository,
+        )
+        target_resolution = target_registry.resolve(
+            contract,
+            now=datetime.now(UTC),
+        )
+        target_path = runtime_verification_target_path(receipt.task_id)
+        gh.upsert_json_file(
+            target_path,
+            target_resolution.canonical_dict(),
+            message=f"runtime: target {receipt.verification_id}",
+        )
+
         registry = build_runtime_probe_registry()
         dispatch_transition = record_runtime_verification_dispatch(
             contract=contract,
@@ -131,6 +148,12 @@ def main() -> int:
             "source_sha": completion.receipt.source_sha,
             "dispatch_count": completion.receipt.dispatch_count,
             "probe_execution_enabled": True,
+            "runtime_target_kind": target_resolution.evidence.kind.value,
+            "runtime_target_id": target_resolution.evidence.target_id,
+            "runtime_target_provenance_id": target_resolution.evidence.provenance_id,
+            "runtime_target_deployment_id": target_resolution.evidence.deployment_id,
+            "runtime_target_evidence_fingerprint": target_resolution.evidence.fingerprint(),
+            "runtime_target_registry_fingerprint": target_resolution.registry_fingerprint,
             "report_fingerprint": execution.report.fingerprint(),
             "attempts_by_probe": [
                 {"probe_id": probe_id, "attempts": attempts}

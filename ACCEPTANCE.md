@@ -237,7 +237,7 @@
 - [x] A trusted probe registry maps probe IDs to fixed controller-owned implementations; untrusted planner/provider output cannot supply executable probe definitions.
 - [x] Post-merge runtime verification automatically binds to the exact trusted merge SHA and persists a durable verification receipt.
 - [x] Runtime probes execute with bounded timeouts/retries and cannot expand repository, credential, network, or deployment authority.
-- [ ] Deployment-aware verification can distinguish repository runtime, preview/staging, and production targets without assuming deployment success from CI success.
+- [x] Deployment-aware verification can distinguish repository runtime, preview/staging, and production targets without assuming deployment success from CI success.
 - [ ] Failed runtime/deployment verification enters bounded recovery or HUMAN_WAIT and never silently marks the Campaign complete.
 - [ ] A real external-repository proof demonstrates merge -> runtime/deployment verification -> durable VERIFIED evidence through the trusted controller.
 
