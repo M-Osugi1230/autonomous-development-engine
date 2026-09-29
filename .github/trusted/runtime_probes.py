@@ -7,6 +7,7 @@ from ade.runtime_probe_registry import (
     TrustedRuntimeProbeRegistry,
 )
 from ade.runtime_verification import RuntimeProbeStatus
+from ade.runtime_verification_trigger import RuntimeVerificationPolicy
 
 
 def _execution_not_enabled(
@@ -34,4 +35,19 @@ def build_runtime_probe_registry() -> TrustedRuntimeProbeRegistry:
                 runner=_execution_not_enabled,
             ),
         ]
+    )
+
+
+def build_runtime_verification_policy(
+    target_repository: str,
+) -> RuntimeVerificationPolicy:
+    return RuntimeVerificationPolicy(
+        target_repository=target_repository,
+        environment="repository",
+        required_probe_ids=(
+            "offline-cli-smoke",
+            "production-import-smoke",
+        ),
+        max_attempts=2,
+        timeout_seconds=300,
     )
