@@ -96,6 +96,8 @@ class AutonomousPlannerTests(unittest.TestCase):
         self.assertIn("native approval plan", provider.prompts[0])
         self.assertIn("exactly one concrete repository file", provider.prompts[0])
         self.assertIn("must not combine implementation and tests", provider.prompts[0])
+        self.assertIn("new_paths", provider.prompts[0])
+        self.assertIn("explicitly intends to create", provider.prompts[0])
         self.assertNotIn("v12-001", proposal()["tasks"][0]["key"])
 
     def test_repository_structure_context_is_injected_as_data(self) -> None:
@@ -120,6 +122,83 @@ class AutonomousPlannerTests(unittest.TestCase):
                 high_level_goal=GOAL,
                 policy=policy(),
                 repository_context="x" * 12001,
+            )
+
+    def test_repository_grounding_accepts_known_existing_paths(self) -> None:
+        result = validate_planner_proposal(
+            high_level_goal=GOAL,
+            proposal_payload=proposal(),
+            policy=policy(),
+            id_prefix="v13",
+            existing_paths={
+                "src/ade/repository_status.py",
+                "tests/test_repository_status.py",
+                "README.md",
+            },
+        )
+        self.assertEqual(result.disposition, PlannerDisposition.ACCEPTED)
+
+    def test_repository_grounding_rejects_unknown_path_without_new_intent(self) -> None:
+        with self.assertRaisesRegex(
+            PlannerValidationError,
+            "does not exist in repository snapshot and is not declared new",
+        ):
+            validate_planner_proposal(
+                high_level_goal=GOAL,
+                proposal_payload=proposal(),
+                policy=policy(),
+                existing_paths={"src/ade/repository_status.py"},
+            )
+
+    def test_repository_grounding_allows_explicit_new_file(self) -> None:
+        payload = proposal()
+        payload["tasks"][1]["allowed_paths"] = ["tests/test_repository_status_new.py"]
+        payload["tasks"][1]["new_paths"] = ["tests/test_repository_status_new.py"]
+        validated = validate_planner_proposal(
+            high_level_goal=GOAL,
+            proposal_payload=payload,
+            policy=policy(),
+            existing_paths={"src/ade/repository_status.py"},
+        )
+        self.assertEqual(validated.disposition, PlannerDisposition.ACCEPTED)
+        canonical = PlannerProposal.from_dict(payload).canonical_dict()
+        self.assertEqual(
+            canonical["tasks"][1]["new_paths"],
+            ["tests/test_repository_status_new.py"],
+        )
+
+    def test_repository_grounding_rejects_existing_path_declared_new(self) -> None:
+        payload = proposal()
+        payload["tasks"][0]["new_paths"] = ["src/ade/repository_status.py"]
+        with self.assertRaisesRegex(
+            PlannerValidationError,
+            "declares existing repository path as new",
+        ):
+            validate_planner_proposal(
+                high_level_goal=GOAL,
+                proposal_payload=payload,
+                policy=policy(),
+                existing_paths={
+                    "src/ade/repository_status.py",
+                    "tests/test_repository_status.py",
+                },
+            )
+
+    def test_repository_grounding_rejects_new_path_outside_allowed_paths(self) -> None:
+        payload = proposal()
+        payload["tasks"][0]["new_paths"] = ["src/ade/extra.py"]
+        with self.assertRaisesRegex(
+            PlannerValidationError,
+            "new_paths must be a subset of allowed_paths",
+        ):
+            validate_planner_proposal(
+                high_level_goal=GOAL,
+                proposal_payload=payload,
+                policy=policy(),
+                existing_paths={
+                    "src/ade/repository_status.py",
+                    "tests/test_repository_status.py",
+                },
             )
 
     def test_validated_plan_compiles_into_existing_campaign_path(self) -> None:
