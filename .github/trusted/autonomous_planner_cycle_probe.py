@@ -222,6 +222,13 @@ def main() -> int:
     assert evidence["repository_context_fingerprint"] == repository_context.fingerprint
     assert evidence["repository_content_summary_fingerprint"] == content_summary.fingerprint()
     assert evidence["repository_relationship_graph_fingerprint"] == relationship_graph.fingerprint()
+    expected_impact = cycle.analyze_repository_impact(
+        relationship_graph,
+        changed_paths=["src/helper.py", "tests/test_helper.py"],
+        max_depth=3,
+        max_results=100,
+    )
+    assert evidence["repository_impact_analysis_fingerprint"] == expected_impact.fingerprint()
     intelligence = next(
         payload
         for path, payload, _, _ in gh.writes
@@ -232,6 +239,12 @@ def main() -> int:
     assert intelligence["content_summary"] == content_summary.canonical_dict()
     assert intelligence["relationship_graph_fingerprint"] == relationship_graph.fingerprint()
     assert intelligence["relationship_graph"] == relationship_graph.canonical_dict()
+    assert intelligence["impact_analysis"] == expected_impact.canonical_dict()
+    assert intelligence["impact_analysis_fingerprint"] == expected_impact.fingerprint()
+    assert intelligence["impact_analysis"]["changed_paths"] == [
+        "src/helper.py",
+        "tests/test_helper.py",
+    ]
     assert "never persisted raw" not in json.dumps(intelligence, sort_keys=True)
     assert intelligence["planner_context_fingerprint"] == repository_context.fingerprint
     prepared_state = gh.writes[3][1]
@@ -240,6 +253,7 @@ def main() -> int:
     assert metadata["repository_intelligence_context_fingerprint"] == repository_context.fingerprint
     assert metadata["repository_intelligence_content_fingerprint"] == content_summary.fingerprint()
     assert metadata["repository_intelligence_relationship_fingerprint"] == relationship_graph.fingerprint()
+    assert metadata["repository_intelligence_impact_fingerprint"] == expected_impact.fingerprint()
     assert metadata["repository_intelligence_source_sha"] == snapshot.source_sha
 
     accepted = gh.writes[-1][1]
@@ -285,6 +299,7 @@ def main() -> int:
         "secret_free_ast_content_summary": True,
         "repository_dependency_graph": True,
         "test_source_relationships": True,
+        "trusted_plan_impact_analysis": True,
     }, sort_keys=True))
     return 0
 
