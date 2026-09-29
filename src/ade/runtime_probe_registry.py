@@ -21,6 +21,7 @@ class RuntimeProbeInvocation:
     environment: str
     attempt: int = 1
     timeout_seconds: int = 300
+    repository_write_authority: bool = False
     credential_authority: bool = False
     network_authority: bool = False
     deployment_authority: bool = False
@@ -37,6 +38,7 @@ class RuntimeProbeInvocation:
         if any(
             type(value) is not bool
             for value in (
+                self.repository_write_authority,
                 self.credential_authority,
                 self.network_authority,
                 self.deployment_authority,
@@ -179,6 +181,7 @@ class TrustedRuntimeProbeRegistry:
             environment=contract.environment,
             attempt=attempt,
             timeout_seconds=contract.timeout_seconds,
+            repository_write_authority=False,
             credential_authority=False,
             network_authority=False,
             deployment_authority=False,
