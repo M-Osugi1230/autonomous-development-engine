@@ -99,6 +99,43 @@ class RuntimeVerificationContract:
         )
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> "RuntimeVerificationContract":
+        if not isinstance(payload, dict):
+            raise RuntimeVerificationError(
+                "runtime verification contract must be a JSON object"
+            )
+        allowed = {
+            "schema_version",
+            "verification_id",
+            "target_repository",
+            "source_sha",
+            "environment",
+            "required_probe_ids",
+            "max_attempts",
+            "timeout_seconds",
+        }
+        unknown = set(payload) - allowed
+        if unknown:
+            raise RuntimeVerificationError(
+                f"unknown runtime verification contract fields: {sorted(unknown)}"
+            )
+        raw_probe_ids = payload.get("required_probe_ids")
+        if not isinstance(raw_probe_ids, list):
+            raise RuntimeVerificationError(
+                "runtime verification required_probe_ids must be a list"
+            )
+        return cls(
+            schema_version=payload.get("schema_version", 0),
+            verification_id=str(payload.get("verification_id", "")),
+            target_repository=str(payload.get("target_repository", "")),
+            source_sha=str(payload.get("source_sha", "")),
+            environment=str(payload.get("environment", "")),
+            required_probe_ids=tuple(str(item) for item in raw_probe_ids),
+            max_attempts=payload.get("max_attempts", 0),
+            timeout_seconds=payload.get("timeout_seconds", 0),
+        )
+
 
 @dataclass(frozen=True, slots=True)
 class RuntimeProbeResult:
