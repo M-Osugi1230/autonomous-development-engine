@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.2-external-goal-campaign-001",
+  "campaign_id": "v1.2-external-goal-campaign-003",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-28T22:38:06.339959+00:00",
-  "plan_fingerprint": "97239156c40d4086d4ee684e605e1cfa7cdd0c69cfd2e6089c49e69ceff04920",
+  "dispatched_at": "2026-09-29T08:33:40.319918+00:00",
+  "plan_fingerprint": "a07442a60ea1ba213ee84acd0618097b3d8a6636777d4b1ef9bff789068c7249",
   "run_attempt": "1",
-  "run_id": "36493541167",
+  "run_id": "36543481699",
   "schema_version": 1,
-  "source": "schedule",
-  "source_sha": "538294a47908318bb7f7b8a8fb926308e4e1b354",
+  "source": "push",
+  "source_sha": "79972c5ddc5597b1ca3ca63ea20aef48ee507870",
   "status": "DISPATCHED",
-  "task_id": "v12ext-001"
+  "task_id": "v12ext3-001"
 }
