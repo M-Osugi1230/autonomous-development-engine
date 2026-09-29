@@ -1,7 +1,7 @@
 {
-  "fingerprint": "fa1862e95d62a9dd8e3a22f304e3cdd707ce00f6bbad89a331c2829e1c8a694d",
+  "fingerprint": "1b414c26aeb55986c3cf41dc46089e0251f00b2a941c65251d6ebe30f04442b0",
   "plan": {
-    "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment series label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Implementation must live in a production module under src/thought_pipeline and tests must live only under tests; production modules must not import test-only dependencies. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+    "goal": "Extend the existing thought-experiment model utilities with a small deterministic normalizer for a non-empty experiment variant label. The display label must collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key must use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Add focused unit-test coverage using existing test files. Do not create any new files. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
     "human_boundaries": [
       "destructive or irreversible operation",
       "credential or secret access",
@@ -11,31 +11,31 @@
     "tasks": [
       {
         "acceptance": [
-          "Implement experiment series label normalization utility in src/thought_pipeline/models.py.",
+          "- Define `ExperimentVariantLabelSummary` as a frozen dataclass containing `display_label` and `key`. - Implement `normalize_experiment_variant_label` in `src/thought_pipeline/models.py` to collapse whitespace, apply Unicode case folding and space-to-hyphen replacement for the key, and validate input types and non-emptiness.",
           "Repository CI remains green"
         ],
         "allowed_paths": [
           "src/thought_pipeline/models.py"
         ],
         "depends_on": [],
-        "prompt": "Goal: Add a small self-contained deterministic utility for normalizing a non-empty experiment series label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Implementation must live in a production module under src/thought_pipeline and tests must live only under tests; production modules must not import test-only dependencies. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior. Outcome: Implement experiment series label normalization utility in src/thought_pipeline/models.py. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "v12ext6-001",
-        "title": "Implement experiment series label normalization utility in src/thought_pipeline/models.py."
+        "prompt": "Goal: Extend the existing thought-experiment model utilities with a small deterministic normalizer for a non-empty experiment variant label. The display label must collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key must use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Add focused unit-test coverage using existing test files. Do not create any new files. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior. Outcome: - Define `ExperimentVariantLabelSummary` as a frozen dataclass containing `display_label` and `key`. - Implement `normalize_experiment_variant_label` in `src/thought_pipeline/models.py` to collapse whitespace, apply Unicode case folding and space-to-hyphen replacement for the key, and validate input types and non-emptiness. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "v13ri1-001",
+        "title": "Implement `ExperimentVariantLabelSummary` and `normalize_experiment_variant_label` in `src/thought_pipeline/models.py`."
       },
       {
         "acceptance": [
-          "Add unit tests for experiment series label normalization in tests/test_models.py.",
+          "- Add unit tests in `tests/test_models.py` testing valid normalization, whitespace collapsing, Unicode case folding, immutability of summary object, and rejection of invalid inputs.",
           "Repository CI remains green"
         ],
         "allowed_paths": [
           "tests/test_models.py"
         ],
         "depends_on": [
-          "v12ext6-001"
+          "v13ri1-001"
         ],
-        "prompt": "Goal: Add a small self-contained deterministic utility for normalizing a non-empty experiment series label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Implementation must live in a production module under src/thought_pipeline and tests must live only under tests; production modules must not import test-only dependencies. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior. Outcome: Add unit tests for experiment series label normalization in tests/test_models.py. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "v12ext6-002",
-        "title": "Add unit tests for experiment series label normalization in tests/test_models.py."
+        "prompt": "Goal: Extend the existing thought-experiment model utilities with a small deterministic normalizer for a non-empty experiment variant label. The display label must collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key must use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Add focused unit-test coverage using existing test files. Do not create any new files. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior. Outcome: - Add unit tests in `tests/test_models.py` testing valid normalization, whitespace collapsing, Unicode case folding, immutability of summary object, and rejection of invalid inputs. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "v13ri1-002",
+        "title": "Add unit tests for variant label normalization in `tests/test_models.py`."
       }
     ]
   },
