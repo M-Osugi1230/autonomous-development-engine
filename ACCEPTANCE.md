@@ -196,17 +196,17 @@
 
 ## ADE v1.2 — Autonomous Planner
 
-- [ ] A human can submit only a high-level Goal; per-task Outcome, allowed_paths, Acceptance, and Dependencies are produced by an untrusted planner rather than manually supplied for each task.
-- [ ] Planner output uses a strict versioned proposal schema and cannot directly mutate AcceptedPlan, Campaign, Task DAG, project state, workflows, or trusted controller files.
-- [ ] Trusted deterministic validation requires exact Goal binding and rejects malformed, empty, over-budget, cyclic, forward-dependent, or duplicate proposal tasks.
-- [ ] Trusted policy bounds task count, paths per task, acceptance checks per task, text sizes, and allowed repository path prefixes.
-- [ ] Planner-proposed paths remain relative, normalized, inside trusted allowed roots, and outside .github/, .autodev/, secret/config, and other protected control paths.
-- [ ] Trusted validation assigns executable task IDs and provider prompts; the planner cannot choose executable task IDs or inject raw provider control instructions.
-- [ ] Mandatory human-only boundaries for destructive/irreversible actions, credentials/secrets, and externally consequential side effects are present before acceptance.
-- [ ] Unsafe/destructive planner proposals are rejected or converted to HUMAN_WAIT before AcceptedPlan creation; they are never silently accepted.
-- [ ] Only the trusted acceptance boundary can convert a validated planner proposal into a fingerprinted AcceptedPlan.
-- [ ] Identical normalized Goal + proposal + trusted policy produce the same DevelopmentPlan and AcceptedPlan fingerprint.
-- [ ] A validated AcceptedPlan compiles through the existing Campaign/DAG path and can enter v1.1 Zero-Touch Start without bypassing any v1.0/v1.1 gates.
-- [ ] Deterministic CI proofs cover schema rejection, scope rejection, dependency rejection, budget rejection, human-boundary enforcement, stable fingerprinting, and successful compile.
-- [ ] A real planning provider produces a plan from a high-level Goal without manually authored per-task work items, and the raw planner proposal is preserved as evidence.
+- [x] A human can submit only a high-level Goal; per-task Outcome, allowed_paths, Acceptance, and Dependencies are produced by an untrusted planner rather than manually supplied for each task.
+- [x] Planner output uses a strict versioned proposal schema and cannot directly mutate AcceptedPlan, Campaign, Task DAG, project state, workflows, or trusted controller files.
+- [x] Trusted deterministic validation requires exact Goal binding and rejects malformed, empty, over-budget, cyclic, forward-dependent, or duplicate proposal tasks.
+- [x] Trusted policy bounds task count, paths per task, acceptance checks per task, text sizes, and allowed repository path prefixes.
+- [x] Planner-proposed paths remain relative, normalized, inside trusted allowed roots, and outside .github/, .autodev/, secret/config, and other protected control paths.
+- [x] Trusted validation assigns executable task IDs and provider prompts; the planner cannot choose executable task IDs or inject raw provider control instructions.
+- [x] Mandatory human-only boundaries for destructive/irreversible actions, credentials/secrets, and externally consequential side effects are present before acceptance.
+- [x] Unsafe/destructive planner proposals are rejected or converted to HUMAN_WAIT before AcceptedPlan creation; they are never silently accepted.
+- [x] Only the trusted acceptance boundary can convert a validated planner proposal into a fingerprinted AcceptedPlan.
+- [x] Identical normalized Goal + proposal + trusted policy produce the same DevelopmentPlan and AcceptedPlan fingerprint.
+- [x] A validated AcceptedPlan compiles through the existing Campaign/DAG path and can enter v1.1 Zero-Touch Start without bypassing any v1.0/v1.1 gates.
+- [x] Deterministic CI proofs cover schema rejection, scope rejection, dependency rejection, budget rejection, human-boundary enforcement, stable fingerprinting, and successful compile.
+- [x] A real planning provider produces a plan from a high-level Goal without manually authored per-task work items, and the raw planner proposal is preserved as evidence.
 - [ ] A real external-repository proof completes High-level Goal -> autonomous proposal -> trusted validation -> AcceptedPlan -> automatic Campaign start -> multiple PR/CI/trusted-merge cycles -> terminal Goal Acceptance.
