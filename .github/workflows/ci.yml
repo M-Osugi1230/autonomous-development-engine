@@ -63,6 +63,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python .github/trusted/autonomous_planner_retry_probe.py
 
+      - name: Repository Intelligence proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/repository_intelligence_probe.py
+
       - name: Remote Repository Loop proof
         env:
           PYTHONPATH: src
