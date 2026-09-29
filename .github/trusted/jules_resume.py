@@ -16,6 +16,7 @@ from jules_cycle import (
     monitor_existing,
     run_new_cycle,
 )
+from ade.remote_execution import execution_target_from_state
 
 CHECKPOINT_FILE = Path(".autodev/runtime/checkpoint.json")
 
@@ -83,6 +84,21 @@ def decide_checkpoint_action(
     raise ValueError(f"unsupported checkpoint state: {state}")
 
 
+def resolve_resume_target(
+    state_payload: dict[str, Any],
+    *,
+    controller_owner: str,
+    controller_repo: str,
+) -> str:
+    if not isinstance(state_payload, dict):
+        raise ValueError("state_payload must be a JSON object")
+    fallback = f"{controller_owner}/{controller_repo}"
+    return execution_target_from_state(
+        state_payload,
+        fallback_repository=fallback,
+    )
+
+
 def main() -> int:
     owner = os.environ.get("ADE_GITHUB_OWNER", "M-Osugi1230")
     repo = os.environ.get("ADE_GITHUB_REPO", "autonomous-development-engine")
@@ -119,6 +135,13 @@ def main() -> int:
 
         client = JulesClient()
         gh = GitHubClient()
+        state_payload, _ = gh.get_json_file(".autodev/state.json")
+        target_repository = resolve_resume_target(
+            state_payload,
+            controller_owner=owner,
+            controller_repo=repo,
+        )
+        target_owner, target_repo = target_repository.split("/", 1)
 
         if action == "MONITOR":
             assert session_id is not None
@@ -128,6 +151,7 @@ def main() -> int:
                 gh,
                 task=task,
                 session_id=session_id,
+                target_repository=target_repository,
             )
 
         if action == "START_NEW":
@@ -136,8 +160,9 @@ def main() -> int:
                 task=task,
                 client=client,
                 gh=gh,
-                owner=owner,
-                repo=repo,
+                owner=target_owner,
+                repo=target_repo,
+                target_repository=target_repository,
             )
 
         raise RuntimeError(f"unhandled resume action: {action}")
