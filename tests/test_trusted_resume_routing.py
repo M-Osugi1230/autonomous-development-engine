@@ -101,6 +101,15 @@ class TrustedResumeRoutingTests(unittest.TestCase):
             "M-Osugi1230/autonomous-development-engine",
         )
 
+    def test_resume_uses_execution_lease_before_starting_new_session(self) -> None:
+        source = (TRUSTED_DIR / "jules_resume.py").read_text(encoding="utf-8")
+        self.assertIn("claim_execution(", source)
+        self.assertIn("github-actions-resume:", source)
+        self.assertLess(
+            source.index("claim_execution("),
+            source.index('print("RESUME: quota window elapsed; starting a new Jules session")'),
+        )
+
     def test_cloud_probe_helper(self) -> None:
         module = load_trusted_module("resume_probe.py", "trusted_resume_probe_test")
         result = module.run_probe()
