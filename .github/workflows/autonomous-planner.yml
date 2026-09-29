@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - ".autodev/planning-goal.json"
+  repository_dispatch:
+    types:
+      - ade_planner_retry
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
