@@ -23,9 +23,13 @@ BOUNDARIES = [
 class FakeGitHub:
     def __init__(self):
         self.writes = []
+        self.dispatches = []
 
     def upsert_json_file(self, path, payload, *, message, branch="main"):
         self.writes.append((path, payload, message, branch))
+
+    def dispatch(self, event_type, payload=None):
+        self.dispatches.append((event_type, payload or {}))
 
 
 def main() -> int:
@@ -134,6 +138,17 @@ def main() -> int:
     accepted = gh.writes[-1][1]
     assert accepted["status"] == "ACCEPTED"
     assert accepted["fingerprint"] == bundle.accepted_plan.fingerprint
+    assert gh.dispatches == [
+        (
+            "ade_zero_touch_start",
+            {
+                "task_id": bundle.cycle_task.task_id,
+                "campaign_id": bundle.campaign.campaign_id,
+                "request_id": request.request_id,
+                "source": "autonomous-planner",
+            },
+        )
+    ]
 
     print(json.dumps({
         "ok": True,
@@ -143,6 +158,7 @@ def main() -> int:
         "planning_only_evidence": True,
         "fingerprint_reconciled": True,
         "trusted_task_count_bounds": True,
+        "explicit_zero_touch_dispatch": True,
     }, sort_keys=True))
     return 0
 
