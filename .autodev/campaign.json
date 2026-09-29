@@ -1,14 +1,10 @@
 {
-  "campaign_id": "v1.3-repository-intelligence-campaign-001",
-  "completed_task_ids": [
-    "v13ri1-001",
-    "v13ri1-002"
-  ],
-  "goal": "Extend the existing thought-experiment model utilities with a small deterministic normalizer for a non-empty experiment variant label. The display label must collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key must use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Add focused unit-test coverage using existing test files. Do not create any new files. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+  "campaign_id": "v1.4-runtime-verification-campaign-001",
+  "completed_task_ids": [],
+  "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses Unicode whitespace such as non-breaking space and em space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
   "schema_version": 1,
-  "status": "COMPLETED",
+  "status": "RUNNING",
   "task_ids": [
-    "v13ri1-001",
-    "v13ri1-002"
+    "v14rv1-001"
   ]
 }
