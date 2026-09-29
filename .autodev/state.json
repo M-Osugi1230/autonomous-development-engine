@@ -74,6 +74,7 @@
     "milestone": "phase12-complete",
     "next_required_human_action": null,
     "next_system_action": "zero-touch-start",
+    "pause_reason": "jules-rolling-quota",
     "phase": "v1.2-autonomous-planner",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -101,6 +102,7 @@
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
     "queue_exhausted": false,
+    "resume_after": "2026-09-29T12:25:49.197198+00:00",
     "scheduler": "dag",
     "target_base_branch": "main",
     "target_repository": "M-Osugi1230/one-minute-thought-experiments"
@@ -108,6 +110,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "READY",
-  "updated_at": "2026-09-29T10:40:12.848987+00:00"
+  "status": "PAUSED_QUOTA",
+  "updated_at": "2026-09-29T10:40:33.603202+00:00"
 }
