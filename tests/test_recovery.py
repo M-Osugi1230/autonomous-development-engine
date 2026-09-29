@@ -8,6 +8,7 @@ class RecoveryPolicyTests(unittest.TestCase):
         self.assertEqual(choose_recovery(RecoveryFailure.CI_FAILURE, RecoveryProgress()), RecoveryAction.REPAIR)
         self.assertEqual(choose_recovery(RecoveryFailure.MERGE_CONFLICT, RecoveryProgress()), RecoveryAction.REBASE)
         self.assertEqual(choose_recovery(RecoveryFailure.INVALID_IMPLEMENTATION, RecoveryProgress()), RecoveryAction.REPLAN)
+        self.assertEqual(choose_recovery(RecoveryFailure.RUNTIME_VERIFICATION, RecoveryProgress()), RecoveryAction.HUMAN_WAIT)
 
     def test_budgets_stop_unbounded_recovery(self):
         exhausted=RecoveryProgress(retries=2, repairs=2, rebases=1, replans=1)
