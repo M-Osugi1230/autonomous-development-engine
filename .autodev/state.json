@@ -57,7 +57,7 @@
     "v12ext3-002",
     "v12ext4-001"
   ],
-  "current_task_id": "v12ext4-002",
+  "current_task_id": null,
   "failed_task_ids": [],
   "iteration": 55,
   "metadata": {
@@ -65,16 +65,15 @@
     "campaign_id": "v1.2-external-goal-campaign-004",
     "dag_blocked": false,
     "last_superseded_campaign": {
-      "campaign_id": "v1.2-external-goal-campaign-001",
-      "reason": "planner-meta-task-and-directory-scope-rejected-after-v1.2-hardening",
-      "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/5",
-      "task_id": "v12ext-001"
+      "campaign_id": "v1.2-external-goal-campaign-004",
+      "task_id": "v12ext4-002",
+      "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/9",
+      "reason": "post-merge-quality-gate-gap-runtime-pytest-dependency-and-tests-outside-suite"
     },
     "manual_progress_during_provider_quota": true,
     "milestone": "phase12-complete",
     "next_required_human_action": null,
-    "next_system_action": "zero-touch-start",
-    "pause_reason": "jules-rolling-quota",
+    "next_system_action": "repair-target-baseline-and-harden-quality-gate",
     "phase": "v1.2-autonomous-planner",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -102,7 +101,6 @@
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
     "queue_exhausted": false,
-    "resume_after": "2026-09-29T12:25:49.197198+00:00",
     "scheduler": "dag",
     "target_base_branch": "main",
     "target_repository": "M-Osugi1230/one-minute-thought-experiments"
@@ -110,6 +108,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "PAUSED_QUOTA",
-  "updated_at": "2026-09-29T10:40:33.603202+00:00"
+  "status": "READY",
+  "updated_at": "2026-09-29T11:17:04.372Z"
 }
