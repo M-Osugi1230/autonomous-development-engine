@@ -59,11 +59,12 @@
     "v12ext6-001",
     "v12ext6-002",
     "v13ri1-001",
-    "v13ri1-002"
+    "v13ri1-002",
+    "v14rv1-001"
   ],
-  "current_task_id": "v14rv1-001",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 59,
+  "iteration": 60,
   "metadata": {
     "accepted_plan_fingerprint": "3fdd6f14778d03f3fa8b38c0472fcbc17713acfc6d1f1b6ce690c22ce80f2a14",
     "campaign_id": "v1.4-runtime-verification-campaign-001",
@@ -103,7 +104,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "repository_intelligence_content_fingerprint": "33353a2a13227a1e9b1087bf8a99ac27cd3065efeb2a71051d5ad7dab9f200d2",
     "repository_intelligence_context_fingerprint": "3d59c45fba2d62fbf34ca50d63aae96b4116c2d902edcc5c3b2f7be7f79d8887",
     "repository_intelligence_impact_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
@@ -137,6 +138,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-09-29T23:46:25.103799+00:00"
+  "status": "READY",
+  "updated_at": "2026-09-29T23:53:58.940520+00:00"
 }
