@@ -2,6 +2,12 @@ from __future__ import annotations
 
 import json
 
+from ade.runtime_probe_registry import (
+    RuntimeProbeInvocation,
+    RuntimeProbeObservation,
+    RuntimeProbeRegistration,
+    TrustedRuntimeProbeRegistry,
+)
 from ade.runtime_verification import (
     RuntimeProbeResult,
     RuntimeProbeStatus,
@@ -25,6 +31,27 @@ def main() -> int:
         max_attempts=2,
     )
 
+    calls: list[RuntimeProbeInvocation] = []
+
+    def pass_probe(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+        calls.append(invocation)
+        return RuntimeProbeObservation(RuntimeProbeStatus.PASS)
+
+    registry = TrustedRuntimeProbeRegistry(
+        [
+            RuntimeProbeRegistration("probe-a", "impl-a-v1", pass_probe),
+            RuntimeProbeRegistration("probe-b", "impl-b-v1", pass_probe),
+        ]
+    )
+    registry.ensure_contract_supported(contract)
+    result_a = registry.execute(contract, probe_id="probe-a")
+    result_b = registry.execute(contract, probe_id="probe-b")
+    assert result_a.probe_id == "probe-a"
+    assert result_a.source_sha == SHA
+    assert result_b.probe_id == "probe-b"
+    assert result_b.source_sha == SHA
+    assert len(calls) == 2
+
     partial = evaluate_runtime_verification(
         contract,
         [
@@ -39,18 +66,7 @@ def main() -> int:
 
     complete = evaluate_runtime_verification(
         contract,
-        [
-            RuntimeProbeResult(
-                probe_id="probe-a",
-                status=RuntimeProbeStatus.PASS,
-                source_sha=SHA,
-            ),
-            RuntimeProbeResult(
-                probe_id="probe-b",
-                status=RuntimeProbeStatus.PASS,
-                source_sha=SHA,
-            ),
-        ],
+        [result_a, result_b],
     )
     assert complete.disposition is RuntimeVerificationDisposition.VERIFIED
 
@@ -94,6 +110,9 @@ def main() -> int:
         "all_required_pass_verified": True,
         "required_failure_blocks": True,
         "stale_source_rejected": True,
+        "trusted_registry_required": True,
+        "registry_identity_binding": True,
+        "registry_fingerprint": registry.fingerprint(),
         "contract_fingerprint": contract.fingerprint(),
         "report_fingerprint": complete.fingerprint(),
     }, sort_keys=True))
