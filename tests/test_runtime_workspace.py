@@ -3,6 +3,7 @@ from __future__ import annotations
 from io import BytesIO
 import importlib.util
 import tarfile
+import sys
 import tempfile
 import unittest
 from pathlib import Path
