@@ -2,9 +2,9 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "6036465720705248386",
+  "provider_session_id": "4435308494906123157",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "v12ext6-002"
+  "state": "RUNNING",
+  "task_id": "v13ri1-001"
 }
