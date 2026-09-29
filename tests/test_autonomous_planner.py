@@ -83,6 +83,14 @@ class AutonomousPlannerTests(unittest.TestCase):
             ["v12-001", "v12-002"],
         )
         self.assertEqual(result.accepted_plan.plan.tasks[1].depends_on, ("v12-001",))
+        self.assertIn(
+            "Do not add test code to non-test implementation files",
+            result.accepted_plan.plan.tasks[0].prompt,
+        )
+        self.assertIn(
+            "Do not add test code to non-test implementation files",
+            result.accepted_plan.plan.tasks[1].prompt,
+        )
         self.assertIn("untrusted planning component", provider.prompts[0])
         self.assertIn("concrete repository files", provider.prompts[0])
         self.assertIn("native approval plan", provider.prompts[0])
