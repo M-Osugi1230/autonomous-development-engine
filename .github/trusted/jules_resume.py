@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -165,7 +165,7 @@ def main() -> int:
                     task_id=task_id,
                     owner_id=owner_id,
                     now=datetime.now(UTC),
-                    ttl=__import__("datetime").timedelta(minutes=50),
+                    ttl=timedelta(minutes=50),
                 )
             except RuntimeError as exc:
                 if "live execution lease" in str(exc):
