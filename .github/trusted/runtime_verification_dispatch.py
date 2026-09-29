@@ -10,10 +10,13 @@ from ade.runtime_probe_executor import execute_runtime_verification_bounded
 from ade.runtime_verification import (
     RuntimeVerificationContract,
     RuntimeVerificationDisposition,
+    RuntimeVerificationError,
 )
 from ade.runtime_verification_trigger import (
     RuntimeVerificationReceipt,
     record_runtime_verification_dispatch,
+    record_runtime_verification_failure,
+    record_runtime_verification_human_wait,
     record_runtime_verification_report,
     runtime_verification_paths,
     runtime_verification_report_path,
@@ -22,6 +25,10 @@ from ade.runtime_verification_trigger import (
 from github_client import GitHubClient, GitHubError
 from runtime_probes import build_runtime_probe_registry
 from runtime_targets import build_runtime_target_registry
+from runtime_verification_control import (
+    advance_after_runtime_verified,
+    enter_runtime_human_wait,
+)
 
 RESULT_PATH = Path(".autodev/runtime/runtime-verification-dispatch-result.json")
 
