@@ -111,6 +111,37 @@ def main() -> int:
             receipt=receipt,
         )
 
+        if receipt.status == "VERIFIED":
+            next_task_id, queue_advanced = advance_after_runtime_verified(
+                gh,
+                receipt,
+            )
+            result = {
+                "schema_version": 1,
+                "state": "VERIFIED",
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "queue_advanced": queue_advanced,
+                "next_task_id": next_task_id,
+                "replay": True,
+            }
+            _write(result)
+            print(json.dumps(result, sort_keys=True))
+            return 0
+
+        if receipt.status == "HUMAN_WAIT":
+            result = {
+                "schema_version": 1,
+                "state": "HUMAN_WAIT",
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "queue_advanced": False,
+                "replay": True,
+            }
+            _write(result)
+            print(json.dumps(result, sort_keys=True))
+            return 0
+
         target_registry = build_runtime_target_registry(
             contract.target_repository,
         )
