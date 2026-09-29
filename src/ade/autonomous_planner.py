@@ -443,7 +443,13 @@ def validate_planner_proposal(
     for task in proposal.tasks:
         title = _bounded_text(task.title, policy, label=f"task {task.key} title")
         outcome = _bounded_text(task.outcome, policy, label=f"task {task.key} outcome")
-        prompt = f"Goal: {goal}\nOutcome: {outcome}"
+        prompt = (
+            f"Goal: {goal}\n"
+            f"Outcome: {outcome}\n"
+            "Scope discipline: implement only this task's stated outcome and acceptance. "
+            "Do not add test code to non-test implementation files or implementation code "
+            "to dedicated test files unless this task's outcome explicitly requires it."
+        )
         planned.append(
             PlannedTask(
                 task_id=task_ids[task.key],
