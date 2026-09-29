@@ -418,13 +418,23 @@ def planner_repository_context(
     snapshot: RepositorySnapshot,
     *,
     allowed_path_prefixes: tuple[str, ...],
+    content_summary: RepositoryContentSummary | None = None,
     max_files: int = 200,
+    max_summary_modules: int = 20,
     max_chars: int = 12000,
 ) -> RepositoryPlannerContext:
     if not isinstance(snapshot, RepositorySnapshot):
         raise RepositoryIntelligenceError("snapshot must be a RepositorySnapshot")
     if type(max_files) is not int or max_files < 1 or max_files > 1000:
         raise RepositoryIntelligenceError("max_files must be between 1 and 1000")
+    if type(max_summary_modules) is not int or not 0 <= max_summary_modules <= 100:
+        raise RepositoryIntelligenceError("max_summary_modules must be between 0 and 100")
+    if content_summary is not None and not isinstance(
+        content_summary, RepositoryContentSummary
+    ):
+        raise RepositoryIntelligenceError(
+            "content_summary must be a RepositoryContentSummary or null"
+        )
     if type(max_chars) is not int or max_chars < 1024 or max_chars > 50000:
         raise RepositoryIntelligenceError("max_chars must be between 1024 and 50000")
     if not allowed_path_prefixes:
@@ -441,8 +451,16 @@ def planner_repository_context(
         if any(_path_within(path, prefix) for prefix in prefixes)
     ]
     selected = matching[:max_files]
+    summary_modules = (
+        list(content_summary.modules[:max_summary_modules])
+        if content_summary is not None
+        else []
+    )
 
-    def payload_for(files: list[str]) -> dict[str, Any]:
+    def payload_for(
+        files: list[str],
+        modules: list[PythonModuleSummary],
+    ) -> dict[str, Any]:
         return {
             "schema_version": 1,
             "repository": snapshot.repository,
@@ -458,18 +476,46 @@ def planner_repository_context(
             "known_files_within_trusted_roots": files,
             "known_file_count_within_trusted_roots": len(matching),
             "known_files_truncated": len(files) < len(matching),
+            "content_summary_fingerprint": (
+                content_summary.fingerprint()
+                if content_summary is not None
+                else None
+            ),
+            "content_summary_module_count": (
+                len(content_summary.modules)
+                if content_summary is not None
+                else 0
+            ),
+            "python_module_summaries": [
+                module.canonical_dict()
+                for module in modules
+            ],
+            "python_module_summaries_truncated": (
+                content_summary is not None
+                and len(modules) < len(content_summary.modules)
+            ),
         }
 
-    payload = payload_for(selected)
+    payload = payload_for(selected, summary_modules)
     serialized = json.dumps(
         payload,
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),
     )
+    while len(serialized) > max_chars and summary_modules:
+        summary_modules.pop()
+        payload = payload_for(selected, summary_modules)
+        serialized = json.dumps(
+            payload,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+
     while len(serialized) > max_chars and selected:
         selected.pop()
-        payload = payload_for(selected)
+        payload = payload_for(selected, summary_modules)
         serialized = json.dumps(
             payload,
             ensure_ascii=False,
