@@ -235,7 +235,7 @@
 - [x] Unknown probes, duplicate results, stale source SHAs, invalid identifiers, and attempt-budget violations fail closed.
 - [x] Contract and report fingerprints are deterministic, and the trusted runtime contract probe is exercised by the mandatory unit-test CI stage.
 - [x] A trusted probe registry maps probe IDs to fixed controller-owned implementations; untrusted planner/provider output cannot supply executable probe definitions.
-- [ ] Post-merge runtime verification automatically binds to the exact trusted merge SHA and persists a durable verification receipt.
+- [x] Post-merge runtime verification automatically binds to the exact trusted merge SHA and persists a durable verification receipt.
 - [ ] Runtime probes execute with bounded timeouts/retries and cannot expand repository, credential, network, or deployment authority.
 - [ ] Deployment-aware verification can distinguish repository runtime, preview/staging, and production targets without assuming deployment success from CI success.
 - [ ] Failed runtime/deployment verification enters bounded recovery or HUMAN_WAIT and never silently marks the Campaign complete.
