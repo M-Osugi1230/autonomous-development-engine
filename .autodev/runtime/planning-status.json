@@ -1,13 +1,13 @@
 {
-  "accepted_plan_fingerprint": "fa1862e95d62a9dd8e3a22f304e3cdd707ce00f6bbad89a331c2829e1c8a694d",
+  "accepted_plan_fingerprint": "1b414c26aeb55986c3cf41dc46089e0251f00b2a941c65251d6ebe30f04442b0",
   "attempt": 1,
-  "campaign_id": "v1.2-external-goal-campaign-006",
-  "first_task_id": "v12ext6-001",
-  "proposal_fingerprint": "efc011554ee6bbf2379089248a2bf069e8cc364f6ef9d5b614b3acfc3e73867e",
+  "campaign_id": "v1.3-repository-intelligence-campaign-001",
+  "first_task_id": "v13ri1-001",
+  "proposal_fingerprint": "9e522fc41393532efcfd057f0d774b4dcfbdf93d93efc661c9618ea6831a76ba",
   "reason": "trusted-plan-accepted",
-  "request_fingerprint": "2cd58d56b01fe1976d1f457fd740407d12abe6947ace00044f8d233a89862b1f",
-  "request_id": "v1.2-external-goal-proof-006",
+  "request_fingerprint": "d872f29fcb6f96ec1e2d61ed862fbeff12d4c7815b41bce9884c405ef3ceb64e",
+  "request_id": "v1.3-repository-intelligence-proof-001",
   "schema_version": 1,
   "state": "ACCEPTED",
-  "updated_at": "2026-09-29T16:56:23.146081+00:00"
+  "updated_at": "2026-09-29T22:15:55.113818+00:00"
 }
