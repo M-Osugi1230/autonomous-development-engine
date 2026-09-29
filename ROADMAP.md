@@ -97,3 +97,5 @@ Evidence: real Campaign `v1.1-zero-touch-proof-001` was activated by AcceptedPla
 
 ## ADE v1.2 — Autonomous Planner
 Generate bounded DevelopmentPlans from a high-level Goal using repository-aware AI planning, then require deterministic trusted validation before AcceptedPlan/Campaign creation. AI planner output is never directly executable.
+
+Current status: planner schema/policy validation, planning-only Jules boundary, explicit Planner -> Zero-Touch handoff, external PR monitoring, quota-resume target preservation, resume execution-lease reclamation, and the v1.2 graduation-audit contract are implemented and CI-green. Real proof `v1.2-external-goal-proof-004` has completed Task 1 through external PR #9 / CI / trusted merge and is paused at the provider quota boundary before Task 2. v1.2 remains open until the automatic quota resume completes Task 2 and terminal immutable evidence passes the graduation audit.
