@@ -120,7 +120,6 @@ def main() -> int:
             source_name="sources/github/example/repo",
             poll_interval_seconds=0.001,
             max_plan_polls=3,
-            max_structured_polls=3,
             activity_404_retries=2,
             allowed_path_prefixes=("src/ade", "tests"),
         ),
@@ -140,16 +139,17 @@ def main() -> int:
     assert create[2]["requirePlanApproval"] is True
     assert "automationMode" not in create[2]
     assert not any(path.endswith(":approvePlan") for _, path, _, _ in client.requests)
-    assert any(path.endswith(":sendMessage") for _, path, _, _ in client.requests)
+    assert not any(path.endswith(":sendMessage") for _, path, _, _ in client.requests)
     assert provider.last_observed_state == "AWAITING_PLAN_APPROVAL"
-    assert provider.last_proposal_mode == "followup-structured"
+    assert provider.last_proposal_mode == "derived-plan-steps"
 
     print(json.dumps({
         "ok": True,
         "require_plan_approval": True,
         "auto_create_pr_disabled": True,
         "approve_plan_never_called": True,
-        "structured_followup_preferred": True,
+        "approval_boundary_read_only": True,
+        "plan_snapshot_derived_without_followup": True,
         "unapproved_terminal_state": True,
     }, sort_keys=True))
     return 0
