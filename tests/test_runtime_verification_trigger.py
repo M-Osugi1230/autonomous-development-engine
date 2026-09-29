@@ -22,6 +22,7 @@ from ade.runtime_verification_trigger import (
     arm_post_merge_runtime_verification,
     record_runtime_verification_dispatch,
     record_runtime_verification_report,
+    record_runtime_verification_human_wait,
     runtime_verification_report_path,
 )
 
@@ -406,6 +407,35 @@ class RuntimeVerificationTriggerTests(unittest.TestCase):
                 receipt=dispatched,
                 report=stale,
             )
+
+    def test_failed_receipt_can_only_enter_human_wait(self) -> None:
+        trusted_registry = registry()
+        activation = arm_post_merge_runtime_verification(
+            policy=policy(),
+            registry=trusted_registry,
+            task_id="task-001",
+            target_repository="example/target",
+            trusted_merge_sha=SHA_A,
+        )
+        dispatched = record_runtime_verification_dispatch(
+            contract=activation.contract,
+            registry=trusted_registry,
+            receipt=activation.receipt,
+        ).receipt
+        failed = RuntimeVerificationReceipt(
+            **{
+                **dispatched.canonical_dict(),
+                "status": "FAILED",
+            }
+        )
+        waiting = record_runtime_verification_human_wait(failed)
+        self.assertTrue(waiting.changed)
+        self.assertEqual(waiting.receipt.status, "HUMAN_WAIT")
+        replay = record_runtime_verification_human_wait(waiting.receipt)
+        self.assertFalse(replay.changed)
+        self.assertEqual(replay.receipt, waiting.receipt)
+        with self.assertRaisesRegex(RuntimeVerificationError, "requires FAILED"):
+            record_runtime_verification_human_wait(dispatched)
 
     def test_report_path_is_task_scoped(self) -> None:
         self.assertEqual(
