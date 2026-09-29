@@ -21,8 +21,10 @@ from ade.planning_activation import PlanningGoalRequest, build_planning_activati
 from ade.repository_intelligence import (
     RepositoryContentSummary,
     RepositoryPlannerContext,
+    RepositoryRelationshipGraph,
     RepositorySnapshot,
     build_python_content_summary,
+    build_repository_relationships,
     build_repository_snapshot,
     planner_repository_context,
     python_candidate_paths,
@@ -149,7 +151,12 @@ def _steps_hash(steps: tuple[dict[str, str], ...]) -> str:
 def _collect_repository_intelligence(
     gh: GitHubClient,
     request: PlanningGoalRequest,
-) -> tuple[RepositorySnapshot, RepositoryContentSummary, RepositoryPlannerContext]:
+) -> tuple[
+    RepositorySnapshot,
+    RepositoryContentSummary,
+    RepositoryRelationshipGraph,
+    RepositoryPlannerContext,
+]:
     source_sha = gh.get_branch_head_sha(
         request.target_repository,
         branch=request.base_branch,
@@ -191,15 +198,18 @@ def _collect_repository_intelligence(
         max_files=20,
         max_source_chars=100000,
     )
+    relationship_graph = build_repository_relationships(content_summary)
     context = planner_repository_context(
         snapshot,
         allowed_path_prefixes=request.allowed_path_prefixes,
         content_summary=content_summary,
+        relationship_graph=relationship_graph,
         max_files=200,
         max_summary_modules=20,
+        max_relationships=100,
         max_chars=12000,
     )
-    return snapshot, content_summary, context
+    return snapshot, content_summary, relationship_graph, context
 
 
 def _persist_activation(
@@ -211,6 +221,7 @@ def _persist_activation(
     provider: JulesPlanningProvider,
     snapshot: RepositorySnapshot,
     content_summary: RepositoryContentSummary,
+    relationship_graph: RepositoryRelationshipGraph,
     repository_context: RepositoryPlannerContext,
     attempt: int,
 ) -> None:
@@ -241,6 +252,7 @@ def _persist_activation(
         "repository_snapshot_fingerprint": snapshot.fingerprint(),
         "repository_context_fingerprint": repository_context.fingerprint,
         "repository_content_summary_fingerprint": content_summary.fingerprint(),
+        "repository_relationship_graph_fingerprint": relationship_graph.fingerprint(),
         "repository_source_sha": snapshot.source_sha,
     }
 
@@ -269,6 +281,7 @@ def _persist_activation(
     metadata["repository_intelligence_snapshot_fingerprint"] = snapshot.fingerprint()
     metadata["repository_intelligence_context_fingerprint"] = repository_context.fingerprint
     metadata["repository_intelligence_content_fingerprint"] = content_summary.fingerprint()
+    metadata["repository_intelligence_relationship_fingerprint"] = relationship_graph.fingerprint()
     metadata["repository_intelligence_source_sha"] = snapshot.source_sha
     state_payload["updated_at"] = datetime.now(UTC).isoformat()
     gh.upsert_json_file(
@@ -284,6 +297,8 @@ def _persist_activation(
             "snapshot_fingerprint": snapshot.fingerprint(),
             "content_summary": content_summary.canonical_dict(),
             "content_summary_fingerprint": content_summary.fingerprint(),
+            "relationship_graph": relationship_graph.canonical_dict(),
+            "relationship_graph_fingerprint": relationship_graph.fingerprint(),
             "planner_context": repository_context.payload,
             "planner_context_fingerprint": repository_context.fingerprint,
         },
@@ -379,7 +394,12 @@ def main() -> int:
         if not isinstance(source_name, str) or not source_name.strip():
             raise JulesPlannerError("Jules target source has no resource name")
 
-        snapshot, content_summary, repository_context = _collect_repository_intelligence(
+        (
+            snapshot,
+            content_summary,
+            relationship_graph,
+            repository_context,
+        ) = _collect_repository_intelligence(
             gh,
             request,
         )
@@ -450,6 +470,7 @@ def main() -> int:
             provider=provider,
             snapshot=snapshot,
             content_summary=content_summary,
+            relationship_graph=relationship_graph,
             repository_context=repository_context,
             attempt=attempt,
         )

@@ -117,3 +117,5 @@ Slice 001 complete: Git tree metadata is read through the trusted controller, no
 
 Slice 002 complete: trusted bounded UTF-8 reads are limited to deterministic Python candidates; raw source is parsed locally with Python AST and discarded. Planner/evidence receive only module names, top-level class/function names, import-module names, parse status, byte counts, and content/blob fingerprints. String constants, docstrings, imported symbol names, and raw source text are not persisted into Repository Intelligence context.
 
+Slice 003 complete: internal Python import edges are resolved against the bounded content summary, relative imports are normalized against package context, external imports are ignored, and test-to-source relationships are derived from import edges with an unambiguous filename fallback. The bounded relationship graph is fingerprinted and supplied to planner context/evidence without changing write authority.
+

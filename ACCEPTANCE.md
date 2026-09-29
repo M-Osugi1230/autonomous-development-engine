@@ -221,7 +221,7 @@
 - [x] Snapshot and planner-context fingerprints are persisted in repository-intelligence evidence, planner evidence, and project-state metadata.
 - [x] CI contains deterministic Repository Intelligence and trusted activation proofs for the structure snapshot path.
 - [x] Bounded trusted content summaries identify relevant symbols/modules without exposing secrets or unbounded repository text.
-- [ ] Repository Intelligence records dependency/import relationships and test-to-source relationships needed for change planning.
+- [x] Repository Intelligence records dependency/import relationships and test-to-source relationships needed for change planning.
 - [ ] A deterministic impact analysis identifies likely affected files and tests for a proposed change without granting write authority.
 - [ ] Planner validation can require proposed concrete paths to exist in the trusted repository snapshot unless a task explicitly creates a new file.
 - [ ] A real external-repository proof demonstrates that repository-aware planning selects grounded implementation/test paths and completes through the existing trusted execution loop.

@@ -135,6 +135,63 @@ class RepositoryContentSummary:
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
+@dataclass(frozen=True, slots=True)
+class RepositoryDependencyEdge:
+    source_path: str
+    target_path: str
+    kind: str = "import"
+
+    def canonical_dict(self) -> dict[str, str]:
+        return {
+            "source_path": self.source_path,
+            "target_path": self.target_path,
+            "kind": self.kind,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class RepositoryTestSourceLink:
+    test_path: str
+    source_path: str
+    reason: str
+
+    def canonical_dict(self) -> dict[str, str]:
+        return {
+            "test_path": self.test_path,
+            "source_path": self.source_path,
+            "reason": self.reason,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class RepositoryRelationshipGraph:
+    dependency_edges: tuple[RepositoryDependencyEdge, ...]
+    test_source_links: tuple[RepositoryTestSourceLink, ...]
+    schema_version: int = 1
+
+    def canonical_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": 1,
+            "dependency_edge_count": len(self.dependency_edges),
+            "dependency_edges": [
+                edge.canonical_dict() for edge in self.dependency_edges
+            ],
+            "test_source_link_count": len(self.test_source_links),
+            "test_source_links": [
+                link.canonical_dict() for link in self.test_source_links
+            ],
+        }
+
+    def fingerprint(self) -> str:
+        raw = json.dumps(
+            self.canonical_dict(),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
 def _normalized_repository(value: str) -> str:
     if not isinstance(value, str) or _REPOSITORY.fullmatch(value) is None:
         raise RepositoryIntelligenceError("repository must be owner/name")
@@ -414,13 +471,133 @@ def build_python_content_summary(
     )
 
 
+def _resolve_import_module(
+    *,
+    current: PythonModuleSummary,
+    imported: str,
+) -> str:
+    if not imported.startswith("."):
+        return imported
+
+    level = len(imported) - len(imported.lstrip("."))
+    suffix = imported[level:]
+    current_parts = current.module.split(".") if current.module else []
+    if PurePosixPath(current.path).name == "__init__.py":
+        package_parts = current_parts
+    else:
+        package_parts = current_parts[:-1]
+
+    ascend = level - 1
+    if ascend > len(package_parts):
+        return ""
+    base = package_parts[: len(package_parts) - ascend] if ascend else package_parts
+    if suffix:
+        base = [*base, *suffix.split(".")]
+    return ".".join(part for part in base if part)
+
+
+def build_repository_relationships(
+    content_summary: RepositoryContentSummary,
+) -> RepositoryRelationshipGraph:
+    if not isinstance(content_summary, RepositoryContentSummary):
+        raise RepositoryIntelligenceError(
+            "content_summary must be a RepositoryContentSummary"
+        )
+
+    by_module = {
+        module.module: module
+        for module in content_summary.modules
+        if module.module
+    }
+    edges: set[RepositoryDependencyEdge] = set()
+    for module in content_summary.modules:
+        if not module.parse_ok:
+            continue
+        for imported in module.imports:
+            resolved = _resolve_import_module(current=module, imported=imported)
+            target = by_module.get(resolved)
+            if target is None or target.path == module.path:
+                continue
+            edges.add(
+                RepositoryDependencyEdge(
+                    source_path=module.path,
+                    target_path=target.path,
+                )
+            )
+
+    links: dict[tuple[str, str], RepositoryTestSourceLink] = {}
+    modules_by_stem: dict[str, list[PythonModuleSummary]] = {}
+    for module in content_summary.modules:
+        if module.is_test:
+            continue
+        modules_by_stem.setdefault(PurePosixPath(module.path).stem, []).append(module)
+
+    for edge in edges:
+        source = next(
+            (module for module in content_summary.modules if module.path == edge.source_path),
+            None,
+        )
+        target = next(
+            (module for module in content_summary.modules if module.path == edge.target_path),
+            None,
+        )
+        if source is None or target is None or not source.is_test or target.is_test:
+            continue
+        links[(source.path, target.path)] = RepositoryTestSourceLink(
+            test_path=source.path,
+            source_path=target.path,
+            reason="import",
+        )
+
+    for module in content_summary.modules:
+        if not module.is_test:
+            continue
+        stem = PurePosixPath(module.path).stem
+        if stem.startswith("test_"):
+            source_stem = stem.removeprefix("test_")
+        elif stem.endswith("_test"):
+            source_stem = stem.removesuffix("_test")
+        else:
+            continue
+        candidates = modules_by_stem.get(source_stem, [])
+        if len(candidates) != 1:
+            continue
+        target = candidates[0]
+        key = (module.path, target.path)
+        links.setdefault(
+            key,
+            RepositoryTestSourceLink(
+                test_path=module.path,
+                source_path=target.path,
+                reason="filename",
+            ),
+        )
+
+    return RepositoryRelationshipGraph(
+        dependency_edges=tuple(
+            sorted(
+                edges,
+                key=lambda edge: (edge.source_path, edge.target_path, edge.kind),
+            )
+        ),
+        test_source_links=tuple(
+            sorted(
+                links.values(),
+                key=lambda link: (link.test_path, link.source_path, link.reason),
+            )
+        ),
+    )
+
+
 def planner_repository_context(
     snapshot: RepositorySnapshot,
     *,
     allowed_path_prefixes: tuple[str, ...],
     content_summary: RepositoryContentSummary | None = None,
+    relationship_graph: RepositoryRelationshipGraph | None = None,
     max_files: int = 200,
     max_summary_modules: int = 20,
+    max_relationships: int = 100,
     max_chars: int = 12000,
 ) -> RepositoryPlannerContext:
     if not isinstance(snapshot, RepositorySnapshot):
@@ -434,6 +611,16 @@ def planner_repository_context(
     ):
         raise RepositoryIntelligenceError(
             "content_summary must be a RepositoryContentSummary or null"
+        )
+    if relationship_graph is not None and not isinstance(
+        relationship_graph, RepositoryRelationshipGraph
+    ):
+        raise RepositoryIntelligenceError(
+            "relationship_graph must be a RepositoryRelationshipGraph or null"
+        )
+    if type(max_relationships) is not int or not 0 <= max_relationships <= 500:
+        raise RepositoryIntelligenceError(
+            "max_relationships must be between 0 and 500"
         )
     if type(max_chars) is not int or max_chars < 1024 or max_chars > 50000:
         raise RepositoryIntelligenceError("max_chars must be between 1024 and 50000")
@@ -456,10 +643,22 @@ def planner_repository_context(
         if content_summary is not None
         else []
     )
+    dependency_edges = (
+        list(relationship_graph.dependency_edges[:max_relationships])
+        if relationship_graph is not None
+        else []
+    )
+    test_source_links = (
+        list(relationship_graph.test_source_links[:max_relationships])
+        if relationship_graph is not None
+        else []
+    )
 
     def payload_for(
         files: list[str],
         modules: list[PythonModuleSummary],
+        edges: list[RepositoryDependencyEdge],
+        links: list[RepositoryTestSourceLink],
     ) -> dict[str, Any]:
         return {
             "schema_version": 1,
@@ -494,18 +693,79 @@ def planner_repository_context(
                 content_summary is not None
                 and len(modules) < len(content_summary.modules)
             ),
+            "relationship_graph_fingerprint": (
+                relationship_graph.fingerprint()
+                if relationship_graph is not None
+                else None
+            ),
+            "internal_dependency_edge_count": (
+                len(relationship_graph.dependency_edges)
+                if relationship_graph is not None
+                else 0
+            ),
+            "internal_dependency_edges": [
+                edge.canonical_dict()
+                for edge in edges
+            ],
+            "dependency_edges_truncated": (
+                relationship_graph is not None
+                and len(edges) < len(relationship_graph.dependency_edges)
+            ),
+            "test_source_link_count": (
+                len(relationship_graph.test_source_links)
+                if relationship_graph is not None
+                else 0
+            ),
+            "test_source_links": [
+                link.canonical_dict()
+                for link in links
+            ],
+            "test_source_links_truncated": (
+                relationship_graph is not None
+                and len(links) < len(relationship_graph.test_source_links)
+            ),
         }
 
-    payload = payload_for(selected, summary_modules)
+    payload = payload_for(
+        selected,
+        summary_modules,
+        dependency_edges,
+        test_source_links,
+    )
     serialized = json.dumps(
         payload,
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),
     )
+    while len(serialized) > max_chars and (
+        dependency_edges or test_source_links
+    ):
+        if len(test_source_links) >= len(dependency_edges) and test_source_links:
+            test_source_links.pop()
+        elif dependency_edges:
+            dependency_edges.pop()
+        payload = payload_for(
+            selected,
+            summary_modules,
+            dependency_edges,
+            test_source_links,
+        )
+        serialized = json.dumps(
+            payload,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+
     while len(serialized) > max_chars and summary_modules:
         summary_modules.pop()
-        payload = payload_for(selected, summary_modules)
+        payload = payload_for(
+            selected,
+            summary_modules,
+            dependency_edges,
+            test_source_links,
+        )
         serialized = json.dumps(
             payload,
             ensure_ascii=False,
@@ -515,7 +775,12 @@ def planner_repository_context(
 
     while len(serialized) > max_chars and selected:
         selected.pop()
-        payload = payload_for(selected, summary_modules)
+        payload = payload_for(
+            selected,
+            summary_modules,
+            dependency_edges,
+            test_source_links,
+        )
         serialized = json.dumps(
             payload,
             ensure_ascii=False,

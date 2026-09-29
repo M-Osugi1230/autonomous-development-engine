@@ -4,6 +4,7 @@ import json
 
 from ade.repository_intelligence import (
     build_python_content_summary,
+    build_repository_relationships,
     build_repository_snapshot,
     planner_repository_context,
     python_candidate_paths,
@@ -63,12 +64,15 @@ def main() -> int:
             ),
         ]
     )
+    relationships = build_repository_relationships(content)
     context = planner_repository_context(
         snapshot,
         allowed_path_prefixes=("src/thought_pipeline", "tests"),
         content_summary=content,
+        relationship_graph=relationships,
         max_files=20,
         max_summary_modules=20,
+        max_relationships=20,
     )
     known = context.payload["known_files_within_trusted_roots"]
     assert known == [
@@ -89,6 +93,21 @@ def main() -> int:
     ]
     assert "do-not-leak-docstring" not in context.serialized
     assert "do-not-leak-secret" not in context.serialized
+    assert context.payload["relationship_graph_fingerprint"] == relationships.fingerprint()
+    assert context.payload["internal_dependency_edges"] == [
+        {
+            "source_path": "tests/test_models.py",
+            "target_path": "src/thought_pipeline/models.py",
+            "kind": "import",
+        }
+    ]
+    assert context.payload["test_source_links"] == [
+        {
+            "test_path": "tests/test_models.py",
+            "source_path": "src/thought_pipeline/models.py",
+            "reason": "import",
+        }
+    ]
     assert len(context.serialized) <= 12000
 
     print(json.dumps({
@@ -101,6 +120,9 @@ def main() -> int:
         "secret_free_ast_summary": True,
         "bounded_source_candidate_selection": True,
         "content_summary_fingerprint": content.fingerprint(),
+        "relationship_graph_fingerprint": relationships.fingerprint(),
+        "internal_dependency_graph": True,
+        "test_source_links": True,
         "snapshot_fingerprint": snapshot.fingerprint(),
         "context_fingerprint": context.fingerprint,
     }, sort_keys=True))
