@@ -1,44 +1,44 @@
 {
-  "fingerprint": "a07442a60ea1ba213ee84acd0618097b3d8a6636777d4b1ef9bff789068c7249",
-  "plan": {
-    "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
-    "human_boundaries": [
-      "destructive or irreversible operation",
-      "credential or secret access",
-      "externally consequential side effect"
-    ],
+    "fingerprint": "a07442a60ea1ba213ee84acd0618097b3d8a6636777d4b1ef9bff789068c7249",
+    "plan": {
+        "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+        "human_boundaries": [
+            "destructive or irreversible operation",
+            "credential or secret access",
+            "externally consequential side effect"
+        ],
+        "schema_version": 1,
+        "tasks": [
+            {
+                "acceptance": [
+                    "Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "src/thought_pipeline/models.py"
+                ],
+                "depends_on": [],
+                "prompt": "Goal: Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior. Outcome: Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`.",
+                "task_id": "v12ext3-001",
+                "title": "Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`."
+            },
+            {
+                "acceptance": [
+                    "Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "tests/test_quality.py"
+                ],
+                "depends_on": [
+                    "v12ext3-001"
+                ],
+                "prompt": "Goal: Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior. Outcome: Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`.",
+                "task_id": "v12ext3-002",
+                "title": "Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`."
+            }
+        ]
+    },
     "schema_version": 1,
-    "tasks": [
-      {
-        "acceptance": [
-          "Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "src/thought_pipeline/models.py"
-        ],
-        "depends_on": [],
-        "prompt": "Goal: Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior. Outcome: Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`.",
-        "task_id": "v12ext3-001",
-        "title": "Implement the experiment topic label normalization utility in `src/thought_pipeline/models.py`."
-      },
-      {
-        "acceptance": [
-          "Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "tests/test_quality.py"
-        ],
-        "depends_on": [
-          "v12ext3-001"
-        ],
-        "prompt": "Goal: Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior. Outcome: Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`.",
-        "task_id": "v12ext3-002",
-        "title": "Add unit tests for the experiment topic label normalization utility in `tests/test_quality.py`."
-      }
-    ]
-  },
-  "schema_version": 1,
-  "status": "ACCEPTED"
+    "status": "ACCEPTED"
 }
