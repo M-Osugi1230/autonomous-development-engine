@@ -56,11 +56,12 @@
     "v12ext3-001",
     "v12ext3-002",
     "v12ext4-001",
-    "v12ext6-001"
+    "v12ext6-001",
+    "v12ext6-002"
   ],
-  "current_task_id": "v12ext6-002",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 56,
+  "iteration": 57,
   "metadata": {
     "accepted_plan_fingerprint": "fa1862e95d62a9dd8e3a22f304e3cdd707ce00f6bbad89a331c2829e1c8a694d",
     "campaign_id": "v1.2-external-goal-campaign-006",
@@ -101,7 +102,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "scheduler": "dag",
     "target_base_branch": "main",
     "target_repository": "M-Osugi1230/one-minute-thought-experiments"
@@ -109,6 +110,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-09-29T17:03:44.782771+00:00"
+  "status": "READY",
+  "updated_at": "2026-09-29T17:09:29.273755+00:00"
 }
