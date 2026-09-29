@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.2-external-goal-campaign-006",
+  "campaign_id": "v1.3-repository-intelligence-campaign-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-29T16:56:34.788563+00:00",
-  "plan_fingerprint": "fa1862e95d62a9dd8e3a22f304e3cdd707ce00f6bbad89a331c2829e1c8a694d",
+  "dispatched_at": "2026-09-29T22:16:05.315050+00:00",
+  "plan_fingerprint": "1b414c26aeb55986c3cf41dc46089e0251f00b2a941c65251d6ebe30f04442b0",
   "run_attempt": "1",
-  "run_id": "36601367495",
+  "run_id": "36638534648",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "da46c6815dc0ab0b8ffbf59346ad9d04c3d22559",
+  "source_sha": "84d3905c2d8e5dfa55f779982c04be5be5ebb1ff",
   "status": "DISPATCHED",
-  "task_id": "v12ext6-001"
+  "task_id": "v13ri1-001"
 }
