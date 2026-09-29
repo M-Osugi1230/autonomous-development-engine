@@ -73,6 +73,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python .github/trusted/runtime_verification_trigger_probe.py
 
+      - name: Runtime Verification bounded execution proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/runtime_probe_executor_probe.py
+
       - name: Remote Repository Loop proof
         env:
           PYTHONPATH: src
