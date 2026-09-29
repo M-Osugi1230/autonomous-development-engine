@@ -150,6 +150,19 @@ def main() -> int:
         )
     ]
 
+    retry_gh = FakeGitHub()
+    cycle._arm_capacity_retry(retry_gh, request)
+    assert retry_gh.dispatches == [
+        (
+            "ade_planner_retry_arm",
+            {
+                "request_id": request.request_id,
+                "request_fingerprint": request.fingerprint(),
+                "source": "autonomous-planner-capacity-pause",
+            },
+        )
+    ]
+
     print(json.dumps({
         "ok": True,
         "canonical_state_before_trigger": True,
@@ -159,6 +172,7 @@ def main() -> int:
         "fingerprint_reconciled": True,
         "trusted_task_count_bounds": True,
         "explicit_zero_touch_dispatch": True,
+        "capacity_retry_arm": True,
     }, sort_keys=True))
     return 0
 
