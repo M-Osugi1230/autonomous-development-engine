@@ -112,6 +112,22 @@ def _persist_remote_execution(
         receipt.to_dict(),
         message=f"remote: PR created for {task_id}",
     )
+    try:
+        gh.dispatch(
+            "ade_remote_pr_monitor",
+            {
+                "task_id": task_id,
+                "target_repository": target_repository,
+                "pull_request_url": pull_request_url,
+                "source": "jules-cycle",
+            },
+        )
+    except GitHubError as exc:
+        print(
+            "WARNING: immediate Remote PR Monitor dispatch failed; scheduled watchdog remains armed: "
+            + _safe_error(exc),
+            file=sys.stderr,
+        )
 
 
 def _set_project_status(
