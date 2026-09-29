@@ -1,10 +1,10 @@
 {
-  "attempt": 2,
-  "detail": "planning-only session began implementation without approval",
-  "reason": "planner-retryable-failure",
+  "attempt": 3,
+  "detail": "planner proposal violates trusted task-count budget",
+  "reason": "planner-failure-budget-exhausted",
   "request_fingerprint": "16e2c66694dbd0840a48fbef2fda8f3ce3459e0ce8c33ff6faaf765bbf5af664",
   "request_id": "v1.2-external-goal-proof-002",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-09-29T00:23:33.335164+00:00"
+  "state": "HUMAN_WAIT",
+  "updated_at": "2026-09-29T06:55:47.011456+00:00"
 }
