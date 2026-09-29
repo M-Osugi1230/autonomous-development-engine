@@ -7,7 +7,7 @@ on:
     paths:
       - ".autodev/planning-goal.json"
   schedule:
-    - cron: "17 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
