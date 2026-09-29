@@ -27,6 +27,7 @@ from github_client import GitHubClient, GitHubError
 from recovery_controller import RECOVERY_PATH, load_recovery
 from runtime_probes import build_runtime_probe_registry
 from runtime_targets import build_runtime_target_registry
+from runtime_workspace import prepare_repository_runtime_workspace
 
 RESULT_PATH = Path(".autodev/runtime/runtime-verification-dispatch-result.json")
 
@@ -188,7 +189,9 @@ def main() -> int:
             message=f"runtime: target {receipt.verification_id}",
         )
 
-        registry = build_runtime_probe_registry()
+        workspace = prepare_repository_runtime_workspace(contract)
+        dependency_fingerprint = workspace.dependency_fingerprint
+        registry = build_runtime_probe_registry(workspace)
         dispatch_transition = record_runtime_verification_dispatch(
             contract=contract,
             registry=registry,
@@ -202,10 +205,13 @@ def main() -> int:
                 message=f"runtime: dispatched {receipt.verification_id}",
             )
 
-        execution = execute_runtime_verification_bounded(
-            contract,
-            registry,
-        )
+        try:
+            execution = execute_runtime_verification_bounded(
+                contract,
+                registry,
+            )
+        finally:
+            workspace.cleanup()
         report_path = runtime_verification_report_path(active_receipt.task_id)
         gh.upsert_json_file(
             report_path,
@@ -249,6 +255,8 @@ def main() -> int:
             "runtime_target_deployment_id": target_resolution.evidence.deployment_id,
             "runtime_target_evidence_fingerprint": target_resolution.evidence.fingerprint(),
             "runtime_target_registry_fingerprint": target_resolution.registry_fingerprint,
+            "runtime_dependency_fingerprint": dependency_fingerprint,
+            "runtime_workspace_source_sha": contract.source_sha,
             "report_fingerprint": execution.report.fingerprint(),
             "attempts_by_probe": [
                 {"probe_id": probe_id, "attempts": attempts}
