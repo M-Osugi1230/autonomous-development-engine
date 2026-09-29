@@ -7,6 +7,7 @@ from ade.repository_intelligence import (
     RepositoryIntelligenceError,
     analyze_python_source,
     build_python_content_summary,
+    build_repository_relationships,
     build_repository_snapshot,
     planner_repository_context,
     python_candidate_paths,
@@ -277,6 +278,138 @@ async def run_async():
         self.assertNotIn("do-not-leak-secret", serialized)
         self.assertIn("public_api", serialized)
         self.assertIn("Service", serialized)
+
+    def test_relationship_graph_resolves_internal_imports_and_tests(self) -> None:
+        content = build_python_content_summary(
+            [
+                (
+                    "src/pkg/models.py",
+                    "class Model:\n    pass\n",
+                    "4" * 40,
+                ),
+                (
+                    "src/pkg/service.py",
+                    "import os\nfrom .models import Model\nclass Service:\n    pass\n",
+                    "5" * 40,
+                ),
+                (
+                    "tests/test_service.py",
+                    "from pkg.service import Service\ndef test_service():\n    assert Service\n",
+                    "6" * 40,
+                ),
+                (
+                    "tests/test_models.py",
+                    "def test_model_shape():\n    assert True\n",
+                    "7" * 40,
+                ),
+            ]
+        )
+        graph = build_repository_relationships(content)
+        self.assertEqual(
+            [edge.canonical_dict() for edge in graph.dependency_edges],
+            [
+                {
+                    "source_path": "src/pkg/service.py",
+                    "target_path": "src/pkg/models.py",
+                    "kind": "import",
+                },
+                {
+                    "source_path": "tests/test_service.py",
+                    "target_path": "src/pkg/service.py",
+                    "kind": "import",
+                },
+            ],
+        )
+        self.assertEqual(
+            [link.canonical_dict() for link in graph.test_source_links],
+            [
+                {
+                    "test_path": "tests/test_models.py",
+                    "source_path": "src/pkg/models.py",
+                    "reason": "filename",
+                },
+                {
+                    "test_path": "tests/test_service.py",
+                    "source_path": "src/pkg/service.py",
+                    "reason": "import",
+                },
+            ],
+        )
+        serialized = json.dumps(graph.canonical_dict(), sort_keys=True)
+        self.assertNotIn('"os"', serialized)
+
+    def test_relationship_graph_is_order_independent(self) -> None:
+        files = [
+            (
+                "src/pkg/a.py",
+                "from .b import helper\ndef run():\n    return helper()\n",
+                "8" * 40,
+            ),
+            (
+                "src/pkg/b.py",
+                "def helper():\n    return 1\n",
+                "9" * 40,
+            ),
+            (
+                "tests/test_a.py",
+                "from pkg.a import run\ndef test_run():\n    assert run()\n",
+                "a" * 40,
+            ),
+        ]
+        first = build_repository_relationships(build_python_content_summary(files))
+        second = build_repository_relationships(
+            build_python_content_summary(reversed(files))
+        )
+        self.assertEqual(first.canonical_dict(), second.canonical_dict())
+        self.assertEqual(first.fingerprint(), second.fingerprint())
+
+    def test_planner_context_contains_bounded_relationships(self) -> None:
+        snapshot = build_repository_snapshot(
+            repository="example/repo",
+            base_branch="main",
+            source_sha=SHA,
+            paths=[
+                "src/pkg/a.py",
+                "src/pkg/b.py",
+                "tests/test_a.py",
+            ],
+        )
+        content = build_python_content_summary(
+            [
+                (
+                    "src/pkg/a.py",
+                    "from .b import helper\ndef run():\n    return helper()\n",
+                    "b" * 40,
+                ),
+                (
+                    "src/pkg/b.py",
+                    "def helper():\n    return 1\n",
+                    "c" * 40,
+                ),
+                (
+                    "tests/test_a.py",
+                    "from pkg.a import run\ndef test_run():\n    assert run()\n",
+                    "d" * 40,
+                ),
+            ]
+        )
+        graph = build_repository_relationships(content)
+        context = planner_repository_context(
+            snapshot,
+            allowed_path_prefixes=("src", "tests"),
+            content_summary=content,
+            relationship_graph=graph,
+            max_relationships=1,
+        )
+        self.assertEqual(context.payload["internal_dependency_edge_count"], 2)
+        self.assertTrue(context.payload["dependency_edges_truncated"])
+        self.assertEqual(len(context.payload["internal_dependency_edges"]), 1)
+        self.assertEqual(context.payload["test_source_link_count"], 1)
+        self.assertFalse(context.payload["test_source_links_truncated"])
+        self.assertEqual(
+            context.payload["relationship_graph_fingerprint"],
+            graph.fingerprint(),
+        )
 
     def test_python_source_character_budget_is_enforced(self) -> None:
         with self.assertRaisesRegex(RepositoryIntelligenceError, "character budget"):
