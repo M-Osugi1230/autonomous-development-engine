@@ -13,6 +13,7 @@ REQUIRED_CI_PROOFS = (
     "Autonomous Planner proof",
     "Jules Planner Adapter proof",
     "Autonomous Planner activation proof",
+    "Autonomous Planner capacity retry proof",
     "Remote Repository Loop proof",
     "Mission Control observability proof",
     "Autonomous recovery fault proof",
@@ -66,6 +67,12 @@ def audit(
         encoding="utf-8"
     )
     resume = (root / ".github/workflows/ade-resume.yml").read_text(encoding="utf-8")
+    planner_workflow = (
+        root / ".github/workflows/autonomous-planner.yml"
+    ).read_text(encoding="utf-8")
+    planner_retry_workflow = (
+        root / ".github/workflows/autonomous-planner-retry.yml"
+    ).read_text(encoding="utf-8")
 
     missing_proofs = [name for name in REQUIRED_CI_PROOFS if name not in ci]
 
@@ -133,6 +140,10 @@ def audit(
         and _positive_int(initial.get("workflow_run")),
         "explicit_zero_touch_handoff": "ade_zero_touch_start" in zero_touch,
         "explicit_remote_monitor_handoff": "ade_remote_pr_monitor" in remote_monitor,
+        "planner_capacity_retry_chain": "ade_planner_retry" in planner_workflow
+        and "ade_planner_retry_arm" in planner_retry_workflow
+        and "sleep 900" in planner_retry_workflow
+        and "cancel-in-progress: true" in planner_retry_workflow,
         "quota_resume_safe": (
             quota.get("observed") is False
             and quota.get("resume_mode") == "not-needed"
