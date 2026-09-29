@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - ".autodev/runtime/remote-execution.json"
+  repository_dispatch:
+    types:
+      - ade_remote_pr_monitor
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
