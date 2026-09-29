@@ -4,6 +4,7 @@ import base64
 import json
 import os
 import time
+import re
 from typing import Any
 
 import sys
@@ -16,6 +17,10 @@ from urllib.request import Request, urlopen
 
 class GitHubError(RuntimeError):
     pass
+
+
+_REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+_SHA40 = re.compile(r"^[0-9a-f]{40}$")
 
 
 class GitHubClient:
@@ -67,6 +72,75 @@ class GitHubClient:
         if not raw: return {}
         try: return json.loads(raw.decode("utf-8"))
         except json.JSONDecodeError as exc: raise GitHubError("GitHub returned invalid JSON") from exc
+
+    @staticmethod
+    def _validate_repository_name(repository: str) -> str:
+        if not isinstance(repository, str) or _REPOSITORY.fullmatch(repository) is None:
+            raise ValueError("repository must be owner/name")
+        return repository
+
+    def get_branch_head_sha(
+        self,
+        repository: str,
+        *,
+        branch: str = "main",
+    ) -> str:
+        repository = self._validate_repository_name(repository)
+        if (
+            not isinstance(branch, str)
+            or not branch.strip()
+            or "/" in branch
+            or len(branch.strip()) > 120
+        ):
+            raise ValueError("branch must be a simple non-empty name")
+        payload = self._request(
+            "GET",
+            f"/repos/{repository}/branches/{branch.strip()}",
+        )
+        if not isinstance(payload, dict):
+            raise GitHubError("branch response must be an object")
+        commit = payload.get("commit")
+        sha = commit.get("sha") if isinstance(commit, dict) else None
+        if not isinstance(sha, str) or _SHA40.fullmatch(sha) is None:
+            raise GitHubError("branch response has no valid head SHA")
+        return sha
+
+    def list_tree_paths(
+        self,
+        repository: str,
+        *,
+        tree_sha: str,
+        max_entries: int = 5000,
+    ) -> list[str]:
+        repository = self._validate_repository_name(repository)
+        if not isinstance(tree_sha, str) or _SHA40.fullmatch(tree_sha) is None:
+            raise ValueError("tree_sha must be a lowercase 40-char SHA")
+        if type(max_entries) is not int or max_entries < 1 or max_entries > 20000:
+            raise ValueError("max_entries must be between 1 and 20000")
+
+        payload = self._request(
+            "GET",
+            f"/repos/{repository}/git/trees/{tree_sha}?recursive=1",
+        )
+        if not isinstance(payload, dict):
+            raise GitHubError("tree response must be an object")
+        if payload.get("truncated") is True:
+            raise GitHubError("repository tree was truncated")
+        tree = payload.get("tree")
+        if not isinstance(tree, list):
+            raise GitHubError("repository tree response has no tree list")
+
+        paths: list[str] = []
+        for entry in tree:
+            if not isinstance(entry, dict) or entry.get("type") != "blob":
+                continue
+            path = entry.get("path")
+            if not isinstance(path, str) or not path:
+                raise GitHubError("repository tree contains an invalid blob path")
+            paths.append(path)
+            if len(paths) > max_entries:
+                raise GitHubError("repository tree exceeds trusted entry budget")
+        return paths
 
     def get_pull_request(self, number: int) -> dict[str, Any]:
         payload = self._request("GET", f"/repos/{self.repository}/pulls/{number}")

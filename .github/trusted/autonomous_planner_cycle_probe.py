@@ -11,6 +11,7 @@ import autonomous_planner_cycle as cycle
 from ade.autonomous_planner import PlannerProposal, validate_planner_proposal
 from ade.models import ProjectState, ProjectStatus
 from ade.planning_activation import PlanningGoalRequest, build_planning_activation
+from ade.repository_intelligence import build_repository_snapshot, planner_repository_context
 
 
 BOUNDARIES = [
@@ -30,6 +31,23 @@ class FakeGitHub:
 
     def dispatch(self, event_type, payload=None):
         self.dispatches.append((event_type, payload or {}))
+
+    def get_branch_head_sha(self, repository, *, branch="main"):
+        assert repository == "example/target"
+        assert branch == "main"
+        return "a" * 40
+
+    def list_tree_paths(self, repository, *, tree_sha, max_entries=5000):
+        assert repository == "example/target"
+        assert tree_sha == "a" * 40
+        assert max_entries == 5000
+        return [
+            "README.md",
+            "pyproject.toml",
+            ".github/workflows/ci.yml",
+            "src/helper.py",
+            "tests/test_helper.py",
+        ]
 
 
 def main() -> int:
@@ -103,6 +121,17 @@ def main() -> int:
         last_observed_state="AWAITING_PLAN_APPROVAL",
     )
     gh = FakeGitHub()
+    snapshot, repository_context = cycle._collect_repository_intelligence(
+        gh,
+        request,
+    )
+    assert snapshot.repository == "example/target"
+    assert snapshot.source_sha == "a" * 40
+    assert repository_context.payload["known_files_within_trusted_roots"] == [
+        "src/helper.py",
+        "tests/test_helper.py",
+    ]
+
     old_write = cycle._write_result
     cycle._write_result = lambda payload: None
     try:
@@ -112,6 +141,8 @@ def main() -> int:
             result=result,
             bundle=bundle,
             provider=provider,
+            snapshot=snapshot,
+            repository_context=repository_context,
             attempt=1,
         )
     finally:
@@ -126,14 +157,33 @@ def main() -> int:
         ".autodev/state.json",
     ]
     assert ".autodev/planner-evidence/planner-cycle-proof.json" in paths
+    assert ".autodev/repository-intelligence/planner-cycle-proof.json" in paths
     assert ".autodev/runtime/planning-status.json" in paths
 
-    evidence = next(payload for path, payload, _, _ in gh.writes if path.endswith("planner-cycle-proof.json"))
+    evidence = next(
+        payload
+        for path, payload, _, _ in gh.writes
+        if path == ".autodev/planner-evidence/planner-cycle-proof.json"
+    )
     serialized = json.dumps(evidence, sort_keys=True)
     assert "session_id" not in serialized
     assert "provider_session" not in serialized
     assert evidence["plan_approved"] is False
     assert evidence["planning_only"] is True
+    assert evidence["repository_snapshot_fingerprint"] == snapshot.fingerprint()
+    assert evidence["repository_context_fingerprint"] == repository_context.fingerprint
+    intelligence = next(
+        payload
+        for path, payload, _, _ in gh.writes
+        if path.endswith("repository-intelligence/planner-cycle-proof.json")
+    )
+    assert intelligence["snapshot_fingerprint"] == snapshot.fingerprint()
+    assert intelligence["planner_context_fingerprint"] == repository_context.fingerprint
+    prepared_state = gh.writes[3][1]
+    metadata = prepared_state["metadata"]
+    assert metadata["repository_intelligence_snapshot_fingerprint"] == snapshot.fingerprint()
+    assert metadata["repository_intelligence_context_fingerprint"] == repository_context.fingerprint
+    assert metadata["repository_intelligence_source_sha"] == snapshot.source_sha
 
     accepted = gh.writes[-1][1]
     assert accepted["status"] == "ACCEPTED"
@@ -173,6 +223,8 @@ def main() -> int:
         "trusted_task_count_bounds": True,
         "explicit_zero_touch_dispatch": True,
         "capacity_retry_arm": True,
+        "repository_intelligence_snapshot": True,
+        "repository_intelligence_evidence": True,
     }, sort_keys=True))
     return 0
 

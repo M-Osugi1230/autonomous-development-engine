@@ -99,3 +99,19 @@ Evidence: real Campaign `v1.1-zero-touch-proof-001` was activated by AcceptedPla
 Generate bounded DevelopmentPlans from a high-level Goal using repository-aware AI planning, then require deterministic trusted validation before AcceptedPlan/Campaign creation. AI planner output is never directly executable.
 
 Graduated: real proof `v1.2-external-goal-proof-006` completed high-level Goal -> Jules planning-only proposal -> trusted validation -> AcceptedPlan -> repository_dispatch Zero-Touch -> external Task 1 PR #11 / CI / trusted merge -> automatic Task 2 -> PR #12 / CI / trusted merge -> terminal Campaign COMPLETED with failed=0 and no manual Campaign progression. The target baseline and both proof PRs passed runtime source hygiene plus clean production-import smoke. Immutable evidence is stored at `.autodev/campaign-evidence/v1.2-autonomous-planner-proof-006.json`, and the dedicated v1.2 Graduation audit is mandatory in CI.
+
+## ADE v1.3 — Repository Intelligence 🚧
+Give the Autonomous Planner a trusted, bounded model of the target repository so plans are grounded in real files, architecture, tests, and dependencies rather than path guesses.
+
+Build order:
+1. deterministic structure snapshot bound to target repository/base/source SHA
+2. bounded planner context using path metadata only
+3. trusted evidence + state fingerprints
+4. bounded content/symbol summaries
+5. dependency and test/source relationship graph
+6. deterministic change-impact analysis
+7. existing-vs-new-file validation at the planner boundary
+8. real external repository proof and v1.3 graduation audit
+
+Slice 001 in progress: Git tree metadata is read through the trusted controller, normalized into a deterministic RepositorySnapshot, filtered to trusted writable roots for planner context, and fingerprinted into activation evidence. File contents are intentionally out of scope for the first slice.
+
