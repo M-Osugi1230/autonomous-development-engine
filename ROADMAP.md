@@ -100,7 +100,7 @@ Generate bounded DevelopmentPlans from a high-level Goal using repository-aware 
 
 Graduated: real proof `v1.2-external-goal-proof-006` completed high-level Goal -> Jules planning-only proposal -> trusted validation -> AcceptedPlan -> repository_dispatch Zero-Touch -> external Task 1 PR #11 / CI / trusted merge -> automatic Task 2 -> PR #12 / CI / trusted merge -> terminal Campaign COMPLETED with failed=0 and no manual Campaign progression. The target baseline and both proof PRs passed runtime source hygiene plus clean production-import smoke. Immutable evidence is stored at `.autodev/campaign-evidence/v1.2-autonomous-planner-proof-006.json`, and the dedicated v1.2 Graduation audit is mandatory in CI.
 
-## ADE v1.3 — Repository Intelligence 🚧
+## ADE v1.3 — Repository Intelligence ✅
 Give the Autonomous Planner a trusted, bounded model of the target repository so plans are grounded in real files, architecture, tests, and dependencies rather than path guesses.
 
 Build order:
@@ -122,4 +122,6 @@ Slice 003 complete: internal Python import edges are resolved against the bounde
 Slice 004 complete: trusted AcceptedPlan allowed_paths are treated as proposed change roots and analyzed against the repository relationship graph. Reverse imports are traversed with bounded deterministic breadth-first search, likely affected tests are surfaced through test/source links, and the resulting impact analysis is fingerprinted into Repository Intelligence evidence and project state. Impact findings are advisory only and never expand execution scope.
 
 Slice 005 complete: the planner task schema carries explicit `new_paths`; live trusted validation compares every allowed path against the full immutable repository snapshot, rejects unknown paths unless they are explicitly declared new, rejects existing paths falsely declared new, and requires new_paths to remain inside allowed_paths. Legacy deterministic v1.2 validation remains compatible when no repository snapshot is supplied.
+
+Graduated: real proof `v1.3-repository-intelligence-proof-001` completed High-level Goal -> trusted Repository Intelligence snapshot/content/relationship/impact context -> Jules planning-only proposal -> trusted existing-path grounding -> automatic Zero-Touch -> external PR #13 / CI / trusted merge -> automatic Task 2 -> PR #14 / CI / trusted merge -> terminal Campaign COMPLETED with failed=0 and no manual Campaign progression. Immutable evidence is stored at `.autodev/campaign-evidence/v1.3-repository-intelligence-proof-001.json`, and the dedicated v1.3 Graduation audit is mandatory in CI.
 

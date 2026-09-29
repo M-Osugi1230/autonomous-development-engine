@@ -122,3 +122,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/v1_2_autonomous_planner_audit.py
+
+      - name: ADE v1.3 Repository Intelligence Graduation audit
+        env:
+          PYTHONPATH: src
+        run: python scripts/v1_3_repository_intelligence_audit.py
