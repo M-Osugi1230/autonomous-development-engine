@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-DEFAULT_EVIDENCE = ".autodev/campaign-evidence/v1.2-autonomous-planner-proof-005.json"
+DEFAULT_EVIDENCE = ".autodev/campaign-evidence/v1.2-autonomous-planner-proof-006.json"
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 REQUIRED_CI_PROOFS = (
     "Zero-Touch Start proof",
@@ -111,8 +111,8 @@ def audit(
     checks = {
         "evidence_schema": evidence.get("schema_version") == 1
         and evidence.get("version") == "v1.2",
-        "proof_identity": evidence.get("request_id") == "v1.2-external-goal-proof-005"
-        and evidence.get("campaign_id") == "v1.2-external-goal-campaign-005",
+        "proof_identity": evidence.get("request_id") == "v1.2-external-goal-proof-006"
+        and evidence.get("campaign_id") == "v1.2-external-goal-campaign-006",
         "target_repository": evidence.get("target_repository")
         == "M-Osugi1230/one-minute-thought-experiments",
         "goal_only_submission": evidence.get("human_authored_per_task_work_items") is False,
