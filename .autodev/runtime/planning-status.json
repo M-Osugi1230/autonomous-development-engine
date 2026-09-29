@@ -1,13 +1,13 @@
 {
-  "accepted_plan_fingerprint": "1b414c26aeb55986c3cf41dc46089e0251f00b2a941c65251d6ebe30f04442b0",
+  "accepted_plan_fingerprint": "3fdd6f14778d03f3fa8b38c0472fcbc17713acfc6d1f1b6ce690c22ce80f2a14",
   "attempt": 1,
-  "campaign_id": "v1.3-repository-intelligence-campaign-001",
-  "first_task_id": "v13ri1-001",
-  "proposal_fingerprint": "9e522fc41393532efcfd057f0d774b4dcfbdf93d93efc661c9618ea6831a76ba",
+  "campaign_id": "v1.4-runtime-verification-campaign-001",
+  "first_task_id": "v14rv1-001",
+  "proposal_fingerprint": "50280bb4fed27f4c2901420d5495ce6a13dca21292a8c2604e7dc0be9a32e241",
   "reason": "trusted-plan-accepted",
-  "request_fingerprint": "d872f29fcb6f96ec1e2d61ed862fbeff12d4c7815b41bce9884c405ef3ceb64e",
-  "request_id": "v1.3-repository-intelligence-proof-001",
+  "request_fingerprint": "dda84c79656d8f5a0c7cf1bb25fc8a2c6b4b2ee37676ad378270ce132cf0a9b9",
+  "request_id": "v1.4-runtime-verification-proof-001",
   "schema_version": 1,
   "state": "ACCEPTED",
-  "updated_at": "2026-09-29T22:15:55.113818+00:00"
+  "updated_at": "2026-09-29T23:45:59.041968+00:00"
 }
