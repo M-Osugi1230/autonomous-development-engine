@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "version": "v1.3",
+  "request_id": "v1.3-repository-intelligence-proof-001",
+  "campaign_id": "v1.3-repository-intelligence-campaign-001",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "human_authored_per_task_work_items": false,
+  "accepted_plan_fingerprint": "1b414c26aeb55986c3cf41dc46089e0251f00b2a941c65251d6ebe30f04442b0",
+  "repository_intelligence": {
+    "source_sha": "0782824b8203728bb13b747bb4c90bddc1ceac23",
+    "snapshot_fingerprint": "2e3c00cef3eed75cd610a66f9f0d3633061e9eed7e7c94f4903c17b20b003319",
+    "context_fingerprint": "7b9649e8d5fe0754e56c3e540b9bb44c5f8ada2235ce8eb61f19634f518196dc",
+    "content_summary_fingerprint": "fea5b0baf91ddc8f5703a927010e30859b84212b6abf54712c553f67537960a0",
+    "relationship_graph_fingerprint": "281220564efef545022123a8cca32106ce8ca7a21c1c63452664028b36c37a91",
+    "impact_analysis_fingerprint": "fed3dd7e202af3bd418cdeb603e653932f7937cd94d8080741081bcd3b16ffb7",
+    "raw_source_persisted": false,
+    "impact_analysis_advisory_only": true,
+    "path_grounding_enforced": true,
+    "grounded_task_paths": [
+      {
+        "task_id": "v13ri1-001",
+        "path": "src/thought_pipeline/models.py",
+        "exists_in_snapshot": true,
+        "declared_new": false
+      },
+      {
+        "task_id": "v13ri1-002",
+        "path": "tests/test_models.py",
+        "exists_in_snapshot": true,
+        "declared_new": false
+      }
+    ]
+  },
+  "planner": {
+    "provider": "jules",
+    "workflow_run": 36638353102,
+    "source_sha": "6f6ecfc22da1804d19d82b8d602784e689d17ab6",
+    "planning_only": true,
+    "plan_approved": false,
+    "provider_execution_boundary_crossed": false,
+    "proposal_mode": "derived-plan-steps",
+    "task_count": 2
+  },
+  "initial_start": {
+    "workflow_run": 36638534648,
+    "trigger_source": "repository_dispatch",
+    "manual_workflow_dispatch": false
+  },
+  "tasks": [
+    {
+      "task_id": "v13ri1-001",
+      "jules_cycle_run": 36638547291,
+      "pull_request": 13,
+      "ci_run": 36639211969,
+      "remote_gate_run": 36639277283,
+      "remote_monitor_run": 36639238128,
+      "head_sha": "815ff829de5933895120f88abc600f1a5b1be1d1",
+      "merge_commit": "4c81ff37ff6b639b55e27ffaed1a82ac5621943c"
+    },
+    {
+      "task_id": "v13ri1-002",
+      "jules_cycle_run": 36639344453,
+      "pull_request": 14,
+      "ci_run": 36639702159,
+      "remote_gate_run": 36639764311,
+      "remote_monitor_run": 36639713848,
+      "head_sha": "36fa901b99402cdfc8ea39dd17b31b0464e97b22",
+      "merge_commit": "72f658d8a41639cc04d7b2220d1de6b1705a32fb"
+    }
+  ],
+  "manual_campaign_progress_after_goal_submission": false,
+  "terminal_status": "COMPLETED",
+  "failed_tasks": 0,
+  "terminal_snapshot": {
+    "source_sha": "bffaf0d2764fbbc627ccb33b9432dea50807a5e6",
+    "accepted_plan": {
+      "status": "ACCEPTED",
+      "fingerprint": "1b414c26aeb55986c3cf41dc46089e0251f00b2a941c65251d6ebe30f04442b0"
+    },
+    "campaign": {
+      "campaign_id": "v1.3-repository-intelligence-campaign-001",
+      "status": "COMPLETED",
+      "task_ids": [
+        "v13ri1-001",
+        "v13ri1-002"
+      ],
+      "completed_task_ids": [
+        "v13ri1-001",
+        "v13ri1-002"
+      ]
+    },
+    "task_graph": [
+      {
+        "task_id": "v13ri1-001",
+        "status": "COMPLETED"
+      },
+      {
+        "task_id": "v13ri1-002",
+        "status": "COMPLETED"
+      }
+    ],
+    "state": {
+      "current_task_id": null,
+      "failed_task_ids": [],
+      "completed_campaign_task_ids": [
+        "v13ri1-001",
+        "v13ri1-002"
+      ]
+    },
+    "remote_execution_receipt": {
+      "schema_version": 1,
+      "status": "MERGED",
+      "task_id": "v13ri1-002"
+    }
+  }
+}
