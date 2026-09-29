@@ -132,6 +132,30 @@ class PlanningActivationTests(unittest.TestCase):
             bundle.accepted_plan.fingerprint,
         )
 
+    def test_activation_preserves_existing_phase_metadata(self):
+        state = self.previous_state()
+        state.metadata["phase"] = "v1.3-repository-intelligence"
+        bundle = build_planning_activation(
+            request=self.request(),
+            validated=self.validated(),
+            previous_state=state,
+        )
+        self.assertEqual(
+            bundle.state.metadata["phase"],
+            "v1.3-repository-intelligence",
+        )
+
+    def test_activation_defaults_phase_for_legacy_state(self):
+        bundle = build_planning_activation(
+            request=self.request(),
+            validated=self.validated(),
+            previous_state=self.previous_state(),
+        )
+        self.assertEqual(
+            bundle.state.metadata["phase"],
+            "v1.2-autonomous-planner",
+        )
+
     def test_activation_refuses_existing_current_task(self):
         state = self.previous_state()
         state.current_task_id = "busy"
