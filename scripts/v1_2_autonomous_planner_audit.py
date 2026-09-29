@@ -77,6 +77,8 @@ def audit(
     quota = quota if isinstance(quota, dict) else {}
     tasks = evidence.get("tasks")
     tasks = tasks if isinstance(tasks, list) else []
+    target_quality = evidence.get("target_quality_gate")
+    target_quality = target_quality if isinstance(target_quality, dict) else {}
     snapshot = evidence.get("terminal_snapshot")
     snapshot = snapshot if isinstance(snapshot, dict) else {}
 
@@ -107,6 +109,10 @@ def audit(
         "target_repository": evidence.get("target_repository")
         == "M-Osugi1230/one-minute-thought-experiments",
         "goal_only_submission": evidence.get("human_authored_per_task_work_items") is False,
+        "target_quality_gate": _sha40(target_quality.get("baseline_sha"))
+        and _positive_int(target_quality.get("baseline_ci_run"))
+        and target_quality.get("runtime_source_hygiene") is True
+        and target_quality.get("clean_production_import_smoke") is True,
         "planner_boundary": planner.get("provider") == "jules"
         and planner.get("planning_only") is True
         and planner.get("plan_approved") is False
