@@ -6,6 +6,7 @@ import unittest
 from ade.repository_intelligence import (
     RepositoryIntelligenceError,
     analyze_python_source,
+    analyze_repository_impact,
     build_python_content_summary,
     build_repository_relationships,
     build_repository_snapshot,
@@ -409,6 +410,179 @@ async def run_async():
         self.assertEqual(
             context.payload["relationship_graph_fingerprint"],
             graph.fingerprint(),
+        )
+
+    def test_impact_analysis_follows_reverse_dependencies_and_tests(self) -> None:
+        content = build_python_content_summary(
+            [
+                (
+                    "src/pkg/models.py",
+                    "class Model:\n    pass\n",
+                    "1" * 40,
+                ),
+                (
+                    "src/pkg/service.py",
+                    "from .models import Model\nclass Service:\n    pass\n",
+                    "2" * 40,
+                ),
+                (
+                    "src/pkg/handler.py",
+                    "from .service import Service\ndef handle():\n    return Service()\n",
+                    "3" * 40,
+                ),
+                (
+                    "src/pkg/unrelated.py",
+                    "def untouched():\n    return True\n",
+                    "4" * 40,
+                ),
+                (
+                    "tests/test_models.py",
+                    "from pkg.models import Model\ndef test_model():\n    assert Model\n",
+                    "5" * 40,
+                ),
+                (
+                    "tests/test_handler.py",
+                    "from pkg.handler import handle\ndef test_handler():\n    assert handle\n",
+                    "6" * 40,
+                ),
+            ]
+        )
+        graph = build_repository_relationships(content)
+        impact = analyze_repository_impact(
+            graph,
+            changed_paths=["src/pkg/models.py"],
+            max_depth=3,
+        )
+        self.assertEqual(impact.changed_paths, ("src/pkg/models.py",))
+        self.assertEqual(
+            [(entry.path, entry.distance, entry.reason, entry.via_path) for entry in impact.entries],
+            [
+                ("src/pkg/models.py", 0, "changed", None),
+                ("src/pkg/service.py", 1, "reverse-import", "src/pkg/models.py"),
+                ("tests/test_models.py", 1, "test-source-link", "src/pkg/models.py"),
+                ("src/pkg/handler.py", 2, "reverse-import", "src/pkg/service.py"),
+                ("tests/test_handler.py", 3, "test-source-link", "src/pkg/handler.py"),
+            ],
+        )
+        self.assertEqual(
+            impact.affected_paths,
+            (
+                "src/pkg/service.py",
+                "tests/test_models.py",
+                "src/pkg/handler.py",
+                "tests/test_handler.py",
+            ),
+        )
+        self.assertEqual(
+            impact.affected_test_paths,
+            ("tests/test_models.py", "tests/test_handler.py"),
+        )
+        self.assertNotIn("src/pkg/unrelated.py", impact.affected_paths)
+        self.assertFalse(impact.truncated)
+
+    def test_impact_analysis_depth_and_result_budgets_are_deterministic(self) -> None:
+        content = build_python_content_summary(
+            [
+                (
+                    "src/pkg/a.py",
+                    "from .b import helper\ndef a():\n    return helper()\n",
+                    "7" * 40,
+                ),
+                (
+                    "src/pkg/b.py",
+                    "from .c import helper\ndef helper():\n    return 1\n",
+                    "8" * 40,
+                ),
+                (
+                    "src/pkg/c.py",
+                    "def helper():\n    return 1\n",
+                    "9" * 40,
+                ),
+                (
+                    "tests/test_c.py",
+                    "from pkg.c import helper\ndef test_c():\n    assert helper()\n",
+                    "a" * 40,
+                ),
+            ]
+        )
+        graph = build_repository_relationships(content)
+
+        shallow = analyze_repository_impact(
+            graph,
+            changed_paths=["src/pkg/c.py", "src/pkg/c.py"],
+            max_depth=1,
+        )
+        self.assertEqual(shallow.changed_paths, ("src/pkg/c.py",))
+        self.assertEqual(
+            [entry.path for entry in shallow.entries],
+            ["src/pkg/c.py", "src/pkg/b.py", "tests/test_c.py"],
+        )
+        self.assertNotIn("src/pkg/a.py", shallow.affected_paths)
+
+        truncated = analyze_repository_impact(
+            graph,
+            changed_paths=["src/pkg/c.py"],
+            max_depth=3,
+            max_results=2,
+        )
+        self.assertEqual(
+            [entry.path for entry in truncated.entries],
+            ["src/pkg/c.py", "src/pkg/b.py"],
+        )
+        self.assertTrue(truncated.truncated)
+
+    def test_impact_fingerprint_is_order_independent(self) -> None:
+        files = [
+            (
+                "src/pkg/base.py",
+                "def base():\n    return 1\n",
+                "b" * 40,
+            ),
+            (
+                "src/pkg/use.py",
+                "from .base import base\ndef use():\n    return base()\n",
+                "c" * 40,
+            ),
+            (
+                "tests/test_base.py",
+                "from pkg.base import base\ndef test_base():\n    assert base()\n",
+                "d" * 40,
+            ),
+        ]
+        first_graph = build_repository_relationships(
+            build_python_content_summary(files)
+        )
+        second_graph = build_repository_relationships(
+            build_python_content_summary(reversed(files))
+        )
+        first = analyze_repository_impact(
+            first_graph,
+            changed_paths=["src/pkg/base.py"],
+        )
+        second = analyze_repository_impact(
+            second_graph,
+            changed_paths=["src/pkg/base.py"],
+        )
+        self.assertEqual(first.canonical_dict(), second.canonical_dict())
+        self.assertEqual(first.fingerprint(), second.fingerprint())
+
+    def test_impact_analysis_accepts_new_file_with_no_known_dependents(self) -> None:
+        graph = build_repository_relationships(build_python_content_summary([]))
+        impact = analyze_repository_impact(
+            graph,
+            changed_paths=["src/pkg/new_feature.py"],
+        )
+        self.assertEqual(impact.changed_paths, ("src/pkg/new_feature.py",))
+        self.assertEqual(impact.affected_paths, ())
+        self.assertEqual(
+            impact.entries[0].canonical_dict(),
+            {
+                "path": "src/pkg/new_feature.py",
+                "distance": 0,
+                "reason": "changed",
+                "via_path": None,
+                "is_test": False,
+            },
         )
 
     def test_python_source_character_budget_is_enforced(self) -> None:
