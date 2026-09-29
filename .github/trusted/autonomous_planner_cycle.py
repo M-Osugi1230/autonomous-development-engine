@@ -20,9 +20,11 @@ from ade.models import ProjectState
 from ade.planning_activation import PlanningGoalRequest, build_planning_activation
 from ade.repository_intelligence import (
     RepositoryContentSummary,
+    RepositoryImpactAnalysis,
     RepositoryPlannerContext,
     RepositoryRelationshipGraph,
     RepositorySnapshot,
+    analyze_repository_impact,
     build_python_content_summary,
     build_repository_relationships,
     build_repository_snapshot,
@@ -226,6 +228,21 @@ def _persist_activation(
     attempt: int,
 ) -> None:
     proposal = PlannerProposal.from_dict(result.raw_proposal).canonical_dict()
+    proposed_paths = tuple(
+        sorted(
+            {
+                path
+                for task in bundle.accepted_plan.plan.tasks
+                for path in task.allowed_paths
+            }
+        )
+    )
+    impact_analysis: RepositoryImpactAnalysis = analyze_repository_impact(
+        relationship_graph,
+        changed_paths=proposed_paths,
+        max_depth=3,
+        max_results=100,
+    )
     evidence = {
         "schema_version": 1,
         "request": request.to_dict(),
@@ -253,6 +270,7 @@ def _persist_activation(
         "repository_context_fingerprint": repository_context.fingerprint,
         "repository_content_summary_fingerprint": content_summary.fingerprint(),
         "repository_relationship_graph_fingerprint": relationship_graph.fingerprint(),
+        "repository_impact_analysis_fingerprint": impact_analysis.fingerprint(),
         "repository_source_sha": snapshot.source_sha,
     }
 
@@ -282,6 +300,7 @@ def _persist_activation(
     metadata["repository_intelligence_context_fingerprint"] = repository_context.fingerprint
     metadata["repository_intelligence_content_fingerprint"] = content_summary.fingerprint()
     metadata["repository_intelligence_relationship_fingerprint"] = relationship_graph.fingerprint()
+    metadata["repository_intelligence_impact_fingerprint"] = impact_analysis.fingerprint()
     metadata["repository_intelligence_source_sha"] = snapshot.source_sha
     state_payload["updated_at"] = datetime.now(UTC).isoformat()
     gh.upsert_json_file(
@@ -299,6 +318,8 @@ def _persist_activation(
             "content_summary_fingerprint": content_summary.fingerprint(),
             "relationship_graph": relationship_graph.canonical_dict(),
             "relationship_graph_fingerprint": relationship_graph.fingerprint(),
+            "impact_analysis": impact_analysis.canonical_dict(),
+            "impact_analysis_fingerprint": impact_analysis.fingerprint(),
             "planner_context": repository_context.payload,
             "planner_context_fingerprint": repository_context.fingerprint,
         },
