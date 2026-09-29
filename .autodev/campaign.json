@@ -1,14 +1,11 @@
 {
-  "campaign_id": "v1.2-external-goal-campaign-003",
-  "completed_task_ids": [
-    "v12ext3-001",
-    "v12ext3-002"
-  ],
-  "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+  "campaign_id": "v1.2-external-goal-campaign-004",
+  "completed_task_ids": [],
+  "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment audience label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
   "schema_version": 1,
-  "status": "COMPLETED",
+  "status": "RUNNING",
   "task_ids": [
-    "v12ext3-001",
-    "v12ext3-002"
+    "v12ext4-001",
+    "v12ext4-002"
   ]
 }
