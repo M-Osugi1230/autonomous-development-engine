@@ -283,3 +283,61 @@ def arm_post_merge_runtime_verification(
         receipt=expected,
         should_dispatch=True,
     )
+
+@dataclass(frozen=True, slots=True)
+class RuntimeVerificationDispatch:
+    receipt: RuntimeVerificationReceipt
+    changed: bool
+
+
+def record_runtime_verification_dispatch(
+    *,
+    contract: RuntimeVerificationContract,
+    registry: TrustedRuntimeProbeRegistry,
+    receipt: RuntimeVerificationReceipt,
+) -> RuntimeVerificationDispatch:
+    if not isinstance(contract, RuntimeVerificationContract):
+        raise RuntimeVerificationError(
+            "contract must be a RuntimeVerificationContract"
+        )
+    if not isinstance(registry, TrustedRuntimeProbeRegistry):
+        raise RuntimeVerificationError(
+            "registry must be a TrustedRuntimeProbeRegistry"
+        )
+    if not isinstance(receipt, RuntimeVerificationReceipt):
+        raise RuntimeVerificationError(
+            "receipt must be a RuntimeVerificationReceipt"
+        )
+    registry.ensure_contract_supported(contract)
+    if receipt.verification_id != contract.verification_id:
+        raise RuntimeVerificationError("runtime verification id drift")
+    if receipt.target_repository != contract.target_repository:
+        raise RuntimeVerificationError("runtime verification repository drift")
+    if receipt.source_sha != contract.source_sha:
+        raise RuntimeVerificationError("runtime verification source SHA drift")
+    if receipt.contract_fingerprint != contract.fingerprint():
+        raise RuntimeVerificationError("runtime verification contract drift")
+    if receipt.registry_fingerprint != registry.fingerprint():
+        raise RuntimeVerificationError("runtime verification registry drift")
+
+    if receipt.status == "ARMED":
+        return RuntimeVerificationDispatch(
+            receipt=RuntimeVerificationReceipt(
+                verification_id=receipt.verification_id,
+                task_id=receipt.task_id,
+                target_repository=receipt.target_repository,
+                source_sha=receipt.source_sha,
+                contract_fingerprint=receipt.contract_fingerprint,
+                registry_fingerprint=receipt.registry_fingerprint,
+                policy_fingerprint=receipt.policy_fingerprint,
+                status="DISPATCHED",
+                dispatch_count=receipt.dispatch_count + 1,
+            ),
+            changed=True,
+        )
+
+    return RuntimeVerificationDispatch(
+        receipt=receipt,
+        changed=False,
+    )
+
