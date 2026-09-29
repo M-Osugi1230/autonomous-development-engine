@@ -224,5 +224,5 @@
 - [x] Repository Intelligence records dependency/import relationships and test-to-source relationships needed for change planning.
 - [x] A deterministic impact analysis identifies likely affected files and tests for a proposed change without granting write authority.
 - [x] Planner validation can require proposed concrete paths to exist in the trusted repository snapshot unless a task explicitly creates a new file.
-- [ ] A real external-repository proof demonstrates that repository-aware planning selects grounded implementation/test paths and completes through the existing trusted execution loop.
+- [x] A real external-repository proof demonstrates that repository-aware planning selects grounded implementation/test paths and completes through the existing trusted execution loop.
 
