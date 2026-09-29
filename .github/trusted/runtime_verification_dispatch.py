@@ -9,6 +9,7 @@ from ade.runtime_verification import RuntimeVerificationContract
 from ade.runtime_verification_trigger import (
     RuntimeVerificationReceipt,
     record_runtime_verification_dispatch,
+    runtime_verification_paths,
 )
 from github_client import GitHubClient, GitHubError
 from runtime_probes import build_runtime_probe_registry
@@ -35,18 +36,6 @@ def _event_payload() -> dict[str, Any]:
     if not isinstance(client_payload, dict):
         raise ValueError("repository_dispatch client_payload is required")
     return client_payload
-
-
-def _paths(task_id: str) -> tuple[str, str]:
-    if (
-        not isinstance(task_id, str)
-        or not task_id
-        or len(task_id) > 80
-        or any(ch not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-" for ch in task_id)
-    ):
-        raise ValueError("task_id must be a safe identifier")
-    prefix = f".autodev/runtime-verification/{task_id}"
-    return f"{prefix}/contract.json", f"{prefix}/receipt.json"
 
 
 def validate_dispatch_payload(
@@ -77,7 +66,7 @@ def main() -> int:
     try:
         event = _event_payload()
         task_id = event.get("task_id")
-        contract_path, receipt_path = _paths(task_id)
+        contract_path, receipt_path = runtime_verification_paths(task_id)
 
         gh = GitHubClient()
         contract_payload, _ = gh.get_json_file(contract_path)
@@ -106,6 +95,7 @@ def main() -> int:
         result = {
             "schema_version": 1,
             "state": "DISPATCHED" if transition.receipt.status == "DISPATCHED" else "NOOP",
+            "receipt_changed": transition.changed,
             "task_id": transition.receipt.task_id,
             "verification_id": transition.receipt.verification_id,
             "target_repository": transition.receipt.target_repository,
