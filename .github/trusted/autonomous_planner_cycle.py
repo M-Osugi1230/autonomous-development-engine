@@ -150,9 +150,11 @@ def _persist_activation(
         "implementation_output_accepted": False,
     }
 
-    # AcceptedPlan is deliberately persisted last. Its main-branch push is the
-    # Zero-Touch Start trigger, so every canonical execution file must already
-    # reconcile before that final write is visible.
+    # AcceptedPlan is deliberately persisted last. Every canonical execution
+    # file must reconcile before activation becomes visible. After the write,
+    # request an explicit repository_dispatch because GitHub suppresses normal
+    # workflow chaining from pushes created with GITHUB_TOKEN. The scheduled
+    # Zero-Touch watchdog remains the bounded fallback if dispatch is unavailable.
     gh.upsert_json_file(
         ".autodev/campaign.json",
         bundle.campaign.to_dict(),
@@ -202,6 +204,22 @@ def _persist_activation(
         bundle.accepted_plan.to_dict(),
         message=f"planner: activate accepted plan {request.request_id}",
     )
+    try:
+        gh.dispatch(
+            "ade_zero_touch_start",
+            {
+                "task_id": bundle.cycle_task.task_id,
+                "campaign_id": bundle.campaign.campaign_id,
+                "request_id": request.request_id,
+                "source": "autonomous-planner",
+            },
+        )
+    except GitHubError as exc:
+        print(
+            "WARNING: immediate Zero-Touch dispatch failed; scheduled watchdog remains armed: "
+            + _safe_error(exc),
+            file=sys.stderr,
+        )
     _write_result(accepted_status)
 
 
