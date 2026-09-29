@@ -23,7 +23,8 @@ SHA = "a" * 40
 
 def _pass(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
     clean = (
-        invocation.credential_authority is False
+        invocation.repository_write_authority is False
+        and invocation.credential_authority is False
         and invocation.network_authority is False
         and invocation.deployment_authority is False
         and "GITHUB_TOKEN" not in os.environ
@@ -112,6 +113,7 @@ def main() -> int:
         "hard_timeout_enforced": True,
         "error_retry_bounded": True,
         "attempt_budget_enforced": True,
+        "repository_write_authority_not_granted": True,
         "credentials_removed": True,
         "network_authority_not_granted": True,
         "deployment_authority_not_granted": True,
