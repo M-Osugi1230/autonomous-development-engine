@@ -1,7 +1,14 @@
 from __future__ import annotations
 
+import copy
 import json
 
+from ade.autonomous_planner import (
+    PlannerDisposition,
+    PlannerPolicy,
+    PlannerValidationError,
+    validate_planner_proposal,
+)
 from ade.repository_intelligence import (
     analyze_repository_impact,
     build_python_content_summary,
@@ -122,6 +129,78 @@ def main() -> int:
     assert impact.entries[1].reason == "test-source-link"
     assert len(context.serialized) <= 12000
 
+    grounding_goal = "Update the existing model helper and its focused tests."
+    grounding_proposal = {
+        "schema_version": 1,
+        "goal": grounding_goal,
+        "tasks": [
+            {
+                "key": "model",
+                "title": "Update model helper",
+                "outcome": "Update the existing model helper.",
+                "depends_on": [],
+                "allowed_paths": ["src/thought_pipeline/models.py"],
+                "acceptance": ["model helper remains deterministic"],
+                "new_paths": [],
+                "human_only": False,
+                "human_reason": None,
+            },
+            {
+                "key": "tests",
+                "title": "Update model tests",
+                "outcome": "Update focused model tests.",
+                "depends_on": ["model"],
+                "allowed_paths": ["tests/test_models.py"],
+                "acceptance": ["focused tests pass"],
+                "new_paths": [],
+                "human_only": False,
+                "human_reason": None,
+            },
+        ],
+        "human_boundaries": [
+            "destructive or irreversible operation",
+            "credential or secret access",
+            "externally consequential side effect",
+        ],
+    }
+    grounding_policy = PlannerPolicy(
+        allowed_path_prefixes=("src/thought_pipeline", "tests"),
+        min_tasks=2,
+        max_tasks=2,
+    )
+    grounded = validate_planner_proposal(
+        high_level_goal=grounding_goal,
+        proposal_payload=grounding_proposal,
+        policy=grounding_policy,
+        id_prefix="ri",
+        existing_paths=frozenset(snapshot.paths),
+    )
+    assert grounded.disposition is PlannerDisposition.ACCEPTED
+
+    unknown = copy.deepcopy(grounding_proposal)
+    unknown["tasks"][0]["allowed_paths"] = ["src/thought_pipeline/unknown.py"]
+    try:
+        validate_planner_proposal(
+            high_level_goal=grounding_goal,
+            proposal_payload=unknown,
+            policy=grounding_policy,
+            existing_paths=frozenset(snapshot.paths),
+        )
+    except PlannerValidationError:
+        pass
+    else:
+        raise AssertionError("unknown repository path was accepted without new_paths")
+
+    explicit_new = copy.deepcopy(unknown)
+    explicit_new["tasks"][0]["new_paths"] = ["src/thought_pipeline/unknown.py"]
+    new_result = validate_planner_proposal(
+        high_level_goal=grounding_goal,
+        proposal_payload=explicit_new,
+        policy=grounding_policy,
+        existing_paths=frozenset(snapshot.paths),
+    )
+    assert new_result.disposition is PlannerDisposition.ACCEPTED
+
     print(json.dumps({
         "ok": True,
         "deterministic_snapshot": True,
@@ -136,6 +215,9 @@ def main() -> int:
         "internal_dependency_graph": True,
         "test_source_links": True,
         "deterministic_change_impact": True,
+        "existing_path_grounding": True,
+        "unknown_path_rejected": True,
+        "explicit_new_path_allowed": True,
         "impact_fingerprint": impact.fingerprint(),
         "snapshot_fingerprint": snapshot.fingerprint(),
         "context_fingerprint": context.fingerprint,
