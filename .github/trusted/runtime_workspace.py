@@ -190,6 +190,11 @@ def prepare_repository_runtime_workspace(
             dependency_fingerprint=sha256(dep_raw.encode("utf-8")).hexdigest(),
             source_sha=contract.source_sha,
         )
-    except Exception:
+    except RuntimeVerificationError:
         shutil.rmtree(temp_root, ignore_errors=True)
         raise
+    except Exception as exc:
+        shutil.rmtree(temp_root, ignore_errors=True)
+        raise RuntimeVerificationError(
+            "runtime workspace preparation failed"
+        ) from exc
