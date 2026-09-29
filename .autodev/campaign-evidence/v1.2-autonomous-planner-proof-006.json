@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "version": "v1.2",
+  "request_id": "v1.2-external-goal-proof-006",
+  "campaign_id": "v1.2-external-goal-campaign-006",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "human_authored_per_task_work_items": false,
+  "target_quality_gate": {
+    "baseline_sha": "32287026986cdd5c1b7f6a10a1f1cb6c93a9d88c",
+    "baseline_ci_run": 36561223812,
+    "runtime_source_hygiene": true,
+    "clean_production_import_smoke": true
+  },
+  "accepted_plan_fingerprint": "fa1862e95d62a9dd8e3a22f304e3cdd707ce00f6bbad89a331c2829e1c8a694d",
+  "planner": {
+    "provider": "jules",
+    "workflow_run": 36600984887,
+    "source_sha": "2435bc0c40a16322d383c6281344f513749780c2",
+    "planning_only": true,
+    "plan_approved": false,
+    "provider_execution_boundary_crossed": false,
+    "proposal_mode": "derived-plan-steps",
+    "task_count": 2
+  },
+  "initial_start": {
+    "workflow_run": 36601367495,
+    "trigger_source": "repository_dispatch",
+    "source_sha": "da46c6815dc0ab0b8ffbf59346ad9d04c3d22559",
+    "task_id": "v12ext6-001",
+    "manual_workflow_dispatch": false
+  },
+  "quota_resume": {
+    "observed": false,
+    "resume_mode": "not-needed"
+  },
+  "tasks": [
+    {
+      "task_id": "v12ext6-001",
+      "jules_cycle_run": 36601385654,
+      "pull_request": 11,
+      "ci_run": 36602079178,
+      "remote_gate_run": 36602155470,
+      "remote_monitor_run": 36602101685,
+      "head_sha": "049b1c8994d4645c671be33bfd58e9a951305587",
+      "merge_commit": "9e349c90fd176282897dad972ef6884288a8927b"
+    },
+    {
+      "task_id": "v12ext6-002",
+      "jules_cycle_run": 36602228409,
+      "pull_request": 12,
+      "ci_run": 36602807081,
+      "remote_gate_run": 36602883727,
+      "remote_monitor_run": 36602836517,
+      "head_sha": "3c658665fa482fc3cbf5d7bccd584ae3a7d86192",
+      "merge_commit": "0782824b8203728bb13b747bb4c90bddc1ceac23"
+    }
+  ],
+  "manual_campaign_progress_after_goal_submission": false,
+  "terminal_status": "COMPLETED",
+  "failed_tasks": 0,
+  "proofs": {
+    "planner_boundary": ".autodev/planner-evidence/v1.2-external-goal-proof-006.json",
+    "planner_capacity_retry": "Autonomous Planner capacity retry proof",
+    "zero_touch": "Zero-Touch Start proof",
+    "execution_lease": "Execution lease duplicate-dispatch proof",
+    "remote_loop": "Remote Repository Loop proof",
+    "restart": "Checkpoint restart proof",
+    "human_boundary": "Human decision boundary proof",
+    "recovery": "Autonomous recovery fault proof",
+    "observability": "Mission Control observability proof"
+  },
+  "terminal_snapshot": {
+    "source_sha": "26c5b488e475c84310665b0f26a69c95df1739aa",
+    "accepted_plan": {
+      "status": "ACCEPTED",
+      "fingerprint": "fa1862e95d62a9dd8e3a22f304e3cdd707ce00f6bbad89a331c2829e1c8a694d",
+      "task_ids": [
+        "v12ext6-001",
+        "v12ext6-002"
+      ]
+    },
+    "campaign": {
+      "campaign_id": "v1.2-external-goal-campaign-006",
+      "status": "COMPLETED",
+      "task_ids": [
+        "v12ext6-001",
+        "v12ext6-002"
+      ],
+      "completed_task_ids": [
+        "v12ext6-001",
+        "v12ext6-002"
+      ]
+    },
+    "task_graph": [
+      {
+        "task_id": "v12ext6-001",
+        "status": "COMPLETED",
+        "depends_on": []
+      },
+      {
+        "task_id": "v12ext6-002",
+        "status": "COMPLETED",
+        "depends_on": [
+          "v12ext6-001"
+        ]
+      }
+    ],
+    "state": {
+      "current_task_id": null,
+      "failed_task_ids": [],
+      "completed_campaign_task_ids": [
+        "v12ext6-001",
+        "v12ext6-002"
+      ]
+    },
+    "remote_execution_receipt": {
+      "schema_version": 1,
+      "status": "MERGED",
+      "task_id": "v12ext6-002",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "pull_request_url": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/12"
+    }
+  }
+}
