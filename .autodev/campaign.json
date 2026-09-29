@@ -1,10 +1,11 @@
 {
-  "campaign_id": "v1.2-external-goal-campaign-001",
+  "campaign_id": "v1.2-external-goal-campaign-003",
   "completed_task_ids": [],
-  "goal": "Add a small deterministic utility that normalizes a non-empty experiment label by collapsing surrounding and repeated internal whitespace into a stable normalized value and returns a structured summary, with focused unit-test coverage. Keep the change isolated from CLI behavior, external APIs, deployment, secrets, and irreversible operations.",
+  "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment topic label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should lowercase that normalized label and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
   "schema_version": 1,
-  "status": "FAILED",
+  "status": "RUNNING",
   "task_ids": [
-    "v12ext-001"
+    "v12ext3-001",
+    "v12ext3-002"
   ]
 }
