@@ -54,17 +54,23 @@
     "v1-1-zero-touch-001",
     "v1-1-zero-touch-002"
   ],
-  "current_task_id": null,
+  "current_task_id": "v12ext3-001",
   "failed_task_ids": [],
   "iteration": 52,
   "metadata": {
-    "accepted_plan_fingerprint": "97239156c40d4086d4ee684e605e1cfa7cdd0c69cfd2e6089c49e69ceff04920",
-    "campaign_id": "v1.2-external-goal-campaign-001",
+    "accepted_plan_fingerprint": "a07442a60ea1ba213ee84acd0618097b3d8a6636777d4b1ef9bff789068c7249",
+    "campaign_id": "v1.2-external-goal-campaign-003",
     "dag_blocked": false,
+    "last_superseded_campaign": {
+      "campaign_id": "v1.2-external-goal-campaign-001",
+      "reason": "planner-meta-task-and-directory-scope-rejected-after-v1.2-hardening",
+      "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/5",
+      "task_id": "v12ext-001"
+    },
     "manual_progress_during_provider_quota": true,
     "milestone": "phase12-complete",
     "next_required_human_action": null,
-    "next_system_action": "submit-hardened-planning-goal",
+    "next_system_action": "zero-touch-start",
     "phase": "v1.2-autonomous-planner",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -83,28 +89,22 @@
     "pilot_pull_request_url": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/3",
     "pilot_target_repository": "M-Osugi1230/one-minute-thought-experiments",
     "plan_source": "live:jules-planner",
-    "planner_policy_fingerprint": "6f93eaa490866257f92811a5daaeeca20332bc9e2d09a3a244f01da74b8c34ca",
-    "planner_proposal_fingerprint": "49345c953c1e3b5d31c6a71ad55d65d251bf10628e74a6ae65f3c7d24a55cf0b",
-    "planning_request_fingerprint": "4c9a1441be3adfaf4e7a76caf08a72ece224e1c6731dc247edf38e300e5cf89c",
-    "planning_request_id": "v1.2-external-goal-proof-001",
+    "planner_policy_fingerprint": "81d087d7c2cbb7eb09cdd279f2bcff3de6333097bbd56fd85bffc91691d114bf",
+    "planner_proposal_fingerprint": "9867cf5532cb16f57c3587b6903bf229f0a503cc1648fd71a0082f49a30e15bf",
+    "planning_request_fingerprint": "62a8f3f83c5ac71aa5bdae92e18f6183be01806a673a401d61a07be393433604",
+    "planning_request_id": "v1.2-external-goal-proof-003",
     "previous_pilot_baseline_sha": "46d2d473305ca8c904f90c78bc8f8aabf3fd7319",
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": true,
+    "queue_exhausted": false,
     "scheduler": "dag",
     "target_base_branch": "main",
-    "target_repository": "M-Osugi1230/one-minute-thought-experiments",
-    "last_superseded_campaign": {
-      "campaign_id": "v1.2-external-goal-campaign-001",
-      "task_id": "v12ext-001",
-      "reason": "planner-meta-task-and-directory-scope-rejected-after-v1.2-hardening",
-      "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/5"
-    }
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
   "status": "READY",
-  "updated_at": "2026-09-28T23:20:00+00:00"
+  "updated_at": "2026-09-29T08:25:41.834417+00:00"
 }
