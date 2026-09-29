@@ -83,6 +83,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python .github/trusted/runtime_target_registry_probe.py
 
+      - name: Runtime Verification failure containment proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/runtime_failure_containment_probe.py
+
       - name: Remote Repository Loop proof
         env:
           PYTHONPATH: src
