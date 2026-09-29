@@ -32,7 +32,7 @@ class PreparedRuntimeWorkspace:
     source_sha: str
 
     def cleanup(self) -> None:
-        shutil.rmtree(self.root, ignore_errors=True)
+        shutil.rmtree(self.root.parent, ignore_errors=True)
 
 
 def _safe_dependency_specs(root: Path) -> tuple[str, ...]:
