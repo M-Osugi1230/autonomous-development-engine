@@ -248,6 +248,7 @@ def derive_proposal_from_plan_steps(
                 "depends_on": dependencies,
                 "allowed_paths": list(paths),
                 "acceptance": acceptance,
+                "new_paths": [],
                 "human_only": False,
                 "human_reason": None,
             }

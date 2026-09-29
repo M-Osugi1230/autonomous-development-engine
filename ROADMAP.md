@@ -121,3 +121,5 @@ Slice 003 complete: internal Python import edges are resolved against the bounde
 
 Slice 004 complete: trusted AcceptedPlan allowed_paths are treated as proposed change roots and analyzed against the repository relationship graph. Reverse imports are traversed with bounded deterministic breadth-first search, likely affected tests are surfaced through test/source links, and the resulting impact analysis is fingerprinted into Repository Intelligence evidence and project state. Impact findings are advisory only and never expand execution scope.
 
+Slice 005 complete: the planner task schema carries explicit `new_paths`; live trusted validation compares every allowed path against the full immutable repository snapshot, rejects unknown paths unless they are explicitly declared new, rejects existing paths falsely declared new, and requires new_paths to remain inside allowed_paths. Legacy deterministic v1.2 validation remains compatible when no repository snapshot is supplied.
+
