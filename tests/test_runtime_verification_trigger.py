@@ -74,7 +74,7 @@ class RuntimeVerificationTriggerTests(unittest.TestCase):
             activation.contract.fingerprint(),
         )
 
-    def test_same_receipt_suppresses_duplicate_dispatch(self) -> None:
+    def test_armed_receipt_remains_retryable_until_dispatch_acknowledgement(self) -> None:
         first = arm_post_merge_runtime_verification(
             policy=policy(),
             registry=registry(),
@@ -90,8 +90,32 @@ class RuntimeVerificationTriggerTests(unittest.TestCase):
             trusted_merge_sha=SHA_A,
             existing_receipt=first.receipt,
         )
-        self.assertFalse(second.should_dispatch)
+        self.assertTrue(second.should_dispatch)
         self.assertEqual(second.receipt, first.receipt)
+
+    def test_dispatched_same_identity_receipt_suppresses_replay(self) -> None:
+        first = arm_post_merge_runtime_verification(
+            policy=policy(),
+            registry=registry(),
+            task_id="task-001",
+            target_repository="example/target",
+            trusted_merge_sha=SHA_A,
+        )
+        dispatched = record_runtime_verification_dispatch(
+            contract=first.contract,
+            registry=registry(),
+            receipt=first.receipt,
+        ).receipt
+        replay = arm_post_merge_runtime_verification(
+            policy=policy(),
+            registry=registry(),
+            task_id="task-001",
+            target_repository="example/target",
+            trusted_merge_sha=SHA_A,
+            existing_receipt=dispatched,
+        )
+        self.assertFalse(replay.should_dispatch)
+        self.assertEqual(replay.receipt.status, "DISPATCHED")
 
     def test_terminal_same_identity_receipt_also_suppresses_replay(self) -> None:
         first = arm_post_merge_runtime_verification(
