@@ -1,10 +1,13 @@
 {
-  "attempt": 0,
-  "detail": "HTTP 400: Precondition check failed.",
-  "reason": "planner-provider-capacity",
-  "request_fingerprint": "d602bf13b0661a8f5d0f121dbb39d06b768cbb1b3819a5a59a9e68aa4f4ea746",
-  "request_id": "v1.2-external-goal-proof-005",
+  "accepted_plan_fingerprint": "fa1862e95d62a9dd8e3a22f304e3cdd707ce00f6bbad89a331c2829e1c8a694d",
+  "attempt": 1,
+  "campaign_id": "v1.2-external-goal-campaign-006",
+  "first_task_id": "v12ext6-001",
+  "proposal_fingerprint": "efc011554ee6bbf2379089248a2bf069e8cc364f6ef9d5b614b3acfc3e73867e",
+  "reason": "trusted-plan-accepted",
+  "request_fingerprint": "2cd58d56b01fe1976d1f457fd740407d12abe6947ace00044f8d233a89862b1f",
+  "request_id": "v1.2-external-goal-proof-006",
   "schema_version": 1,
-  "state": "PAUSED_QUOTA",
-  "updated_at": "2026-09-29T11:26:18.485930+00:00"
+  "state": "ACCEPTED",
+  "updated_at": "2026-09-29T16:56:23.146081+00:00"
 }
