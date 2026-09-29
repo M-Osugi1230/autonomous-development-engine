@@ -1,7 +1,7 @@
 {
   "attempt": 0,
   "last_error": "Superseded: merged Task 1 passed CI but introduced a runtime pytest dependency and misplaced tests; proof004 is not valid Goal Acceptance evidence.",
-  "last_failure_kind": "QUALITY_GATE_GAP",
+  "last_failure_kind": "VALIDATION_ERROR",
   "provider_session_id": null,
   "replan_count": 0,
   "resume_after": null,
