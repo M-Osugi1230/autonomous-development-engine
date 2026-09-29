@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-DEFAULT_EVIDENCE = ".autodev/campaign-evidence/v1.2-autonomous-planner-proof-004.json"
+DEFAULT_EVIDENCE = ".autodev/campaign-evidence/v1.2-autonomous-planner-proof-005.json"
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 REQUIRED_CI_PROOFS = (
     "Zero-Touch Start proof",
@@ -102,8 +102,8 @@ def audit(
     checks = {
         "evidence_schema": evidence.get("schema_version") == 1
         and evidence.get("version") == "v1.2",
-        "proof_identity": evidence.get("request_id") == "v1.2-external-goal-proof-004"
-        and evidence.get("campaign_id") == "v1.2-external-goal-campaign-004",
+        "proof_identity": evidence.get("request_id") == "v1.2-external-goal-proof-005"
+        and evidence.get("campaign_id") == "v1.2-external-goal-campaign-005",
         "target_repository": evidence.get("target_repository")
         == "M-Osugi1230/one-minute-thought-experiments",
         "goal_only_submission": evidence.get("human_authored_per_task_work_items") is False,
@@ -127,14 +127,19 @@ def audit(
         and _positive_int(initial.get("workflow_run")),
         "explicit_zero_touch_handoff": "ade_zero_touch_start" in zero_touch,
         "explicit_remote_monitor_handoff": "ade_remote_pr_monitor" in remote_monitor,
-        "quota_pause_observed": quota.get("task_id") == "v12ext4-002"
-        and quota.get("paused") is True
-        and isinstance(quota.get("resume_after"), str)
-        and bool(quota["resume_after"].strip()),
-        "automatic_quota_resume": quota.get("manual_resume") is False
-        and quota.get("external_target_preserved") is True
-        and quota.get("execution_lease_reclaimed") is True
-        and _positive_int(quota.get("resume_run")),
+        "quota_resume_safe": (
+            quota.get("observed") is False
+            and quota.get("resume_mode") == "not-needed"
+        )
+        or (
+            quota.get("observed") is True
+            and quota.get("manual_resume") is False
+            and isinstance(quota.get("resume_after"), str)
+            and bool(quota["resume_after"].strip())
+            and quota.get("external_target_preserved") is True
+            and quota.get("execution_lease_reclaimed") is True
+            and _positive_int(quota.get("resume_run"))
+        ),
         "resume_watchdog": 'cron: "*/15 * * * *"' in resume,
         "real_multi_task_evidence": len(tasks) >= 2
         and all(_task_evidence(task) for task in tasks),

@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "version": "v1.2",
+  "request_id": "v1.2-external-goal-proof-004",
+  "campaign_id": "v1.2-external-goal-campaign-004",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "terminal_status": "SUPERSEDED_QUALITY_GATE_GAP",
+  "graduation_candidate": false,
+  "planner": {
+    "workflow_run": 36555882853,
+    "source_sha": "875edc84463a9a95e7b2689dae452f1fc8681f1c",
+    "provider": "jules",
+    "planning_only": true,
+    "plan_approved": false,
+    "provider_execution_boundary_crossed": false,
+    "proposal_mode": "derived-plan-steps",
+    "task_count": 2
+  },
+  "initial_start": {
+    "workflow_run": 36556080655,
+    "trigger_source": "repository_dispatch",
+    "manual_workflow_dispatch": false
+  },
+  "completed_task": {
+    "task_id": "v12ext4-001",
+    "jules_cycle_run": 36556094389,
+    "pull_request": 9,
+    "ci_run": 36556876897,
+    "remote_gate_run": 36556927434,
+    "remote_monitor_run": 36556893121,
+    "head_sha": "ebb3b7eb1145cc1be7389418c03f3e6eff7ec981",
+    "merge_commit": "61ad7357f7a6f7a73ce03965d88f1177721020d3"
+  },
+  "interrupted_task": {
+    "task_id": "v12ext4-002",
+    "dispatch_run": 36556995540,
+    "state": "PAUSED_QUOTA_THEN_RETIRED",
+    "original_resume_after": "2026-09-29T12:25:49.197198+00:00"
+  },
+  "quality_gap": {
+    "discovered_after_merge": true,
+    "p1": "Production module src/thought_pipeline/audience.py imported pytest even though pytest is not a pyproject production dependency.",
+    "p2": "Test functions were embedded in src/thought_pipeline/audience.py and were outside configured pytest testpaths.",
+    "masked_by_existing_ci": "requirements.txt installed pytest before tests, so the production dependency defect was invisible.",
+    "review_comment_ids": [
+      4132447408,
+      4132447416
+    ]
+  },
+  "corrective_action": {
+    "target_repair_pull_request": 10,
+    "target_repair_merge_commit": "32287026986cdd5c1b7f6a10a1f1cb6c93a9d88c",
+    "runtime_hygiene_check_added": true,
+    "clean_production_import_smoke_added": true,
+    "ade_role_separation_hardening_merge_commit": "cf9c203b4e949f1d0774b4270bce5f65e55d2b7a"
+  },
+  "conclusion": "Proof004 demonstrated autonomous handoff and one trusted external cycle, but is explicitly excluded from v1.2 graduation because post-merge quality review found a real production-runtime defect."
+}
