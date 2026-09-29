@@ -1,10 +1,10 @@
 {
   "attempt": 0,
-  "last_error": "HTTP 400: Precondition check failed.",
-  "last_failure_kind": "PROVIDER_QUOTA",
+  "last_error": "Superseded: merged Task 1 passed CI but introduced a runtime pytest dependency and misplaced tests; proof004 is not valid Goal Acceptance evidence.",
+  "last_failure_kind": "QUALITY_GATE_GAP",
   "provider_session_id": null,
   "replan_count": 0,
-  "resume_after": "2026-09-29T12:25:49.197198+00:00",
-  "state": "PAUSED_QUOTA",
+  "resume_after": null,
+  "state": "FAILED",
   "task_id": "v12ext4-002"
 }
