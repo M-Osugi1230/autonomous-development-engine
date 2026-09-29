@@ -30,6 +30,12 @@ def runtime_verification_paths(task_id: str) -> tuple[str, str]:
     return f"{prefix}/contract.json", f"{prefix}/receipt.json"
 
 
+def runtime_verification_report_path(task_id: str) -> str:
+    contract_path, _ = runtime_verification_paths(task_id)
+    prefix = contract_path.removesuffix("/contract.json")
+    return f"{prefix}/report.json"
+
+
 @dataclass(frozen=True, slots=True)
 class RuntimeVerificationPolicy:
     target_repository: str
