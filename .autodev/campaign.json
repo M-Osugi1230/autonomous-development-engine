@@ -1,14 +1,11 @@
 {
-  "campaign_id": "v1.2-external-goal-campaign-006",
-  "completed_task_ids": [
-    "v12ext6-001",
-    "v12ext6-002"
-  ],
-  "goal": "Add a small self-contained deterministic utility for normalizing a non-empty experiment series label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Implementation must live in a production module under src/thought_pipeline and tests must live only under tests; production modules must not import test-only dependencies. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
+  "campaign_id": "v1.3-repository-intelligence-campaign-001",
+  "completed_task_ids": [],
+  "goal": "Extend the existing thought-experiment model utilities with a small deterministic normalizer for a non-empty experiment variant label. The display label must collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key must use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a frozen structured summary containing the display label and key. Add focused unit-test coverage using existing test files. Do not create any new files. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.",
   "schema_version": 1,
-  "status": "COMPLETED",
+  "status": "RUNNING",
   "task_ids": [
-    "v12ext6-001",
-    "v12ext6-002"
+    "v13ri1-001",
+    "v13ri1-002"
   ]
 }
