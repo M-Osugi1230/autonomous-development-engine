@@ -125,3 +125,17 @@ Slice 005 complete: the planner task schema carries explicit `new_paths`; live t
 
 Graduated: real proof `v1.3-repository-intelligence-proof-001` completed High-level Goal -> trusted Repository Intelligence snapshot/content/relationship/impact context -> Jules planning-only proposal -> trusted existing-path grounding -> automatic Zero-Touch -> external PR #13 / CI / trusted merge -> automatic Task 2 -> PR #14 / CI / trusted merge -> terminal Campaign COMPLETED with failed=0 and no manual Campaign progression. Immutable evidence is stored at `.autodev/campaign-evidence/v1.3-repository-intelligence-proof-001.json`, and the dedicated v1.3 Graduation audit is mandatory in CI.
 
+## ADE v1.4 — Runtime / Deployment Verification 🚧
+Verify that merged work actually runs in the intended environment instead of treating CI success as proof of runtime or deployment success.
+
+Build order:
+1. immutable source-SHA-bound Runtime Verification Contract
+2. trusted probe registry with fixed controller-owned implementations
+3. automatic post-merge verification trigger and durable receipt
+4. bounded runtime probe execution with timeout/retry policy
+5. environment/deployment target adapters and freshness/provenance checks
+6. recovery/HUMAN_WAIT integration for runtime failures
+7. real external repository proof and v1.4 graduation audit
+
+Slice 001 complete: ADE now has a deterministic RuntimeVerificationContract and RuntimeProbeResult model bound to target repository, exact source SHA, environment, trusted probe IDs, timeout, and retry budgets. The evaluator is fail-closed for unknown/duplicate/stale/over-budget evidence, reports PENDING while required evidence is incomplete, and can report VERIFIED only when every required trusted probe passes. The contract intentionally carries no executable command, URL, header, credential, or secret payload; trusted probe implementation mapping is deferred to Slice 002.
+
