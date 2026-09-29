@@ -29,6 +29,12 @@ def _evidence() -> dict:
         "campaign_id": "v1.2-external-goal-campaign-005",
         "target_repository": "M-Osugi1230/one-minute-thought-experiments",
         "human_authored_per_task_work_items": False,
+        "target_quality_gate": {
+            "baseline_sha": SHA_A,
+            "baseline_ci_run": 100,
+            "runtime_source_hygiene": True,
+            "clean_production_import_smoke": True,
+        },
         "accepted_plan_fingerprint": "fingerprint-005",
         "planner": {
             "provider": "jules",
@@ -153,6 +159,16 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
             self.assertTrue(result["v1_2_autonomous_planner_graduated"], result)
             self.assertEqual(result["missing_proofs"], [])
             self.assertTrue(all(result["checks"].values()))
+
+    def test_missing_target_quality_gate_cannot_graduate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            evidence = _evidence()
+            evidence["target_quality_gate"]["clean_production_import_smoke"] = False
+            self._fixture(root, evidence)
+            result = audit(root)
+            self.assertFalse(result["v1_2_autonomous_planner_graduated"])
+            self.assertFalse(result["checks"]["target_quality_gate"])
 
     def test_nonterminal_campaign_cannot_graduate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
