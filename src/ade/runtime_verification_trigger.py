@@ -463,3 +463,29 @@ def record_runtime_verification_human_wait(
     )
     return RuntimeVerificationCompletion(receipt=waiting, changed=True)
 
+def record_runtime_verification_failure(
+    receipt: RuntimeVerificationReceipt,
+) -> RuntimeVerificationCompletion:
+    if not isinstance(receipt, RuntimeVerificationReceipt):
+        raise RuntimeVerificationError(
+            "receipt must be a RuntimeVerificationReceipt"
+        )
+    if receipt.status in {"FAILED", "HUMAN_WAIT"}:
+        return RuntimeVerificationCompletion(receipt=receipt, changed=False)
+    if receipt.status == "VERIFIED":
+        raise RuntimeVerificationError(
+            "verified runtime receipt cannot transition to FAILED"
+        )
+    failed = RuntimeVerificationReceipt(
+        verification_id=receipt.verification_id,
+        task_id=receipt.task_id,
+        target_repository=receipt.target_repository,
+        source_sha=receipt.source_sha,
+        contract_fingerprint=receipt.contract_fingerprint,
+        registry_fingerprint=receipt.registry_fingerprint,
+        policy_fingerprint=receipt.policy_fingerprint,
+        status="FAILED",
+        dispatch_count=receipt.dispatch_count,
+    )
+    return RuntimeVerificationCompletion(receipt=failed, changed=True)
+
