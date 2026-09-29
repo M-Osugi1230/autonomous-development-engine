@@ -6,6 +6,7 @@ import unittest
 from ade.autonomous_planner import (
     PlannerDisposition,
     PlannerPolicy,
+    PlannerProposal,
     PlannerValidationError,
     accept_validated_proposal,
     plan_high_level_goal,
