@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 
 from ade.repository_intelligence import (
+    analyze_repository_impact,
     build_python_content_summary,
     build_repository_relationships,
     build_repository_snapshot,
@@ -108,6 +109,17 @@ def main() -> int:
             "reason": "import",
         }
     ]
+
+    impact = analyze_repository_impact(
+        relationships,
+        changed_paths=["src/thought_pipeline/models.py"],
+        max_depth=3,
+        max_results=20,
+    )
+    assert impact.changed_paths == ("src/thought_pipeline/models.py",)
+    assert impact.affected_paths == ("tests/test_models.py",)
+    assert impact.affected_test_paths == ("tests/test_models.py",)
+    assert impact.entries[1].reason == "test-source-link"
     assert len(context.serialized) <= 12000
 
     print(json.dumps({
@@ -123,6 +135,8 @@ def main() -> int:
         "relationship_graph_fingerprint": relationships.fingerprint(),
         "internal_dependency_graph": True,
         "test_source_links": True,
+        "deterministic_change_impact": True,
+        "impact_fingerprint": impact.fingerprint(),
         "snapshot_fingerprint": snapshot.fingerprint(),
         "context_fingerprint": context.fingerprint,
     }, sort_keys=True))

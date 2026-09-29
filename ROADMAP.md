@@ -119,3 +119,5 @@ Slice 002 complete: trusted bounded UTF-8 reads are limited to deterministic Pyt
 
 Slice 003 complete: internal Python import edges are resolved against the bounded content summary, relative imports are normalized against package context, external imports are ignored, and test-to-source relationships are derived from import edges with an unambiguous filename fallback. The bounded relationship graph is fingerprinted and supplied to planner context/evidence without changing write authority.
 
+Slice 004 complete: trusted AcceptedPlan allowed_paths are treated as proposed change roots and analyzed against the repository relationship graph. Reverse imports are traversed with bounded deterministic breadth-first search, likely affected tests are surfaced through test/source links, and the resulting impact analysis is fingerprinted into Repository Intelligence evidence and project state. Impact findings are advisory only and never expand execution scope.
+

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from collections import deque
 import ast
 import hashlib
 import json
@@ -180,6 +181,53 @@ class RepositoryRelationshipGraph:
             "test_source_links": [
                 link.canonical_dict() for link in self.test_source_links
             ],
+        }
+
+    def fingerprint(self) -> str:
+        raw = json.dumps(
+            self.canonical_dict(),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+@dataclass(frozen=True, slots=True)
+class RepositoryImpactEntry:
+    path: str
+    distance: int
+    reason: str
+    via_path: str | None
+    is_test: bool
+
+    def canonical_dict(self) -> dict[str, Any]:
+        return {
+            "path": self.path,
+            "distance": self.distance,
+            "reason": self.reason,
+            "via_path": self.via_path,
+            "is_test": self.is_test,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class RepositoryImpactAnalysis:
+    changed_paths: tuple[str, ...]
+    affected_paths: tuple[str, ...]
+    affected_test_paths: tuple[str, ...]
+    entries: tuple[RepositoryImpactEntry, ...]
+    truncated: bool
+    schema_version: int = 1
+
+    def canonical_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": 1,
+            "changed_paths": list(self.changed_paths),
+            "affected_paths": list(self.affected_paths),
+            "affected_test_paths": list(self.affected_test_paths),
+            "entries": [entry.canonical_dict() for entry in self.entries],
+            "truncated": self.truncated,
         }
 
     def fingerprint(self) -> str:
@@ -586,6 +634,130 @@ def build_repository_relationships(
                 key=lambda link: (link.test_path, link.source_path, link.reason),
             )
         ),
+    )
+
+
+def analyze_repository_impact(
+    relationship_graph: RepositoryRelationshipGraph,
+    *,
+    changed_paths: Iterable[str],
+    max_depth: int = 3,
+    max_results: int = 100,
+) -> RepositoryImpactAnalysis:
+    if not isinstance(relationship_graph, RepositoryRelationshipGraph):
+        raise RepositoryIntelligenceError(
+            "relationship_graph must be a RepositoryRelationshipGraph"
+        )
+    if type(max_depth) is not int or not 0 <= max_depth <= 8:
+        raise RepositoryIntelligenceError("max_depth must be between 0 and 8")
+    if type(max_results) is not int or not 1 <= max_results <= 500:
+        raise RepositoryIntelligenceError("max_results must be between 1 and 500")
+
+    normalized_changed: list[str] = []
+    seen: set[str] = set()
+    for raw in changed_paths:
+        path = _normalized_path(raw)
+        if path in seen:
+            continue
+        seen.add(path)
+        normalized_changed.append(path)
+        if len(normalized_changed) > 32:
+            raise RepositoryIntelligenceError(
+                "impact analysis exceeds trusted changed-path budget"
+            )
+    if not normalized_changed:
+        raise RepositoryIntelligenceError("impact analysis requires changed_paths")
+    normalized_changed.sort()
+    if max_results < len(normalized_changed):
+        raise RepositoryIntelligenceError(
+            "max_results must fit every changed path"
+        )
+
+    reverse: dict[str, set[str]] = {}
+    for edge in relationship_graph.dependency_edges:
+        reverse.setdefault(edge.target_path, set()).add(edge.source_path)
+
+    distance: dict[str, int] = {path: 0 for path in normalized_changed}
+    via: dict[str, str | None] = {path: None for path in normalized_changed}
+    reason: dict[str, str] = {path: "changed" for path in normalized_changed}
+    queue = deque(normalized_changed)
+
+    while queue:
+        current = queue.popleft()
+        current_distance = distance[current]
+        if current_distance >= max_depth:
+            continue
+        for dependent in sorted(reverse.get(current, ())):
+            candidate_distance = current_distance + 1
+            previous_distance = distance.get(dependent)
+            previous_via = via.get(dependent)
+            should_update = (
+                previous_distance is None
+                or candidate_distance < previous_distance
+                or (
+                    candidate_distance == previous_distance
+                    and (
+                        previous_via is None
+                        or current < previous_via
+                    )
+                )
+            )
+            if not should_update:
+                continue
+            distance[dependent] = candidate_distance
+            via[dependent] = current
+            reason[dependent] = "reverse-import"
+            queue.append(dependent)
+
+    for link in relationship_graph.test_source_links:
+        source_distance = distance.get(link.source_path)
+        if source_distance is None:
+            continue
+        candidate_distance = source_distance + 1
+        if candidate_distance > max_depth + 1:
+            continue
+        previous_distance = distance.get(link.test_path)
+        if (
+            previous_distance is None
+            or candidate_distance < previous_distance
+            or candidate_distance == previous_distance
+        ):
+            distance[link.test_path] = candidate_distance
+            via[link.test_path] = link.source_path
+            reason[link.test_path] = "test-source-link"
+
+    all_entries = [
+        RepositoryImpactEntry(
+            path=path,
+            distance=distance[path],
+            reason=reason[path],
+            via_path=via[path],
+            is_test=_is_test_path(path),
+        )
+        for path in distance
+    ]
+    ordered = sorted(all_entries, key=lambda entry: (entry.distance, entry.path))
+    selected = tuple(ordered[:max_results])
+    selected_paths = {entry.path for entry in selected}
+    affected = tuple(
+        entry.path
+        for entry in selected
+        if entry.distance > 0
+    )
+    affected_tests = tuple(
+        entry.path
+        for entry in selected
+        if entry.distance > 0 and entry.is_test
+    )
+
+    return RepositoryImpactAnalysis(
+        changed_paths=tuple(
+            path for path in normalized_changed if path in selected_paths
+        ),
+        affected_paths=affected,
+        affected_test_paths=affected_tests,
+        entries=selected,
+        truncated=len(selected) < len(ordered),
     )
 
 
