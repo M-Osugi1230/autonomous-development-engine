@@ -1,0 +1,976 @@
+{
+  "content_summary": {
+    "module_count": 13,
+    "modules": [
+      {
+        "byte_count": 155,
+        "content_sha": "0e5ee548cc0a3663f6e95a6b3d78fe86f92a972d",
+        "imports": [
+          "__future__",
+          "pathlib",
+          "sys"
+        ],
+        "is_test": true,
+        "module": "tests.conftest",
+        "parse_ok": true,
+        "path": "tests/conftest.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 4130,
+        "content_sha": "4e8b97869eeccc1d30d9e68360956d3eac21b6fb",
+        "imports": [
+          "__future__",
+          "importlib.util",
+          "os",
+          "pathlib",
+          "pytest",
+          "types"
+        ],
+        "is_test": true,
+        "module": "tests.test_ade_remote_gate",
+        "parse_ok": true,
+        "path": "tests/test_ade_remote_gate.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_pr"
+          },
+          {
+            "kind": "function",
+            "name": "test_pr_file_listing_fetches_all_pages"
+          },
+          {
+            "kind": "function",
+            "name": "test_remote_receipt_is_authoritative_task_pr_binding"
+          },
+          {
+            "kind": "function",
+            "name": "test_validate_pr_accepts_only_exact_allowed_files"
+          },
+          {
+            "kind": "function",
+            "name": "test_validate_pr_requires_exact_ci_head_sha"
+          }
+        ]
+      },
+      {
+        "byte_count": 1243,
+        "content_sha": "41888a59f3b1129139a438198153a16ecf3c3142",
+        "imports": [
+          "__future__",
+          "pytest",
+          "thought_pipeline.audience"
+        ],
+        "is_test": true,
+        "module": "tests.test_audience",
+        "parse_ok": true,
+        "path": "tests/test_audience.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_normalize_audience_label_collapses_whitespace_and_preserves_display_case"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_audience_label_rejects_empty_or_whitespace"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_audience_label_rejects_non_string"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_audience_label_uses_unicode_case_folding_for_key"
+          }
+        ]
+      },
+      {
+        "byte_count": 3137,
+        "content_sha": "a40c8adb41b0b9f360a2703cdf7c307c495a0f50",
+        "imports": [
+          "__future__",
+          "json",
+          "openai",
+          "shutil",
+          "thought_pipeline.audio",
+          "thought_pipeline.providers",
+          "thought_pipeline.repository",
+          "thought_pipeline.timeline",
+          "types"
+        ],
+        "is_test": true,
+        "module": "tests.test_audio",
+        "parse_ok": true,
+        "path": "tests/test_audio.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_openai_voice_uses_streaming_wav_and_voice_instructions"
+          },
+          {
+            "kind": "function",
+            "name": "test_silent_provider_builds_measurable_scene_track"
+          }
+        ]
+      },
+      {
+        "byte_count": 2625,
+        "content_sha": "32c060039ba4aa69ed125eb2407f11c85bb23d68",
+        "imports": [
+          "__future__",
+          "thought_pipeline.providers",
+          "thought_pipeline.quality",
+          "thought_pipeline.repository",
+          "thought_pipeline.soundbed",
+          "thought_pipeline.timeline",
+          "thought_pipeline.visuals",
+          "wave"
+        ],
+        "is_test": true,
+        "module": "tests.test_fast44",
+        "parse_ok": true,
+        "path": "tests/test_fast44.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_fast44_variant_is_valid_and_moves_twist_forward"
+          },
+          {
+            "kind": "function",
+            "name": "test_kinetic_profile_adds_motion_frames_and_neutral_storyboard"
+          },
+          {
+            "kind": "function",
+            "name": "test_soundbed_matches_timeline_and_ducks_choice_pauses"
+          }
+        ]
+      },
+      {
+        "byte_count": 4750,
+        "content_sha": "3382b0b0fb82b70d5c9651c16410cfbd9f065247",
+        "imports": [
+          "dataclasses",
+          "pytest",
+          "thought_pipeline.models"
+        ],
+        "is_test": true,
+        "module": "tests.test_models",
+        "parse_ok": true,
+        "path": "tests/test_models.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_series_label_rejects_empty_or_whitespace_input"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_series_label_rejects_non_string_input"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_series_label_returns_frozen_summary"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_series_label_valid_inputs"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_variant_label_rejects_empty_or_whitespace_input"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_variant_label_rejects_non_string_input"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_variant_label_returns_frozen_summary"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_variant_label_valid_inputs"
+          }
+        ]
+      },
+      {
+        "byte_count": 1755,
+        "content_sha": "87b68d20989418da0dfc03ba43357f8293d639aa",
+        "imports": [
+          "__future__",
+          "openai",
+          "pytest",
+          "thought_pipeline.errors",
+          "thought_pipeline.models",
+          "thought_pipeline.prompting",
+          "thought_pipeline.providers",
+          "thought_pipeline.repository",
+          "types"
+        ],
+        "is_test": true,
+        "module": "tests.test_openai_provider",
+        "parse_ok": true,
+        "path": "tests/test_openai_provider.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_openai_provider_requires_api_key"
+          },
+          {
+            "kind": "function",
+            "name": "test_openai_provider_uses_responses_structured_parse"
+          }
+        ]
+      },
+      {
+        "byte_count": 818,
+        "content_sha": "62cfe544425c503064e628635adf450213bc06bf",
+        "imports": [
+          "__future__",
+          "csv",
+          "json",
+          "thought_pipeline.pdca",
+          "thought_pipeline.repository"
+        ],
+        "is_test": true,
+        "module": "tests.test_pdca",
+        "parse_ok": true,
+        "path": "tests/test_pdca.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_pdca_packet_compares_baseline_and_fast44"
+          }
+        ]
+      },
+      {
+        "byte_count": 1579,
+        "content_sha": "e829da22239facecb99758abf3fd3b94a521cdd0",
+        "imports": [
+          "__future__",
+          "json",
+          "thought_pipeline.core",
+          "thought_pipeline.providers",
+          "thought_pipeline.repository",
+          "thought_pipeline.timeline"
+        ],
+        "is_test": true,
+        "module": "tests.test_pipeline",
+        "parse_ok": true,
+        "path": "tests/test_pipeline.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_offline_pipeline_writes_complete_artifact_set"
+          },
+          {
+            "kind": "function",
+            "name": "test_planned_timeline_and_srt_end_at_fifty_seconds"
+          }
+        ]
+      },
+      {
+        "byte_count": 2933,
+        "content_sha": "93d1337f989f8ffaff037d58956b0cbd3ccfb049",
+        "imports": [
+          "pytest",
+          "thought_pipeline.models",
+          "thought_pipeline.providers",
+          "thought_pipeline.quality",
+          "thought_pipeline.repository"
+        ],
+        "is_test": true,
+        "module": "tests.test_quality",
+        "parse_ok": true,
+        "path": "tests/test_quality.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_golden"
+          },
+          {
+            "kind": "function",
+            "name": "test_duration_outside_range_fails"
+          },
+          {
+            "kind": "function",
+            "name": "test_golden_sample_passes_editorial_validation"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_topic_label_rejects_empty_or_whitespace"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_topic_label_rejects_non_string"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_topic_label_success"
+          },
+          {
+            "kind": "function",
+            "name": "test_title_in_hook_fails"
+          }
+        ]
+      },
+      {
+        "byte_count": 808,
+        "content_sha": "f79c530176f486e4a15d3b067887fda95b97a8b1",
+        "imports": [
+          "thought_pipeline.repository"
+        ],
+        "is_test": true,
+        "module": "tests.test_repository",
+        "parse_ok": true,
+        "path": "tests/test_repository.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_all_repository_configuration_is_valid"
+          },
+          {
+            "kind": "function",
+            "name": "test_prompt_contains_fact_pack_and_brand_rules"
+          }
+        ]
+      },
+      {
+        "byte_count": 1809,
+        "content_sha": "2ff1bd5fc9ab8b02eb2536f097793f637fb31a1d",
+        "imports": [
+          "PIL",
+          "__future__",
+          "imageio_ffmpeg",
+          "pathlib",
+          "thought_pipeline.audio",
+          "thought_pipeline.render",
+          "thought_pipeline.visuals"
+        ],
+        "is_test": true,
+        "module": "tests.test_video_encode",
+        "parse_ok": true,
+        "path": "tests/test_video_encode.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_ffmpeg_encodes_vertical_mp4_with_audio"
+          }
+        ]
+      },
+      {
+        "byte_count": 1236,
+        "content_sha": "7e138094df4d56ea121d6bd0c06ef7373620ff76",
+        "imports": [
+          "PIL",
+          "__future__",
+          "thought_pipeline.providers",
+          "thought_pipeline.repository",
+          "thought_pipeline.timeline",
+          "thought_pipeline.visuals"
+        ],
+        "is_test": true,
+        "module": "tests.test_visuals",
+        "parse_ok": true,
+        "path": "tests/test_visuals.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_preview_visuals_include_scene_cards_subtitles_and_storyboard"
+          }
+        ]
+      }
+    ],
+    "schema_version": 1
+  },
+  "content_summary_fingerprint": "33353a2a13227a1e9b1087bf8a99ac27cd3065efeb2a71051d5ad7dab9f200d2",
+  "impact_analysis": {
+    "affected_paths": [],
+    "affected_test_paths": [],
+    "changed_paths": [
+      "tests/test_models.py"
+    ],
+    "entries": [
+      {
+        "distance": 0,
+        "is_test": true,
+        "path": "tests/test_models.py",
+        "reason": "changed",
+        "via_path": null
+      }
+    ],
+    "schema_version": 1,
+    "truncated": false
+  },
+  "impact_analysis_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
+  "planner_context": {
+    "base_branch": "main",
+    "content_summary_fingerprint": "33353a2a13227a1e9b1087bf8a99ac27cd3065efeb2a71051d5ad7dab9f200d2",
+    "content_summary_module_count": 13,
+    "dependency_edges_truncated": false,
+    "documentation_paths": [
+      "README.md",
+      "analytics/README.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_7_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_8_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_9_ADDENDUM.md",
+      "docs/TIKTOK_ANALYTICS_AUTOMATION.md"
+    ],
+    "internal_dependency_edge_count": 0,
+    "internal_dependency_edges": [],
+    "known_file_count_within_trusted_roots": 13,
+    "known_files_truncated": false,
+    "known_files_within_trusted_roots": [
+      "tests/conftest.py",
+      "tests/test_ade_remote_gate.py",
+      "tests/test_audience.py",
+      "tests/test_audio.py",
+      "tests/test_fast44.py",
+      "tests/test_models.py",
+      "tests/test_openai_provider.py",
+      "tests/test_pdca.py",
+      "tests/test_pipeline.py",
+      "tests/test_quality.py",
+      "tests/test_repository.py",
+      "tests/test_video_encode.py",
+      "tests/test_visuals.py"
+    ],
+    "manifest_paths": [
+      "pyproject.toml",
+      "requirements.txt"
+    ],
+    "python_module_summaries": [
+      {
+        "byte_count": 155,
+        "content_sha": "0e5ee548cc0a3663f6e95a6b3d78fe86f92a972d",
+        "imports": [
+          "__future__",
+          "pathlib",
+          "sys"
+        ],
+        "is_test": true,
+        "module": "tests.conftest",
+        "parse_ok": true,
+        "path": "tests/conftest.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 4130,
+        "content_sha": "4e8b97869eeccc1d30d9e68360956d3eac21b6fb",
+        "imports": [
+          "__future__",
+          "importlib.util",
+          "os",
+          "pathlib",
+          "pytest",
+          "types"
+        ],
+        "is_test": true,
+        "module": "tests.test_ade_remote_gate",
+        "parse_ok": true,
+        "path": "tests/test_ade_remote_gate.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_pr"
+          },
+          {
+            "kind": "function",
+            "name": "test_pr_file_listing_fetches_all_pages"
+          },
+          {
+            "kind": "function",
+            "name": "test_remote_receipt_is_authoritative_task_pr_binding"
+          },
+          {
+            "kind": "function",
+            "name": "test_validate_pr_accepts_only_exact_allowed_files"
+          },
+          {
+            "kind": "function",
+            "name": "test_validate_pr_requires_exact_ci_head_sha"
+          }
+        ]
+      },
+      {
+        "byte_count": 1243,
+        "content_sha": "41888a59f3b1129139a438198153a16ecf3c3142",
+        "imports": [
+          "__future__",
+          "pytest",
+          "thought_pipeline.audience"
+        ],
+        "is_test": true,
+        "module": "tests.test_audience",
+        "parse_ok": true,
+        "path": "tests/test_audience.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_normalize_audience_label_collapses_whitespace_and_preserves_display_case"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_audience_label_rejects_empty_or_whitespace"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_audience_label_rejects_non_string"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_audience_label_uses_unicode_case_folding_for_key"
+          }
+        ]
+      },
+      {
+        "byte_count": 3137,
+        "content_sha": "a40c8adb41b0b9f360a2703cdf7c307c495a0f50",
+        "imports": [
+          "__future__",
+          "json",
+          "openai",
+          "shutil",
+          "thought_pipeline.audio",
+          "thought_pipeline.providers",
+          "thought_pipeline.repository",
+          "thought_pipeline.timeline",
+          "types"
+        ],
+        "is_test": true,
+        "module": "tests.test_audio",
+        "parse_ok": true,
+        "path": "tests/test_audio.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_openai_voice_uses_streaming_wav_and_voice_instructions"
+          },
+          {
+            "kind": "function",
+            "name": "test_silent_provider_builds_measurable_scene_track"
+          }
+        ]
+      },
+      {
+        "byte_count": 2625,
+        "content_sha": "32c060039ba4aa69ed125eb2407f11c85bb23d68",
+        "imports": [
+          "__future__",
+          "thought_pipeline.providers",
+          "thought_pipeline.quality",
+          "thought_pipeline.repository",
+          "thought_pipeline.soundbed",
+          "thought_pipeline.timeline",
+          "thought_pipeline.visuals",
+          "wave"
+        ],
+        "is_test": true,
+        "module": "tests.test_fast44",
+        "parse_ok": true,
+        "path": "tests/test_fast44.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_fast44_variant_is_valid_and_moves_twist_forward"
+          },
+          {
+            "kind": "function",
+            "name": "test_kinetic_profile_adds_motion_frames_and_neutral_storyboard"
+          },
+          {
+            "kind": "function",
+            "name": "test_soundbed_matches_timeline_and_ducks_choice_pauses"
+          }
+        ]
+      },
+      {
+        "byte_count": 4750,
+        "content_sha": "3382b0b0fb82b70d5c9651c16410cfbd9f065247",
+        "imports": [
+          "dataclasses",
+          "pytest",
+          "thought_pipeline.models"
+        ],
+        "is_test": true,
+        "module": "tests.test_models",
+        "parse_ok": true,
+        "path": "tests/test_models.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_series_label_rejects_empty_or_whitespace_input"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_series_label_rejects_non_string_input"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_series_label_returns_frozen_summary"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_series_label_valid_inputs"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_variant_label_rejects_empty_or_whitespace_input"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_variant_label_rejects_non_string_input"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_variant_label_returns_frozen_summary"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_variant_label_valid_inputs"
+          }
+        ]
+      },
+      {
+        "byte_count": 1755,
+        "content_sha": "87b68d20989418da0dfc03ba43357f8293d639aa",
+        "imports": [
+          "__future__",
+          "openai",
+          "pytest",
+          "thought_pipeline.errors",
+          "thought_pipeline.models",
+          "thought_pipeline.prompting",
+          "thought_pipeline.providers",
+          "thought_pipeline.repository",
+          "types"
+        ],
+        "is_test": true,
+        "module": "tests.test_openai_provider",
+        "parse_ok": true,
+        "path": "tests/test_openai_provider.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_openai_provider_requires_api_key"
+          },
+          {
+            "kind": "function",
+            "name": "test_openai_provider_uses_responses_structured_parse"
+          }
+        ]
+      },
+      {
+        "byte_count": 818,
+        "content_sha": "62cfe544425c503064e628635adf450213bc06bf",
+        "imports": [
+          "__future__",
+          "csv",
+          "json",
+          "thought_pipeline.pdca",
+          "thought_pipeline.repository"
+        ],
+        "is_test": true,
+        "module": "tests.test_pdca",
+        "parse_ok": true,
+        "path": "tests/test_pdca.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_pdca_packet_compares_baseline_and_fast44"
+          }
+        ]
+      },
+      {
+        "byte_count": 1579,
+        "content_sha": "e829da22239facecb99758abf3fd3b94a521cdd0",
+        "imports": [
+          "__future__",
+          "json",
+          "thought_pipeline.core",
+          "thought_pipeline.providers",
+          "thought_pipeline.repository",
+          "thought_pipeline.timeline"
+        ],
+        "is_test": true,
+        "module": "tests.test_pipeline",
+        "parse_ok": true,
+        "path": "tests/test_pipeline.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_offline_pipeline_writes_complete_artifact_set"
+          },
+          {
+            "kind": "function",
+            "name": "test_planned_timeline_and_srt_end_at_fifty_seconds"
+          }
+        ]
+      },
+      {
+        "byte_count": 2933,
+        "content_sha": "93d1337f989f8ffaff037d58956b0cbd3ccfb049",
+        "imports": [
+          "pytest",
+          "thought_pipeline.models",
+          "thought_pipeline.providers",
+          "thought_pipeline.quality",
+          "thought_pipeline.repository"
+        ],
+        "is_test": true,
+        "module": "tests.test_quality",
+        "parse_ok": true,
+        "path": "tests/test_quality.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_golden"
+          },
+          {
+            "kind": "function",
+            "name": "test_duration_outside_range_fails"
+          },
+          {
+            "kind": "function",
+            "name": "test_golden_sample_passes_editorial_validation"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_topic_label_rejects_empty_or_whitespace"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_topic_label_rejects_non_string"
+          },
+          {
+            "kind": "function",
+            "name": "test_normalize_experiment_topic_label_success"
+          },
+          {
+            "kind": "function",
+            "name": "test_title_in_hook_fails"
+          }
+        ]
+      },
+      {
+        "byte_count": 808,
+        "content_sha": "f79c530176f486e4a15d3b067887fda95b97a8b1",
+        "imports": [
+          "thought_pipeline.repository"
+        ],
+        "is_test": true,
+        "module": "tests.test_repository",
+        "parse_ok": true,
+        "path": "tests/test_repository.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_all_repository_configuration_is_valid"
+          },
+          {
+            "kind": "function",
+            "name": "test_prompt_contains_fact_pack_and_brand_rules"
+          }
+        ]
+      },
+      {
+        "byte_count": 1809,
+        "content_sha": "2ff1bd5fc9ab8b02eb2536f097793f637fb31a1d",
+        "imports": [
+          "PIL",
+          "__future__",
+          "imageio_ffmpeg",
+          "pathlib",
+          "thought_pipeline.audio",
+          "thought_pipeline.render",
+          "thought_pipeline.visuals"
+        ],
+        "is_test": true,
+        "module": "tests.test_video_encode",
+        "parse_ok": true,
+        "path": "tests/test_video_encode.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_ffmpeg_encodes_vertical_mp4_with_audio"
+          }
+        ]
+      },
+      {
+        "byte_count": 1236,
+        "content_sha": "7e138094df4d56ea121d6bd0c06ef7373620ff76",
+        "imports": [
+          "PIL",
+          "__future__",
+          "thought_pipeline.providers",
+          "thought_pipeline.repository",
+          "thought_pipeline.timeline",
+          "thought_pipeline.visuals"
+        ],
+        "is_test": true,
+        "module": "tests.test_visuals",
+        "parse_ok": true,
+        "path": "tests/test_visuals.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "test_preview_visuals_include_scene_cards_subtitles_and_storyboard"
+          }
+        ]
+      }
+    ],
+    "python_module_summaries_truncated": false,
+    "relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "schema_version": 1,
+    "snapshot_fingerprint": "caff7263596359de10ac06b62cc020a1a1903179276e05b2f9c02539b78837ee",
+    "source_roots": [
+      "src"
+    ],
+    "source_sha": "72f658d8a41639cc04d7b2220d1de6b1705a32fb",
+    "test_roots": [
+      "tests"
+    ],
+    "test_source_link_count": 0,
+    "test_source_links": [],
+    "test_source_links_truncated": false,
+    "trusted_writable_roots": [
+      "tests"
+    ],
+    "workflow_paths": [
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/tiktok-analytics-ci.yml",
+      ".github/workflows/tiktok-analytics.yml"
+    ]
+  },
+  "planner_context_fingerprint": "3d59c45fba2d62fbf34ca50d63aae96b4116c2d902edcc5c3b2f7be7f79d8887",
+  "relationship_graph": {
+    "dependency_edge_count": 0,
+    "dependency_edges": [],
+    "schema_version": 1,
+    "test_source_link_count": 0,
+    "test_source_links": []
+  },
+  "relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "schema_version": 1,
+  "snapshot": {
+    "base_branch": "main",
+    "documentation_paths": [
+      "README.md",
+      "analytics/README.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_7_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_8_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_9_ADDENDUM.md",
+      "docs/TIKTOK_ANALYTICS_AUTOMATION.md"
+    ],
+    "manifest_paths": [
+      "pyproject.toml",
+      "requirements.txt"
+    ],
+    "path_count": 83,
+    "paths": [
+      ".env.example",
+      ".github/trusted/ade_remote_gate.py",
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/tiktok-analytics-ci.yml",
+      ".github/workflows/tiktok-analytics.yml",
+      ".gitignore",
+      "README.md",
+      "analytics/README.md",
+      "analytics/manual/2026-08-31-baseline.json",
+      "assets/fonts/.gitkeep",
+      "assets/icons/.gitkeep",
+      "assets/music/.gitkeep",
+      "assets/sfx/.gitkeep",
+      "cache/.gitkeep",
+      "config/brand.yaml",
+      "config/llm.yaml",
+      "config/prompts.yaml",
+      "config/video.yaml",
+      "config/voice.yaml",
+      "content/experiments.yaml",
+      "content/experiments/001_trolley_problem.yaml",
+      "content/experiments/002_ship_of_theseus.yaml",
+      "content/experiments/003_brain_in_a_vat.yaml",
+      "content/experiments/011_violinist.yaml",
+      "content/experiments/015_five_minute_hypothesis.yaml",
+      "content/experiments/045_prisoners_dilemma.yaml",
+      "content/golden/001.json",
+      "content/golden/carousel/002.json",
+      "content/golden/variants/fast44/001.json",
+      "content/publishing/001_trolley_problem.md",
+      "content/publishing/002_ship_of_theseus.md",
+      "content/publishing/011_violinist.md",
+      "content/publishing/015_five_minute_hypothesis.md",
+      "content/publishing/015_hedgehog_dilemma.md",
+      "content/publishing/045_prisoners_dilemma.md",
+      "content/publishing/_template.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_7_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_8_ADDENDUM.md",
+      "docs/PHOTO_CAROUSEL_POST_CREATION_MANUAL_V1_9_ADDENDUM.md",
+      "docs/TIKTOK_ANALYTICS_AUTOMATION.md",
+      "output/.gitkeep",
+      "pipeline.py",
+      "pyproject.toml",
+      "requirements.txt",
+      "scripts/runtime_hygiene.py",
+      "scripts/tiktok_analytics.py",
+      "scripts/tiktok_report.py",
+      "src/thought_pipeline/__init__.py",
+      "src/thought_pipeline/artifacts.py",
+      "src/thought_pipeline/audience.py",
+      "src/thought_pipeline/audio.py",
+      "src/thought_pipeline/cli.py",
+      "src/thought_pipeline/core.py",
+      "src/thought_pipeline/errors.py",
+      "src/thought_pipeline/media.py",
+      "src/thought_pipeline/models.py",
+      "src/thought_pipeline/pdca.py",
+      "src/thought_pipeline/prompting.py",
+      "src/thought_pipeline/providers.py",
+      "src/thought_pipeline/quality.py",
+      "src/thought_pipeline/render.py",
+      "src/thought_pipeline/repository.py",
+      "src/thought_pipeline/soundbed.py",
+      "src/thought_pipeline/timeline.py",
+      "src/thought_pipeline/visuals.py",
+      "templates/binary_choice/template.yaml",
+      "templates/mystery/.gitkeep",
+      "templates/pov/.gitkeep",
+      "tests/conftest.py",
+      "tests/test_ade_remote_gate.py",
+      "tests/test_audience.py",
+      "tests/test_audio.py",
+      "tests/test_fast44.py",
+      "tests/test_models.py",
+      "tests/test_openai_provider.py",
+      "tests/test_pdca.py",
+      "tests/test_pipeline.py",
+      "tests/test_quality.py",
+      "tests/test_repository.py",
+      "tests/test_video_encode.py",
+      "tests/test_visuals.py"
+    ],
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "schema_version": 1,
+    "source_roots": [
+      "src"
+    ],
+    "source_sha": "72f658d8a41639cc04d7b2220d1de6b1705a32fb",
+    "test_roots": [
+      "tests"
+    ],
+    "workflow_paths": [
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/tiktok-analytics-ci.yml",
+      ".github/workflows/tiktok-analytics.yml"
+    ]
+  },
+  "snapshot_fingerprint": "caff7263596359de10ac06b62cc020a1a1903179276e05b2f9c02539b78837ee"
+}
