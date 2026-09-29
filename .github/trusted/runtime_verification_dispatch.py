@@ -11,6 +11,10 @@ from ade.runtime_verification import (
     RuntimeVerificationContract,
     RuntimeVerificationDisposition,
 )
+from ade.runtime_verification_recovery import (
+    contain_runtime_verification_failure,
+    runtime_failure_fingerprint,
+)
 from ade.runtime_verification_trigger import (
     RuntimeVerificationReceipt,
     record_runtime_verification_dispatch,
@@ -20,6 +24,7 @@ from ade.runtime_verification_trigger import (
     runtime_verification_target_path,
 )
 from github_client import GitHubClient, GitHubError
+from recovery_controller import RECOVERY_PATH, load_recovery
 from runtime_probes import build_runtime_probe_registry
 from runtime_targets import build_runtime_target_registry
 
@@ -45,6 +50,55 @@ def _event_payload() -> dict[str, Any]:
     if not isinstance(client_payload, dict):
         raise ValueError("repository_dispatch client_payload is required")
     return client_payload
+
+
+def _contain_failure(
+    gh: GitHubClient,
+    *,
+    receipt_path: str,
+    receipt: RuntimeVerificationReceipt,
+    report=None,
+    failure_detail: str | None = None,
+) -> RuntimeVerificationReceipt:
+    state_payload, _ = gh.get_json_file(".autodev/state.json")
+    campaign_payload, _ = gh.get_json_file(".autodev/campaign.json")
+    previous, _ = load_recovery(gh)
+    if previous is not None and previous.task_id != receipt.task_id:
+        previous = None
+
+    transition = contain_runtime_verification_failure(
+        receipt=receipt,
+        state_payload=state_payload,
+        campaign_payload=campaign_payload,
+        report=report,
+        failure_fingerprint=(
+            runtime_failure_fingerprint(failure_detail)
+            if failure_detail is not None
+            else None
+        ),
+        previous_recovery=previous,
+    )
+    gh.upsert_json_file(
+        RECOVERY_PATH,
+        transition.recovery.to_dict(),
+        message=f"recovery: runtime verification {receipt.task_id}",
+    )
+    gh.upsert_json_file(
+        ".autodev/campaign.json",
+        transition.campaign,
+        message=f"campaign: runtime human wait {receipt.task_id}",
+    )
+    gh.upsert_json_file(
+        ".autodev/state.json",
+        transition.state,
+        message=f"state: runtime human wait {receipt.task_id}",
+    )
+    gh.upsert_json_file(
+        receipt_path,
+        transition.receipt.canonical_dict(),
+        message=f"runtime: human wait {receipt.verification_id}",
+    )
+    return transition.receipt
 
 
 def validate_dispatch_payload(
@@ -87,6 +141,38 @@ def main() -> int:
             contract=contract,
             receipt=receipt,
         )
+
+        if receipt.status == "VERIFIED":
+            result = {
+                "schema_version": 1,
+                "state": "VERIFIED",
+                "receipt_changed": False,
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "target_repository": receipt.target_repository,
+                "source_sha": receipt.source_sha,
+                "dispatch_count": receipt.dispatch_count,
+                "reason": "runtime-verification-already-verified",
+            }
+            _write(result)
+            print(json.dumps(result, sort_keys=True))
+            return 0
+
+        if receipt.status == "HUMAN_WAIT":
+            result = {
+                "schema_version": 1,
+                "state": "HUMAN_WAIT",
+                "receipt_changed": False,
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "target_repository": receipt.target_repository,
+                "source_sha": receipt.source_sha,
+                "dispatch_count": receipt.dispatch_count,
+                "reason": "runtime-verification-already-human-wait",
+            }
+            _write(result)
+            print(json.dumps(result, sort_keys=True))
+            return 2
 
         target_registry = build_runtime_target_registry(
             contract.target_repository,
@@ -138,15 +224,24 @@ def main() -> int:
                 message=f"runtime: {completion.receipt.status.lower()} {completion.receipt.verification_id}",
             )
 
+        final_receipt = completion.receipt
+        if execution.report.disposition is RuntimeVerificationDisposition.FAILED:
+            final_receipt = _contain_failure(
+                gh,
+                receipt_path=receipt_path,
+                receipt=completion.receipt,
+                report=execution.report,
+            )
+
         result = {
             "schema_version": 1,
-            "state": completion.receipt.status,
-            "receipt_changed": dispatch_transition.changed or completion.changed,
-            "task_id": completion.receipt.task_id,
-            "verification_id": completion.receipt.verification_id,
-            "target_repository": completion.receipt.target_repository,
-            "source_sha": completion.receipt.source_sha,
-            "dispatch_count": completion.receipt.dispatch_count,
+            "state": final_receipt.status,
+            "receipt_changed": dispatch_transition.changed or completion.changed or final_receipt != completion.receipt,
+            "task_id": final_receipt.task_id,
+            "verification_id": final_receipt.verification_id,
+            "target_repository": final_receipt.target_repository,
+            "source_sha": final_receipt.source_sha,
+            "dispatch_count": final_receipt.dispatch_count,
             "probe_execution_enabled": True,
             "runtime_target_kind": target_resolution.evidence.kind.value,
             "runtime_target_id": target_resolution.evidence.target_id,
@@ -162,18 +257,45 @@ def main() -> int:
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
-        if execution.report.disposition is RuntimeVerificationDisposition.FAILED:
+        if final_receipt.status == "HUMAN_WAIT":
             return 2
         return 0
     except (GitHubError, ValueError, OSError, json.JSONDecodeError) as exc:
+        detail = str(exc).splitlines()[0][:256]
         result = {
             "schema_version": 1,
             "state": "FAILED",
-            "error": str(exc).splitlines()[0][:256],
+            "error": detail,
         }
+        try:
+            if "gh" in locals() and "receipt" in locals() and "receipt_path" in locals():
+                active = receipt
+                if active.status in {"ARMED", "DISPATCHED", "FAILED"}:
+                    failed_receipt = RuntimeVerificationReceipt(
+                        verification_id=active.verification_id,
+                        task_id=active.task_id,
+                        target_repository=active.target_repository,
+                        source_sha=active.source_sha,
+                        contract_fingerprint=active.contract_fingerprint,
+                        registry_fingerprint=active.registry_fingerprint,
+                        policy_fingerprint=active.policy_fingerprint,
+                        status="FAILED",
+                        dispatch_count=active.dispatch_count,
+                    )
+                    human_wait = _contain_failure(
+                        gh,
+                        receipt_path=receipt_path,
+                        receipt=failed_receipt,
+                        failure_detail=detail,
+                    )
+                    result["state"] = human_wait.status
+                    result["task_id"] = human_wait.task_id
+                    result["verification_id"] = human_wait.verification_id
+        except Exception as containment_exc:
+            result["containment_error"] = str(containment_exc).splitlines()[0][:256]
         _write(result)
         print(json.dumps(result, sort_keys=True))
-        return 1
+        return 2 if result.get("state") == "HUMAN_WAIT" else 1
 
 
 if __name__ == "__main__":
