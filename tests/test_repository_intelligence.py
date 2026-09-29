@@ -230,6 +230,133 @@ async def run_async():
             ["src/ade/helper.py", "tests/test_helper.py"],
         )
 
+    def test_relationship_graph_resolves_internal_imports_and_tests(self) -> None:
+        content = build_python_content_summary(
+            [
+                (
+                    "src/pkg/models.py",
+                    "class Model:\n    pass\n",
+                    "4" * 40,
+                ),
+                (
+                    "src/pkg/service.py",
+                    "import json\nfrom .models import Model\nclass Service:\n    pass\n",
+                    "5" * 40,
+                ),
+                (
+                    "tests/test_service.py",
+                    "from pkg.service import Service\ndef test_service():\n    assert Service\n",
+                    "6" * 40,
+                ),
+                (
+                    "tests/test_models.py",
+                    "def test_placeholder():\n    assert True\n",
+                    "7" * 40,
+                ),
+            ]
+        )
+        graph = build_repository_relationships(content)
+        self.assertEqual(
+            [
+                (edge.source_path, edge.target_path, edge.kind)
+                for edge in graph.dependency_edges
+            ],
+            [
+                ("src/pkg/service.py", "src/pkg/models.py", "import"),
+                ("tests/test_service.py", "src/pkg/service.py", "import"),
+            ],
+        )
+        self.assertEqual(
+            [
+                (link.test_path, link.source_path, link.reason)
+                for link in graph.test_source_links
+            ],
+            [
+                ("tests/test_models.py", "src/pkg/models.py", "filename"),
+                ("tests/test_service.py", "src/pkg/service.py", "import"),
+            ],
+        )
+        serialized = json.dumps(graph.canonical_dict(), sort_keys=True)
+        self.assertNotIn("json", serialized)
+        self.assertEqual(
+            graph.fingerprint(),
+            build_repository_relationships(content).fingerprint(),
+        )
+
+    def test_relationship_graph_ignores_unresolved_and_broken_modules(self) -> None:
+        content = build_python_content_summary(
+            [
+                (
+                    "src/pkg/a.py",
+                    "import requests\nfrom .missing import nope\ndef a():\n    pass\n",
+                    "8" * 40,
+                ),
+                (
+                    "src/pkg/b.py",
+                    "def broken(:\n    pass\n",
+                    "9" * 40,
+                ),
+            ]
+        )
+        graph = build_repository_relationships(content)
+        self.assertEqual(graph.dependency_edges, ())
+        self.assertEqual(graph.test_source_links, ())
+
+    def test_relationships_enter_planner_context_with_bounded_truncation(self) -> None:
+        snapshot = build_repository_snapshot(
+            repository="example/repo",
+            base_branch="main",
+            source_sha=SHA,
+            paths=[
+                "src/pkg/models.py",
+                "src/pkg/service.py",
+                "tests/test_models.py",
+                "tests/test_service.py",
+            ],
+        )
+        content = build_python_content_summary(
+            [
+                (
+                    "src/pkg/models.py",
+                    "class Model:\n    pass\n",
+                    "a" * 40,
+                ),
+                (
+                    "src/pkg/service.py",
+                    "from .models import Model\nclass Service:\n    pass\n",
+                    "b" * 40,
+                ),
+                (
+                    "tests/test_models.py",
+                    "from pkg.models import Model\ndef test_model():\n    assert Model\n",
+                    "c" * 40,
+                ),
+                (
+                    "tests/test_service.py",
+                    "from pkg.service import Service\ndef test_service():\n    assert Service\n",
+                    "d" * 40,
+                ),
+            ]
+        )
+        graph = build_repository_relationships(content)
+        context = planner_repository_context(
+            snapshot,
+            allowed_path_prefixes=("src/pkg", "tests"),
+            content_summary=content,
+            relationship_graph=graph,
+            max_relationships=1,
+        )
+        self.assertEqual(context.payload["internal_dependency_edge_count"], 3)
+        self.assertEqual(len(context.payload["internal_dependency_edges"]), 1)
+        self.assertTrue(context.payload["dependency_edges_truncated"])
+        self.assertEqual(context.payload["test_source_link_count"], 2)
+        self.assertEqual(len(context.payload["test_source_links"]), 1)
+        self.assertTrue(context.payload["test_source_links_truncated"])
+        self.assertEqual(
+            context.payload["relationship_graph_fingerprint"],
+            graph.fingerprint(),
+        )
+
     def test_planner_context_includes_only_safe_content_summary(self) -> None:
         snapshot = build_repository_snapshot(
             repository="example/repo",
