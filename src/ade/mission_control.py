@@ -424,7 +424,7 @@ def build_mission_control_snapshot(
         warnings.append("failure ledger count differs from state failed task count")
     if (
         checkpoint is not None
-        and checkpoint.state is not CheckpointState.COMPLETED
+        and checkpoint.state not in {CheckpointState.COMPLETED, CheckpointState.FAILED}
         and state.current_task_id is None
     ):
         warnings.append("non-terminal checkpoint exists without a current task")

@@ -319,6 +319,32 @@ class MissionControlSnapshotTests(unittest.TestCase):
             snapshot.warnings,
         )
 
+    def test_failed_checkpoint_without_current_task_is_terminal(self) -> None:
+        self.write_base_fixture()
+        state = json.loads((self.autodev / "state.json").read_text(encoding="utf-8"))
+        state["status"] = "READY"
+        state["current_task_id"] = None
+        state["failed_task_ids"] = []
+        self.write_json("state.json", state)
+        self.write_json("failures.json", {"schema_version": 1, "failures": []})
+        CheckpointStore(self.autodev / "runtime" / "checkpoint.json").save(
+            TaskCheckpoint(
+                task_id="retired-task",
+                state=CheckpointState.FAILED,
+                attempt=0,
+                replan_count=0,
+                last_failure_kind="VALIDATION_ERROR",
+                last_error="retired validation failure",
+            )
+        )
+
+        snapshot = build_mission_control_snapshot(self.root)
+
+        self.assertNotIn(
+            "non-terminal checkpoint exists without a current task",
+            snapshot.warnings,
+        )
+
     def test_nonterminal_checkpoint_without_current_task_emits_warning(self) -> None:
         self.write_base_fixture()
         state = json.loads((self.autodev / "state.json").read_text(encoding="utf-8"))
