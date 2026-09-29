@@ -202,10 +202,13 @@ def build_planning_activation(
     running_first = graph.require(first.task_id)
 
     metadata = dict(previous_state.metadata)
+    phase = metadata.get("phase")
+    if not isinstance(phase, str) or not phase.strip():
+        phase = "v1.2-autonomous-planner"
     metadata.update(
         {
             "campaign_id": campaign.campaign_id,
-            "phase": "v1.2-autonomous-planner",
+            "phase": phase,
             "plan_source": "live:jules-planner",
             "planning_request_id": request.request_id,
             "planning_request_fingerprint": request.fingerprint(),
