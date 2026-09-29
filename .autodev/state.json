@@ -56,12 +56,12 @@
     "v12ext3-001",
     "v12ext3-002"
   ],
-  "current_task_id": null,
+  "current_task_id": "v12ext4-001",
   "failed_task_ids": [],
   "iteration": 54,
   "metadata": {
-    "accepted_plan_fingerprint": "a07442a60ea1ba213ee84acd0618097b3d8a6636777d4b1ef9bff789068c7249",
-    "campaign_id": "v1.2-external-goal-campaign-003",
+    "accepted_plan_fingerprint": "f21bfe5acc48062bb3957eae5d65ba3d3a78e75b0ab58e51e3431a55b651ef2f",
+    "campaign_id": "v1.2-external-goal-campaign-004",
     "dag_blocked": false,
     "last_superseded_campaign": {
       "campaign_id": "v1.2-external-goal-campaign-001",
@@ -92,14 +92,14 @@
     "pilot_target_repository": "M-Osugi1230/one-minute-thought-experiments",
     "plan_source": "live:jules-planner",
     "planner_policy_fingerprint": "81d087d7c2cbb7eb09cdd279f2bcff3de6333097bbd56fd85bffc91691d114bf",
-    "planner_proposal_fingerprint": "9867cf5532cb16f57c3587b6903bf229f0a503cc1648fd71a0082f49a30e15bf",
-    "planning_request_fingerprint": "62a8f3f83c5ac71aa5bdae92e18f6183be01806a673a401d61a07be393433604",
-    "planning_request_id": "v1.2-external-goal-proof-003",
+    "planner_proposal_fingerprint": "a36413ddbaff51dc155c84f1babe667596175b271be53d33a7a359a080c78d89",
+    "planning_request_fingerprint": "dc10c685c7aafc67b60cb3d85c8a1f567c650d62b2646ae523fba80a3150f6b9",
+    "planning_request_id": "v1.2-external-goal-proof-004",
     "previous_pilot_baseline_sha": "46d2d473305ca8c904f90c78bc8f8aabf3fd7319",
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": true,
+    "queue_exhausted": false,
     "scheduler": "dag",
     "target_base_branch": "main",
     "target_repository": "M-Osugi1230/one-minute-thought-experiments"
@@ -108,5 +108,5 @@
   "provider": "jules",
   "schema_version": 1,
   "status": "READY",
-  "updated_at": "2026-09-29T10:28:02.361996+00:00"
+  "updated_at": "2026-09-29T10:31:10.774606+00:00"
 }
