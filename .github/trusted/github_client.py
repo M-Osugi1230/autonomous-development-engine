@@ -12,6 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from ade.infrastructure_retry import InfrastructureFailure, RetryPolicy, classify_github_error, retry_delay
 from urllib.error import HTTPError, URLError
+from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 
@@ -141,6 +142,60 @@ class GitHubClient:
             if len(paths) > max_entries:
                 raise GitHubError("repository tree exceeds trusted entry budget")
         return paths
+
+    def get_text_file(
+        self,
+        repository: str,
+        *,
+        path: str,
+        ref: str,
+        max_bytes: int = 65536,
+    ) -> tuple[str, str]:
+        repository = self._validate_repository_name(repository)
+        if (
+            not isinstance(path, str)
+            or not path
+            or path.startswith("/")
+            or "\\" in path
+            or ".." in path.split("/")
+        ):
+            raise ValueError("path must be a safe repository-relative path")
+        if not isinstance(ref, str) or _SHA40.fullmatch(ref) is None:
+            raise ValueError("ref must be a lowercase 40-char SHA")
+        if type(max_bytes) is not int or max_bytes < 1 or max_bytes > 262144:
+            raise ValueError("max_bytes must be between 1 and 262144")
+
+        encoded_path = quote(path, safe="/")
+        payload = self._request(
+            "GET",
+            f"/repos/{repository}/contents/{encoded_path}?ref={ref}",
+        )
+        if not isinstance(payload, dict):
+            raise GitHubError("file response must be an object")
+        size = payload.get("size")
+        if type(size) is not int or size < 0:
+            raise GitHubError("file response has no valid size")
+        if size > max_bytes:
+            raise GitHubError("repository file exceeds trusted byte budget")
+        if payload.get("encoding") != "base64":
+            raise GitHubError("repository file is not base64 encoded")
+        encoded = payload.get("content")
+        blob_sha = payload.get("sha")
+        if not isinstance(encoded, str):
+            raise GitHubError("repository file has no content")
+        if not isinstance(blob_sha, str) or _SHA40.fullmatch(blob_sha) is None:
+            raise GitHubError("repository file has no valid blob SHA")
+        try:
+            raw = base64.b64decode(encoded.replace("\n", ""), validate=True)
+        except ValueError as exc:
+            raise GitHubError("repository file contains invalid base64") from exc
+        if len(raw) > max_bytes:
+            raise GitHubError("repository file exceeds trusted byte budget")
+        try:
+            text = raw.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise GitHubError("repository file is not UTF-8 text") from exc
+        return text, blob_sha
 
     def get_pull_request(self, number: int) -> dict[str, Any]:
         payload = self._request("GET", f"/repos/{self.repository}/pulls/{number}")

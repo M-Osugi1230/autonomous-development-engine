@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import importlib.util
 import sys
 import unittest
@@ -80,6 +81,76 @@ class TrustedGitHubRepositoryIntelligenceTests(unittest.TestCase):
             ],
         )
         self.assertTrue(issubclass(module.GitHubError, RuntimeError))
+
+    def test_reads_bounded_utf8_text_file(self) -> None:
+        raw = b"def helper():\n    return 1\n"
+        blob_sha = "d" * 40
+        module, client = self._client(
+            [
+                {
+                    "size": len(raw),
+                    "encoding": "base64",
+                    "content": base64.b64encode(raw).decode("ascii"),
+                    "sha": blob_sha,
+                }
+            ]
+        )
+        text_value, returned_sha = client.get_text_file(
+            "example/target",
+            path="src/helper.py",
+            ref="a" * 40,
+            max_bytes=1024,
+        )
+        self.assertEqual(text_value, raw.decode("utf-8"))
+        self.assertEqual(returned_sha, blob_sha)
+        self.assertEqual(
+            client.requests,
+            [
+                (
+                    "GET",
+                    "/repos/example/target/contents/src/helper.py?ref=" + "a" * 40,
+                )
+            ],
+        )
+        self.assertTrue(issubclass(module.GitHubError, RuntimeError))
+
+    def test_rejects_oversized_or_non_utf8_file(self) -> None:
+        module, oversized = self._client(
+            [
+                {
+                    "size": 2048,
+                    "encoding": "base64",
+                    "content": "",
+                    "sha": "e" * 40,
+                }
+            ]
+        )
+        with self.assertRaisesRegex(module.GitHubError, "byte budget"):
+            oversized.get_text_file(
+                "example/target",
+                path="src/large.py",
+                ref="a" * 40,
+                max_bytes=1024,
+            )
+
+        raw = b"\xff\xfe"
+        module, binary = self._client(
+            [
+                {
+                    "size": len(raw),
+                    "encoding": "base64",
+                    "content": base64.b64encode(raw).decode("ascii"),
+                    "sha": "f" * 40,
+                }
+            ]
+        )
+        with self.assertRaisesRegex(module.GitHubError, "UTF-8"):
+            binary.get_text_file(
+                "example/target",
+                path="src/binary.py",
+                ref="a" * 40,
+                max_bytes=1024,
+            )
 
     def test_truncated_tree_is_rejected(self) -> None:
         sha = "b" * 40

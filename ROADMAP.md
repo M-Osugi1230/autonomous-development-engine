@@ -113,5 +113,7 @@ Build order:
 7. existing-vs-new-file validation at the planner boundary
 8. real external repository proof and v1.3 graduation audit
 
-Slice 001 in progress: Git tree metadata is read through the trusted controller, normalized into a deterministic RepositorySnapshot, filtered to trusted writable roots for planner context, and fingerprinted into activation evidence. File contents are intentionally out of scope for the first slice.
+Slice 001 complete: Git tree metadata is read through the trusted controller, normalized into a deterministic RepositorySnapshot, filtered to trusted writable roots for planner context, and fingerprinted into activation evidence.
+
+Slice 002 complete: trusted bounded UTF-8 reads are limited to deterministic Python candidates; raw source is parsed locally with Python AST and discarded. Planner/evidence receive only module names, top-level class/function names, import-module names, parse status, byte counts, and content/blob fingerprints. String constants, docstrings, imported symbol names, and raw source text are not persisted into Repository Intelligence context.
 

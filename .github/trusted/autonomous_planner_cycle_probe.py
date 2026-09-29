@@ -49,6 +49,22 @@ class FakeGitHub:
             "tests/test_helper.py",
         ]
 
+    def get_text_file(self, repository, *, path, ref, max_bytes=65536):
+        assert repository == "example/target"
+        assert ref == "a" * 40
+        assert max_bytes == 65536
+        if path == "src/helper.py":
+            return (
+                'import json\n\ndef helper():\n    return "never persisted raw"\n',
+                "b" * 40,
+            )
+        if path == "tests/test_helper.py":
+            return (
+                "from helper import helper\n\ndef test_helper():\n    assert helper()\n",
+                "c" * 40,
+            )
+        raise AssertionError(f"unexpected text file: {path}")
+
 
 def main() -> int:
     request = PlanningGoalRequest(
@@ -121,7 +137,7 @@ def main() -> int:
         last_observed_state="AWAITING_PLAN_APPROVAL",
     )
     gh = FakeGitHub()
-    snapshot, repository_context = cycle._collect_repository_intelligence(
+    snapshot, content_summary, repository_context = cycle._collect_repository_intelligence(
         gh,
         request,
     )
@@ -131,6 +147,16 @@ def main() -> int:
         "src/helper.py",
         "tests/test_helper.py",
     ]
+    assert [module.path for module in content_summary.modules] == [
+        "src/helper.py",
+        "tests/test_helper.py",
+    ]
+    assert repository_context.payload["content_summary_fingerprint"] == content_summary.fingerprint()
+    assert len(repository_context.payload["python_module_summaries"]) == 2
+    assert "never persisted raw" not in json.dumps(
+        repository_context.payload,
+        sort_keys=True,
+    )
 
     old_write = cycle._write_result
     cycle._write_result = lambda payload: None
@@ -142,6 +168,7 @@ def main() -> int:
             bundle=bundle,
             provider=provider,
             snapshot=snapshot,
+            content_summary=content_summary,
             repository_context=repository_context,
             attempt=1,
         )
@@ -172,17 +199,22 @@ def main() -> int:
     assert evidence["planning_only"] is True
     assert evidence["repository_snapshot_fingerprint"] == snapshot.fingerprint()
     assert evidence["repository_context_fingerprint"] == repository_context.fingerprint
+    assert evidence["repository_content_summary_fingerprint"] == content_summary.fingerprint()
     intelligence = next(
         payload
         for path, payload, _, _ in gh.writes
         if path.endswith("repository-intelligence/planner-cycle-proof.json")
     )
     assert intelligence["snapshot_fingerprint"] == snapshot.fingerprint()
+    assert intelligence["content_summary_fingerprint"] == content_summary.fingerprint()
+    assert intelligence["content_summary"] == content_summary.canonical_dict()
+    assert "never persisted raw" not in json.dumps(intelligence, sort_keys=True)
     assert intelligence["planner_context_fingerprint"] == repository_context.fingerprint
     prepared_state = gh.writes[3][1]
     metadata = prepared_state["metadata"]
     assert metadata["repository_intelligence_snapshot_fingerprint"] == snapshot.fingerprint()
     assert metadata["repository_intelligence_context_fingerprint"] == repository_context.fingerprint
+    assert metadata["repository_intelligence_content_fingerprint"] == content_summary.fingerprint()
     assert metadata["repository_intelligence_source_sha"] == snapshot.source_sha
 
     accepted = gh.writes[-1][1]
@@ -225,6 +257,7 @@ def main() -> int:
         "capacity_retry_arm": True,
         "repository_intelligence_snapshot": True,
         "repository_intelligence_evidence": True,
+        "secret_free_ast_content_summary": True,
     }, sort_keys=True))
     return 0
 
