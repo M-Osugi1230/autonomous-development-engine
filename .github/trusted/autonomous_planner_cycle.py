@@ -19,10 +19,13 @@ from ade.jules_planner import JulesPlannerConfig, JulesPlannerError, JulesPlanni
 from ade.models import ProjectState
 from ade.planning_activation import PlanningGoalRequest, build_planning_activation
 from ade.repository_intelligence import (
+    RepositoryContentSummary,
     RepositoryPlannerContext,
     RepositorySnapshot,
+    build_python_content_summary,
     build_repository_snapshot,
     planner_repository_context,
+    python_candidate_paths,
 )
 from github_client import GitHubClient, GitHubError
 from jules_client import JulesClient, JulesError, JulesPrecondition, JulesQuota, JulesUnauthorized
@@ -146,7 +149,7 @@ def _steps_hash(steps: tuple[dict[str, str], ...]) -> str:
 def _collect_repository_intelligence(
     gh: GitHubClient,
     request: PlanningGoalRequest,
-) -> tuple[RepositorySnapshot, RepositoryPlannerContext]:
+) -> tuple[RepositorySnapshot, RepositoryContentSummary, RepositoryPlannerContext]:
     source_sha = gh.get_branch_head_sha(
         request.target_repository,
         branch=request.base_branch,
@@ -163,13 +166,40 @@ def _collect_repository_intelligence(
         paths=paths,
         max_paths=5000,
     )
+
+    files: list[tuple[str, str, str]] = []
+    for path in python_candidate_paths(
+        snapshot,
+        allowed_path_prefixes=request.allowed_path_prefixes,
+        max_files=20,
+    ):
+        try:
+            source, blob_sha = gh.get_text_file(
+                request.target_repository,
+                path=path,
+                ref=source_sha,
+                max_bytes=65536,
+            )
+        except GitHubError as exc:
+            if "exceeds trusted byte budget" in str(exc):
+                continue
+            raise
+        files.append((path, source, blob_sha))
+
+    content_summary = build_python_content_summary(
+        files,
+        max_files=20,
+        max_source_chars=100000,
+    )
     context = planner_repository_context(
         snapshot,
         allowed_path_prefixes=request.allowed_path_prefixes,
+        content_summary=content_summary,
         max_files=200,
+        max_summary_modules=20,
         max_chars=12000,
     )
-    return snapshot, context
+    return snapshot, content_summary, context
 
 
 def _persist_activation(
@@ -180,6 +210,7 @@ def _persist_activation(
     bundle,
     provider: JulesPlanningProvider,
     snapshot: RepositorySnapshot,
+    content_summary: RepositoryContentSummary,
     repository_context: RepositoryPlannerContext,
     attempt: int,
 ) -> None:
@@ -209,6 +240,7 @@ def _persist_activation(
         "implementation_output_accepted": False,
         "repository_snapshot_fingerprint": snapshot.fingerprint(),
         "repository_context_fingerprint": repository_context.fingerprint,
+        "repository_content_summary_fingerprint": content_summary.fingerprint(),
         "repository_source_sha": snapshot.source_sha,
     }
 
@@ -236,6 +268,7 @@ def _persist_activation(
     metadata = state_payload.setdefault("metadata", {})
     metadata["repository_intelligence_snapshot_fingerprint"] = snapshot.fingerprint()
     metadata["repository_intelligence_context_fingerprint"] = repository_context.fingerprint
+    metadata["repository_intelligence_content_fingerprint"] = content_summary.fingerprint()
     metadata["repository_intelligence_source_sha"] = snapshot.source_sha
     state_payload["updated_at"] = datetime.now(UTC).isoformat()
     gh.upsert_json_file(
@@ -249,6 +282,8 @@ def _persist_activation(
             "schema_version": 1,
             "snapshot": snapshot.canonical_dict(),
             "snapshot_fingerprint": snapshot.fingerprint(),
+            "content_summary": content_summary.canonical_dict(),
+            "content_summary_fingerprint": content_summary.fingerprint(),
             "planner_context": repository_context.payload,
             "planner_context_fingerprint": repository_context.fingerprint,
         },
@@ -344,7 +379,7 @@ def main() -> int:
         if not isinstance(source_name, str) or not source_name.strip():
             raise JulesPlannerError("Jules target source has no resource name")
 
-        snapshot, repository_context = _collect_repository_intelligence(
+        snapshot, content_summary, repository_context = _collect_repository_intelligence(
             gh,
             request,
         )
@@ -414,6 +449,7 @@ def main() -> int:
             bundle=bundle,
             provider=provider,
             snapshot=snapshot,
+            content_summary=content_summary,
             repository_context=repository_context,
             attempt=attempt,
         )
