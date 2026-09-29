@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import ast
 import hashlib
 import json
 from pathlib import PurePosixPath
@@ -77,6 +78,61 @@ class RepositoryPlannerContext:
     payload: dict[str, Any]
     serialized: str
     fingerprint: str
+
+
+@dataclass(frozen=True, slots=True)
+class RepositorySymbol:
+    kind: str
+    name: str
+
+    def canonical_dict(self) -> dict[str, str]:
+        return {"kind": self.kind, "name": self.name}
+
+
+@dataclass(frozen=True, slots=True)
+class PythonModuleSummary:
+    path: str
+    module: str
+    is_test: bool
+    parse_ok: bool
+    content_sha: str
+    byte_count: int
+    symbols: tuple[RepositorySymbol, ...]
+    imports: tuple[str, ...]
+
+    def canonical_dict(self) -> dict[str, Any]:
+        return {
+            "path": self.path,
+            "module": self.module,
+            "is_test": self.is_test,
+            "parse_ok": self.parse_ok,
+            "content_sha": self.content_sha,
+            "byte_count": self.byte_count,
+            "symbols": [symbol.canonical_dict() for symbol in self.symbols],
+            "imports": list(self.imports),
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class RepositoryContentSummary:
+    modules: tuple[PythonModuleSummary, ...]
+    schema_version: int = 1
+
+    def canonical_dict(self) -> dict[str, Any]:
+        return {
+            "schema_version": 1,
+            "module_count": len(self.modules),
+            "modules": [module.canonical_dict() for module in self.modules],
+        }
+
+    def fingerprint(self) -> str:
+        raw = json.dumps(
+            self.canonical_dict(),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def _normalized_repository(value: str) -> str:
@@ -200,6 +256,162 @@ def build_repository_snapshot(
 def _path_within(path: str, prefix: str) -> bool:
     normalized = prefix.rstrip("/")
     return path == normalized or path.startswith(normalized + "/")
+
+
+def python_candidate_paths(
+    snapshot: RepositorySnapshot,
+    *,
+    allowed_path_prefixes: tuple[str, ...],
+    max_files: int = 40,
+) -> tuple[str, ...]:
+    if not isinstance(snapshot, RepositorySnapshot):
+        raise RepositoryIntelligenceError("snapshot must be a RepositorySnapshot")
+    if type(max_files) is not int or max_files < 1 or max_files > 200:
+        raise RepositoryIntelligenceError("max_files must be between 1 and 200")
+    if not allowed_path_prefixes:
+        raise RepositoryIntelligenceError("allowed_path_prefixes must not be empty")
+
+    prefixes = tuple(_normalized_path(raw.rstrip("/")) for raw in allowed_path_prefixes)
+    candidates = [
+        path
+        for path in snapshot.paths
+        if path.endswith(".py")
+        and any(_path_within(path, prefix) for prefix in prefixes)
+    ]
+    return tuple(candidates[:max_files])
+
+
+def _python_module_name(path: str) -> str:
+    parsed = PurePosixPath(path)
+    parts = list(parsed.with_suffix("").parts)
+    if parts and parts[0] == "src":
+        parts = parts[1:]
+    if parts and parts[-1] == "__init__":
+        parts = parts[:-1]
+    return ".".join(parts) or parsed.stem
+
+
+def _is_test_path(path: str) -> bool:
+    parsed = PurePosixPath(path)
+    return (
+        parsed.parts[0] in _TEST_ROOT_NAMES
+        or parsed.name.startswith("test_")
+        or parsed.name.endswith("_test.py")
+    )
+
+
+def _import_name(node: ast.ImportFrom) -> tuple[str, ...]:
+    prefix = "." * node.level
+    if node.module:
+        return (prefix + node.module,)
+    values = []
+    for alias in node.names:
+        if alias.name != "*":
+            values.append(prefix + alias.name)
+    return tuple(values)
+
+
+def analyze_python_source(
+    *,
+    path: str,
+    source: str,
+    content_sha: str,
+    max_source_chars: int = 100000,
+    max_symbols: int = 100,
+    max_imports: int = 100,
+) -> PythonModuleSummary:
+    normalized_path = _normalized_path(path)
+    if not normalized_path.endswith(".py"):
+        raise RepositoryIntelligenceError("python summary path must end with .py")
+    if not isinstance(source, str):
+        raise RepositoryIntelligenceError("python source must be text")
+    if type(max_source_chars) is not int or max_source_chars < 1 or max_source_chars > 500000:
+        raise RepositoryIntelligenceError("max_source_chars must be between 1 and 500000")
+    if len(source) > max_source_chars:
+        raise RepositoryIntelligenceError("python source exceeds trusted character budget")
+    if type(max_symbols) is not int or not 1 <= max_symbols <= 500:
+        raise RepositoryIntelligenceError("max_symbols must be between 1 and 500")
+    if type(max_imports) is not int or not 1 <= max_imports <= 500:
+        raise RepositoryIntelligenceError("max_imports must be between 1 and 500")
+    _normalized_sha(content_sha)
+
+    byte_count = len(source.encode("utf-8"))
+    try:
+        tree = ast.parse(source, filename=normalized_path)
+    except SyntaxError:
+        return PythonModuleSummary(
+            path=normalized_path,
+            module=_python_module_name(normalized_path),
+            is_test=_is_test_path(normalized_path),
+            parse_ok=False,
+            content_sha=content_sha,
+            byte_count=byte_count,
+            symbols=(),
+            imports=(),
+        )
+
+    symbols: list[RepositorySymbol] = []
+    imports: list[str] = []
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            symbols.append(RepositorySymbol(kind="function", name=node.name))
+        elif isinstance(node, ast.ClassDef):
+            symbols.append(RepositorySymbol(kind="class", name=node.name))
+        elif isinstance(node, ast.Import):
+            imports.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            imports.extend(_import_name(node))
+
+    ordered_symbols = tuple(
+        sorted(
+            {symbol for symbol in symbols},
+            key=lambda item: (item.kind, item.name),
+        )[:max_symbols]
+    )
+    ordered_imports = tuple(sorted(set(imports))[:max_imports])
+
+    return PythonModuleSummary(
+        path=normalized_path,
+        module=_python_module_name(normalized_path),
+        is_test=_is_test_path(normalized_path),
+        parse_ok=True,
+        content_sha=content_sha,
+        byte_count=byte_count,
+        symbols=ordered_symbols,
+        imports=ordered_imports,
+    )
+
+
+def build_python_content_summary(
+    files: Iterable[tuple[str, str, str]],
+    *,
+    max_files: int = 40,
+    max_source_chars: int = 100000,
+) -> RepositoryContentSummary:
+    if type(max_files) is not int or not 1 <= max_files <= 200:
+        raise RepositoryIntelligenceError("max_files must be between 1 and 200")
+
+    summaries: list[PythonModuleSummary] = []
+    seen: set[str] = set()
+    for raw_path, source, content_sha in files:
+        path = _normalized_path(raw_path)
+        if path in seen:
+            raise RepositoryIntelligenceError(f"duplicate content-summary path: {path}")
+        seen.add(path)
+        summaries.append(
+            analyze_python_source(
+                path=path,
+                source=source,
+                content_sha=content_sha,
+                max_source_chars=max_source_chars,
+            )
+        )
+        if len(summaries) > max_files:
+            raise RepositoryIntelligenceError("content summary exceeds trusted file budget")
+
+    return RepositoryContentSummary(
+        modules=tuple(sorted(summaries, key=lambda item: item.path))
+    )
 
 
 def planner_repository_context(
