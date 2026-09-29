@@ -1,10 +1,10 @@
 {
   "auto_create_pr": true,
   "poll_interval_seconds": 15,
-  "prompt": "Goal: Add a small self-contained deterministic utility for normalizing a non-empty experiment audience label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.\nOutcome: - Implement input validation and label/key normalization functions for experiment audience labels.\nAllowed paths: src/thought_pipeline/audience.py\nAcceptance: - Implement input validation and label/key normalization functions for experiment audience labels.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+  "prompt": "Goal: Add a small self-contained deterministic utility for normalizing a non-empty experiment audience label. The normalized display label should collapse surrounding and repeated internal whitespace while preserving letter case, and the stable key should use Unicode case folding and replace spaces with hyphens. Reject non-string or empty input and return a structured summary containing the display label and key. Add focused unit-test coverage. Keep the change internal: do not alter package exports, CLI behavior, external APIs, workflows, configuration, deployment, secrets, or irreversible behavior.\nOutcome: - Implement test cases verifying whitespace collapsing, case folding key creation, error handling for empty/non-string inputs, and dictionary payload structure.\nAllowed paths: tests/test_audience.py\nAcceptance: - Implement test cases verifying whitespace collapsing, case folding key creation, error handling for empty/non-string inputs, and dictionary payload structure.; Repository CI remains green\nDo not modify files outside the allowed paths.",
   "schema_version": 1,
   "starting_branch": "main",
-  "task_id": "v12ext4-001",
+  "task_id": "v12ext4-002",
   "timeout_seconds": 1800,
-  "title": "Add audience label normalization utility in `src/thought_pipeline/audience.py`."
+  "title": "Add unit tests for audience label normalization in `tests/test_audience.py`."
 }
