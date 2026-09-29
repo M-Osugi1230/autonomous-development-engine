@@ -21,12 +21,12 @@ def _write(root: Path, relative: str, content: str) -> None:
 
 
 def _evidence() -> dict:
-    task_ids = ["v12ext5-001", "v12ext5-002"]
+    task_ids = ["v12ext6-001", "v12ext6-002"]
     return {
         "schema_version": 1,
         "version": "v1.2",
-        "request_id": "v1.2-external-goal-proof-005",
-        "campaign_id": "v1.2-external-goal-campaign-005",
+        "request_id": "v1.2-external-goal-proof-006",
+        "campaign_id": "v1.2-external-goal-campaign-006",
         "target_repository": "M-Osugi1230/one-minute-thought-experiments",
         "human_authored_per_task_work_items": False,
         "target_quality_gate": {
@@ -35,7 +35,7 @@ def _evidence() -> dict:
             "runtime_source_hygiene": True,
             "clean_production_import_smoke": True,
         },
-        "accepted_plan_fingerprint": "fingerprint-005",
+        "accepted_plan_fingerprint": "fingerprint-006",
         "planner": {
             "provider": "jules",
             "workflow_run": 101,
@@ -57,7 +57,7 @@ def _evidence() -> dict:
         },
         "tasks": [
             {
-                "task_id": "v12ext5-001",
+                "task_id": "v12ext6-001",
                 "jules_cycle_run": 104,
                 "pull_request": 9,
                 "ci_run": 105,
@@ -67,7 +67,7 @@ def _evidence() -> dict:
                 "merge_commit": SHA_C,
             },
             {
-                "task_id": "v12ext5-002",
+                "task_id": "v12ext6-002",
                 "jules_cycle_run": 108,
                 "pull_request": 10,
                 "ci_run": 109,
@@ -84,17 +84,17 @@ def _evidence() -> dict:
             "source_sha": SHA_D,
             "accepted_plan": {
                 "status": "ACCEPTED",
-                "fingerprint": "fingerprint-005",
+                "fingerprint": "fingerprint-006",
             },
             "campaign": {
-                "campaign_id": "v1.2-external-goal-campaign-005",
+                "campaign_id": "v1.2-external-goal-campaign-006",
                 "status": "COMPLETED",
                 "task_ids": task_ids,
                 "completed_task_ids": task_ids,
             },
             "task_graph": [
-                {"task_id": "v12ext5-001", "status": "COMPLETED"},
-                {"task_id": "v12ext5-002", "status": "COMPLETED"},
+                {"task_id": "v12ext6-001", "status": "COMPLETED"},
+                {"task_id": "v12ext6-002", "status": "COMPLETED"},
             ],
             "state": {
                 "current_task_id": None,
@@ -104,7 +104,7 @@ def _evidence() -> dict:
             "remote_execution_receipt": {
                 "schema_version": 1,
                 "status": "MERGED",
-                "task_id": "v12ext5-002",
+                "task_id": "v12ext6-002",
             },
         },
     }
@@ -114,7 +114,7 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
     def _fixture(self, root: Path, evidence: dict) -> None:
         _write(
             root,
-            ".autodev/campaign-evidence/v1.2-autonomous-planner-proof-005.json",
+            ".autodev/campaign-evidence/v1.2-autonomous-planner-proof-006.json",
             json.dumps(evidence, indent=2) + "\n",
         )
         _write(
@@ -221,7 +221,7 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
             evidence = _evidence()
             evidence["quota_resume"] = {
                 "observed": True,
-                "task_id": "v12ext5-002",
+                "task_id": "v12ext6-002",
                 "resume_after": "2026-09-29T12:25:49+00:00",
                 "manual_resume": True,
                 "resume_run": 103,

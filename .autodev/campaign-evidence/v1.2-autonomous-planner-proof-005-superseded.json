@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "version": "v1.2",
+  "request_id": "v1.2-external-goal-proof-005",
+  "campaign_id": "v1.2-external-goal-campaign-005",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "target_baseline": {
+    "sha": "32287026986cdd5c1b7f6a10a1f1cb6c93a9d88c",
+    "ci_run": 36561223812,
+    "runtime_source_hygiene": true,
+    "clean_production_import_smoke": true
+  },
+  "planner_status": {
+    "state": "PAUSED_QUOTA",
+    "attempt": 0,
+    "reason": "planner-provider-capacity",
+    "detail": "HTTP 400: Precondition check failed.",
+    "updated_at": "2026-09-29T11:26:18.485930+00:00"
+  },
+  "accepted_plan_created": false,
+  "campaign_activated": false,
+  "superseded": true,
+  "superseded_reason": "provider-capacity pause was safe, but best-effort cron did not provide a bounded retry cadence; self-scheduling stale-safe retry chain was added before the next proof",
+  "successor_request_id": "v1.2-external-goal-proof-006",
+  "successor_campaign_id": "v1.2-external-goal-campaign-006"
+}
