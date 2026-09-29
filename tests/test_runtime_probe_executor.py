@@ -60,7 +60,8 @@ def _error_then_pass(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservat
 
 def _authority_probe(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
     clean = (
-        invocation.credential_authority is False
+        invocation.repository_write_authority is False
+        and invocation.credential_authority is False
         and invocation.network_authority is False
         and invocation.deployment_authority is False
         and invocation.timeout_seconds == 1
