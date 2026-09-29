@@ -160,7 +160,11 @@ def main() -> int:
     assert ".autodev/repository-intelligence/planner-cycle-proof.json" in paths
     assert ".autodev/runtime/planning-status.json" in paths
 
-    evidence = next(payload for path, payload, _, _ in gh.writes if path.endswith("planner-cycle-proof.json"))
+    evidence = next(
+        payload
+        for path, payload, _, _ in gh.writes
+        if path == ".autodev/planner-evidence/planner-cycle-proof.json"
+    )
     serialized = json.dumps(evidence, sort_keys=True)
     assert "session_id" not in serialized
     assert "provider_session" not in serialized
