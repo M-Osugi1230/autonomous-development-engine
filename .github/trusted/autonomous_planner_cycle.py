@@ -18,6 +18,12 @@ from ade.autonomous_planner import (
 from ade.jules_planner import JulesPlannerConfig, JulesPlannerError, JulesPlanningProvider
 from ade.models import ProjectState
 from ade.planning_activation import PlanningGoalRequest, build_planning_activation
+from ade.repository_intelligence import (
+    RepositoryPlannerContext,
+    RepositorySnapshot,
+    build_repository_snapshot,
+    planner_repository_context,
+)
 from github_client import GitHubClient, GitHubError
 from jules_client import JulesClient, JulesError, JulesPrecondition, JulesQuota, JulesUnauthorized
 
@@ -27,6 +33,7 @@ STATUS_PATH = Path(".autodev/runtime/planning-status.json")
 RESULT_PATH = Path(".autodev/runtime/autonomous-planner-result.json")
 REMOTE_STATUS_PATH = ".autodev/runtime/planning-status.json"
 REMOTE_EVIDENCE_PREFIX = ".autodev/planner-evidence"
+REMOTE_REPOSITORY_INTELLIGENCE_PREFIX = ".autodev/repository-intelligence"
 
 MAX_NON_QUOTA_ATTEMPTS = 3
 
@@ -136,6 +143,35 @@ def _steps_hash(steps: tuple[dict[str, str], ...]) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
+def _collect_repository_intelligence(
+    gh: GitHubClient,
+    request: PlanningGoalRequest,
+) -> tuple[RepositorySnapshot, RepositoryPlannerContext]:
+    source_sha = gh.get_branch_head_sha(
+        request.target_repository,
+        branch=request.base_branch,
+    )
+    paths = gh.list_tree_paths(
+        request.target_repository,
+        tree_sha=source_sha,
+        max_entries=5000,
+    )
+    snapshot = build_repository_snapshot(
+        repository=request.target_repository,
+        base_branch=request.base_branch,
+        source_sha=source_sha,
+        paths=paths,
+        max_paths=5000,
+    )
+    context = planner_repository_context(
+        snapshot,
+        allowed_path_prefixes=request.allowed_path_prefixes,
+        max_files=200,
+        max_chars=12000,
+    )
+    return snapshot, context
+
+
 def _persist_activation(
     gh: GitHubClient,
     *,
@@ -143,6 +179,8 @@ def _persist_activation(
     result,
     bundle,
     provider: JulesPlanningProvider,
+    snapshot: RepositorySnapshot,
+    repository_context: RepositoryPlannerContext,
     attempt: int,
 ) -> None:
     proposal = PlannerProposal.from_dict(result.raw_proposal).canonical_dict()
@@ -169,6 +207,9 @@ def _persist_activation(
         ),
         "plan_approved": False,
         "implementation_output_accepted": False,
+        "repository_snapshot_fingerprint": snapshot.fingerprint(),
+        "repository_context_fingerprint": repository_context.fingerprint,
+        "repository_source_sha": snapshot.source_sha,
     }
 
     # AcceptedPlan is deliberately persisted last. Every canonical execution
@@ -192,11 +233,26 @@ def _persist_activation(
         message=f"planner: prepare first task {bundle.cycle_task.task_id}",
     )
     state_payload = bundle.state.to_dict()
+    metadata = state_payload.setdefault("metadata", {})
+    metadata["repository_intelligence_snapshot_fingerprint"] = snapshot.fingerprint()
+    metadata["repository_intelligence_context_fingerprint"] = repository_context.fingerprint
+    metadata["repository_intelligence_source_sha"] = snapshot.source_sha
     state_payload["updated_at"] = datetime.now(UTC).isoformat()
     gh.upsert_json_file(
         ".autodev/state.json",
         state_payload,
         message=f"planner: prepare state {request.campaign_id}",
+    )
+    gh.upsert_json_file(
+        f"{REMOTE_REPOSITORY_INTELLIGENCE_PREFIX}/{request.request_id}.json",
+        {
+            "schema_version": 1,
+            "snapshot": snapshot.canonical_dict(),
+            "snapshot_fingerprint": snapshot.fingerprint(),
+            "planner_context": repository_context.payload,
+            "planner_context_fingerprint": repository_context.fingerprint,
+        },
+        message=f"repository intelligence: {request.request_id}",
     )
     gh.upsert_json_file(
         f"{REMOTE_EVIDENCE_PREFIX}/{request.request_id}.json",
@@ -288,6 +344,11 @@ def main() -> int:
         if not isinstance(source_name, str) or not source_name.strip():
             raise JulesPlannerError("Jules target source has no resource name")
 
+        snapshot, repository_context = _collect_repository_intelligence(
+            gh,
+            request,
+        )
+
         provider = JulesPlanningProvider(
             client,
             JulesPlannerConfig(
@@ -303,6 +364,7 @@ def main() -> int:
             high_level_goal=request.goal,
             policy=request.planner_policy(),
             id_prefix=request.id_prefix,
+            repository_context=repository_context.serialized,
         )
 
         if result.validated.disposition is PlannerDisposition.HUMAN_WAIT:
@@ -351,6 +413,8 @@ def main() -> int:
             result=result,
             bundle=bundle,
             provider=provider,
+            snapshot=snapshot,
+            repository_context=repository_context,
             attempt=attempt,
         )
         print(json.dumps({
