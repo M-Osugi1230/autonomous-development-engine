@@ -261,6 +261,7 @@ class MissionControlSnapshot:
     warnings: tuple[str, ...]
     activity: tuple[MissionActivitySummary, ...] = ()
     preview: MissionPreviewSummary | None = None
+    planning: dict[str, Any] | None = None
     campaign: dict[str, Any] | None = None
     lifecycle_status: str = "RUNNING"
     zero_touch_start: dict[str, Any] | None = None
@@ -317,6 +318,7 @@ class MissionControlSnapshot:
             "warnings": list(self.warnings),
             "activity": [event.to_dict() for event in self.activity],
             "preview": self.preview.to_dict() if self.preview is not None else None,
+            "planning": self.planning,
             "campaign": self.campaign,
             "lifecycle_status": self.lifecycle_status,
             "zero_touch_start": self.zero_touch_start,
@@ -436,6 +438,36 @@ def build_mission_control_snapshot(
     if state.status.value == "HUMAN_WAIT" and not open_decisions:
         warnings.append("project is HUMAN_WAIT but no open human decision exists")
 
+    planning_payload = None
+    planning_path = autodev / "runtime" / "planning-status.json"
+    if planning_path.exists():
+        raw_planning = _load_json_object(planning_path, label="planning status")
+        if raw_planning.get("schema_version") != 1:
+            raise ValueError("invalid planning status schema_version")
+        planning_state = raw_planning.get("state")
+        allowed_planning_states = {"ACCEPTED", "PAUSED_QUOTA", "REPLAN", "HUMAN_WAIT"}
+        if planning_state not in allowed_planning_states:
+            raise ValueError("invalid planning status state")
+        request_id = raw_planning.get("request_id")
+        reason = raw_planning.get("reason")
+        updated_at = raw_planning.get("updated_at")
+        attempt = raw_planning.get("attempt")
+        if not isinstance(request_id, str) or not request_id.strip():
+            raise ValueError("invalid planning status request_id")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError("invalid planning status reason")
+        if not isinstance(updated_at, str) or not updated_at.strip():
+            raise ValueError("invalid planning status updated_at")
+        if type(attempt) is not int or attempt < 0:
+            raise ValueError("invalid planning status attempt")
+        planning_payload = {
+            "request_id": _redact_display_text(request_id),
+            "state": planning_state,
+            "attempt": attempt,
+            "reason": _redact_display_text(reason),
+            "updated_at": _redact_display_text(updated_at),
+        }
+
     campaign_payload = None
     campaign_path = autodev / "campaign.json"
     if campaign_path.exists():
@@ -481,10 +513,13 @@ def build_mission_control_snapshot(
     )
 
     lifecycle_status = "RUNNING"
-    if open_decisions or state.status.value == "HUMAN_WAIT":
+    planning_state = planning_payload.get("state") if planning_payload is not None else None
+    if open_decisions or state.status.value == "HUMAN_WAIT" or planning_state == "HUMAN_WAIT":
         lifecycle_status = "HUMAN_WAIT"
     elif state.failed_task_ids or state.status.value == "FAILED":
         lifecycle_status = "FAILED"
+    elif planning_state in {"PAUSED_QUOTA", "REPLAN"}:
+        lifecycle_status = "RECOVERING"
     elif campaign_payload is not None and campaign_payload.get("status") == "COMPLETED":
         lifecycle_status = "COMPLETED"
     elif checkpoint is not None and checkpoint.state.value in {"PAUSED_QUOTA", "REPLAN"}:
@@ -513,6 +548,7 @@ def build_mission_control_snapshot(
         warnings=tuple(warnings),
         activity=activity,
         preview=preview,
+        planning=planning_payload,
         campaign=campaign_payload,
         lifecycle_status=lifecycle_status,
         zero_touch_start=zero_touch_start_payload,

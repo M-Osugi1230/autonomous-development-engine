@@ -133,6 +133,25 @@ def _activity_feed(snapshot: MissionControlSnapshot) -> str:
     return '<ol class="activity-list">' + "".join(items) + "</ol>"
 
 
+def _planning_card(snapshot: MissionControlSnapshot) -> str:
+    planning = snapshot.planning
+    if planning is None:
+        return '<p class="empty">No autonomous planning status.</p>'
+    return """<dl class="detail-grid">
+      <div><dt>Request</dt><dd>{request_id}</dd></div>
+      <div><dt>State</dt><dd>{state}</dd></div>
+      <div><dt>Attempt</dt><dd>{attempt}</dd></div>
+      <div><dt>Reason</dt><dd>{reason}</dd></div>
+      <div><dt>Updated</dt><dd>{updated_at}</dd></div>
+    </dl>""".format(
+        request_id=_text(planning.get("request_id")),
+        state=_text(planning.get("state")),
+        attempt=_text(planning.get("attempt")),
+        reason=_text(planning.get("reason")),
+        updated_at=_text(planning.get("updated_at")),
+    )
+
+
 def _campaign_card(snapshot: MissionControlSnapshot) -> str:
     campaign = snapshot.campaign
     if campaign is None:
@@ -306,6 +325,11 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
       </dl>
     </section>
 
+    <section class="card" aria-labelledby="planning-heading">
+      <h2 id="planning-heading">Autonomous planner</h2>
+      $planning
+    </section>
+
     <section class="card" aria-labelledby="campaign-heading">
       <h2 id="campaign-heading">Campaign</h2>
       $campaign
@@ -366,6 +390,7 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
         project_id=_text(snapshot.project_id),
         status=_text(snapshot.project_status),
         lifecycle_status=_text(snapshot.lifecycle_status),
+        planning=_planning_card(snapshot),
         campaign=_campaign_card(snapshot),
         zero_touch_start=_zero_touch_start_card(snapshot),
         iteration=_text(snapshot.iteration),
