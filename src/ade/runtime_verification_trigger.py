@@ -12,6 +12,22 @@ from .runtime_verification import (
 )
 
 
+def runtime_verification_paths(task_id: str) -> tuple[str, str]:
+    if (
+        not isinstance(task_id, str)
+        or not task_id
+        or len(task_id) > 80
+        or any(
+            ch
+            not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-"
+            for ch in task_id
+        )
+    ):
+        raise RuntimeVerificationError("task_id must be a safe identifier")
+    prefix = f".autodev/runtime-verification/{task_id}"
+    return f"{prefix}/contract.json", f"{prefix}/receipt.json"
+
+
 @dataclass(frozen=True, slots=True)
 class RuntimeVerificationPolicy:
     target_repository: str
