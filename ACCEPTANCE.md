@@ -287,5 +287,6 @@
 - [x] Reviewer/diagnostic contributions are immutable evidence objects and cannot directly mutate code, Campaign state, Acceptance, merge state, or Runtime Verification.
 - [x] Conflicting agent contributions are reconciled deterministically by controller policy; unresolved material conflicts enter HUMAN_WAIT rather than majority voting.
 - [x] Provider-session lifecycle preserves task/provider affinity, lease safety, quota recovery, and duplicate suppression independently for each role.
+- [x] Reviewer CHANGES_REQUIRED feedback can trigger only a bounded controller-owned correction request that reuses the frozen AcceptedPlan scope/Acceptance; reviewer data cannot directly dispatch, expand scope, merge, or approve work, and correction-budget exhaustion enters HUMAN_WAIT.
 - [ ] A real external-repository proof demonstrates bounded implementer + independent reviewer collaboration through the existing trusted merge/runtime gates.
 - [ ] A dedicated v1.7 Graduation audit reconstructs the multi-agent proof end to end.
