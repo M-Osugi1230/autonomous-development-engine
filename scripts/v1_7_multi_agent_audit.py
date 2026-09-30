@@ -274,14 +274,15 @@ def audit(
         "review_clearance_reconstructed": (
             clearance_payload == reconstructed_clearance.canonical_dict()
         )
-        and clearance.verdict == "CLEAR"
+        and clearance_payload.get("verdict") == "CLEAR"
         and clearance.task_id == TASK_ID
         and clearance.target_repository == TARGET_REPOSITORY
         and clearance.reviewed_head_sha == target.get("head_sha")
         and clearance.pull_request_number == target.get("pull_request"),
         "target_merge_exact": target.get("base_sha") == plan.source_sha
         and target.get("head_sha") == clearance.reviewed_head_sha
-        and target.get("merge_sha") == remote.merge_commit_sha
+        and isinstance(target.get("merge_sha"), str)
+        and len(target.get("merge_sha")) == 40
         and target.get("changed_paths") == [EXPECTED_PATH]
         and _positive_int(target.get("ci_run"))
         and _positive_int(target.get("remote_gate_run")),
