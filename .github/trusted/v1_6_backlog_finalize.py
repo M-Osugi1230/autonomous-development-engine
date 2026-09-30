@@ -174,6 +174,7 @@ def _target_observations(
     *,
     remote: RemoteExecutionReceipt,
     expected_base_sha: str,
+    expected_changed_paths: tuple[str, ...],
 ) -> dict[str, Any]:
     number = remote.pull_request_number
     pr = _api_json(f"/repos/{TARGET_REPOSITORY}/pulls/{number}")
@@ -208,7 +209,7 @@ def _target_observations(
         for item in files
         if isinstance(item, dict) and isinstance(item.get("filename"), str)
     )
-    if changed_paths != ["tests/test_models.py"]:
+    if changed_paths != sorted(expected_changed_paths):
         raise ValueError(f"target pull request scope is not exact: {changed_paths}")
 
     runs_payload = _api_json(
@@ -339,8 +340,16 @@ def main() -> int:
         task_id = task.get("task_id")
         if not isinstance(task_id, str) or not task_id:
             raise ValueError("v1.6 task identity is missing")
-        if task.get("allowed_paths") != ["tests/test_models.py"]:
-            raise ValueError("v1.6 AcceptedPlan scope expanded beyond tests/test_models.py")
+        allowed_paths = task.get("allowed_paths")
+        if (
+            not isinstance(allowed_paths, list)
+            or len(allowed_paths) != 1
+            or not isinstance(allowed_paths[0], str)
+            or not allowed_paths[0].startswith("tests/")
+            or ".." in allowed_paths[0].split("/")
+            or "\\" in allowed_paths[0]
+        ):
+            raise ValueError("v1.6 AcceptedPlan must allow exactly one normalized tests/ path")
         if task.get("new_paths") != [] or task.get("human_only") is not False:
             raise ValueError("v1.6 AcceptedPlan violates bounded execution contract")
 
@@ -414,6 +423,7 @@ def main() -> int:
         observations = _target_observations(
             remote=remote,
             expected_base_sha=candidate.source_sha,
+            expected_changed_paths=tuple(allowed_paths),
         )
         if contract.get("source_sha") != observations["merge_sha"]:
             raise ValueError("runtime contract does not bind trusted merge SHA")
