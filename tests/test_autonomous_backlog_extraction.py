@@ -6,7 +6,14 @@ from ade.autonomous_backlog import AutonomousBacklogError, BacklogCandidateKind
 from ade.autonomous_backlog_extraction import (
     extract_recovery_candidate,
     extract_runtime_gap_candidate,
+    extract_verified_memory_followup_candidate,
 )
+from ade.development_memory import (
+    DevelopmentMemoryLedger,
+    DevelopmentMemoryRecord,
+    MemoryKind,
+)
+from ade.development_memory_store import DevelopmentMemoryStore
 from ade.recovery import RecoveryAction, RecoveryFailure, RecoveryProgress
 from ade.recovery_runtime import RecoveryRecord
 from ade.runtime_verification import RuntimeVerificationContract
@@ -55,6 +62,36 @@ def receipt(status: str = "FAILED") -> RuntimeVerificationReceipt:
         policy_fingerprint="d" * 64,
         status=status,
         dispatch_count=1,
+    )
+
+
+
+
+def memory_store(
+    *,
+    kind: MemoryKind = MemoryKind.VERIFIED_OUTCOME,
+    tags: tuple[str, ...] = ("feedback", "runtime", "verified"),
+) -> DevelopmentMemoryStore:
+    record = DevelopmentMemoryRecord(
+        memory_id="mem-verified-runtime-001",
+        kind=kind,
+        repository=REPO,
+        source_sha=SHA,
+        statement=(
+            "Trusted runtime verification completed with every required probe "
+            "passing against the exact source SHA."
+        ),
+        task_id="task-001",
+        evidence_paths=(
+            ".autodev/runtime-verification/task-001/contract.json",
+            ".autodev/runtime-verification/task-001/receipt.json",
+            ".autodev/runtime-verification/task-001/report.json",
+        ),
+        evidence_fingerprints=("1" * 64, "2" * 64, "3" * 64),
+        tags=tags,
+    )
+    return DevelopmentMemoryStore(
+        ledger=DevelopmentMemoryLedger(records=(record,))
     )
 
 
@@ -120,6 +157,59 @@ class AutonomousBacklogExtractionTests(unittest.TestCase):
                 contract_payload=contract().canonical_dict(),
                 receipt_path=".autodev/runtime-verification/task-001/receipt.json",
                 receipt_payload=receipt("VERIFIED").canonical_dict(),
+            )
+
+    def test_verified_runtime_memory_can_become_bounded_followup(self) -> None:
+        store = memory_store()
+        value = extract_verified_memory_followup_candidate(
+            store_path=".autodev/development-memory.json",
+            store_payload=store.canonical_dict(),
+            memory_id="mem-verified-runtime-001",
+            source_phase="v1.6-autonomous-backlog",
+        )
+        self.assertEqual(value.kind, BacklogCandidateKind.MEMORY_FOLLOWUP)
+        self.assertEqual(value.repository, REPO)
+        self.assertEqual(value.source_sha, SHA)
+        self.assertFalse(value.human_only)
+        self.assertEqual(
+            value.evidence_paths,
+            (".autodev/development-memory.json",),
+        )
+        self.assertEqual(
+            set(value.evidence_fingerprints),
+            {store.fingerprint(), store.ledger.records[0].fingerprint()},
+        )
+        self.assertEqual(
+            value.tags,
+            ("memory", "runtime", "verified"),
+        )
+        self.assertNotIn(store.ledger.records[0].statement, value.statement)
+        self.assertFalse(value.canonical_dict()["execution_authority"])
+
+    def test_memory_followup_requires_verified_runtime_outcome(self) -> None:
+        for store in (
+            memory_store(kind=MemoryKind.FAILURE),
+            memory_store(tags=("feedback", "verified")),
+        ):
+            with self.subTest(store=store.fingerprint()):
+                with self.assertRaises(AutonomousBacklogError):
+                    extract_verified_memory_followup_candidate(
+                        store_path=".autodev/development-memory.json",
+                        store_payload=store.canonical_dict(),
+                        memory_id="mem-verified-runtime-001",
+                    )
+
+    def test_memory_followup_store_fingerprint_is_revalidated(self) -> None:
+        payload = memory_store().canonical_dict()
+        payload["ledger_fingerprint"] = "f" * 64
+        with self.assertRaisesRegex(
+            AutonomousBacklogError,
+            "store evidence is invalid",
+        ):
+            extract_verified_memory_followup_candidate(
+                store_path=".autodev/development-memory.json",
+                store_payload=payload,
+                memory_id="mem-verified-runtime-001",
             )
 
     def test_runtime_contract_binding_must_match(self) -> None:

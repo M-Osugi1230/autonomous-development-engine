@@ -9,7 +9,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from ade.autonomous_backlog_extraction import (
     extract_recovery_candidate,
     extract_runtime_gap_candidate,
+    extract_verified_memory_followup_candidate,
 )
+from ade.development_memory import (
+    DevelopmentMemoryLedger,
+    DevelopmentMemoryRecord,
+    MemoryKind,
+)
+from ade.development_memory_store import DevelopmentMemoryStore
 from ade.recovery import RecoveryAction, RecoveryFailure, RecoveryProgress
 from ade.recovery_runtime import RecoveryRecord
 from ade.runtime_verification import RuntimeVerificationContract
@@ -68,6 +75,44 @@ def main() -> int:
     assert runtime_candidate.human_only is True
     assert runtime_candidate.canonical_dict()["auto_dispatch"] is False
 
+    verified_memory = DevelopmentMemoryRecord(
+        memory_id="mem-v16-proof-source-001",
+        kind=MemoryKind.VERIFIED_OUTCOME,
+        repository=REPOSITORY,
+        source_sha=SOURCE_SHA,
+        statement=(
+            "Trusted runtime verification completed with every required probe "
+            "passing against the exact source SHA."
+        ),
+        task_id="task-003",
+        evidence_paths=(
+            ".autodev/runtime-verification/task-003/contract.json",
+            ".autodev/runtime-verification/task-003/receipt.json",
+            ".autodev/runtime-verification/task-003/report.json",
+        ),
+        evidence_fingerprints=("1" * 64, "2" * 64, "3" * 64),
+        tags=("feedback", "runtime", "verified"),
+    )
+    store = DevelopmentMemoryStore(
+        ledger=DevelopmentMemoryLedger(records=(verified_memory,))
+    )
+    memory_candidate = extract_verified_memory_followup_candidate(
+        store_path=".autodev/development-memory.json",
+        store_payload=store.canonical_dict(),
+        memory_id=verified_memory.memory_id,
+        source_phase="v1.6-autonomous-backlog",
+    )
+    assert memory_candidate.human_only is False
+    assert memory_candidate.source_sha == SOURCE_SHA
+    assert memory_candidate.evidence_paths == (
+        ".autodev/development-memory.json",
+    )
+    assert set(memory_candidate.evidence_fingerprints) == {
+        store.fingerprint(),
+        verified_memory.fingerprint(),
+    }
+    assert memory_candidate.canonical_dict()["execution_authority"] is False
+
     print(json.dumps({
         "ok": True,
         "recovery_candidate_id": recovery_candidate.candidate_id,
@@ -75,6 +120,9 @@ def main() -> int:
         "controller_owned_templates": True,
         "provider_freeform_surface": False,
         "runtime_failure_human_only": True,
+        "verified_memory_candidate_id": memory_candidate.candidate_id,
+        "verified_memory_store_bound": True,
+        "verified_memory_record_bound": True,
         "execution_authority": False,
     }, sort_keys=True))
     return 0
