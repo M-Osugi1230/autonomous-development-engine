@@ -1,0 +1,13 @@
+{
+  "allowed_path_prefixes": [
+    "tests"
+  ],
+  "base_branch": "main",
+  "campaign_id": "abgproof-campaign-777c97294d4bc932",
+  "goal": "Resolve trusted Autonomous Backlog candidate: Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority.",
+  "id_prefix": "abgproof-777c97294d",
+  "max_tasks": 1,
+  "request_id": "abgproof-request-777c97294d4bc932",
+  "schema_version": 1,
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+}
