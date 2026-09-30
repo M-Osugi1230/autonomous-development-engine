@@ -13,6 +13,7 @@ from .development_memory_extraction import (
     extract_verified_runtime_memory,
 )
 from .development_memory_resolution import resolve_development_memory
+from .development_memory_store import DevelopmentMemoryStore
 from .development_memory_retrieval import (
     DevelopmentMemoryQuery,
     DevelopmentMemoryRetrieval,
@@ -61,6 +62,51 @@ class DevelopmentMemoryPlanningBundle:
             "current_source_sha": self.retrieval.query.current_source_sha,
             "repository": self.retrieval.query.repository,
         }
+
+
+def build_planning_memory_bundle_from_store(
+    *,
+    store: DevelopmentMemoryStore,
+    store_path: str,
+    repository: str,
+    current_source_sha: str,
+    max_results: int = 8,
+    max_chars: int = 4000,
+) -> DevelopmentMemoryPlanningBundle | None:
+    matching_records = tuple(
+        record
+        for record in store.ledger.records
+        if record.repository == repository
+    )
+    if not matching_records:
+        return None
+
+    ledger = DevelopmentMemoryLedger(records=matching_records)
+    resolution = resolve_development_memory(
+        ledger,
+        current_source_shas={repository: current_source_sha},
+    )
+    retrieval = retrieve_development_memory(
+        resolution,
+        DevelopmentMemoryQuery(
+            repository=repository,
+            current_source_sha=current_source_sha,
+            tags=_DEFAULT_QUERY_TAGS,
+            max_results=max_results,
+        ),
+    )
+    context = build_retrieved_memory_context(
+        retrieval,
+        max_chars=max_chars,
+    )
+    return DevelopmentMemoryPlanningBundle(
+        context=context,
+        retrieval=retrieval,
+        resolution_fingerprint=resolution.fingerprint(),
+        source_evidence_path=store_path,
+        source_evidence_fingerprint=store.fingerprint(),
+        extracted_record_count=len(matching_records),
+    )
 
 
 def build_planning_memory_bundle(

@@ -18,7 +18,9 @@ from ade.autonomous_planner import (
 from ade.development_memory_planning import (
     DevelopmentMemoryPlanningBundle,
     build_planning_memory_bundle,
+    build_planning_memory_bundle_from_store,
 )
+from ade.development_memory_store import DevelopmentMemoryStore
 from ade.jules_planner import JulesPlannerConfig, JulesPlannerError, JulesPlanningProvider
 from ade.models import ProjectState
 from ade.planning_activation import PlanningGoalRequest, build_planning_activation
@@ -224,6 +226,20 @@ def _collect_development_memory(
     snapshot: RepositorySnapshot,
     previous_state: ProjectState,
 ) -> DevelopmentMemoryPlanningBundle | None:
+    store_path = Path(".autodev/development-memory.json")
+    if store_path.exists():
+        store = DevelopmentMemoryStore.from_dict(_load(store_path))
+        stored_bundle = build_planning_memory_bundle_from_store(
+            store=store,
+            store_path=str(store_path),
+            repository=request.target_repository,
+            current_source_sha=snapshot.source_sha,
+            max_results=8,
+            max_chars=4000,
+        )
+        if stored_bundle is not None:
+            return stored_bundle
+
     raw_path = previous_state.metadata.get("v1_4_graduation_evidence")
     if raw_path is None:
         return None

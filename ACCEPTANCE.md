@@ -254,6 +254,7 @@
 - [x] Trusted controller code derives memory records automatically from verified Campaign, recovery, runtime-verification, and human-decision evidence.
 - [x] Supersession/conflict handling prevents obsolete or contradicted memory from silently remaining authoritative.
 - [x] Autonomous Planner integration consumes bounded memory as data while deterministic trusted proposal validation remains authoritative.
+- [x] Runtime Verification feeds verified outcomes and bounded recovery outcomes into an idempotent durable memory store without making memory persistence a runtime-success authority.
 - [ ] A real external-repository proof demonstrates useful memory reuse across later work without scope expansion or manual per-task memory authoring.
 - [ ] A dedicated v1.5 Graduation audit proves the trusted memory path end to end.
 
