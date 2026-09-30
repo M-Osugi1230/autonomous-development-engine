@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from pathlib import Path
 from typing import Any
 
+from ade.development_memory_extraction import evidence_fingerprint
+from ade.development_memory_planning import build_planning_memory_bundle
 from ade.development_memory_store import DevelopmentMemoryStore
 
 
@@ -12,6 +15,10 @@ DEFAULT_EVIDENCE = ".autodev/campaign-evidence/v1.5-development-memory-proof-001
 STORE_PATH = ".autodev/development-memory.json"
 TARGET_REPOSITORY = "M-Osugi1230/one-minute-thought-experiments"
 SOURCE_MEMORY_EVIDENCE = ".autodev/campaign-evidence/v1.4-runtime-verification-proof-003.json"
+PLANNER_EVIDENCE = ".autodev/planner-evidence/v1.5-development-memory-proof-001.json"
+RUNTIME_CONTRACT = ".autodev/runtime-verification/v15mem1-001/contract.json"
+RUNTIME_RECEIPT = ".autodev/runtime-verification/v15mem1-001/receipt.json"
+RUNTIME_REPORT = ".autodev/runtime-verification/v15mem1-001/report.json"
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_CI_PROOFS = (
@@ -54,6 +61,16 @@ def _sha256(value: object) -> bool:
     return isinstance(value, str) and SHA256.fullmatch(value) is not None
 
 
+def _fingerprint(payload: object) -> str:
+    raw = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
 def audit(
     root: Path,
     *,
@@ -61,6 +78,15 @@ def audit(
     store_path: str = STORE_PATH,
 ) -> dict[str, object]:
     evidence = _load(root, evidence_path)
+    planner_evidence = _load(root, PLANNER_EVIDENCE)
+    source_memory_evidence = _load(root, SOURCE_MEMORY_EVIDENCE)
+    raw_runtime_contract = _load(root, RUNTIME_CONTRACT)
+    raw_runtime_receipt = _load(root, RUNTIME_RECEIPT)
+    raw_runtime_report_wrapper = _load(root, RUNTIME_REPORT)
+    raw_runtime_report = raw_runtime_report_wrapper.get("report")
+    raw_runtime_report = (
+        raw_runtime_report if isinstance(raw_runtime_report, dict) else {}
+    )
     store_payload = _load(root, store_path)
     store = DevelopmentMemoryStore.from_dict(store_payload)
     ci = (root / ".github/workflows/ci.yml").read_text(encoding="utf-8")
@@ -93,6 +119,15 @@ def audit(
 
     base_sha = task.get("base_sha")
     merge_sha = task.get("merge_commit")
+    rebuilt_memory = {}
+    if _sha40(base_sha):
+        rebuilt_bundle = build_planning_memory_bundle(
+            evidence_path=SOURCE_MEMORY_EVIDENCE,
+            evidence_payload=source_memory_evidence,
+            repository=TARGET_REPOSITORY,
+            current_source_sha=base_sha,
+        )
+        rebuilt_memory = rebuilt_bundle.evidence_dict()
     required_probes = {"offline-cli-smoke", "production-import-smoke"}
     result_ids = {
         row.get("probe_id")
@@ -102,6 +137,10 @@ def audit(
 
     memory_ids = memory.get("memory_ids")
     memory_ids = memory_ids if isinstance(memory_ids, list) else []
+    raw_planner_memory = planner_evidence.get("development_memory")
+    raw_planner_memory = (
+        raw_planner_memory if isinstance(raw_planner_memory, dict) else {}
+    )
     matching_feedback = [
         record
         for record in store.ledger.records
@@ -123,6 +162,21 @@ def audit(
         and planner.get("planning_only") is True
         and _sha256(planner.get("accepted_plan_fingerprint"))
         and planner.get("repository_source_sha") == base_sha,
+        "planner_evidence_bound": planner_evidence.get("schema_version") == 1
+        and planner_evidence.get("campaign_id") == evidence.get("campaign_id")
+        and planner_evidence.get("accepted_plan_fingerprint")
+        == planner.get("accepted_plan_fingerprint")
+        and planner_evidence.get("planning_only") is True
+        and planner_evidence.get("repository_source_sha") == base_sha
+        and raw_planner_memory == memory,
+        "source_memory_evidence_integrity": evidence_fingerprint(
+            source_memory_evidence
+        )
+        == memory.get("source_evidence_fingerprint")
+        and memory.get("source_evidence_path") == SOURCE_MEMORY_EVIDENCE,
+        "memory_reuse_reproducible": bool(rebuilt_memory)
+        and rebuilt_memory == memory
+        and rebuilt_memory == raw_planner_memory,
         "memory_reused": memory.get("used") is True
         and memory.get("authority") == "advisory-data-only"
         and memory.get("execution_authority") is False
@@ -150,6 +204,11 @@ def audit(
         and _sha40(task.get("head_sha"))
         and _sha40(merge_sha)
         and task.get("changed_paths") == ["tests/test_models.py"],
+        "runtime_raw_evidence_bound": raw_runtime_contract == contract
+        and raw_runtime_receipt == receipt
+        and raw_runtime_report == report
+        and raw_runtime_report_wrapper.get("report_fingerprint")
+        == runtime.get("report_fingerprint"),
         "runtime_workflow": _positive_int(runtime.get("workflow_run"))
         and runtime.get("trigger_source") == "repository_dispatch"
         and runtime.get("manual_workflow_dispatch") is False,
@@ -182,14 +241,28 @@ def audit(
         and feedback.get("repository") == TARGET_REPOSITORY
         and feedback.get("source_sha") == merge_sha
         and _sha256(feedback.get("store_fingerprint"))
+        and feedback.get("store_fingerprint") == store.fingerprint()
+        and feedback.get("record_count") == len(store.ledger.records)
         and _positive_int(feedback.get("record_count")),
         "durable_store_feedback_record": store_record is not None
         and store_record.repository == TARGET_REPOSITORY
         and store_record.source_sha == merge_sha
         and store_record.task_id == "v15mem1-001"
         and set(store_record.tags) == {"feedback", "runtime", "verified"}
-        and len(store_record.evidence_paths) == 3
-        and len(store_record.evidence_fingerprints) == 3,
+        and store_record.evidence_paths
+        == (
+            ".autodev/runtime-verification/v15mem1-001/contract.json",
+            ".autodev/runtime-verification/v15mem1-001/receipt.json",
+            ".autodev/runtime-verification/v15mem1-001/report.json",
+        )
+        and _sha256(runtime.get("report_fingerprint"))
+        and len(store_record.evidence_fingerprints) == 3
+        and set(store_record.evidence_fingerprints)
+        == {
+            raw_runtime_receipt.get("contract_fingerprint"),
+            _fingerprint(raw_runtime_receipt),
+            raw_runtime_report_wrapper.get("report_fingerprint"),
+        },
         "campaign_completed": campaign.get("campaign_id")
         == "v1.5-development-memory-campaign-001"
         and campaign.get("status") == "COMPLETED"
