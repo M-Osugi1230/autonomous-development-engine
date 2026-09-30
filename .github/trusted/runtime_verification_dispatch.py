@@ -219,9 +219,6 @@ def _persist_runtime_provenance(
         raise ValueError("pull_request_head_sha is required")
     if trusted_merge_sha != contract.source_sha:
         raise ValueError("trusted_merge_sha does not match runtime source SHA")
-    if memory_feedback.get("state") not in {"ADDED", "UNCHANGED"}:
-        raise ValueError("durable memory feedback is not complete")
-
     state_payload, _ = gh.get_json_file(".autodev/state.json")
     metadata = state_payload.get("metadata")
     metadata = metadata if isinstance(metadata, dict) else {}
@@ -549,10 +546,7 @@ def main() -> int:
                 final_receipt.task_id == V1_5_FINALIZER_TASK_ID
                 or phase == V1_6_BACKLOG_PHASE
             )
-            if (
-                needs_provenance
-                and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}
-            ):
+            if needs_provenance:
                 runtime_provenance = _persist_runtime_provenance(
                     gh,
                     event_payload=event,
@@ -562,19 +556,20 @@ def main() -> int:
                     report_fingerprint=execution.report.fingerprint(),
                     memory_feedback=memory_feedback,
                 )
-                if final_receipt.task_id == V1_5_FINALIZER_TASK_ID:
-                    graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
-                        gh,
-                        receipt=final_receipt,
-                        provenance=runtime_provenance,
-                    )
-                elif phase == V1_6_BACKLOG_PHASE:
-                    backlog_finalizer = _dispatch_v1_6_backlog_finalizer(
-                        gh,
-                        receipt=final_receipt,
-                        provenance=runtime_provenance,
-                        phase=phase,
-                    )
+                if memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
+                    if final_receipt.task_id == V1_5_FINALIZER_TASK_ID:
+                        graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
+                            gh,
+                            receipt=final_receipt,
+                            provenance=runtime_provenance,
+                        )
+                    elif phase == V1_6_BACKLOG_PHASE:
+                        backlog_finalizer = _dispatch_v1_6_backlog_finalizer(
+                            gh,
+                            receipt=final_receipt,
+                            provenance=runtime_provenance,
+                            phase=phase,
+                        )
         else:
             memory_feedback = _persist_recovery_feedback_safely(
                 gh,
