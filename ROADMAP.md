@@ -195,3 +195,17 @@ Runtime phase carry-forward hardening: the post-merge Remote PR Monitor now trea
 
 Proof001 bootstrap complete: request `v1.5-development-memory-proof-001` reused two trusted v1.4 memory records as advisory-only planning data, automatically executed task `v15mem1-001`, produced external PR #18 with only `tests/test_models.py`, passed target CI run `36706648785`, and merged through trusted gate at exact target SHA `098ad46eacba0da82bf8c9551df48f7401bf54c6`. Runtime Verification run `36706778575` reached durable `VERIFIED` with both required probes PASS on attempt 1. The verified outcome was appended to `.autodev/development-memory.json` as `mem-3d6660d55ad11cf3941ee9fb` with record fingerprint `72a5c70e6eed1f6af559c3182a2f8ccffea6c340eeb5163aba549cde38456e99`. Trusted successor run `36706821914` froze bootstrap-only evidence and armed proof002; proof001 alone remains explicitly ineligible for v1.5 graduation.
 
+## ADE v1.6 — Autonomous Backlog 🚧
+Turn trusted evidence into a bounded queue of possible next Goals without giving backlog data any execution authority. Autonomous Backlog is an advisory candidate layer only: candidates cannot dispatch work, expand scope, bypass human boundaries, or replace Autonomous Planner / AcceptedPlan validation.
+
+Build order:
+1. immutable evidence-bound BacklogCandidate schema + deterministic bounded ledger
+2. trusted candidate extraction from verified Acceptance gaps, runtime/recovery outcomes, Development Memory, and Repository Intelligence
+3. deterministic deduplication, supersession, staleness, and controller-owned priority
+4. repository/source-SHA-bound eligibility with human-only exclusion
+5. single-candidate Goal handoff into the existing Autonomous Planner boundary
+6. verified completion feedback and candidate retirement
+7. real external-repository proof and v1.6 graduation audit
+
+Slice 001 complete: `BacklogCandidate` is repository/source-SHA/evidence bound and uses a fixed candidate-kind enum, bounded printable statement, normalized trusted `.autodev/` evidence paths, SHA-256 evidence fingerprints, bounded tags, and an explicit human-only marker. Candidate IDs can be deterministically derived from trusted metadata. `AutonomousBacklog` is immutable, order-deterministic, duplicate-ID fail-closed, capped at 500 candidates, and independently fingerprinted. Serialized candidate/backlog data explicitly carries `execution_authority=false`, `auto_dispatch=false`, and `may_expand_scope=false`; attempts to deserialize authority escalation are rejected. Slice 001 has no workflow activation and does not interact with the active v1.5 proof002 Campaign.
+
