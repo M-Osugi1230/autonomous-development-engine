@@ -218,6 +218,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/multi_agent_reconciliation_probe.py
 
+      - name: Multi-Agent role runtime lifecycle proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/multi_agent_runtime_probe.py
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
