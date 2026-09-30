@@ -160,6 +160,13 @@
       "occurred_at": "2026-09-30T08:42:58.810985+00:00",
       "summary": "Merged Jules PR #17",
       "task_id": "v14rv3-001"
+    },
+    {
+      "event_id": "pr-merged-18-f4d2daa227f8",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-09-30T11:09:24.214606+00:00",
+      "summary": "Merged Jules PR #18",
+      "task_id": "v15mem1-001"
     }
   ],
   "schema_version": 1
