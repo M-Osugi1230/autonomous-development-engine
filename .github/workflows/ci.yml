@@ -123,6 +123,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/autonomous_backlog_selection_probe.py
 
+      - name: Autonomous Backlog PlanningGoal handoff proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/autonomous_backlog_goal_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
