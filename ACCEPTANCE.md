@@ -267,7 +267,7 @@
 - [x] Backlog data explicitly grants no execution authority, no automatic dispatch authority, and no scope-expansion authority.
 - [x] Candidate text rejects control characters, URLs, and common secret/token markers; untrusted evidence paths fail closed.
 - [x] A deterministic Autonomous Backlog schema proof is mandatory in CI.
-- [ ] Trusted extraction creates candidates only from controller-verified gaps/outcomes; provider prose cannot directly create executable work.
+- [x] Trusted extraction creates candidates only from controller-verified gaps/outcomes; provider prose cannot directly create executable work.
 - [ ] Candidate supersession, staleness, deduplication, and deterministic priority are controller-owned and fail closed.
 - [ ] Eligibility selection is repository/source-SHA bound, excludes human-only work, and selects at most one next Goal candidate.
 - [ ] Selected candidates become high-level PlanningGoal input only; Autonomous Planner + AcceptedPlan remain the sole task/scope authority.
