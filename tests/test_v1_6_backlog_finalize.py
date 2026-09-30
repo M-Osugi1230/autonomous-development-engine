@@ -142,6 +142,73 @@ class V16BacklogFinalizeTests(unittest.TestCase):
                 message="bad",
             )
 
+    def test_target_observations_requires_exact_accepted_path(self) -> None:
+        original = module._api_json
+        try:
+            def fake_api(path: str):
+                if "/pulls/21/files" in path:
+                    return [{"filename": "tests/test_pipeline.py"}]
+                if "/pulls/21" in path:
+                    return {
+                        "state": "closed",
+                        "merged_at": "2026-10-01T00:02:00Z",
+                        "created_at": "2026-10-01T00:00:00Z",
+                        "html_url": f"https://github.com/{REPO}/pull/21",
+                        "head": {"sha": "b" * 40},
+                        "base": {"sha": SHA},
+                        "merge_commit_sha": "c" * 40,
+                    }
+                if "/actions/runs" in path:
+                    return {
+                        "workflow_runs": [
+                            {
+                                "id": 101,
+                                "name": "Phase 1 and 2 checks",
+                                "event": "pull_request",
+                                "conclusion": "success",
+                                "head_sha": "b" * 40,
+                                "created_at": "2026-10-01T00:00:30Z",
+                                "updated_at": "2026-10-01T00:01:00Z",
+                            },
+                            {
+                                "id": 102,
+                                "name": "ADE Remote PR Gate",
+                                "event": "workflow_run",
+                                "conclusion": "success",
+                                "head_sha": "d" * 40,
+                                "created_at": "2026-10-01T00:01:10Z",
+                                "updated_at": "2026-10-01T00:01:30Z",
+                            },
+                        ]
+                    }
+                raise AssertionError(path)
+
+            module._api_json = fake_api
+            remote = module.RemoteExecutionReceipt(
+                task_id="proof-task",
+                target_repository=REPO,
+                pull_request_url=f"https://github.com/{REPO}/pull/21",
+                recorded_at="2026-10-01T00:02:00+00:00",
+                status="MERGED",
+            )
+            observed = module._target_observations(
+                remote=remote,
+                expected_base_sha=SHA,
+                expected_changed_paths=("tests/test_pipeline.py",),
+            )
+            self.assertEqual(
+                observed["changed_paths"],
+                ["tests/test_pipeline.py"],
+            )
+            with self.assertRaisesRegex(ValueError, "scope is not exact"):
+                module._target_observations(
+                    remote=remote,
+                    expected_base_sha=SHA,
+                    expected_changed_paths=("tests/test_models.py",),
+                )
+        finally:
+            module._api_json = original
+
     def test_positive_run_id_accepts_durable_string_or_int_only(self) -> None:
         self.assertEqual(module._positive_int(7, field="run"), 7)
         self.assertEqual(module._positive_int("8", field="run"), 8)

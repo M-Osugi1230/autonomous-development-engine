@@ -492,6 +492,38 @@ class V16AutonomousBacklogAuditTests(unittest.TestCase):
             self.assertFalse(result["v1_6_autonomous_backlog_graduated"])
             self.assertFalse(result["checks"]["candidate_reconstructed"])
 
+    def test_policy_bound_alternate_tests_path_can_graduate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root)
+            accepted = json.loads((root / ACCEPTED_PLAN_PATH).read_text())
+            accepted["plan"]["tasks"][0]["allowed_paths"] = [
+                "tests/test_pipeline.py"
+            ]
+            write(root, ACCEPTED_PLAN_PATH, accepted)
+
+            proof = json.loads((root / EVIDENCE_PATH).read_text())
+            proof["task"]["changed_paths"] = ["tests/test_pipeline.py"]
+            write(root, EVIDENCE_PATH, proof)
+
+            provenance = json.loads(
+                (root / PROOF_PROVENANCE_PATH).read_text()
+            )
+            provenance["target_pull_request"]["changed_paths"] = [
+                "tests/test_pipeline.py"
+            ]
+            write(root, PROOF_PROVENANCE_PATH, provenance)
+
+            result = audit(root)
+            self.assertTrue(
+                result["checks"]["accepted_plan_bounded"],
+                result,
+            )
+            self.assertTrue(
+                result["v1_6_autonomous_backlog_graduated"],
+                result,
+            )
+
     def test_accepted_plan_scope_expansion_blocks_graduation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

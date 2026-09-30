@@ -143,8 +143,11 @@ def audit(
     proof002_records = tuple(
         record for record in store.ledger.records if record.task_id == TASK_ID
     )
+    reused_memory_ids = {memory_id for memory_id, _ in memory_pairs}
     preproof_records = tuple(
-        record for record in store.ledger.records if record.task_id != TASK_ID
+        record
+        for record in store.ledger.records
+        if record.memory_id in reused_memory_ids
     )
     planning_store = DevelopmentMemoryStore(
         ledger=DevelopmentMemoryLedger(records=preproof_records)
@@ -211,6 +214,31 @@ def audit(
         ]
         if len(matches) == 1:
             final_feedback_record = matches[0]
+
+    graduation_store = None
+    if expected_feedback is not None:
+        graduation_store = DevelopmentMemoryStore(
+            ledger=DevelopmentMemoryLedger(
+                records=(
+                    *planning_store.ledger.records,
+                    expected_feedback,
+                )
+            )
+        )
+
+    live_records_by_id = {
+        record.memory_id: record
+        for record in store.ledger.records
+    }
+    graduation_records_preserved = (
+        graduation_store is not None
+        and all(
+            record.memory_id in live_records_by_id
+            and live_records_by_id[record.memory_id].canonical_dict()
+            == record.canonical_dict()
+            for record in graduation_store.ledger.records
+        )
+    )
 
     matching_target_records_before = [
         record
@@ -327,9 +355,11 @@ def audit(
         and feedback.get("memory_kind") == "VERIFIED_OUTCOME"
         and feedback.get("repository") == TARGET_REPOSITORY
         and feedback.get("source_sha") == merge_sha
+        and graduation_store is not None
         and _sha256(feedback.get("store_fingerprint"))
-        and feedback.get("store_fingerprint") == store.fingerprint()
-        and feedback.get("record_count") == len(store.ledger.records),
+        and feedback.get("store_fingerprint") == graduation_store.fingerprint()
+        and feedback.get("record_count") == len(graduation_store.ledger.records),
+        "append_only_store_preserves_graduation_records": graduation_records_preserved,
         "final_feedback_record_bound": expected_feedback is not None
         and final_feedback_record is not None
         and final_feedback_record.canonical_dict()
@@ -355,7 +385,12 @@ def audit(
         "missing_proofs": missing_proofs,
         "bootstrap_memory_id": bootstrap_pair[0],
         "planning_store_fingerprint": planning_store.fingerprint(),
-        "final_store_fingerprint": store.fingerprint(),
+        "final_store_fingerprint": (
+            graduation_store.fingerprint()
+            if graduation_store is not None
+            else None
+        ),
+        "live_store_fingerprint": store.fingerprint(),
         "reused_memory_count": len(memory_pairs),
         "v1_5_development_memory_graduated": all(checks.values()),
     }

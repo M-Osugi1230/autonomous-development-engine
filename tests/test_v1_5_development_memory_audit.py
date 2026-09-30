@@ -5,7 +5,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from ade.development_memory import DevelopmentMemoryRecord, MemoryKind
+from ade.development_memory import (
+    DevelopmentMemoryLedger,
+    DevelopmentMemoryRecord,
+    MemoryKind,
+)
 from ade.development_memory_feedback import build_verified_runtime_feedback_record
 from ade.development_memory_planning import build_planning_memory_bundle_from_store
 from ade.development_memory_store import DevelopmentMemoryStore, merge_memory_records
@@ -365,6 +369,65 @@ class V15DevelopmentMemoryAuditTests(unittest.TestCase):
             self.assertTrue(all(result["checks"].values()), result)
             self.assertEqual(result["reused_memory_count"], 1)
 
+    def test_later_append_only_memory_does_not_invalidate_graduation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            evidence = _evidence()
+            self._fixture(root, evidence)
+
+            later = DevelopmentMemoryRecord(
+                memory_id="mem-" + "3" * 24,
+                kind=MemoryKind.VERIFIED_OUTCOME,
+                repository=TARGET,
+                source_sha=MERGE_SHA,
+                statement=(
+                    "Trusted runtime verification completed with every required "
+                    "probe passing against the exact source SHA."
+                ),
+                task_id="v16later-001",
+                evidence_paths=(
+                    ".autodev/runtime-verification/v16later-001/contract.json",
+                    ".autodev/runtime-verification/v16later-001/receipt.json",
+                    ".autodev/runtime-verification/v16later-001/report.json",
+                ),
+                evidence_fingerprints=("8" * 64, "9" * 64, "a" * 64),
+                tags=("feedback", "runtime", "verified"),
+            )
+            graduation_store = _final_store()
+            live_store = merge_memory_records(
+                graduation_store,
+                (later,),
+            ).store
+            _write(
+                root,
+                ".autodev/development-memory.json",
+                live_store.canonical_dict(),
+            )
+
+            result = audit(root)
+            self.assertTrue(
+                result["v1_5_development_memory_graduated"],
+                result,
+            )
+            self.assertTrue(
+                result["checks"][
+                    "append_only_store_preserves_graduation_records"
+                ],
+                result,
+            )
+            self.assertEqual(
+                result["final_store_fingerprint"],
+                graduation_store.fingerprint(),
+            )
+            self.assertEqual(
+                result["live_store_fingerprint"],
+                live_store.fingerprint(),
+            )
+            self.assertNotEqual(
+                result["final_store_fingerprint"],
+                result["live_store_fingerprint"],
+            )
+
     def test_bootstrap_feedback_must_be_reused_by_proof002(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -442,6 +505,40 @@ class V15DevelopmentMemoryAuditTests(unittest.TestCase):
             self.assertFalse(result["checks"]["runtime_exact_merge_sha"])
             self.assertFalse(result["checks"]["no_manual_campaign_progress"])
 
+    def test_later_store_cannot_rewrite_graduation_record(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            evidence = _evidence()
+            self._fixture(root, evidence)
+
+            bootstrap = _bootstrap_record()
+            changed_bootstrap = DevelopmentMemoryRecord(
+                memory_id=bootstrap.memory_id,
+                kind=bootstrap.kind,
+                repository=bootstrap.repository,
+                source_sha=bootstrap.source_sha,
+                statement="Trusted verified outcome content was changed.",
+                task_id=bootstrap.task_id,
+                evidence_paths=bootstrap.evidence_paths,
+                evidence_fingerprints=bootstrap.evidence_fingerprints,
+                tags=bootstrap.tags,
+            )
+            bad_store = DevelopmentMemoryStore(
+                ledger=DevelopmentMemoryLedger(
+                    records=(changed_bootstrap, _proof002_record())
+                )
+            )
+            _write(
+                root,
+                ".autodev/development-memory.json",
+                bad_store.canonical_dict(),
+            )
+            result = audit(root)
+            self.assertFalse(result["v1_5_development_memory_graduated"])
+            self.assertFalse(
+                result["checks"]["exact_reused_record_fingerprints"]
+            )
+
     def test_final_store_requires_exact_proof002_feedback_record(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -454,7 +551,12 @@ class V15DevelopmentMemoryAuditTests(unittest.TestCase):
             )
             result = audit(root)
             self.assertFalse(result["v1_5_development_memory_graduated"])
-            self.assertFalse(result["checks"]["runtime_feedback_added"])
+            self.assertTrue(result["checks"]["runtime_feedback_added"])
+            self.assertFalse(
+                result["checks"][
+                    "append_only_store_preserves_graduation_records"
+                ]
+            )
             self.assertFalse(result["checks"]["final_feedback_record_bound"])
 
 
