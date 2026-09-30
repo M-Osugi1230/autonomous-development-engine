@@ -114,6 +114,53 @@ class AutonomousBacklogSelectionTests(unittest.TestCase):
         self.assertIsNone(selection.selected_candidate_id)
         self.assertEqual(selection.eligible_candidate_ids, ())
 
+    def test_retired_candidates_are_excluded_from_future_selection(self) -> None:
+        acceptance = item(
+            "backlog-acceptance",
+            kind=BacklogCandidateKind.ACCEPTANCE_GAP,
+            tags=("acceptance",),
+        )
+        remediation = item(
+            "backlog-remediation",
+            kind=BacklogCandidateKind.VERIFIED_REMEDIATION,
+            tags=("remediation",),
+        )
+        backlog = AutonomousBacklog(candidates=(acceptance, remediation))
+        resolution = resolve_autonomous_backlog(
+            backlog,
+            current_sources={REPO: SHA},
+        )
+        selection = select_next_backlog_candidate(
+            backlog,
+            resolution,
+            repository=REPO,
+            source_sha=SHA,
+            retired_candidate_ids=("backlog-acceptance",),
+        )
+        self.assertEqual(selection.selected_candidate_id, "backlog-remediation")
+        self.assertEqual(selection.retired_candidate_ids, ("backlog-acceptance",))
+        self.assertNotIn("backlog-acceptance", selection.eligible_candidate_ids)
+
+    def test_unknown_retirement_fails_closed(self) -> None:
+        value = item(
+            "backlog-one",
+            kind=BacklogCandidateKind.ACCEPTANCE_GAP,
+            tags=("acceptance",),
+        )
+        backlog = AutonomousBacklog(candidates=(value,))
+        resolution = resolve_autonomous_backlog(
+            backlog,
+            current_sources={REPO: SHA},
+        )
+        with self.assertRaisesRegex(AutonomousBacklogError, "unknown"):
+            select_next_backlog_candidate(
+                backlog,
+                resolution,
+                repository=REPO,
+                source_sha=SHA,
+                retired_candidate_ids=("backlog-missing",),
+            )
+
     def test_selection_rejects_wrong_source_or_mismatched_resolution(self) -> None:
         value = item(
             "backlog-one",
