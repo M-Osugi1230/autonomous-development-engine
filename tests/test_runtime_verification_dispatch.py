@@ -89,6 +89,87 @@ class RuntimeVerificationDispatchTests(unittest.TestCase):
                         receipt=receipt,
                     )
 
+    def test_verified_v15_bootstrap_feedback_dispatches_successor(self) -> None:
+        module = load_module()
+        contract, _, _ = self._values()
+        receipt = RuntimeVerificationReceipt(
+            verification_id=contract.verification_id,
+            task_id="v15mem1-001",
+            target_repository=contract.target_repository,
+            source_sha=contract.source_sha,
+            contract_fingerprint=contract.fingerprint(),
+            registry_fingerprint="b" * 64,
+            policy_fingerprint="c" * 64,
+            status="VERIFIED",
+            dispatch_count=1,
+        )
+
+        class FakeGitHub:
+            def __init__(self) -> None:
+                self.calls: list[tuple[str, dict]] = []
+
+            def dispatch(self, event_type: str, payload: dict) -> None:
+                self.calls.append((event_type, dict(payload)))
+
+        gh = FakeGitHub()
+        outcome = module._dispatch_development_memory_successor(
+            gh,
+            receipt=receipt,
+            memory_feedback={"state": "ADDED"},
+        )
+        self.assertEqual(outcome, "DISPATCHED")
+        self.assertEqual(len(gh.calls), 1)
+        self.assertEqual(gh.calls[0][0], "ade_development_memory_successor")
+        self.assertEqual(gh.calls[0][1]["task_id"], "v15mem1-001")
+
+    def test_successor_dispatch_is_not_runtime_success_authority(self) -> None:
+        module = load_module()
+        contract, _, _ = self._values()
+        ordinary = RuntimeVerificationReceipt(
+            verification_id=contract.verification_id,
+            task_id="other-task",
+            target_repository=contract.target_repository,
+            source_sha=contract.source_sha,
+            contract_fingerprint=contract.fingerprint(),
+            registry_fingerprint="b" * 64,
+            policy_fingerprint="c" * 64,
+            status="VERIFIED",
+            dispatch_count=1,
+        )
+
+        class FakeGitHub:
+            def dispatch(self, event_type: str, payload: dict) -> None:
+                raise AssertionError("dispatch must not be called")
+
+        self.assertEqual(
+            module._dispatch_development_memory_successor(
+                FakeGitHub(),
+                receipt=ordinary,
+                memory_feedback={"state": "ADDED"},
+            ),
+            "NOT_APPLICABLE",
+        )
+
+        bootstrap = RuntimeVerificationReceipt(
+            verification_id=contract.verification_id,
+            task_id="v15mem1-001",
+            target_repository=contract.target_repository,
+            source_sha=contract.source_sha,
+            contract_fingerprint=contract.fingerprint(),
+            registry_fingerprint="b" * 64,
+            policy_fingerprint="c" * 64,
+            status="VERIFIED",
+            dispatch_count=1,
+        )
+        self.assertEqual(
+            module._dispatch_development_memory_successor(
+                FakeGitHub(),
+                receipt=bootstrap,
+                memory_feedback={"state": "FAILED"},
+            ),
+            "WAITING_FOR_DURABLE_MEMORY",
+        )
+
     def test_runtime_evidence_paths_reject_unsafe_task_id(self) -> None:
         from ade.runtime_verification_trigger import runtime_verification_paths
 

@@ -1,0 +1,46 @@
+name: ADE Development Memory Successor
+
+on:
+  repository_dispatch:
+    types:
+      - ade_development_memory_successor
+  schedule:
+    - cron: "13,28,43,58 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-development-memory-successor
+  cancel-in-progress: false
+
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate bootstrap and arm durable-store proof
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/v1_5_memory_successor.py
+
+      - name: Upload Development Memory successor evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-development-memory-successor-result
+          path: .autodev/runtime/v1-5-memory-successor-result.json
+          if-no-files-found: error
+          retention-days: 30
