@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.5-development-memory-campaign-002",
+  "campaign_id": "abgproof-campaign-777c97294d4bc932",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-30T11:11:28.316279+00:00",
-  "plan_fingerprint": "5d2fc1f34955613652ffa9d33a0469cc304e3dacee377c9d3f9f018e597cba6e",
+  "dispatched_at": "2026-09-30T17:32:26.415031+00:00",
+  "plan_fingerprint": "86d2f69c6bb21a1c46a70560710a2d89d213bba10b6e754a8008fbd6594ef75a",
   "run_attempt": "1",
-  "run_id": "36706989643",
+  "run_id": "36752097727",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "3950fcefbd8ba65ce430b26274104d58034fffb6",
+  "source_sha": "c2012dc68965103522b7db799c23aa893df96d39",
   "status": "DISPATCHED",
-  "task_id": "v15mem2-001"
+  "task_id": "abgproof-777c97294d-001"
 }
