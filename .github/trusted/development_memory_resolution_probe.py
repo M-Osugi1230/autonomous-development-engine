@@ -108,6 +108,8 @@ def main() -> int:
                 superseded_memory_id="memory-old-rule",
                 successor_memory_id="memory-new-rule",
                 reason=MemorySupersessionReason.CORRECTED,
+                evidence_path=".autodev/evidence/supersession.json",
+                evidence_fingerprint="7" * 64,
             ),
         ),
     )
@@ -137,6 +139,8 @@ def main() -> int:
                 "conflict_fail_closed": True,
                 "historical_lessons_preserved": True,
                 "current_source_required": True,
+                "supersession_evidence_required": True,
+                "same_subject_supersession_required": True,
                 "eligible_memory_ids": sorted(eligible),
                 "resolution_fingerprint": resolution.fingerprint(),
             },
