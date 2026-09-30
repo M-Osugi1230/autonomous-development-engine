@@ -31,6 +31,34 @@ def load_module():
 
 
 class RuntimeVerificationDispatchTests(unittest.TestCase):
+    def test_v17_phase_requires_runtime_provenance(self) -> None:
+        module = load_module()
+        self.assertTrue(
+            module._runtime_provenance_required(
+                "v17ma1-001",
+                "v1.7-multi-agent",
+            )
+        )
+        self.assertTrue(
+            module._runtime_provenance_required(
+                "any-v16-task",
+                "v1.6-autonomous-backlog",
+            )
+        )
+        self.assertTrue(
+            module._runtime_provenance_required(
+                "v15mem2-001",
+                "v1.5-development-memory",
+            )
+        )
+        self.assertFalse(
+            module._runtime_provenance_required(
+                "legacy-task",
+                "v1.3-repository-intelligence",
+            )
+        )
+
+
     def _values(self):
         contract = RuntimeVerificationContract(
             verification_id=f"rv-{SHA}",
