@@ -38,6 +38,7 @@ from runtime_workspace import prepare_repository_runtime_workspace
 RESULT_PATH = Path(".autodev/runtime/runtime-verification-dispatch-result.json")
 V1_5_FINALIZER_TASK_ID = "v15mem2-001"
 V1_6_BACKLOG_PHASE = "v1.6-autonomous-backlog"
+V1_7_MULTI_AGENT_PHASE = "v1.7-multi-agent"
 
 
 def _runtime_provenance_path(task_id: str) -> str:
@@ -393,7 +394,7 @@ def main() -> int:
             phase = _active_phase(gh)
             needs_provenance = (
                 receipt.task_id == V1_5_FINALIZER_TASK_ID
-                or phase == V1_6_BACKLOG_PHASE
+                or phase in {V1_6_BACKLOG_PHASE, V1_7_MULTI_AGENT_PHASE}
             )
             if needs_provenance and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
                 try:
@@ -544,7 +545,7 @@ def main() -> int:
             phase = _active_phase(gh)
             needs_provenance = (
                 final_receipt.task_id == V1_5_FINALIZER_TASK_ID
-                or phase == V1_6_BACKLOG_PHASE
+                or phase in {V1_6_BACKLOG_PHASE, V1_7_MULTI_AGENT_PHASE}
             )
             if needs_provenance:
                 runtime_provenance = _persist_runtime_provenance(
