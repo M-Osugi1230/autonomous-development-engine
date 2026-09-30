@@ -1,0 +1,29 @@
+{
+  "fingerprint": "86d2f69c6bb21a1c46a70560710a2d89d213bba10b6e754a8008fbd6594ef75a",
+  "plan": {
+    "goal": "Resolve trusted Autonomous Backlog candidate: Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Add regression follow-up test in `tests/test_pipeline.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_pipeline.py"
+        ],
+        "depends_on": [],
+        "prompt": "Goal: Resolve trusted Autonomous Backlog candidate: Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority. Outcome: Add regression follow-up test in `tests/test_pipeline.py`. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "abgproof-777c97294d-001",
+        "title": "Add regression follow-up test in `tests/test_pipeline.py`."
+      }
+    ]
+  },
+  "schema_version": 1,
+  "status": "ACCEPTED"
+}
