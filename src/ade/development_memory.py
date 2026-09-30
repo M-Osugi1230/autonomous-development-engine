@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 import hashlib
 import json
@@ -82,7 +82,7 @@ def _timestamp(value: object) -> str:
         raise DevelopmentMemoryError("observed_at must be valid ISO-8601") from exc
     if parsed.tzinfo is None or parsed.utcoffset() is None:
         raise DevelopmentMemoryError("observed_at must be timezone-aware")
-    return normalized
+    return parsed.astimezone(UTC).isoformat()
 
 
 def _evidence_ref(value: object) -> str:
