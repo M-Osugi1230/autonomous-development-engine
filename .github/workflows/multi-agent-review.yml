@@ -1,0 +1,48 @@
+name: ADE Multi-Agent Review
+
+on:
+  repository_dispatch:
+    types:
+      - ade_multi_agent_review
+  schedule:
+    - cron: "5,20,35,50 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-multi-agent-review
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run bounded independent reviewer
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          ADE_JULES_DAILY_TASK_LIMIT: "15"
+        run: python .github/trusted/multi_agent_review_cycle.py
+
+      - name: Upload Multi-Agent review result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-multi-agent-review-result
+          path: .autodev/runtime/multi-agent-review-result.json
+          if-no-files-found: error
+          retention-days: 30
