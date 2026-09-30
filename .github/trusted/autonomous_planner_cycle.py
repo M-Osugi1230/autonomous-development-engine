@@ -267,8 +267,8 @@ def _persist_activation(
     content_summary: RepositoryContentSummary,
     relationship_graph: RepositoryRelationshipGraph,
     repository_context: RepositoryPlannerContext,
-    development_memory: DevelopmentMemoryPlanningBundle | None,
     attempt: int,
+    development_memory: DevelopmentMemoryPlanningBundle | None = None,
 ) -> None:
     proposal = PlannerProposal.from_dict(result.raw_proposal).canonical_dict()
     proposed_paths = tuple(
