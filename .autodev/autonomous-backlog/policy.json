@@ -1,0 +1,12 @@
+{
+  "allowed_path_prefixes": [
+    "tests"
+  ],
+  "base_branch": "main",
+  "max_tasks": 1,
+  "min_tasks": 1,
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "request_prefix": "abgproof",
+  "schema_version": 1,
+  "scope_source": "trusted-backlog-planning-policy-v1"
+}
