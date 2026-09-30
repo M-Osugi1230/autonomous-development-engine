@@ -1,0 +1,41 @@
+{
+  "campaign_id": "v1.5-development-memory-campaign-001",
+  "durable_memory_feedback": {
+    "memory_fingerprint": "72a5c70e6eed1f6af559c3182a2f8ccffea6c340eeb5163aba549cde38456e99",
+    "memory_id": "mem-3d6660d55ad11cf3941ee9fb",
+    "store_fingerprint": "596ab4cafa69d6197cf17475e0c0b02dcba35bf1f90f5331ce5da7cd76802cf4",
+    "store_record_count": 1
+  },
+  "evidence_policy": "Proof001 is bootstrap evidence only. v1.5 graduation requires proof002 to reuse the durable Development Memory store directly.",
+  "external_execution": {
+    "pull_request_url": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/18",
+    "status": "MERGED"
+  },
+  "graduation_eligible": false,
+  "planner_memory": {
+    "authority": "advisory-data-only",
+    "current_source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+    "execution_authority": false,
+    "memory_ids": [
+      "mem-bbe21eba48d98909b1482e8d",
+      "mem-ece808aff9fb89dc61413b58"
+    ],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "source_evidence_fingerprint": "74d5db26bb2d3314d9ed7cf0bfc6c22b97f9a34ddc88e5ab8c98e6d82adccae9",
+    "source_evidence_path": ".autodev/campaign-evidence/v1.4-runtime-verification-proof-003.json",
+    "used": true
+  },
+  "request_id": "v1.5-development-memory-proof-001",
+  "runtime_verification": {
+    "dispatch_count": 1,
+    "source_sha": "098ad46eacba0da82bf8c9551df48f7401bf54c6",
+    "status": "VERIFIED",
+    "verification_id": "rv-098ad46eacba0da82bf8c9551df48f7401bf54c6"
+  },
+  "schema_version": 1,
+  "successor_request_id": "v1.5-development-memory-proof-002",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "task_id": "v15mem1-001",
+  "version": "v1.5-bootstrap"
+}
