@@ -97,7 +97,8 @@
     },
     "milestone": "v1.5-proof-002-pending",
     "next_required_human_action": null,
-    "next_system_action": "zero-touch-start",
+    "next_system_action": "resume-after-provider-quota",
+    "pause_reason": "jules-rolling-quota",
     "phase": "v1.5-development-memory",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -131,6 +132,7 @@
     "repository_intelligence_relationship_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
     "repository_intelligence_snapshot_fingerprint": "739cc9ab4122a74b79b924b1929fc280e6033add5fc38a2e48abd46f4b9fe7ca",
     "repository_intelligence_source_sha": "098ad46eacba0da82bf8c9551df48f7401bf54c6",
+    "resume_after": "2026-09-30T16:55:29.834903+00:00",
     "scheduler": "dag",
     "superseded_v1_4_proofs": [
       {
@@ -207,6 +209,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "READY",
-  "updated_at": "2026-09-30T11:11:13.081068+00:00"
+  "status": "PAUSED_QUOTA",
+  "updated_at": "2026-09-30T11:11:45.898414+00:00"
 }
