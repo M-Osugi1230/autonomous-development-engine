@@ -1,0 +1,91 @@
+{
+  "accepted_plan_fingerprint": "86d2f69c6bb21a1c46a70560710a2d89d213bba10b6e754a8008fbd6594ef75a",
+  "campaign_id": "abgproof-campaign-777c97294d4bc932",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "358a4ad85b1104ccd76a34ebf513d0cf14fe0a0d9f990b33fd8036f3d55eb234",
+    "current_source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+    "execution_authority": false,
+    "extracted_record_count": 2,
+    "memory_fingerprints": [
+      "dbe24350a2fe6c0b7ab58494af3518af0aa7e97928312a4c733b03f4c059bb53"
+    ],
+    "memory_ids": [
+      "mem-786d667480ca61ad8f1a9f0f"
+    ],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "resolution_fingerprint": "8ab8839de2d12294ce60e8ee2e2c67c6e2ca1aa4c2f8e32428d725130b49b79e",
+    "retrieval_fingerprint": "4604f3a0ca3f9cca9427ee0eb8df868ba7722449422bc8df51f879cdbe855604",
+    "retrieved_record_count": 1,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "d64743456ef0a231d5a86d471d1697a5daf7eef3825822037bd4ebd9c25229de",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": true
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "e4bb792a008504b2c2620275e2351ddd57512b910afefd738a31879823b26119",
+  "proposal": {
+    "goal": "Resolve trusted Autonomous Backlog candidate: Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Add regression follow-up test in `tests/test_pipeline.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_pipeline.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Add regression follow-up test in `tests/test_pipeline.py`.",
+        "title": "Add regression follow-up test in `tests/test_pipeline.py`."
+      }
+    ]
+  },
+  "proposal_fingerprint": "fbd2930597f4062e5629068f97e4c60afe0a27a962b6693a40dcf817dee628d4",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 1,
+  "provider_plan_steps_sha256": "c6b9fdf6aa212e5161956292d6887b1346fcb90b894ab802d6b16f95f0aacb26",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "b93bd68922fcfe8673fc1fffe7754113e9ae1709736847ead688a196ba8f2ef4",
+  "repository_context_fingerprint": "09c939e7a45095cec480fccaec264c37edd2f599d682f7eba1684de30f8b1863",
+  "repository_impact_analysis_fingerprint": "85f1e0736495f751d75d0e4a0f8e01ef32ebe17537de98346c84ca6061c8a1f9",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "365a3a069ecabad098effa3b1d1ef6b67343e993bf5fa168e9e0d70bf8d86ff5",
+  "repository_source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+  "request": {
+    "allowed_path_prefixes": [
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "abgproof-campaign-777c97294d4bc932",
+    "goal": "Resolve trusted Autonomous Backlog candidate: Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority.",
+    "id_prefix": "abgproof-777c97294d",
+    "max_tasks": 1,
+    "request_id": "abgproof-request-777c97294d4bc932",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "request_fingerprint": "be60fba89697942072d4b5d279550908e035766d2a5601d807b0ca5eafdf46c6",
+  "schema_version": 1,
+  "task_ids": [
+    "abgproof-777c97294d-001"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 36751985370
+}
