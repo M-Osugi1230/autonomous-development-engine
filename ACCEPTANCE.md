@@ -284,7 +284,7 @@
 - [x] Unknown fields, authority escalation, cross-task/source trust-anchor drift, unsafe evidence paths, URLs, and secret-like objective text fail closed.
 - [x] A deterministic Multi-Agent foundation proof is mandatory in CI.
 - [x] Trusted controller logic derives role assignments from an AcceptedPlan and provider availability without accepting provider-authored scope or authority.
-- [ ] Reviewer/diagnostic contributions are immutable evidence objects and cannot directly mutate code, Campaign state, Acceptance, merge state, or Runtime Verification.
+- [x] Reviewer/diagnostic contributions are immutable evidence objects and cannot directly mutate code, Campaign state, Acceptance, merge state, or Runtime Verification.
 - [ ] Conflicting agent contributions are reconciled deterministically by controller policy; unresolved material conflicts enter HUMAN_WAIT rather than majority voting.
 - [ ] Provider-session lifecycle preserves task/provider affinity, lease safety, quota recovery, and duplicate suppression independently for each role.
 - [ ] A real external-repository proof demonstrates bounded implementer + independent reviewer collaboration through the existing trusted merge/runtime gates.
