@@ -491,7 +491,10 @@ def main() -> int:
                 receipt=final_receipt,
                 memory_feedback=memory_feedback,
             )
-            if memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
+            if (
+                final_receipt.task_id == V1_5_FINALIZER_TASK_ID
+                and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}
+            ):
                 runtime_provenance = _persist_runtime_provenance(
                     gh,
                     event_payload=event,
