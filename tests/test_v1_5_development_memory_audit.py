@@ -551,7 +551,12 @@ class V15DevelopmentMemoryAuditTests(unittest.TestCase):
             )
             result = audit(root)
             self.assertFalse(result["v1_5_development_memory_graduated"])
-            self.assertFalse(result["checks"]["runtime_feedback_added"])
+            self.assertTrue(result["checks"]["runtime_feedback_added"])
+            self.assertFalse(
+                result["checks"][
+                    "append_only_store_preserves_graduation_records"
+                ]
+            )
             self.assertFalse(result["checks"]["final_feedback_record_bound"])
 
 
