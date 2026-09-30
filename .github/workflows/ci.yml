@@ -228,6 +228,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/multi_agent_correction_probe.py
 
+      - name: Multi-Agent reviewer clearance proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/multi_agent_review_gate_probe.py
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
