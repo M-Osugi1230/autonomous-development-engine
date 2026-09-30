@@ -117,6 +117,8 @@
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
     "queue_exhausted": false,
+    "recovery_action": "REPAIR",
+    "recovery_failure": "CI_FAILURE",
     "repository_intelligence_content_fingerprint": "213576cd6283e3134b56eac93f10060f9b8dd1daa9d7bbf3eceb5b883a2500d2",
     "repository_intelligence_context_fingerprint": "44ed339948ac2a736db1672b8d1993dae34f96d9fa5c3b0c4977512c10c7d007",
     "repository_intelligence_impact_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
@@ -153,6 +155,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "PAUSED_QUOTA",
+  "status": "READY",
   "updated_at": "2026-09-30T00:43:46.927005+00:00"
 }
