@@ -1,0 +1,13 @@
+{
+  "execution_authority": false,
+  "providers": [
+    {
+      "availability": "AVAILABLE",
+      "evidence_basis": "authenticated-source-visible-before-review-session",
+      "provider_id": "jules"
+    }
+  ],
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "schema_version": 1,
+  "source_sha": "01729fb00f49b4d6013a958a0a9adf7924c4aa2c"
+}
