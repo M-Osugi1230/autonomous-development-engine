@@ -259,3 +259,19 @@
 - [ ] A successor real external-repository proof reuses records directly from `.autodev/development-memory.json`, with exact reused record fingerprints persisted before execution and no scope/Acceptance authority gained from memory.
 - [ ] A dedicated v1.5 Graduation audit proves the trusted memory path end to end, including durable-store reuse rather than bootstrap evidence reuse alone.
 
+## ADE v1.6 — Autonomous Backlog
+
+- [x] Backlog candidates use a strict versioned immutable schema with deterministic fingerprints.
+- [x] Every candidate is bound to an explicit repository, source SHA, trusted `.autodev/` evidence paths, and SHA-256 evidence fingerprints.
+- [x] The backlog ledger is order-deterministic, duplicate-ID safe, bounded, and fingerprinted independently of insertion order.
+- [x] Backlog data explicitly grants no execution authority, no automatic dispatch authority, and no scope-expansion authority.
+- [x] Candidate text rejects control characters, URLs, and common secret/token markers; untrusted evidence paths fail closed.
+- [x] A deterministic Autonomous Backlog schema proof is mandatory in CI.
+- [ ] Trusted extraction creates candidates only from controller-verified gaps/outcomes; provider prose cannot directly create executable work.
+- [ ] Candidate supersession, staleness, deduplication, and deterministic priority are controller-owned and fail closed.
+- [ ] Eligibility selection is repository/source-SHA bound, excludes human-only work, and selects at most one next Goal candidate.
+- [ ] Selected candidates become high-level PlanningGoal input only; Autonomous Planner + AcceptedPlan remain the sole task/scope authority.
+- [ ] Completion feedback retires a candidate only after trusted merge/runtime evidence proves the selected Goal outcome.
+- [ ] A real external-repository proof demonstrates evidence -> backlog candidate -> selected Goal -> AcceptedPlan -> trusted execution -> verified retirement without manual per-task authoring.
+- [ ] A dedicated v1.6 Graduation audit proves the Autonomous Backlog path end to end.
+
