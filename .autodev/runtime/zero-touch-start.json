@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.4-runtime-verification-campaign-003",
+  "campaign_id": "v1.5-development-memory-campaign-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-30T08:38:09.886688+00:00",
-  "plan_fingerprint": "65a168f047c1a3051ae296fd5f147726fd537ffce0d3e179f3868eb55da92ab6",
+  "dispatched_at": "2026-09-30T09:29:32.062223+00:00",
+  "plan_fingerprint": "e6fb3847224ddee3c2cf053abf7acac0bd1c49a8ef355a2ccceb51cb0904770e",
   "run_attempt": "1",
-  "run_id": "36690919246",
+  "run_id": "36696433516",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "f222d989cc13e1d0ae1a0a8cd6446e4e824fcac3",
+  "source_sha": "bbb4fb9e7ba0a6d67d952bdf92d7c34cb3edd814",
   "status": "DISPATCHED",
-  "task_id": "v14rv3-001"
+  "task_id": "v15mem1-001"
 }
