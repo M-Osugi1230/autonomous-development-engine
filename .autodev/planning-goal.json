@@ -3,12 +3,11 @@
     "tests"
   ],
   "base_branch": "main",
-  "campaign_id": "v1.5-development-memory-campaign-002",
-  "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses EN SPACE (U+2002) and HAIR SPACE (U+200A) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
-  "id_prefix": "v15mem2",
+  "campaign_id": "abgproof-campaign-777c97294d4bc932",
+  "goal": "Resolve trusted Autonomous Backlog candidate: Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority.",
+  "id_prefix": "abgproof-777c97294d",
   "max_tasks": 1,
-  "min_tasks": 1,
-  "request_id": "v1.5-development-memory-proof-002",
+  "request_id": "abgproof-request-777c97294d4bc932",
   "schema_version": 1,
   "target_repository": "M-Osugi1230/one-minute-thought-experiments"
 }
