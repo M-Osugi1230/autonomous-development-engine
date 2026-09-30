@@ -77,8 +77,10 @@ def _identifier(value: str, *, field: str) -> str:
 def _bounded_text(value: str, *, field: str, max_chars: int) -> str:
     if not isinstance(value, str):
         raise AutonomousBacklogError(f"{field} must be text")
+    if _CONTROL.search(value):
+        raise AutonomousBacklogError(f"{field} must be bounded printable text")
     normalized = " ".join(value.strip().split())
-    if not normalized or len(normalized) > max_chars or _CONTROL.search(normalized):
+    if not normalized or len(normalized) > max_chars:
         raise AutonomousBacklogError(f"{field} must be bounded printable text")
     folded = normalized.casefold()
     if any(marker in folded for marker in _SECRET_MARKERS):
