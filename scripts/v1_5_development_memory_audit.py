@@ -256,12 +256,13 @@ def audit(
             ".autodev/runtime-verification/v15mem1-001/report.json",
         )
         and _sha256(runtime.get("report_fingerprint"))
-        and store_record.evidence_fingerprints
-        == (
+        and len(store_record.evidence_fingerprints) == 3
+        and set(store_record.evidence_fingerprints)
+        == {
             raw_runtime_receipt.get("contract_fingerprint"),
             _fingerprint(raw_runtime_receipt),
             raw_runtime_report_wrapper.get("report_fingerprint"),
-        ),
+        },
         "campaign_completed": campaign.get("campaign_id")
         == "v1.5-development-memory-campaign-001"
         and campaign.get("status") == "COMPLETED"
