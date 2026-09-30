@@ -11,6 +11,8 @@ from .autonomous_backlog import (
     BacklogCandidateKind,
     build_candidate_id,
 )
+from .development_memory import MemoryKind
+from .development_memory_store import DevelopmentMemoryStore
 from .recovery import RecoveryAction, RecoveryFailure
 from .recovery_runtime import RecoveryRecord
 from .runtime_verification import RuntimeVerificationContract
@@ -184,3 +186,64 @@ def extract_runtime_gap_candidate(
         source_phase=source_phase,
         human_only=True,
     )
+
+def extract_verified_memory_followup_candidate(
+    *,
+    store_path: str,
+    store_payload: object,
+    memory_id: str,
+    source_phase: str | None = None,
+) -> BacklogCandidate:
+    try:
+        store = DevelopmentMemoryStore.from_dict(store_payload)
+    except (TypeError, ValueError) as exc:
+        raise AutonomousBacklogError(
+            "Development Memory store evidence is invalid"
+        ) from exc
+
+    matches = [
+        record
+        for record in store.ledger.records
+        if record.memory_id == memory_id
+    ]
+    if len(matches) != 1:
+        raise AutonomousBacklogError(
+            "verified memory follow-up requires exactly one memory record"
+        )
+    record = matches[0]
+    if record.kind is not MemoryKind.VERIFIED_OUTCOME:
+        raise AutonomousBacklogError(
+            "memory follow-up requires VERIFIED_OUTCOME"
+        )
+    required_tags = {"feedback", "runtime", "verified"}
+    if not required_tags.issubset(set(record.tags)):
+        raise AutonomousBacklogError(
+            "memory follow-up requires trusted runtime verified tags"
+        )
+
+    store_fingerprint = store.fingerprint()
+    record_fingerprint = record.fingerprint()
+    statement = (
+        f"Trusted verified outcome {record.memory_id} is available for one "
+        "bounded regression follow-up without granting execution authority."
+    )
+    candidate_id = build_candidate_id(
+        kind=BacklogCandidateKind.MEMORY_FOLLOWUP,
+        repository=record.repository,
+        source_sha=record.source_sha,
+        statement=statement,
+        evidence_fingerprints=(store_fingerprint, record_fingerprint),
+    )
+    return BacklogCandidate(
+        candidate_id=candidate_id,
+        kind=BacklogCandidateKind.MEMORY_FOLLOWUP,
+        repository=record.repository,
+        source_sha=record.source_sha,
+        statement=statement,
+        evidence_paths=(store_path,),
+        evidence_fingerprints=(store_fingerprint, record_fingerprint),
+        tags=("memory", "runtime", "verified"),
+        source_phase=source_phase,
+        human_only=False,
+    )
+
