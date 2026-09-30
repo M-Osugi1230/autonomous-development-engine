@@ -163,8 +163,30 @@ def _write_once_json(
         raise ValueError(f"immutable v1.6 artifact drift: {path}")
 
 
+def _local_v1_5_graduated(root: Path = Path(".")) -> bool:
+    path = root / STATE_PATH
+    if not path.is_file():
+        return False
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("ProjectState must be a JSON object")
+    metadata = payload.get("metadata")
+    metadata = metadata if isinstance(metadata, dict) else {}
+    return metadata.get("v1_5_graduated") is True
+
+
 def main() -> int:
     try:
+        if not _local_v1_5_graduated():
+            payload = {
+                "schema_version": 1,
+                "state": "NOOP",
+                "reason": "v1.5-not-graduated",
+            }
+            _write_result(payload)
+            print(json.dumps(payload, sort_keys=True))
+            return 0
+
         audit_result = audit_v1_5(Path("."))
         if not audit_result.get("v1_5_development_memory_graduated"):
             payload = {

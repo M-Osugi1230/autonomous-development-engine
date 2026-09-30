@@ -133,6 +133,26 @@ class V16BacklogSuccessorTests(unittest.TestCase):
         )
         self.assertEqual(left, right)
 
+    def test_local_pregraduation_state_is_safe_noop_gate(self) -> None:
+        import json
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            path = root / module.STATE_PATH
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(
+                json.dumps(state(graduated=False)),
+                encoding="utf-8",
+            )
+            self.assertFalse(module._local_v1_5_graduated(root))
+
+            path.write_text(
+                json.dumps(state(graduated=True)),
+                encoding="utf-8",
+            )
+            self.assertTrue(module._local_v1_5_graduated(root))
+
     def test_v15_graduation_is_required(self) -> None:
         with self.assertRaisesRegex(ValueError, "not graduated"):
             module.build_activation(
