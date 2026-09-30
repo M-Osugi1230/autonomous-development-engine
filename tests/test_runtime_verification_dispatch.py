@@ -32,6 +32,7 @@ def load_module():
 
 class RuntimeVerificationDispatchTests(unittest.TestCase):
     def test_v17_phase_requires_runtime_provenance(self) -> None:
+        module = load_module()
         self.assertTrue(
             module._runtime_provenance_required(
                 "v17ma1-001",
