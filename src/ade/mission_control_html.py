@@ -319,6 +319,9 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
         <div><dt>Phase</dt><dd>$phase</dd></div>
         <div><dt>Milestone</dt><dd>$milestone</dd></div>
         <div><dt>Current task</dt><dd>$current_task</dd></div>
+        <div><dt>Next system action</dt><dd>$next_system_action</dd></div>
+        <div><dt>Human action</dt><dd>$next_required_human_action</dd></div>
+        <div><dt>Resume after</dt><dd>$resume_after</dd></div>
         <div><dt>State updated</dt><dd>$state_updated</dd></div>
         <div><dt>Queue exhausted</dt><dd>$queue_exhausted</dd></div>
         <div><dt>Failed tasks</dt><dd>$failed</dd></div>
@@ -399,6 +402,9 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
         phase=_text(snapshot.phase),
         milestone=_text(snapshot.milestone),
         current_task=_text(snapshot.current_task_id),
+        next_system_action=_text(snapshot.next_system_action),
+        next_required_human_action=_text(snapshot.next_required_human_action),
+        resume_after=_text(snapshot.resume_after),
         state_updated=_text(snapshot.state_updated_at),
         queue_exhausted="yes" if snapshot.queue_exhausted else "no",
         failed=_text(snapshot.failed_tasks),
