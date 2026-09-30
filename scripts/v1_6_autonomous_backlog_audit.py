@@ -222,6 +222,18 @@ def audit(
         else {}
     )
     task_id = accepted_task.get("task_id")
+    accepted_paths = accepted_task.get("allowed_paths")
+    accepted_paths = accepted_paths if isinstance(accepted_paths, list) else []
+    changed_paths = task.get("changed_paths")
+    changed_paths = changed_paths if isinstance(changed_paths, list) else []
+    exact_tests_scope = (
+        len(accepted_paths) == 1
+        and isinstance(accepted_paths[0], str)
+        and accepted_paths[0].startswith("tests/")
+        and ".." not in accepted_paths[0].split("/")
+        and "\\" not in accepted_paths[0]
+        and changed_paths == accepted_paths
+    )
     contract_path = (
         f".autodev/runtime-verification/{task_id}/contract.json"
         if isinstance(task_id, str)
@@ -390,11 +402,10 @@ def audit(
         == planner_evidence.get("accepted_plan_fingerprint")
         and len(plan_tasks) == 1
         and isinstance(task_id, str)
-        and accepted_task.get("allowed_paths") == ["tests/test_models.py"]
+        and exact_tests_scope
         and accepted_task.get("new_paths") == []
         and accepted_task.get("human_only") is False
         and task.get("task_id") == task_id
-        and task.get("changed_paths") == ["tests/test_models.py"]
         and _positive_int(task.get("zero_touch_run"))
         and _positive_int(task.get("implementation_run"))
         and _positive_int(task.get("pull_request"))
