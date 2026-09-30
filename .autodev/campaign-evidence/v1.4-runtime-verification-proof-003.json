@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "version": "v1.4",
+  "request_id": "v1.4-runtime-verification-proof-003",
+  "campaign_id": "v1.4-runtime-verification-campaign-003",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "human_authored_per_task_work_items": false,
+  "execution_provenance_clean": true,
+  "task": {
+    "task_id": "v14rv3-001",
+    "planner_workflow_run": 36690758847,
+    "zero_touch_run": 36690919246,
+    "jules_cycle_run": 36690934657,
+    "pull_request": 17,
+    "ci_run": 36691307632,
+    "remote_gate_run": 36691380061,
+    "remote_monitor_run": 36691326618,
+    "head_sha": "2e102412270bcfd8a738b4c5bc89aa4e3f40e79e",
+    "merge_commit": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9"
+  },
+  "runtime_verification": {
+    "workflow_run": 36691433088,
+    "trigger_source": "repository_dispatch",
+    "manual_workflow_dispatch": false,
+    "workspace_source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+    "dependency_fingerprint": "3214b67ce798fa395e205184f3c9f7a7b416a24622b29a5f5044638e98c5cd86",
+    "recovery_triggered": false,
+    "human_wait_triggered": false,
+    "contract": {
+      "environment": "repository",
+      "max_attempts": 2,
+      "required_probe_ids": [
+        "offline-cli-smoke",
+        "production-import-smoke"
+      ],
+      "schema_version": 1,
+      "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "timeout_seconds": 300,
+      "verification_id": "rv-d3073a165a902b58cb2dfee9b16736fc7eaa43d9"
+    },
+    "receipt": {
+      "contract_fingerprint": "2d2d43c0c8e31a0177596ea36ab9a7834e2ad866b16a075d416e9ab7699e6b04",
+      "dispatch_count": 1,
+      "policy_fingerprint": "1e3eda77b853444be7915913da7c7050f42a7e650f0d83d38d8634f36f470d78",
+      "registry_fingerprint": "aa0abe525d4baacdfcfb05e204221bbe17d30efb30a7122d581e33b6c59284f7",
+      "schema_version": 1,
+      "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+      "status": "VERIFIED",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "task_id": "v14rv3-001",
+      "verification_id": "rv-d3073a165a902b58cb2dfee9b16736fc7eaa43d9"
+    },
+    "target": {
+      "evidence": {
+        "deployment_id": null,
+        "environment": "repository",
+        "kind": "repository",
+        "observed_at": "2026-09-30T08:43:01.665586+00:00",
+        "provenance_id": "trusted-merge-sha-v1",
+        "schema_version": 1,
+        "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+        "target_id": "repository-runtime",
+        "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+      },
+      "evidence_fingerprint": "f7a2da1dbc53c4b5170d2f39c8abc1a5947ec4f30779838b8ccdce6d336cbdd5",
+      "registry_fingerprint": "5c63ba520e12cf48f1552ce013e722ce2eb583dfcd53bd7612bcf5cf738b719d",
+      "schema_version": 1,
+      "spec": {
+        "deployment_required": false,
+        "environment": "repository",
+        "kind": "repository",
+        "max_age_seconds": 300,
+        "max_future_skew_seconds": 60,
+        "schema_version": 1,
+        "target_id": "repository-runtime"
+      }
+    },
+    "report": {
+      "contract_fingerprint": "2d2d43c0c8e31a0177596ea36ab9a7834e2ad866b16a075d416e9ab7699e6b04",
+      "disposition": "VERIFIED",
+      "missing_probe_ids": [],
+      "results": [
+        {
+          "attempt": 1,
+          "detail_code": "offline-cli-pass",
+          "probe_id": "offline-cli-smoke",
+          "schema_version": 1,
+          "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+          "status": "PASS"
+        },
+        {
+          "attempt": 1,
+          "detail_code": "production-import-pass",
+          "probe_id": "production-import-smoke",
+          "schema_version": 1,
+          "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+          "status": "PASS"
+        }
+      ],
+      "schema_version": 1,
+      "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+      "verification_id": "rv-d3073a165a902b58cb2dfee9b16736fc7eaa43d9"
+    },
+    "report_fingerprint": "0fd23c252d7d57852d0231e51d4497b183ae595e9a81fd13aca8d0a5dd58c01c",
+    "attempts_by_probe": [
+      {
+        "attempts": 1,
+        "probe_id": "offline-cli-smoke"
+      },
+      {
+        "attempts": 1,
+        "probe_id": "production-import-smoke"
+      }
+    ]
+  },
+  "manual_campaign_progress_after_goal_submission": false,
+  "terminal_snapshot": {
+    "campaign": {
+      "campaign_id": "v1.4-runtime-verification-campaign-003",
+      "completed_task_ids": [
+        "v14rv3-001"
+      ],
+      "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses narrow no-break space (U+202F) and medium mathematical space (U+205F) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+      "schema_version": 1,
+      "status": "COMPLETED",
+      "task_ids": [
+        "v14rv3-001"
+      ]
+    },
+    "state": {
+      "status": "READY",
+      "current_task_id": null,
+      "failed_task_ids": []
+    }
+  },
+  "provenance": {
+    "accepted_plan_fingerprint": "65a168f047c1a3051ae296fd5f147726fd537ffce0d3e179f3868eb55da92ab6",
+    "planner_proposal_fingerprint": "9113d11a9832ea0d66a13be2b6c134ce01d913b9137f1908dc4e14a689c472dc",
+    "planning_request_fingerprint": "93433420f793dfe9d1829ceb011ba5c10fd6f48373bc39b068cfa448d5b641a3",
+    "provider_session_id": "16692895198334863934",
+    "provider_session_matches_pull_request": true,
+    "recovery_ledger_task_id": "v14rv2-001",
+    "proof003_recovery_write_observed": false
+  }
+}
