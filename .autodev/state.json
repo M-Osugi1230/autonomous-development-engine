@@ -63,12 +63,12 @@
     "v14rv1-001",
     "v14rv2-001"
   ],
-  "current_task_id": null,
+  "current_task_id": "v14rv3-001",
   "failed_task_ids": [],
   "iteration": 61,
   "metadata": {
-    "accepted_plan_fingerprint": "e99456955b7248ffb3adb2bd319783ea273c86144e8fadf47fe6ed267b7cf743",
-    "campaign_id": "v1.4-runtime-verification-campaign-002",
+    "accepted_plan_fingerprint": "65a168f047c1a3051ae296fd5f147726fd537ffce0d3e179f3868eb55da92ab6",
+    "campaign_id": "v1.4-runtime-verification-campaign-003",
     "dag_blocked": false,
     "last_superseded_campaign": {
       "campaign_id": "v1.2-external-goal-campaign-004",
@@ -77,19 +77,19 @@
       "task_id": "v12ext4-002"
     },
     "last_superseded_v1_4_proof": {
-      "request_id": "v1.4-runtime-verification-proof-002",
       "campaign_id": "v1.4-runtime-verification-campaign-002",
-      "task_id": "v14rv2-001",
       "outcome": "VERIFIED_BUT_EXCLUDED",
       "reason": "controller-ci-failure-provenance-misbinding",
-      "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/16",
-      "target_merge_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+      "remediation_merge_sha": "e50e558e820964ea1e1882685da46b90ed472265",
       "remediation_pull_request": 173,
-      "remediation_merge_sha": "e50e558e820964ea1e1882685da46b90ed472265"
+      "request_id": "v1.4-runtime-verification-proof-002",
+      "target_merge_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+      "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/16",
+      "task_id": "v14rv2-001"
     },
     "milestone": "v1.4-proof-003-pending",
     "next_required_human_action": null,
-    "next_system_action": "run-v1.4-runtime-verification-proof-003",
+    "next_system_action": "zero-touch-start",
     "phase": "v1.4-runtime-deployment-verification",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -109,21 +109,45 @@
     "pilot_target_repository": "M-Osugi1230/one-minute-thought-experiments",
     "plan_source": "live:jules-planner",
     "planner_policy_fingerprint": "e4bb792a008504b2c2620275e2351ddd57512b910afefd738a31879823b26119",
-    "planner_proposal_fingerprint": "1ac2faa4d96735f83d9c5855488574c642d009cc64af80490b04f7dd22bd945e",
-    "planning_request_fingerprint": "ca5d567b7570920fa60255cc376edc4aae5454824aac93164e4a16b8d2c8b1a3",
-    "planning_request_id": "v1.4-runtime-verification-proof-002",
+    "planner_proposal_fingerprint": "9113d11a9832ea0d66a13be2b6c134ce01d913b9137f1908dc4e14a689c472dc",
+    "planning_request_fingerprint": "93433420f793dfe9d1829ceb011ba5c10fd6f48373bc39b068cfa448d5b641a3",
+    "planning_request_id": "v1.4-runtime-verification-proof-003",
     "previous_pilot_baseline_sha": "46d2d473305ca8c904f90c78bc8f8aabf3fd7319",
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": true,
-    "repository_intelligence_content_fingerprint": "213576cd6283e3134b56eac93f10060f9b8dd1daa9d7bbf3eceb5b883a2500d2",
-    "repository_intelligence_context_fingerprint": "44ed339948ac2a736db1672b8d1993dae34f96d9fa5c3b0c4977512c10c7d007",
+    "queue_exhausted": false,
+    "repository_intelligence_content_fingerprint": "f40ae8a2e0349fafce5a248b8e3f5328572e18851a8ef76d690c20121293351e",
+    "repository_intelligence_context_fingerprint": "dc6261f5e336966d707e12665c3269dcb0788b9b8d0439533864c95ed7e04581",
     "repository_intelligence_impact_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
     "repository_intelligence_relationship_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
-    "repository_intelligence_snapshot_fingerprint": "3dc46ae5d4f6fe8609f81f835f3653f21ed27750fa830e83eaa582e76c5b455d",
-    "repository_intelligence_source_sha": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
+    "repository_intelligence_snapshot_fingerprint": "84424a63b0277b1d124e6d434059586d98e116d4f3cac25d5b7967f286192476",
+    "repository_intelligence_source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
     "scheduler": "dag",
+    "superseded_v1_4_proofs": [
+      {
+        "campaign_id": "v1.4-runtime-verification-campaign-001",
+        "outcome": "HUMAN_WAIT",
+        "reason": "runtime-verification-entered-human-wait-before-target-or-report-evidence-persisted",
+        "remediation_merge_sha": "e0d2559050f8e47d7f96d038a46f6c67fb8cc32b",
+        "remediation_pull_request": 167,
+        "request_id": "v1.4-runtime-verification-proof-001",
+        "target_merge_sha": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
+        "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/15",
+        "task_id": "v14rv1-001"
+      },
+      {
+        "campaign_id": "v1.4-runtime-verification-campaign-002",
+        "outcome": "VERIFIED_BUT_EXCLUDED",
+        "reason": "controller-ci-failure-provenance-misbinding",
+        "remediation_merge_sha": "e50e558e820964ea1e1882685da46b90ed472265",
+        "remediation_pull_request": 173,
+        "request_id": "v1.4-runtime-verification-proof-002",
+        "target_merge_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+        "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/16",
+        "task_id": "v14rv2-001"
+      }
+    ],
     "target_base_branch": "main",
     "target_repository": "M-Osugi1230/one-minute-thought-experiments",
     "v1_2_graduated": true,
@@ -141,43 +165,19 @@
     "v1_4_proof_001_armed": true,
     "v1_4_proof_001_superseded": true,
     "v1_4_proof_002_armed": true,
+    "v1_4_proof_002_superseded": true,
+    "v1_4_proof_003_armed": true,
     "v1_4_real_repository_runtime_probes": true,
     "v1_4_slice_001_runtime_verification_contract": true,
     "v1_4_slice_002_trusted_probe_registry": true,
     "v1_4_slice_003_post_merge_trigger": true,
     "v1_4_slice_004_bounded_probe_execution": true,
     "v1_4_slice_005_runtime_target_adapters": true,
-    "v1_4_slice_006_runtime_failure_containment": true,
-    "v1_4_proof_002_superseded": true,
-    "v1_4_proof_003_armed": true,
-    "superseded_v1_4_proofs": [
-      {
-        "campaign_id": "v1.4-runtime-verification-campaign-001",
-        "outcome": "HUMAN_WAIT",
-        "reason": "runtime-verification-entered-human-wait-before-target-or-report-evidence-persisted",
-        "remediation_merge_sha": "e0d2559050f8e47d7f96d038a46f6c67fb8cc32b",
-        "remediation_pull_request": 167,
-        "request_id": "v1.4-runtime-verification-proof-001",
-        "target_merge_sha": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
-        "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/15",
-        "task_id": "v14rv1-001"
-      },
-      {
-        "request_id": "v1.4-runtime-verification-proof-002",
-        "campaign_id": "v1.4-runtime-verification-campaign-002",
-        "task_id": "v14rv2-001",
-        "outcome": "VERIFIED_BUT_EXCLUDED",
-        "reason": "controller-ci-failure-provenance-misbinding",
-        "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/16",
-        "target_merge_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
-        "remediation_pull_request": 173,
-        "remediation_merge_sha": "e50e558e820964ea1e1882685da46b90ed472265"
-      }
-    ]
+    "v1_4_slice_006_runtime_failure_containment": true
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
   "status": "READY",
-  "updated_at": "2026-09-30T08:29:29.835348+00:00"
+  "updated_at": "2026-09-30T08:37:54.568630+00:00"
 }
