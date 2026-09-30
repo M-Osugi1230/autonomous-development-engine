@@ -80,6 +80,15 @@ def _load(root: Path, relative: str) -> dict[str, Any]:
     return payload
 
 
+def _load_derived(root: Path, relative: str) -> dict[str, Any]:
+    if not relative:
+        return {}
+    path = root / relative
+    if not path.is_file():
+        return {}
+    return _load(root, relative)
+
+
 def _sha40(value: object) -> bool:
     return isinstance(value, str) and SHA40.fullmatch(value) is not None
 
@@ -189,7 +198,7 @@ def audit(
         if isinstance(request_id, str)
         else ""
     )
-    planner_evidence = _load(root, planner_path) if planner_path else {}
+    planner_evidence = _load_derived(root, planner_path)
 
     plan = accepted_plan.get("plan")
     plan = plan if isinstance(plan, dict) else {}
@@ -216,9 +225,9 @@ def audit(
         if isinstance(task_id, str)
         else ""
     )
-    contract_payload = _load(root, contract_path) if contract_path else {}
-    receipt_payload = _load(root, receipt_path) if receipt_path else {}
-    report_wrapper = _load(root, report_path) if report_path else {}
+    contract_payload = _load_derived(root, contract_path)
+    receipt_payload = _load_derived(root, receipt_path)
+    report_wrapper = _load_derived(root, report_path)
 
     remote = None
     contract = None
