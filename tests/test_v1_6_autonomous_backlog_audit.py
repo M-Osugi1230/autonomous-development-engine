@@ -506,6 +506,14 @@ class V16AutonomousBacklogAuditTests(unittest.TestCase):
             proof["task"]["changed_paths"] = ["tests/test_pipeline.py"]
             write(root, EVIDENCE_PATH, proof)
 
+            provenance = json.loads(
+                (root / PROOF_PROVENANCE_PATH).read_text()
+            )
+            provenance["target_pull_request"]["changed_paths"] = [
+                "tests/test_pipeline.py"
+            ]
+            write(root, PROOF_PROVENANCE_PATH, provenance)
+
             result = audit(root)
             self.assertTrue(
                 result["checks"]["accepted_plan_bounded"],
