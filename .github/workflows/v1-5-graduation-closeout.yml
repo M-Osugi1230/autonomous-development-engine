@@ -1,0 +1,48 @@
+name: ADE v1.5 Graduation Closeout
+
+on:
+  repository_dispatch:
+    types:
+      - ade_v1_5_graduation_closeout
+  schedule:
+    - cron: "5,20,35,50 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ade-v1-5-graduation-closeout
+  cancel-in-progress: false
+
+jobs:
+  closeout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build and validate graduation closeout PR
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/v1_5_graduation_closeout.py
+
+      - name: Upload v1.5 closeout result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-v1-5-graduation-closeout-result
+          path: .autodev/runtime/v1-5-graduation-closeout-result.json
+          if-no-files-found: error
+          retention-days: 30
