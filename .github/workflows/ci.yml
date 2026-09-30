@@ -93,6 +93,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/development_memory_planner_integration_probe.py
 
+      - name: Development Memory feedback lifecycle proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/development_memory_feedback_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
