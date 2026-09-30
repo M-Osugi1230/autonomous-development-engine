@@ -108,6 +108,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/autonomous_backlog_probe.py
 
+      - name: Autonomous Backlog trusted extraction proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/autonomous_backlog_extraction_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
