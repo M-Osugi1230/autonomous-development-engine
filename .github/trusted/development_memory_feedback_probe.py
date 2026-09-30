@@ -21,6 +21,7 @@ from development_memory_feedback import (
     STORE_PATH,
     persist_verified_runtime_feedback,
 )
+import runtime_verification_dispatch as runtime_dispatch
 
 
 SHA = "a" * 40
@@ -128,6 +129,19 @@ def main() -> int:
     assert second["state"] == "UNCHANGED"
     assert len(api.writes) == 1
 
+    failed = runtime_dispatch._persist_verified_feedback_safely(
+        FailWriteApi(),
+        contract=contract,
+        receipt=receipt,
+        report=report,
+        contract_path=".autodev/runtime-verification/task-001/contract.json",
+        receipt_path=".autodev/runtime-verification/task-001/receipt.json",
+        report_path=".autodev/runtime-verification/task-001/report.json",
+    )
+    assert failed["state"] == "FAILED"
+    assert len(failed["error_fingerprint"]) == 64
+    assert "simulated memory-store write failure" not in json.dumps(failed)
+
     stored = DevelopmentMemoryStore.from_dict(api.payload)
     assert len(stored.ledger.records) == 1
     assert stored.ledger.records[0].source_sha == SHA
@@ -137,6 +151,7 @@ def main() -> int:
         "runtime_feedback_record_source_bound": True,
         "store_persistence_idempotent": True,
         "duplicate_write_suppressed": True,
+        "feedback_failure_is_bounded_and_non_throwing": True,
         "record_count": len(stored.ledger.records),
         "memory_id": record.memory_id,
         "store_fingerprint": stored.fingerprint(),
