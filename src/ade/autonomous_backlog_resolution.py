@@ -13,6 +13,7 @@ from .autonomous_backlog import (
     BacklogCandidate,
     BacklogCandidateKind,
 )
+from .autonomous_backlog_feedback import BacklogRetirementRecord
 
 
 _SHA40 = re.compile(r"^[0-9a-f]{40}$")
@@ -25,6 +26,7 @@ class BacklogResolutionState(StrEnum):
     STALE = "STALE"
     SUPERSEDED = "SUPERSEDED"
     CONFLICTED = "CONFLICTED"
+    RETIRED = "RETIRED"
 
 
 class BacklogResolutionReason(StrEnum):
@@ -33,6 +35,7 @@ class BacklogResolutionReason(StrEnum):
     EXPLICIT_SUPERSESSION = "EXPLICIT_SUPERSESSION"
     SEMANTIC_DUPLICATE = "SEMANTIC_DUPLICATE"
     SUBJECT_CONFLICT = "SUBJECT_CONFLICT"
+    VERIFIED_COMPLETION = "VERIFIED_COMPLETION"
 
 
 _PRIORITY_BY_KIND: dict[BacklogCandidateKind, int] = {
@@ -272,6 +275,47 @@ def _validated_supersessions(
     return tuple(supersessions)
 
 
+def _validated_retirements(
+    backlog: AutonomousBacklog,
+    retirements: tuple[BacklogRetirementRecord, ...],
+) -> tuple[BacklogRetirementRecord, ...]:
+    candidates = {candidate.candidate_id: candidate for candidate in backlog.candidates}
+    by_candidate: dict[str, BacklogRetirementRecord] = {}
+    for retirement in retirements:
+        if not isinstance(retirement, BacklogRetirementRecord):
+            raise AutonomousBacklogError(
+                "retirement must be BacklogRetirementRecord"
+            )
+        candidate = candidates.get(retirement.candidate_id)
+        if candidate is None:
+            raise AutonomousBacklogError(
+                "retirement references an unknown candidate"
+            )
+        if retirement.candidate_id in by_candidate:
+            raise AutonomousBacklogError(
+                "candidate cannot have multiple retirement records"
+            )
+        if retirement.candidate_fingerprint != candidate.fingerprint():
+            raise AutonomousBacklogError(
+                "retirement candidate fingerprint does not match backlog"
+            )
+        if retirement.repository != candidate.repository:
+            raise AutonomousBacklogError(
+                "retirement repository does not match candidate"
+            )
+        if retirement.original_source_sha != candidate.source_sha:
+            raise AutonomousBacklogError(
+                "retirement original source SHA does not match candidate"
+            )
+        by_candidate[retirement.candidate_id] = retirement
+    return tuple(
+        sorted(
+            by_candidate.values(),
+            key=lambda item: (item.candidate_id, item.retirement_id),
+        )
+    )
+
+
 def _subject(candidate: BacklogCandidate) -> tuple[object, ...]:
     return (
         candidate.repository,
@@ -287,17 +331,25 @@ def resolve_autonomous_backlog(
     *,
     current_sources: Mapping[str, str],
     supersessions: tuple[BacklogSupersession, ...] = (),
+    retirements: tuple[BacklogRetirementRecord, ...] = (),
 ) -> AutonomousBacklogResolution:
     if not isinstance(backlog, AutonomousBacklog):
         raise AutonomousBacklogError("backlog must be AutonomousBacklog")
     sources = _validate_current_sources(backlog, current_sources)
     source_map = dict(sources)
     links = _validated_supersessions(backlog, supersessions)
+    retirement_records = _validated_retirements(backlog, retirements)
     explicit_prior_ids = {link.prior_candidate_id for link in links}
+    retired_ids = {item.candidate_id for item in retirement_records}
 
     state_by_id: dict[str, tuple[BacklogResolutionState, BacklogResolutionReason]] = {}
     for candidate in backlog.candidates:
-        if candidate.candidate_id in explicit_prior_ids:
+        if candidate.candidate_id in retired_ids:
+            state_by_id[candidate.candidate_id] = (
+                BacklogResolutionState.RETIRED,
+                BacklogResolutionReason.VERIFIED_COMPLETION,
+            )
+        elif candidate.candidate_id in explicit_prior_ids:
             state_by_id[candidate.candidate_id] = (
                 BacklogResolutionState.SUPERSEDED,
                 BacklogResolutionReason.EXPLICIT_SUPERSESSION,
