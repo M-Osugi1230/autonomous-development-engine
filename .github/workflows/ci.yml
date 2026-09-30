@@ -103,6 +103,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python .github/trusted/development_memory_successor_probe.py
 
+      - name: Autonomous Backlog proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/autonomous_backlog_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
