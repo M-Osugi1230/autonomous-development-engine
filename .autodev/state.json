@@ -89,6 +89,7 @@
     "milestone": "v1.4-proof-002-pending",
     "next_required_human_action": null,
     "next_system_action": "zero-touch-start",
+    "pause_reason": "jules-rolling-quota",
     "phase": "v1.4-runtime-deployment-verification",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -122,6 +123,7 @@
     "repository_intelligence_relationship_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
     "repository_intelligence_snapshot_fingerprint": "3dc46ae5d4f6fe8609f81f835f3653f21ed27750fa830e83eaa582e76c5b455d",
     "repository_intelligence_source_sha": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
+    "resume_after": "2026-09-30T06:56:17.017175+00:00",
     "scheduler": "dag",
     "target_base_branch": "main",
     "target_repository": "M-Osugi1230/one-minute-thought-experiments",
@@ -151,6 +153,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "READY",
-  "updated_at": "2026-09-30T00:43:16.479353+00:00"
+  "status": "PAUSED_QUOTA",
+  "updated_at": "2026-09-30T00:43:46.927005+00:00"
 }
