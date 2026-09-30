@@ -17,6 +17,7 @@ from ade.development_memory_successor import (
     evaluate_v1_5_bootstrap_successor,
     proof002_planning_goal,
 )
+from ade.runtime_verification_trigger import RuntimeVerificationReceipt
 from github_client import GitHubClient, GitHubError
 
 
@@ -49,6 +50,35 @@ def _optional_json(gh: GitHubClient, path: str) -> dict[str, Any] | None:
     if not isinstance(payload, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return payload
+
+
+def _retry_verified_memory_feedback(
+    gh: GitHubClient,
+    *,
+    receipt_payload: dict[str, Any] | None,
+) -> str:
+    if receipt_payload is None:
+        return "NOT_READY"
+    try:
+        receipt = RuntimeVerificationReceipt.from_dict(receipt_payload)
+    except (TypeError, ValueError):
+        return "INVALID_RECEIPT"
+    if receipt.task_id != "v15mem1-001" or receipt.status != "VERIFIED":
+        return "NOT_APPLICABLE"
+    try:
+        gh.dispatch(
+            "ade_runtime_verification",
+            {
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "target_repository": receipt.target_repository,
+                "source_sha": receipt.source_sha,
+                "source": "development-memory-successor-feedback-retry",
+            },
+        )
+    except GitHubError:
+        return "SCHEDULED_RETRY"
+    return "DISPATCHED"
 
 
 def _result(state: str, reason: str, **extra: Any) -> dict[str, Any]:
@@ -121,10 +151,30 @@ def main() -> int:
             path for path, payload in required_paths.items() if payload is None
         )
         if missing:
+            feedback_retry = "NOT_APPLICABLE"
+            if (
+                missing == [MEMORY_STORE_PATH]
+                and state_payload.get("status") == "READY"
+                and state_payload.get("current_task_id") is None
+                and state_payload.get("failed_task_ids") == []
+            ):
+                feedback_retry = _retry_verified_memory_feedback(
+                    gh,
+                    receipt_payload=required_paths[RECEIPT_PATH],
+                )
             payload = _result(
-                "NOOP",
-                "bootstrap-evidence-not-ready",
+                (
+                    "RETRYING_MEMORY_FEEDBACK"
+                    if feedback_retry in {"DISPATCHED", "SCHEDULED_RETRY"}
+                    else "NOOP"
+                ),
+                (
+                    "verified-runtime-memory-feedback-retry"
+                    if feedback_retry in {"DISPATCHED", "SCHEDULED_RETRY"}
+                    else "bootstrap-evidence-not-ready"
+                ),
                 missing_paths=missing,
+                memory_feedback_retry=feedback_retry,
             )
             _write(payload)
             print(json.dumps(payload, sort_keys=True))
@@ -141,10 +191,34 @@ def main() -> int:
             memory_store_payload=required_paths[MEMORY_STORE_PATH],
         )
         if not decision.eligible:
+            feedback_retry = "NOT_APPLICABLE"
+            if (
+                decision.reason
+                in {
+                    "durable store does not contain exactly one feedback record",
+                    "durable feedback record differs from trusted reconstruction",
+                }
+                and state_payload.get("status") == "READY"
+                and state_payload.get("current_task_id") is None
+                and state_payload.get("failed_task_ids") == []
+            ):
+                feedback_retry = _retry_verified_memory_feedback(
+                    gh,
+                    receipt_payload=required_paths[RECEIPT_PATH],
+                )
             payload = _result(
-                "NOOP",
-                "bootstrap-not-eligible",
+                (
+                    "RETRYING_MEMORY_FEEDBACK"
+                    if feedback_retry in {"DISPATCHED", "SCHEDULED_RETRY"}
+                    else "NOOP"
+                ),
+                (
+                    "verified-runtime-memory-feedback-retry"
+                    if feedback_retry in {"DISPATCHED", "SCHEDULED_RETRY"}
+                    else "bootstrap-not-eligible"
+                ),
                 decision=decision.canonical_dict(),
+                memory_feedback_retry=feedback_retry,
             )
             _write(payload)
             print(json.dumps(payload, sort_keys=True))
