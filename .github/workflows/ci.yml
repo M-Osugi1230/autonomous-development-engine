@@ -133,6 +133,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/autonomous_backlog_feedback_probe.py
 
+      - name: Autonomous Backlog successor gate proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/v1_6_backlog_successor_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
