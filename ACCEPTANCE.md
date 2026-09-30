@@ -275,3 +275,17 @@
 - [x] A real external-repository proof demonstrates evidence -> backlog candidate -> selected Goal -> AcceptedPlan -> trusted execution -> verified retirement without manual per-task authoring.
 - [x] A dedicated v1.6 Graduation audit proves the Autonomous Backlog path end to end.
 
+## ADE v1.7 — Multi-Agent
+
+- [x] Agent roles use a strict finite versioned enum and serialized multi-agent data carries no execution, auto-dispatch, merge, Acceptance, or scope-expansion authority.
+- [x] Every agent assignment is bound to one repository, source SHA, Campaign, task, AcceptedPlan fingerprint, and trusted `.autodev/` evidence.
+- [x] Multi-agent plans are deterministic, fingerprinted, bounded to at most three roles, duplicate-role safe, and require exactly one IMPLEMENTER.
+- [x] Agent role and provider identity are separate concepts; multiple roles may use one provider without gaining additional authority.
+- [x] Unknown fields, authority escalation, cross-task/source trust-anchor drift, unsafe evidence paths, URLs, and secret-like objective text fail closed.
+- [x] A deterministic Multi-Agent foundation proof is mandatory in CI.
+- [ ] Trusted controller logic derives role assignments from an AcceptedPlan and provider availability without accepting provider-authored scope or authority.
+- [ ] Reviewer/diagnostic contributions are immutable evidence objects and cannot directly mutate code, Campaign state, Acceptance, merge state, or Runtime Verification.
+- [ ] Conflicting agent contributions are reconciled deterministically by controller policy; unresolved material conflicts enter HUMAN_WAIT rather than majority voting.
+- [ ] Provider-session lifecycle preserves task/provider affinity, lease safety, quota recovery, and duplicate suppression independently for each role.
+- [ ] A real external-repository proof demonstrates bounded implementer + independent reviewer collaboration through the existing trusted merge/runtime gates.
+- [ ] A dedicated v1.7 Graduation audit reconstructs the multi-agent proof end to end.
