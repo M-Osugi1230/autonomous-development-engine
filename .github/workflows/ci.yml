@@ -68,6 +68,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/repository_intelligence_probe.py
 
+      - name: Development Memory contract proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/development_memory_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
