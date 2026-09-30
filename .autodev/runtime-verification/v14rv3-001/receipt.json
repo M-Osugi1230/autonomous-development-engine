@@ -5,7 +5,7 @@
   "registry_fingerprint": "aa0abe525d4baacdfcfb05e204221bbe17d30efb30a7122d581e33b6c59284f7",
   "schema_version": 1,
   "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
-  "status": "DISPATCHED",
+  "status": "VERIFIED",
   "target_repository": "M-Osugi1230/one-minute-thought-experiments",
   "task_id": "v14rv3-001",
   "verification_id": "rv-d3073a165a902b58cb2dfee9b16736fc7eaa43d9"
