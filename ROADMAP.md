@@ -162,3 +162,18 @@ Proof002 scheduler hardening: while `v14rv2-001` was safely `PAUSED_QUOTA`, the 
 Proof001 retirement: the first real v1.4 proof completed Goal -> Planner -> Zero-Touch -> external PR #15 -> CI/trusted merge, then runtime verification entered fail-closed HUMAN_WAIT before durable target/report evidence was persisted. The failed receipt and recovery fingerprint are preserved and proof001 is excluded from graduation. PR #167 hardened trusted JSON evidence writes so unrelated main-branch movement can be retried while same-path concurrent mutations still fail closed. Graduation is retargeted to proof002; proof001 is not rewritten as success.
 
 Graduated: clean proof `v1.4-runtime-verification-proof-003` completed high-level Goal -> Jules planning-only proposal -> trusted validation -> automatic Zero-Touch -> Jules task `v14rv3-001` -> external PR #17 -> target CI run `36691307632` -> trusted remote gate run `36691380061` -> exact merge SHA `d3073a165a902b58cb2dfee9b16736fc7eaa43d9` -> Runtime Verification run `36691433088`. Both trusted probes (`offline-cli-smoke`, `production-import-smoke`) passed on attempt 1; the durable receipt is `VERIFIED`, Campaign `v1.4-runtime-verification-campaign-003` is COMPLETED, Project state is READY with failed=0, and no recovery/HUMAN_WAIT or unrelated controller-CI recovery occurred during the active proof. Immutable graduation evidence is stored at `.autodev/campaign-evidence/v1.4-runtime-verification-proof-003.json`. The dedicated v1.4 Graduation audit is mandatory in CI. Proof001 and proof002 remain preserved as non-graduation evidence and are not rewritten as successes.
+
+## ADE v1.5 — Development Memory 🚧
+Give ADE a durable, trusted memory of verified decisions, failures, remediations, and outcomes so later planning can reuse evidence instead of rediscovering the same lessons. Memory is advisory data only: it never becomes executable authority and never weakens AcceptedPlan validation, path scope, Acceptance, lease, CI, Runtime Verification, or HUMAN_WAIT.
+
+Build order:
+1. immutable evidence-bound Development Memory record + deterministic ledger
+2. trusted extraction from structured Campaign/recovery/runtime/human-decision evidence
+3. conflict, supersession, and staleness handling
+4. repository-aware bounded retrieval/ranking
+5. planner context integration behind existing deterministic validation
+6. outcome feedback from trusted runtime/recovery evidence
+7. real cross-task/external-repository proof and v1.5 graduation audit
+
+Slice 001 complete: `DevelopmentMemoryRecord` requires repository/source-SHA binding, trusted `.autodev/` evidence paths, SHA-256 evidence fingerprints, bounded fact text, and fixed memory kinds. `DevelopmentMemoryLedger` is immutable, duplicate-safe, order-deterministic, and fingerprinted. Planner-facing memory context is repository-filtered, bounded by record and character budgets, explicitly marked `advisory-data-only`, and carries no execution/scope/Acceptance authority. Secret-like markers, URLs, unsafe evidence paths, malformed SHAs/IDs, and control characters fail closed. The dedicated Development Memory proof is required in CI.
+
