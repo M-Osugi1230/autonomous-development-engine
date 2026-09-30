@@ -1,0 +1,204 @@
+{
+  "campaign_id": "v1.5-development-memory-campaign-002",
+  "execution_provenance_clean": true,
+  "failed_tasks": 0,
+  "human_authored_per_task_work_items": false,
+  "manual_campaign_progress_after_goal_submission": false,
+  "planner": {
+    "accepted_plan_fingerprint": "5d2fc1f34955613652ffa9d33a0469cc304e3dacee377c9d3f9f018e597cba6e",
+    "development_memory": {
+      "authority": "advisory-data-only",
+      "context_fingerprint": "cd0d9f06f447c627e5b28da86f5592f24148a34ba50c0219d692722a21bba770",
+      "current_source_sha": "098ad46eacba0da82bf8c9551df48f7401bf54c6",
+      "execution_authority": false,
+      "extracted_record_count": 1,
+      "memory_fingerprints": [
+        "72a5c70e6eed1f6af559c3182a2f8ccffea6c340eeb5163aba549cde38456e99"
+      ],
+      "memory_ids": [
+        "mem-3d6660d55ad11cf3941ee9fb"
+      ],
+      "memory_may_expand_scope": false,
+      "memory_may_override_acceptance": false,
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "resolution_fingerprint": "e500b236beb29b432642db59478e606d0e544434c174159e3353dd165360513d",
+      "retrieval_fingerprint": "f0e862bd29560ccd3e0a6d7f06a834d49c0ab7ecb02dee1b3141e16719271a93",
+      "retrieved_record_count": 1,
+      "schema_version": 1,
+      "source_evidence_fingerprint": "596ab4cafa69d6197cf17475e0c0b02dcba35bf1f90f5331ce5da7cd76802cf4",
+      "source_evidence_path": ".autodev/development-memory.json",
+      "used": true
+    },
+    "planning_only": true,
+    "proposal_fingerprint": "d915ee6723f241a39d022ff531b500752d867f51c9076b80cbab22c35d35b4d7",
+    "provider": "jules",
+    "repository_source_sha": "098ad46eacba0da82bf8c9551df48f7401bf54c6",
+    "request_fingerprint": "978eda0917f0420239916262006f3c26a9a5ae19585f8df21fbdc2a89cc7f971",
+    "workflow_run": 36706844138
+  },
+  "provenance_observations": {
+    "implementation_workflow_event": "workflow_run",
+    "implementation_workflow_name": "ADE Resume Watch",
+    "runtime_source_matches_trusted_merge": true,
+    "target_pr_base_sha": "098ad46eacba0da82bf8c9551df48f7401bf54c6",
+    "target_pr_jules_session_matches_checkpoint": true,
+    "target_pr_scope_exact": [
+      "tests/test_models.py"
+    ],
+    "zero_touch_dispatch_count": 1
+  },
+  "request_id": "v1.5-development-memory-proof-002",
+  "runtime_verification": {
+    "attempts_by_probe": [
+      {
+        "attempts": 1,
+        "probe_id": "offline-cli-smoke"
+      },
+      {
+        "attempts": 1,
+        "probe_id": "production-import-smoke"
+      }
+    ],
+    "contract": {
+      "environment": "repository",
+      "max_attempts": 2,
+      "required_probe_ids": [
+        "offline-cli-smoke",
+        "production-import-smoke"
+      ],
+      "schema_version": 1,
+      "source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "timeout_seconds": 300,
+      "verification_id": "rv-4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b"
+    },
+    "dependency_fingerprint": "3214b67ce798fa395e205184f3c9f7a7b416a24622b29a5f5044638e98c5cd86",
+    "development_memory_feedback": {
+      "memory_id": "mem-786d667480ca61ad8f1a9f0f",
+      "memory_kind": "VERIFIED_OUTCOME",
+      "record_count": 2,
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "schema_version": 1,
+      "source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+      "state": "ADDED",
+      "store_fingerprint": "d64743456ef0a231d5a86d471d1697a5daf7eef3825822037bd4ebd9c25229de"
+    },
+    "human_wait_triggered": false,
+    "manual_workflow_dispatch": false,
+    "receipt": {
+      "contract_fingerprint": "8e49cb668d0f4e492a5c7c83198ee56bcc0d7fa013a1773f73f4dbacfaad56cd",
+      "dispatch_count": 1,
+      "policy_fingerprint": "1e3eda77b853444be7915913da7c7050f42a7e650f0d83d38d8634f36f470d78",
+      "registry_fingerprint": "aa0abe525d4baacdfcfb05e204221bbe17d30efb30a7122d581e33b6c59284f7",
+      "schema_version": 1,
+      "source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+      "status": "VERIFIED",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "task_id": "v15mem2-001",
+      "verification_id": "rv-4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b"
+    },
+    "recovery_triggered": false,
+    "report": {
+      "contract_fingerprint": "8e49cb668d0f4e492a5c7c83198ee56bcc0d7fa013a1773f73f4dbacfaad56cd",
+      "disposition": "VERIFIED",
+      "missing_probe_ids": [],
+      "results": [
+        {
+          "attempt": 1,
+          "detail_code": "offline-cli-pass",
+          "probe_id": "offline-cli-smoke",
+          "schema_version": 1,
+          "source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+          "status": "PASS"
+        },
+        {
+          "attempt": 1,
+          "detail_code": "production-import-pass",
+          "probe_id": "production-import-smoke",
+          "schema_version": 1,
+          "source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+          "status": "PASS"
+        }
+      ],
+      "schema_version": 1,
+      "source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+      "verification_id": "rv-4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b"
+    },
+    "report_fingerprint": "f33796d2803518b59df573d653a32debbd77a34466baf22228b7ca567a226056",
+    "target": {
+      "evidence": {
+        "deployment_id": null,
+        "environment": "repository",
+        "kind": "repository",
+        "observed_at": "2026-09-30T17:27:02.177679+00:00",
+        "provenance_id": "trusted-merge-sha-v1",
+        "schema_version": 1,
+        "source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+        "target_id": "repository-runtime",
+        "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+      },
+      "evidence_fingerprint": "834c5e1ffe8172025e3bdfaa44c531bb4878bb03bbda091191b1b395cae98ebb",
+      "registry_fingerprint": "5c63ba520e12cf48f1552ce013e722ce2eb583dfcd53bd7612bcf5cf738b719d",
+      "schema_version": 1,
+      "spec": {
+        "deployment_required": false,
+        "environment": "repository",
+        "kind": "repository",
+        "max_age_seconds": 300,
+        "max_future_skew_seconds": 60,
+        "schema_version": 1,
+        "target_id": "repository-runtime"
+      }
+    },
+    "trigger_source": "repository_dispatch",
+    "workflow_run": 36751438279,
+    "workspace_source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b"
+  },
+  "schema_version": 1,
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "task": {
+    "base_sha": "098ad46eacba0da82bf8c9551df48f7401bf54c6",
+    "changed_paths": [
+      "tests/test_models.py"
+    ],
+    "ci_run": 36751301574,
+    "head_sha": "7ca8932551702c7eea911324ac85cb9a53a0a71c",
+    "jules_cycle_run": 36746488623,
+    "merge_commit": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+    "provider_session_id_fingerprint": "checkpoint-and-pr-url-bound",
+    "pull_request": 19,
+    "remote_gate_run": 36751376308,
+    "remote_monitor_run": 36751316780,
+    "task_id": "v15mem2-001",
+    "zero_touch_run": 36706989643
+  },
+  "terminal_snapshot": {
+    "campaign": {
+      "campaign_id": "v1.5-development-memory-campaign-002",
+      "completed_task_ids": [
+        "v15mem2-001"
+      ],
+      "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses EN SPACE (U+2002) and HAIR SPACE (U+200A) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+      "schema_version": 1,
+      "status": "COMPLETED",
+      "task_ids": [
+        "v15mem2-001"
+      ]
+    },
+    "remote_execution_receipt": {
+      "pull_request_url": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/19",
+      "recorded_at": "2026-09-30T17:27:03.815821+00:00",
+      "schema_version": 1,
+      "status": "MERGED",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "task_id": "v15mem2-001"
+    },
+    "state": {
+      "current_task_id": null,
+      "failed_task_ids": [],
+      "status": "READY"
+    }
+  },
+  "terminal_status": "COMPLETED",
+  "version": "v1.5"
+}
