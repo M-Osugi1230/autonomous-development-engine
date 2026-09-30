@@ -1,0 +1,50 @@
+name: ADE v1.7 Multi-Agent Successor
+
+on:
+  repository_dispatch:
+    types:
+      - ade_v1_7_multi_agent_successor
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "14,29,44,59 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-v1-7-multi-agent-successor
+  cancel-in-progress: false
+
+jobs:
+  arm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Arm v1.7 proof only after v1.6 graduation
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/v1_7_multi_agent_successor.py
+
+      - name: Upload v1.7 successor result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-v1-7-multi-agent-successor-result
+          path: .autodev/runtime/v1-7-multi-agent-successor-result.json
+          if-no-files-found: error
+          retention-days: 30
