@@ -78,6 +78,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/development_memory_extraction_probe.py
 
+      - name: Development Memory resolution proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/development_memory_resolution_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
