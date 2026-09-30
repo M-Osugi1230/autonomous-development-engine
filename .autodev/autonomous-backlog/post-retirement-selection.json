@@ -1,0 +1,13 @@
+{
+  "auto_dispatch": false,
+  "backlog_fingerprint": "50f5d88bb7a4197d43db7f793189b1fa82dedc5d5689cbd0397d495d34d77bf1",
+  "eligible_candidate_ids": [],
+  "execution_authority": false,
+  "planning_goal_authority": false,
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "resolution_fingerprint": "3b76f2840b7ad1c0a1c0e375847ca96b5ccc54c683d7678e9f849ebd5a4f7d24",
+  "schema_version": 1,
+  "selected_candidate_id": null,
+  "selection_policy": "current-source-nonhuman-priority-v1",
+  "source_sha": "d9b8f0387525bb40dcc1baba8d730b7c4b4cdc30"
+}
