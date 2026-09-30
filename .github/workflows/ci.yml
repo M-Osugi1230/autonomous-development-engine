@@ -152,3 +152,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/v1_3_repository_intelligence_audit.py
+
+      - name: ADE v1.4 Runtime Verification Graduation audit
+        env:
+          PYTHONPATH: src
+        run: python scripts/v1_4_runtime_verification_audit.py
