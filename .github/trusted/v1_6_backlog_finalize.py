@@ -110,6 +110,14 @@ def _write_once_json(
         raise ValueError(f"immutable v1.6 proof artifact drift: {path}")
 
 
+def _v1_6_already_graduated(state_payload: object) -> bool:
+    if not isinstance(state_payload, dict):
+        raise ValueError("ProjectState must be a JSON object")
+    metadata = state_payload.get("metadata")
+    metadata = metadata if isinstance(metadata, dict) else {}
+    return metadata.get("v1_6_graduated") is True
+
+
 def _positive_int(value: object, *, field: str) -> int:
     if type(value) is int and value > 0:
         return value
@@ -277,6 +285,15 @@ def main() -> int:
         live_state, _ = gh.get_json_file(LIVE_STATE_PATH)
         metadata = live_state.get("metadata")
         metadata = metadata if isinstance(metadata, dict) else {}
+        if _v1_6_already_graduated(live_state):
+            payload = {
+                "schema_version": 1,
+                "state": "NOOP",
+                "reason": "v1.6-already-graduated",
+            }
+            _write_result(payload)
+            print(json.dumps(payload, sort_keys=True))
+            return 0
         if metadata.get("phase") != PHASE:
             payload = {
                 "schema_version": 1,
