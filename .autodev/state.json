@@ -62,7 +62,7 @@
     "v13ri1-002",
     "v14rv1-001"
   ],
-  "current_task_id": "v14rv1-001",
+  "current_task_id": null,
   "failed_task_ids": [],
   "iteration": 60,
   "metadata": {
@@ -75,9 +75,9 @@
       "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/9",
       "task_id": "v12ext4-002"
     },
-    "milestone": "v1.4-proof-001-pending",
-    "next_required_human_action": "review-runtime-verification-failure",
-    "next_system_action": null,
+    "milestone": "v1.4-proof-002-pending",
+    "next_required_human_action": null,
+    "next_system_action": "run-v1.4-runtime-verification-proof-002",
     "phase": "v1.4-runtime-deployment-verification",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -105,17 +105,12 @@
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
     "queue_exhausted": true,
-    "recovery_action": "HUMAN_WAIT",
-    "recovery_failure": "RUNTIME_VERIFICATION",
     "repository_intelligence_content_fingerprint": "33353a2a13227a1e9b1087bf8a99ac27cd3065efeb2a71051d5ad7dab9f200d2",
     "repository_intelligence_context_fingerprint": "3d59c45fba2d62fbf34ca50d63aae96b4116c2d902edcc5c3b2f7be7f79d8887",
     "repository_intelligence_impact_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
     "repository_intelligence_relationship_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
     "repository_intelligence_snapshot_fingerprint": "caff7263596359de10ac06b62cc020a1a1903179276e05b2f9c02539b78837ee",
     "repository_intelligence_source_sha": "72f658d8a41639cc04d7b2220d1de6b1705a32fb",
-    "runtime_verification_failure_fingerprint": "c08b4fbd4302d42331d26600446b04ea5246fa327f638271c9b97f6bc4c1e010",
-    "runtime_verification_id": "rv-730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
-    "runtime_verification_source_sha": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
     "scheduler": "dag",
     "target_base_branch": "main",
     "target_repository": "M-Osugi1230/one-minute-thought-experiments",
@@ -138,11 +133,24 @@
     "v1_4_slice_003_post_merge_trigger": true,
     "v1_4_slice_004_bounded_probe_execution": true,
     "v1_4_slice_005_runtime_target_adapters": true,
-    "v1_4_slice_006_runtime_failure_containment": true
+    "v1_4_slice_006_runtime_failure_containment": true,
+    "v1_4_proof_001_superseded": true,
+    "v1_4_proof_002_armed": true,
+    "last_superseded_v1_4_proof": {
+      "request_id": "v1.4-runtime-verification-proof-001",
+      "campaign_id": "v1.4-runtime-verification-campaign-001",
+      "task_id": "v14rv1-001",
+      "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/15",
+      "target_merge_sha": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
+      "outcome": "HUMAN_WAIT",
+      "reason": "runtime-verification-entered-human-wait-before-target-or-report-evidence-persisted",
+      "remediation_pull_request": 167,
+      "remediation_merge_sha": "e0d2559050f8e47d7f96d038a46f6c67fb8cc32b"
+    }
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "HUMAN_WAIT",
+  "status": "READY",
   "updated_at": "2026-09-29T23:53:58.940520+00:00"
 }
