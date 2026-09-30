@@ -247,6 +247,19 @@ def _target_observations(
     }
 
 
+def _optional_json(
+    gh: GitHubClient,
+    path: str,
+) -> dict[str, Any] | None:
+    try:
+        payload, _ = gh.get_json_file(path)
+        return payload
+    except GitHubError as exc:
+        if "GitHub HTTP 404:" in str(exc):
+            return None
+        raise
+
+
 def _optional_remote_recovery(gh: GitHubClient) -> dict[str, Any] | None:
     try:
         payload, _ = gh.get_json_file(RECOVERY_PATH)
@@ -364,11 +377,35 @@ def main() -> int:
         runtime_provenance_path = (
             f".autodev/runtime-verification/{task_id}/provenance.json"
         )
-        contract, _ = gh.get_json_file(contract_path)
-        receipt, _ = gh.get_json_file(receipt_path)
-        report_wrapper, _ = gh.get_json_file(report_path)
-        runtime_provenance, _ = gh.get_json_file(runtime_provenance_path)
+        contract = _optional_json(gh, contract_path)
+        receipt = _optional_json(gh, receipt_path)
+        report_wrapper = _optional_json(gh, report_path)
+        runtime_provenance = _optional_json(gh, runtime_provenance_path)
+        missing_runtime = [
+            path
+            for path, payload in (
+                (contract_path, contract),
+                (receipt_path, receipt),
+                (report_path, report_wrapper),
+                (runtime_provenance_path, runtime_provenance),
+            )
+            if payload is None
+        ]
+        if missing_runtime:
+            payload = {
+                "schema_version": 1,
+                "state": "NOOP",
+                "reason": "runtime-evidence-not-ready",
+                "missing_paths": missing_runtime,
+            }
+            _write_result(payload)
+            print(json.dumps(payload, sort_keys=True))
+            return 0
 
+        assert contract is not None
+        assert receipt is not None
+        assert report_wrapper is not None
+        assert runtime_provenance is not None
         if receipt.get("status") != "VERIFIED":
             raise ValueError("v1.6 Runtime Verification is not VERIFIED")
         if receipt.get("task_id") != task_id or receipt.get("dispatch_count") != 1:
