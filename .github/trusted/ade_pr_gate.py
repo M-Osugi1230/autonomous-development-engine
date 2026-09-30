@@ -93,6 +93,47 @@ def evaluate_jules_pull_request(
     return True, "Jules provenance and change scope are allowed"
 
 
+def ci_failure_belongs_to_active_task(
+    *,
+    controller_repository: str,
+    state: dict[str, Any],
+    checkpoint: dict[str, Any],
+    pull_request: dict[str, Any],
+    files: list[dict[str, Any]],
+) -> tuple[bool, str]:
+    metadata = state.get("metadata")
+    metadata = metadata if isinstance(metadata, dict) else {}
+    target_repository = metadata.get("target_repository", controller_repository)
+    if target_repository != controller_repository:
+        return False, "active task targets a different repository"
+
+    current_task_id = state.get("current_task_id")
+    if not isinstance(current_task_id, str) or not current_task_id.strip():
+        return False, "project state has no active task"
+
+    if checkpoint.get("task_id") != current_task_id:
+        return False, "checkpoint is not bound to the active task"
+
+    session_id = checkpoint.get("provider_session_id")
+    if not isinstance(session_id, str) or not session_id.strip():
+        return False, "active task has no provider session binding"
+
+    allowed, reason = evaluate_jules_pull_request(
+        repository=controller_repository,
+        pull_request=pull_request,
+        files=files,
+    )
+    if not allowed:
+        return False, "CI failure is not from a managed Jules pull request: " + reason
+
+    body = pull_request.get("body")
+    expected_task_url = f"https://jules.google.com/task/{session_id}"
+    if not isinstance(body, str) or expected_task_url not in body:
+        return False, "Jules pull request is not bound to the active provider session"
+
+    return True, "CI failure is bound to the active managed task and provider session"
+
+
 def _optional_task_graph(
     api: GitHubClient,
 ) -> tuple[dict[str, Any], str] | None:
@@ -313,21 +354,50 @@ def main() -> int:
             return 0
         if workflow_run.get("conclusion") != "success":
             pull_requests = workflow_run.get("pull_requests", [])
-            if isinstance(pull_requests, list) and len(pull_requests) == 1:
-                api = GitHubClient()
-                state, _ = api.get_json_file(".autodev/state.json")
-                task_id = state.get("current_task_id")
-                if isinstance(task_id, str) and task_id.strip():
-                    detail = "ci:" + str(workflow_run.get("id")) + ":" + str(workflow_run.get("conclusion"))
-                    record = plan_and_persist(api, task_id=task_id, failure=RecoveryFailure.CI_FAILURE, detail=detail)
-                    apply_project_status(api, record)
-                    if record.action is RecoveryAction.REPAIR:
-                        api.dispatch("ade_next_cycle", {"task_id": task_id, "recovery": "repair"})
-                        print("RECOVERY: dispatched repair for " + task_id)
-                    else:
-                        print("RECOVERY: " + task_id + " -> " + record.action.value)
+            if not isinstance(pull_requests, list) or len(pull_requests) != 1:
+                print("WAIT: CI is not green; no managed recovery target")
+                return 0
+            pr_number = pull_requests[0].get("number")
+            if not isinstance(pr_number, int):
+                print("WAIT: CI is not green; associated pull request is invalid")
+                return 0
+
+            api = GitHubClient()
+            state, _ = api.get_json_file(".autodev/state.json")
+            task_id = state.get("current_task_id")
+            if not isinstance(task_id, str) or not task_id.strip():
+                print("WAIT: CI is not green; no active task")
+                return 0
+
+            try:
+                checkpoint, _ = api.get_json_file(".autodev/runtime/checkpoint.json")
+            except GitHubError as exc:
+                if "GitHub HTTP 404:" in str(exc):
+                    print("WAIT: CI is not green; active task has no checkpoint")
                     return 0
-            print("WAIT: CI is not green; no managed recovery target")
+                raise
+
+            pr = api.get_pull_request(pr_number)
+            files = api.list_pull_request_files(pr_number)
+            belongs, reason = ci_failure_belongs_to_active_task(
+                controller_repository=api.repository,
+                state=state,
+                checkpoint=checkpoint,
+                pull_request=pr,
+                files=files,
+            )
+            if not belongs:
+                print(f"SKIP: PR #{pr_number} CI failure is unrelated to active task: {reason}")
+                return 0
+
+            detail = "ci:" + str(workflow_run.get("id")) + ":" + str(workflow_run.get("conclusion"))
+            record = plan_and_persist(api, task_id=task_id, failure=RecoveryFailure.CI_FAILURE, detail=detail)
+            apply_project_status(api, record)
+            if record.action is RecoveryAction.REPAIR:
+                api.dispatch("ade_next_cycle", {"task_id": task_id, "recovery": "repair"})
+                print("RECOVERY: dispatched repair for " + task_id)
+            else:
+                print("RECOVERY: " + task_id + " -> " + record.action.value)
             return 0
 
         pull_requests = workflow_run.get("pull_requests", [])
