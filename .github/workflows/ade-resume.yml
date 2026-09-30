@@ -1,6 +1,10 @@
 name: ADE Resume Watch
 
 on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
   repository_dispatch:
     types: [ade_resume_watch]
