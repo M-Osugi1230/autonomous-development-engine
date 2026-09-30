@@ -1,0 +1,40 @@
+{
+  "attempts_by_probe": [
+    {
+      "attempts": 1,
+      "probe_id": "offline-cli-smoke"
+    },
+    {
+      "attempts": 1,
+      "probe_id": "production-import-smoke"
+    }
+  ],
+  "report": {
+    "contract_fingerprint": "2d2d43c0c8e31a0177596ea36ab9a7834e2ad866b16a075d416e9ab7699e6b04",
+    "disposition": "VERIFIED",
+    "missing_probe_ids": [],
+    "results": [
+      {
+        "attempt": 1,
+        "detail_code": "offline-cli-pass",
+        "probe_id": "offline-cli-smoke",
+        "schema_version": 1,
+        "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+        "status": "PASS"
+      },
+      {
+        "attempt": 1,
+        "detail_code": "production-import-pass",
+        "probe_id": "production-import-smoke",
+        "schema_version": 1,
+        "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+        "status": "PASS"
+      }
+    ],
+    "schema_version": 1,
+    "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+    "verification_id": "rv-d3073a165a902b58cb2dfee9b16736fc7eaa43d9"
+  },
+  "report_fingerprint": "0fd23c252d7d57852d0231e51d4497b183ae595e9a81fd13aca8d0a5dd58c01c",
+  "schema_version": 1
+}
