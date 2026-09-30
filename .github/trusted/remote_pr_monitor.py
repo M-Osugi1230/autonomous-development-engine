@@ -128,6 +128,7 @@ def _arm_post_merge_runtime_verification(
     *,
     state: dict[str, Any],
     receipt: RemoteExecutionReceipt,
+    trusted_head_sha: str,
     trusted_merge_sha: str,
 ) -> RuntimeVerificationReceipt | None:
     if not _runtime_verification_enabled(state):
@@ -160,6 +161,7 @@ def _arm_post_merge_runtime_verification(
 
     final_receipt = activation.receipt
     if activation.should_dispatch:
+        remote_monitor_run_id = os.environ.get("GITHUB_RUN_ID")
         gh.dispatch(
             "ade_runtime_verification",
             {
@@ -168,6 +170,10 @@ def _arm_post_merge_runtime_verification(
                 "target_repository": activation.receipt.target_repository,
                 "source_sha": activation.receipt.source_sha,
                 "source": "remote-pr-monitor",
+                "remote_monitor_workflow_run_id": remote_monitor_run_id,
+                "pull_request_number": receipt.pull_request_number,
+                "pull_request_head_sha": trusted_head_sha,
+                "trusted_merge_sha": trusted_merge_sha,
             },
         )
         transition = record_runtime_verification_dispatch(
@@ -259,6 +265,7 @@ def main() -> int:
                     gh,
                     state=state,
                     receipt=receipt,
+                    trusted_head_sha=head_sha,
                     trusted_merge_sha=merge_sha,
                 )
 
