@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "version": "v1.4",
+  "request_id": "v1.4-runtime-verification-proof-001",
+  "campaign_id": "v1.4-runtime-verification-campaign-001",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "human_authored_per_task_work_items": false,
+  "task": {
+    "task_id": "v14rv1-001",
+    "pull_request": 15,
+    "head_sha": "8688e0850c29de95bf2cd561d21f18b4f2a4147f",
+    "merge_commit": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
+    "changed_files": [
+      "tests/test_models.py"
+    ]
+  },
+  "runtime_verification": {
+    "verification_id": "rv-730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
+    "source_sha": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
+    "receipt_status": "HUMAN_WAIT",
+    "dispatch_count": 1,
+    "contract_fingerprint": "8c4da2d2f393e1a136c65c7cc22c1e107e9866f3d33f4baafc7880577c06f3ab",
+    "registry_fingerprint": "aa0abe525d4baacdfcfb05e204221bbe17d30efb30a7122d581e33b6c59284f7",
+    "policy_fingerprint": "1e3eda77b853444be7915913da7c7050f42a7e650f0d83d38d8634f36f470d78",
+    "target_evidence_persisted": false,
+    "report_evidence_persisted": false,
+    "recovery_failure": "RUNTIME_VERIFICATION",
+    "recovery_action": "HUMAN_WAIT",
+    "failure_fingerprint": "c08b4fbd4302d42331d26600446b04ea5246fa327f638271c9b97f6bc4c1e010"
+  },
+  "superseded": true,
+  "superseded_reason": "runtime verification entered fail-closed HUMAN_WAIT before durable target/report evidence was persisted; controller JSON write-conflict handling was hardened before the successor proof",
+  "remediation": {
+    "pull_request": 167,
+    "merge_sha": "e0d2559050f8e47d7f96d038a46f6c67fb8cc32b",
+    "invariant": "retry branch-level HTTP 409 only when the exact JSON path is unchanged; fail closed on same-path mutation"
+  },
+  "successor_request_id": "v1.4-runtime-verification-proof-002",
+  "successor_campaign_id": "v1.4-runtime-verification-campaign-002"
+}
