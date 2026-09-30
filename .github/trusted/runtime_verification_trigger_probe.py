@@ -128,6 +128,29 @@ def main() -> int:
     assert v1_5.status == "DISPATCHED"
     assert len(gh.dispatches) == 2
 
+    v1_6 = remote_pr_monitor._arm_post_merge_runtime_verification(
+        gh,
+        state={
+            "metadata": {
+                "phase": "v1.6-autonomous-backlog",
+                "target_repository": TARGET,
+            }
+        },
+        receipt=RemoteExecutionReceipt(
+            task_id="abgproof-task-001",
+            target_repository=TARGET,
+            pull_request_url=f"https://github.com/{TARGET}/pull/19",
+            recorded_at="2026-10-01T00:00:00+00:00",
+            status="PR_CREATED",
+        ),
+        trusted_head_sha="1" * 40,
+        trusted_merge_sha="d" * 40,
+    )
+    assert v1_6 is not None
+    assert v1_6.source_sha == "d" * 40
+    assert v1_6.status == "DISPATCHED"
+    assert len(gh.dispatches) == 3
+
     old_phase = remote_pr_monitor._arm_post_merge_runtime_verification(
         gh,
         state={"metadata": {"phase": "v1.3-repository-intelligence"}},
@@ -142,7 +165,7 @@ def main() -> int:
         trusted_merge_sha="b" * 40,
     )
     assert old_phase is None
-    assert len(gh.dispatches) == 2
+    assert len(gh.dispatches) == 3
 
     print(json.dumps({
         "ok": True,
@@ -152,6 +175,7 @@ def main() -> int:
         "post_merge_dispatch_recorded": True,
         "duplicate_dispatch_suppressed": True,
         "v1_5_runtime_verification_enabled": True,
+        "v1_6_runtime_verification_enabled": True,
         "pre_v1_4_behavior_preserved": True,
     }, sort_keys=True))
     return 0
