@@ -241,3 +241,11 @@
 - [x] Failed runtime/deployment verification enters bounded recovery or HUMAN_WAIT and never silently marks the Campaign complete.
 - [x] A real external-repository proof demonstrates merge -> runtime/deployment verification -> durable VERIFIED evidence through the trusted controller.
 
+## ADE v1.5 — Development Memory Acceptance
+- [x] Development Memory records are deterministic, bounded, source-backed, secret-filtered, and permanently advisory-only; persisted memory cannot grant execution authority, expand write scope, or bypass HUMAN_WAIT.
+- [ ] Trusted controller extraction creates memory only from validated durable evidence and never from raw provider self-report, raw logs, credentials, or untrusted prose.
+- [ ] Contradictory, superseded, stale, repository-mismatched, or source-drifted memory is detected and cannot silently become current truth.
+- [ ] Planner and Recovery receive only bounded sanitized memory context with explicit provenance and no new execution authority.
+- [ ] Durable memory lifecycle is idempotent across retries/restarts and exposes safe observability without leaking raw evidence or secrets.
+- [ ] A real cross-cycle proof demonstrates useful memory reuse while all existing Trusted Gate, scope, CI, lease, runtime-verification, and human boundaries remain authoritative.
+
