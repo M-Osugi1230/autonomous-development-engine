@@ -232,3 +232,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/v1_4_runtime_verification_audit.py
+
+      - name: ADE v1.5 Development Memory Graduation audit
+        env:
+          PYTHONPATH: src
+        run: python scripts/v1_5_development_memory_audit.py
