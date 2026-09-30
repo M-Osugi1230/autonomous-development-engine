@@ -213,6 +213,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/multi_agent_contribution_probe.py
 
+      - name: Multi-Agent deterministic reconciliation proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/multi_agent_reconciliation_probe.py
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
