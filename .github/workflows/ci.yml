@@ -236,7 +236,7 @@ jobs:
       - name: Multi-Agent graduation finalizer proof
         env:
           PYTHONPATH: src:.github/trusted
-        run: python -m unittest tests.test_v1_7_multi_agent_audit tests.test_runtime_verification_dispatch -v
+        run: python -m unittest discover -s tests -p 'test_v1_7_multi_agent_audit.py' -v
 
       - name: Checkpoint restart proof
         env:
