@@ -1,0 +1,12 @@
+{
+  "contract_fingerprint": "2d2d43c0c8e31a0177596ea36ab9a7834e2ad866b16a075d416e9ab7699e6b04",
+  "dispatch_count": 0,
+  "policy_fingerprint": "1e3eda77b853444be7915913da7c7050f42a7e650f0d83d38d8634f36f470d78",
+  "registry_fingerprint": "aa0abe525d4baacdfcfb05e204221bbe17d30efb30a7122d581e33b6c59284f7",
+  "schema_version": 1,
+  "source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+  "status": "ARMED",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "task_id": "v14rv3-001",
+  "verification_id": "rv-d3073a165a902b58cb2dfee9b16736fc7eaa43d9"
+}
