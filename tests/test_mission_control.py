@@ -204,6 +204,21 @@ class MissionControlSnapshotTests(unittest.TestCase):
         self.assertEqual(snapshot.lifecycle_status, "RECOVERING")
         self.assertNotIn("private provider detail", json.dumps(snapshot.to_dict()))
 
+    def test_snapshot_exposes_quota_resume_next_action(self) -> None:
+        self.write_base_fixture()
+        state = json.loads((self.autodev / "state.json").read_text(encoding="utf-8"))
+        state["status"] = "PAUSED_QUOTA"
+        state["metadata"]["next_system_action"] = "resume-after-provider-quota"
+        state["metadata"]["next_required_human_action"] = None
+        state["metadata"]["resume_after"] = "2026-09-30T06:56:17+00:00"
+        self.write_json("state.json", state)
+
+        snapshot = build_mission_control_snapshot(self.root)
+
+        self.assertEqual(snapshot.next_system_action, "resume-after-provider-quota")
+        self.assertIsNone(snapshot.next_required_human_action)
+        self.assertEqual(snapshot.resume_after, "2026-09-30T06:56:17+00:00")
+
     def test_snapshot_exposes_safe_campaign_progress(self) -> None:
         self.write_base_fixture()
         self.write_json(

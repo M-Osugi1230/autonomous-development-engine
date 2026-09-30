@@ -264,6 +264,8 @@ def _quota_pause(
         metadata_updates={
             "pause_reason": "jules-rolling-quota",
             "resume_after": resume_after,
+            "next_system_action": "resume-after-provider-quota",
+            "next_required_human_action": None,
         },
     )
     _write_result({**payload, "state": "PAUSED_QUOTA"})
@@ -337,6 +339,10 @@ def monitor_existing(
         gh,
         task_id=task_id,
         status="RUNNING",
+        metadata_updates={
+            "next_system_action": "monitor-provider-session",
+            "next_required_human_action": None,
+        },
         clear_pause_metadata=True,
     )
     timeout_seconds = int(task.get("timeout_seconds", 1800))

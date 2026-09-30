@@ -165,6 +165,18 @@ class MissionControlHtmlTests(unittest.TestCase):
         self.assertIn("campaign-zt", html)
         self.assertIn("DISPATCHED", html)
 
+    def test_next_action_and_resume_time_are_rendered(self) -> None:
+        snapshot = replace(
+            make_snapshot(),
+            next_system_action="resume-after-provider-quota",
+            next_required_human_action=None,
+            resume_after="2026-09-30T06:56:17+00:00",
+        )
+        html = render_mission_control(snapshot)
+        self.assertIn("Next system action", html)
+        self.assertIn("resume-after-provider-quota", html)
+        self.assertIn("2026-09-30T06:56:17+00:00", html)
+
     def test_renderer_rejects_non_snapshot_input(self) -> None:
         with self.assertRaises(ValueError):
             render_mission_control({"project_id": "bad"})  # type: ignore[arg-type]
