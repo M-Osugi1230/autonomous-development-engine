@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "version": "v1.4",
+  "request_id": "v1.4-runtime-verification-proof-002",
+  "campaign_id": "v1.4-runtime-verification-campaign-002",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "human_authored_per_task_work_items": false,
+  "accepted_plan_fingerprint": "e99456955b7248ffb3adb2bd319783ea273c86144e8fadf47fe6ed267b7cf743",
+  "planner": {
+    "provider": "jules",
+    "workflow_run": 36651576689,
+    "planning_only": true,
+    "proposal_fingerprint": "1ac2faa4d96735f83d9c5855488574c642d009cc64af80490b04f7dd22bd945e",
+    "request_fingerprint": "ca5d567b7570920fa60255cc376edc4aae5454824aac93164e4a16b8d2c8b1a3"
+  },
+  "task": {
+    "task_id": "v14rv2-001",
+    "planner_workflow_run": 36651576689,
+    "zero_touch_run": 36651700795,
+    "initial_jules_quota_run": 36651713129,
+    "resume_watch_run": 36689562864,
+    "jules_cycle_run": 36689451958,
+    "pull_request": 16,
+    "ci_run": 36689914982,
+    "remote_gate_run": 36689987596,
+    "remote_monitor_run": 36689921025,
+    "head_sha": "bae1a76794b4af329c11f32c238e720caa2f43e6",
+    "merge_commit": "2f357413b318105cbb030cf2c6bbe474689b0e46"
+  },
+  "runtime_verification": {
+    "workflow_run": 36690020952,
+    "trigger_source": "repository_dispatch",
+    "manual_workflow_dispatch": false,
+    "workspace_source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+    "dependency_fingerprint": "3214b67ce798fa395e205184f3c9f7a7b416a24622b29a5f5044638e98c5cd86",
+    "recovery_triggered": false,
+    "human_wait_triggered": false,
+    "contract": {
+      "environment": "repository",
+      "max_attempts": 2,
+      "required_probe_ids": [
+        "offline-cli-smoke",
+        "production-import-smoke"
+      ],
+      "schema_version": 1,
+      "source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "timeout_seconds": 300,
+      "verification_id": "rv-2f357413b318105cbb030cf2c6bbe474689b0e46"
+    },
+    "receipt": {
+      "contract_fingerprint": "7a1f59853a1ee26b6149cf26a80d182661c271f69d904b975b8cc5a66b58f479",
+      "dispatch_count": 1,
+      "policy_fingerprint": "1e3eda77b853444be7915913da7c7050f42a7e650f0d83d38d8634f36f470d78",
+      "registry_fingerprint": "aa0abe525d4baacdfcfb05e204221bbe17d30efb30a7122d581e33b6c59284f7",
+      "schema_version": 1,
+      "source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+      "status": "VERIFIED",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "task_id": "v14rv2-001",
+      "verification_id": "rv-2f357413b318105cbb030cf2c6bbe474689b0e46"
+    },
+    "target": {
+      "evidence": {
+        "deployment_id": null,
+        "environment": "repository",
+        "kind": "repository",
+        "observed_at": "2026-09-30T08:29:39.141026+00:00",
+        "provenance_id": "trusted-merge-sha-v1",
+        "schema_version": 1,
+        "source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+        "target_id": "repository-runtime",
+        "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+      },
+      "evidence_fingerprint": "1eece8f9611446885ac83d2ab2b03ad2c8b07f92eb73ff335e1d0d044ffa5b63",
+      "registry_fingerprint": "5c63ba520e12cf48f1552ce013e722ce2eb583dfcd53bd7612bcf5cf738b719d",
+      "schema_version": 1,
+      "spec": {
+        "deployment_required": false,
+        "environment": "repository",
+        "kind": "repository",
+        "max_age_seconds": 300,
+        "max_future_skew_seconds": 60,
+        "schema_version": 1,
+        "target_id": "repository-runtime"
+      }
+    },
+    "report": {
+      "contract_fingerprint": "7a1f59853a1ee26b6149cf26a80d182661c271f69d904b975b8cc5a66b58f479",
+      "disposition": "VERIFIED",
+      "missing_probe_ids": [],
+      "results": [
+        {
+          "attempt": 1,
+          "detail_code": "offline-cli-pass",
+          "probe_id": "offline-cli-smoke",
+          "schema_version": 1,
+          "source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+          "status": "PASS"
+        },
+        {
+          "attempt": 1,
+          "detail_code": "production-import-pass",
+          "probe_id": "production-import-smoke",
+          "schema_version": 1,
+          "source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+          "status": "PASS"
+        }
+      ],
+      "schema_version": 1,
+      "source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+      "verification_id": "rv-2f357413b318105cbb030cf2c6bbe474689b0e46"
+    },
+    "report_fingerprint": "f45a88a39f6f3bd872d5b656664e8e47742fa4bae6eb9a02c7deb6c6c6e03baf",
+    "attempts_by_probe": [
+      {
+        "attempts": 1,
+        "probe_id": "offline-cli-smoke"
+      },
+      {
+        "attempts": 1,
+        "probe_id": "production-import-smoke"
+      }
+    ]
+  },
+  "operational_incidents": [
+    {
+      "kind": "scheduler-delivery-gap",
+      "last_pre_due_resume_watch_run": 36674811488,
+      "resume_boundary": "2026-09-30T06:56:17.017175+00:00",
+      "remediation_pull_request": 170,
+      "resumed_by_push_run": 36689562864,
+      "affected_runtime_verification_result": false
+    },
+    {
+      "kind": "unrelated-controller-ci-failure-misattribution",
+      "observed_recovery_failure": "CI_FAILURE",
+      "observed_recovery_action": "REPAIR",
+      "recovery_fingerprint": "000270883d57fddfadf8dc3ac55a3d46e628ceb2f1457a325f8c74b678534bea",
+      "remediation_pull_request": 173,
+      "remediation_merge_sha": "e50e558e820964ea1e1882685da46b90ed472265",
+      "affected_runtime_verification_result": false
+    }
+  ],
+  "manual_campaign_progress_after_goal_submission": false,
+  "terminal_status": "COMPLETED",
+  "failed_tasks": 0,
+  "terminal_snapshot": {
+    "source_sha": "e50e558e820964ea1e1882685da46b90ed472265",
+    "campaign": {
+      "campaign_id": "v1.4-runtime-verification-campaign-002",
+      "completed_task_ids": [
+        "v14rv2-001"
+      ],
+      "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses additional Unicode whitespace forms such as ideographic space and thin space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+      "schema_version": 1,
+      "status": "COMPLETED",
+      "task_ids": [
+        "v14rv2-001"
+      ]
+    },
+    "state": {
+      "status": "READY",
+      "current_task_id": null,
+      "failed_task_ids": [],
+      "completed_campaign_task_ids": [
+        "v14rv2-001"
+      ]
+    },
+    "remote_execution_receipt": {
+      "pull_request_url": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/16",
+      "recorded_at": "2026-09-30T08:29:38.181302+00:00",
+      "schema_version": 1,
+      "status": "MERGED",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "task_id": "v14rv2-001"
+    }
+  }
+}
