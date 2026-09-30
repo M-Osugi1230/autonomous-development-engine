@@ -60,6 +60,7 @@ REQUIRED_CI_PROOFS = (
     "Autonomous Backlog selection proof",
     "Autonomous Backlog PlanningGoal handoff proof",
     "Autonomous Backlog verified retirement proof",
+    "Autonomous Backlog successor gate proof",
     "Autonomous Planner proof",
     "Repository Intelligence proof",
     "Development Memory proof",
