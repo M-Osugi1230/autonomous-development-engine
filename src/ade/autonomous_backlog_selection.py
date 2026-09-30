@@ -45,6 +45,7 @@ class BacklogSelection:
     resolution_fingerprint: str
     selected_candidate_id: str | None
     eligible_candidate_ids: tuple[str, ...]
+    retired_candidate_ids: tuple[str, ...] = ()
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -55,13 +56,19 @@ class BacklogSelection:
         if len(self.backlog_fingerprint) != 64 or len(self.resolution_fingerprint) != 64:
             raise AutonomousBacklogError("selection fingerprints must be sha256")
         eligible = tuple(sorted(set(self.eligible_candidate_ids)))
+        retired = tuple(sorted(set(self.retired_candidate_ids)))
         if len(eligible) != len(self.eligible_candidate_ids):
             raise AutonomousBacklogError("eligible candidate IDs must be unique")
+        if len(retired) != len(self.retired_candidate_ids):
+            raise AutonomousBacklogError("retired candidate IDs must be unique")
+        if set(eligible) & set(retired):
+            raise AutonomousBacklogError("retired candidates cannot remain eligible")
         if self.selected_candidate_id is not None and self.selected_candidate_id not in eligible:
             raise AutonomousBacklogError("selected candidate must be eligible")
         if self.selected_candidate_id is None and eligible:
             raise AutonomousBacklogError("eligible candidates require one deterministic selection")
         object.__setattr__(self, "eligible_candidate_ids", eligible)
+        object.__setattr__(self, "retired_candidate_ids", retired)
 
     def canonical_dict(self) -> dict[str, Any]:
         return {
@@ -72,6 +79,7 @@ class BacklogSelection:
             "resolution_fingerprint": self.resolution_fingerprint,
             "selected_candidate_id": self.selected_candidate_id,
             "eligible_candidate_ids": list(self.eligible_candidate_ids),
+            "retired_candidate_ids": list(self.retired_candidate_ids),
             "selection_policy": "current-source-nonhuman-priority-v1",
             "execution_authority": False,
             "planning_goal_authority": False,
@@ -88,6 +96,7 @@ def select_next_backlog_candidate(
     *,
     repository: str,
     source_sha: str,
+    retired_candidate_ids: tuple[str, ...] = (),
 ) -> BacklogSelection:
     if not isinstance(backlog, AutonomousBacklog):
         raise AutonomousBacklogError("backlog must be AutonomousBacklog")
@@ -102,6 +111,12 @@ def select_next_backlog_candidate(
     if source_map.get(repository) != source_sha:
         raise AutonomousBacklogError("selection source SHA does not match resolution")
     by_id = {candidate.candidate_id: candidate for candidate in backlog.candidates}
+    retired = tuple(sorted(set(retired_candidate_ids)))
+    if len(retired) != len(retired_candidate_ids):
+        raise AutonomousBacklogError("retired candidate IDs must be unique")
+    unknown_retired = set(retired) - set(by_id)
+    if unknown_retired:
+        raise AutonomousBacklogError("retirement references unknown backlog candidate")
     entry_by_id = {entry.candidate_id: entry for entry in resolution.entries}
     if set(by_id) != set(entry_by_id):
         raise AutonomousBacklogError("resolution candidate set does not match backlog")
@@ -110,6 +125,8 @@ def select_next_backlog_candidate(
     for candidate_id, candidate in by_id.items():
         entry = entry_by_id[candidate_id]
         if candidate.repository != repository or candidate.source_sha != source_sha:
+            continue
+        if candidate_id in retired:
             continue
         if candidate.human_only:
             continue
@@ -127,4 +144,5 @@ def select_next_backlog_candidate(
         resolution_fingerprint=resolution.fingerprint(),
         selected_candidate_id=selected,
         eligible_candidate_ids=eligible,
+        retired_candidate_ids=retired,
     )
