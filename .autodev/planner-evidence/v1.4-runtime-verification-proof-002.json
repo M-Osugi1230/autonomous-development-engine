@@ -1,0 +1,66 @@
+{
+  "accepted_plan_fingerprint": "e99456955b7248ffb3adb2bd319783ea273c86144e8fadf47fe6ed267b7cf743",
+  "campaign_id": "v1.4-runtime-verification-campaign-002",
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "e4bb792a008504b2c2620275e2351ddd57512b910afefd738a31879823b26119",
+  "proposal": {
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses additional Unicode whitespace forms such as ideographic space and thin space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Add a regression test in `tests/test_models.py` to confirm experiment variant label normalization collapses Unicode whitespace forms such as ideographic space and thin space.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_models.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Add a regression test in `tests/test_models.py` to confirm experiment variant label normalization collapses Unicode whitespace forms such as ideographic space and thin space.",
+        "title": "Add a regression test in `tests/test_models.py` to confirm experiment variant label normalization collapses Unicode whitespace forms such as ideographic space and thin space."
+      }
+    ]
+  },
+  "proposal_fingerprint": "1ac2faa4d96735f83d9c5855488574c642d009cc64af80490b04f7dd22bd945e",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 1,
+  "provider_plan_steps_sha256": "9a5fcc31f36526270b509a9e9b6c72750b9971920d9a5516db54f91ad877c265",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "213576cd6283e3134b56eac93f10060f9b8dd1daa9d7bbf3eceb5b883a2500d2",
+  "repository_context_fingerprint": "44ed339948ac2a736db1672b8d1993dae34f96d9fa5c3b0c4977512c10c7d007",
+  "repository_impact_analysis_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "3dc46ae5d4f6fe8609f81f835f3653f21ed27750fa830e83eaa582e76c5b455d",
+  "repository_source_sha": "730a19aba4b4b3386eeb4c07f750c73f1c5a34b5",
+  "request": {
+    "allowed_path_prefixes": [
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "v1.4-runtime-verification-campaign-002",
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses additional Unicode whitespace forms such as ideographic space and thin space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "id_prefix": "v14rv2",
+    "max_tasks": 1,
+    "request_id": "v1.4-runtime-verification-proof-002",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "request_fingerprint": "ca5d567b7570920fa60255cc376edc4aae5454824aac93164e4a16b8d2c8b1a3",
+  "schema_version": 1,
+  "task_ids": [
+    "v14rv2-001"
+  ]
+}
