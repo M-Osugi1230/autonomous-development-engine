@@ -235,10 +235,10 @@ class DevelopmentMemoryResolutionTests(unittest.TestCase):
         )
         second = memory(
             "memory-002",
-            kind=MemoryKind.REMEDIATION,
+            kind=MemoryKind.VERIFIED_OUTCOME,
             source_sha=CURRENT_SHA,
-            statement="Historical remediation.",
-            tags=("recovery", "rule"),
+            statement="Corrected current outcome.",
+            tags=("runtime", "verified"),
         )
         ledger = DevelopmentMemoryLedger(records=(first, second))
 
