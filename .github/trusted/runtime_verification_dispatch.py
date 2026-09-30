@@ -41,6 +41,13 @@ V1_6_BACKLOG_PHASE = "v1.6-autonomous-backlog"
 V1_7_MULTI_AGENT_PHASE = "v1.7-multi-agent"
 
 
+def _runtime_provenance_required(task_id: str, phase: str | None) -> bool:
+    return (
+        task_id == V1_5_FINALIZER_TASK_ID
+        or phase in {V1_6_BACKLOG_PHASE, V1_7_MULTI_AGENT_PHASE}
+    )
+
+
 def _runtime_provenance_path(task_id: str) -> str:
     return f".autodev/runtime-verification/{task_id}/provenance.json"
 
@@ -392,9 +399,9 @@ def main() -> int:
             backlog_finalizer = "NOT_APPLICABLE"
             runtime_provenance = None
             phase = _active_phase(gh)
-            needs_provenance = (
-                receipt.task_id == V1_5_FINALIZER_TASK_ID
-                or phase in {V1_6_BACKLOG_PHASE, V1_7_MULTI_AGENT_PHASE}
+            needs_provenance = _runtime_provenance_required(
+                receipt.task_id,
+                phase,
             )
             if needs_provenance and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
                 try:
@@ -543,9 +550,9 @@ def main() -> int:
                 memory_feedback=memory_feedback,
             )
             phase = _active_phase(gh)
-            needs_provenance = (
-                final_receipt.task_id == V1_5_FINALIZER_TASK_ID
-                or phase in {V1_6_BACKLOG_PHASE, V1_7_MULTI_AGENT_PHASE}
+            needs_provenance = _runtime_provenance_required(
+                final_receipt.task_id,
+                phase,
             )
             if needs_provenance:
                 runtime_provenance = _persist_runtime_provenance(
