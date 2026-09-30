@@ -233,6 +233,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/multi_agent_review_gate_probe.py
 
+      - name: Multi-Agent graduation finalizer proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python -m unittest discover -s tests -p 'test_v1_7_multi_agent_*.py' -v
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src

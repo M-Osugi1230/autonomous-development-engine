@@ -1,0 +1,51 @@
+name: ADE v1.7 Multi-Agent Finalizer
+
+on:
+  repository_dispatch:
+    types:
+      - ade_v1_7_multi_agent_finalize
+  workflow_run:
+    workflows: ["ADE Runtime Verification", "CI"]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "11,26,41,56 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: ade-v1-7-multi-agent-finalizer
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Freeze audited v1.7 Multi-Agent evidence
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/v1_7_multi_agent_finalize.py
+
+      - name: Upload v1.7 finalizer result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-v1-7-multi-agent-finalizer-result
+          path: .autodev/runtime/v1-7-multi-agent-finalize-result.json
+          if-no-files-found: error
+          retention-days: 30

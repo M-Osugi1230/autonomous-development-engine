@@ -300,6 +300,31 @@ def _dispatch_v1_6_backlog_finalizer(
     return "DISPATCHED"
 
 
+def _dispatch_v1_7_multi_agent_finalizer(
+    gh: GitHubClient,
+    *,
+    receipt: RuntimeVerificationReceipt,
+    provenance: dict[str, Any],
+    phase: str | None,
+) -> str:
+    if receipt.status != "VERIFIED" or phase != V1_7_MULTI_AGENT_PHASE:
+        return "NOT_APPLICABLE"
+    try:
+        gh.dispatch(
+            "ade_v1_7_multi_agent_finalize",
+            {
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "source_sha": receipt.source_sha,
+                "runtime_workflow_run_id": provenance["runtime_workflow_run_id"],
+                "source": "runtime-verification",
+            },
+        )
+    except GitHubError:
+        return "SCHEDULED_FALLBACK"
+    return "DISPATCHED"
+
+
 def _dispatch_v1_5_graduation_finalizer(
     gh: GitHubClient,
     *,
@@ -397,32 +422,43 @@ def main() -> int:
             )
             graduation_finalizer = "NOT_APPLICABLE"
             backlog_finalizer = "NOT_APPLICABLE"
+            multi_agent_finalizer = "NOT_APPLICABLE"
             runtime_provenance = None
             phase = _active_phase(gh)
             needs_provenance = _runtime_provenance_required(
                 receipt.task_id,
                 phase,
             )
-            if needs_provenance and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
+            if needs_provenance:
                 try:
                     runtime_provenance, _ = gh.get_json_file(
                         _runtime_provenance_path(receipt.task_id)
                     )
-                    if receipt.task_id == V1_5_FINALIZER_TASK_ID:
-                        graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
-                            gh,
-                            receipt=receipt,
-                            provenance=runtime_provenance,
-                        )
-                    elif phase == V1_6_BACKLOG_PHASE:
-                        backlog_finalizer = _dispatch_v1_6_backlog_finalizer(
+                    if phase == V1_7_MULTI_AGENT_PHASE:
+                        multi_agent_finalizer = _dispatch_v1_7_multi_agent_finalizer(
                             gh,
                             receipt=receipt,
                             provenance=runtime_provenance,
                             phase=phase,
                         )
+                    elif memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
+                        if receipt.task_id == V1_5_FINALIZER_TASK_ID:
+                            graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
+                                gh,
+                                receipt=receipt,
+                                provenance=runtime_provenance,
+                            )
+                        elif phase == V1_6_BACKLOG_PHASE:
+                            backlog_finalizer = _dispatch_v1_6_backlog_finalizer(
+                                gh,
+                                receipt=receipt,
+                                provenance=runtime_provenance,
+                                phase=phase,
+                            )
                 except GitHubError:
-                    if receipt.task_id == V1_5_FINALIZER_TASK_ID:
+                    if phase == V1_7_MULTI_AGENT_PHASE:
+                        multi_agent_finalizer = "WAITING_FOR_PROVENANCE"
+                    elif receipt.task_id == V1_5_FINALIZER_TASK_ID:
                         graduation_finalizer = "WAITING_FOR_PROVENANCE"
                     elif phase == V1_6_BACKLOG_PHASE:
                         backlog_finalizer = "WAITING_FOR_PROVENANCE"
@@ -441,6 +477,7 @@ def main() -> int:
                 "runtime_provenance": runtime_provenance,
                 "v1_5_graduation_finalizer": graduation_finalizer,
                 "v1_6_backlog_finalizer": backlog_finalizer,
+                "v1_7_multi_agent_finalizer": multi_agent_finalizer,
             }
             _write(result)
             print(json.dumps(result, sort_keys=True))
@@ -534,6 +571,7 @@ def main() -> int:
         runtime_provenance = None
         graduation_finalizer = "NOT_APPLICABLE"
         backlog_finalizer = "NOT_APPLICABLE"
+        multi_agent_finalizer = "NOT_APPLICABLE"
         if final_receipt.status == "VERIFIED":
             memory_feedback = _persist_verified_feedback_safely(
                 gh,
@@ -564,7 +602,14 @@ def main() -> int:
                     report_fingerprint=execution.report.fingerprint(),
                     memory_feedback=memory_feedback,
                 )
-                if memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
+                if phase == V1_7_MULTI_AGENT_PHASE:
+                    multi_agent_finalizer = _dispatch_v1_7_multi_agent_finalizer(
+                        gh,
+                        receipt=final_receipt,
+                        provenance=runtime_provenance,
+                        phase=phase,
+                    )
+                elif memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
                     if final_receipt.task_id == V1_5_FINALIZER_TASK_ID:
                         graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
                             gh,
@@ -613,6 +658,7 @@ def main() -> int:
             "runtime_provenance": runtime_provenance,
             "v1_5_graduation_finalizer": graduation_finalizer,
             "v1_6_backlog_finalizer": backlog_finalizer,
+            "v1_7_multi_agent_finalizer": multi_agent_finalizer,
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
