@@ -2,9 +2,9 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "8394616774902109947",
+  "provider_session_id": "15484582041168001412",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "v15mem2-001"
+  "state": "RUNNING",
+  "task_id": "abgproof-777c97294d-001"
 }
