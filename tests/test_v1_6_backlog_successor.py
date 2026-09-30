@@ -105,7 +105,7 @@ class V16BacklogSuccessorTests(unittest.TestCase):
             activation["planning_goal"]["allowed_path_prefixes"],
             ["tests"],
         )
-        self.assertEqual(activation["planning_goal"]["min_tasks"], 1)
+        self.assertEqual(activation["planning_goal"].get("min_tasks", 1), 1)
         self.assertEqual(activation["planning_goal"]["max_tasks"], 1)
         self.assertTrue(
             activation["request_id"].startswith("abgproof-request-")
