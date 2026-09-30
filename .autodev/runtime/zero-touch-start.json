@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.4-runtime-verification-campaign-002",
+  "campaign_id": "v1.4-runtime-verification-campaign-003",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-30T00:43:32.787640+00:00",
-  "plan_fingerprint": "e99456955b7248ffb3adb2bd319783ea273c86144e8fadf47fe6ed267b7cf743",
+  "dispatched_at": "2026-09-30T08:38:09.886688+00:00",
+  "plan_fingerprint": "65a168f047c1a3051ae296fd5f147726fd537ffce0d3e179f3868eb55da92ab6",
   "run_attempt": "1",
-  "run_id": "36651700795",
+  "run_id": "36690919246",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "fd7bb4596dfeb416511c7ddfd1b929021d8a5923",
+  "source_sha": "f222d989cc13e1d0ae1a0a8cd6446e4e824fcac3",
   "status": "DISPATCHED",
-  "task_id": "v14rv2-001"
+  "task_id": "v14rv3-001"
 }
