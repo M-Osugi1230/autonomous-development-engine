@@ -99,9 +99,9 @@
       "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/16",
       "task_id": "v14rv2-001"
     },
-    "milestone": "v1.5-proof-002-pending",
+    "milestone": "v1.5-graduated",
     "next_required_human_action": null,
-    "next_system_action": "monitor-provider-session",
+    "next_system_action": "v1.6-backlog-successor",
     "phase": "v1.5-development-memory",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -206,11 +206,18 @@
     "v1_5_slice_003_memory_resolution": true,
     "v1_5_slice_004_memory_retrieval_ranking": true,
     "v1_5_slice_005_planner_integration": true,
-    "v1_5_slice_006_memory_feedback_lifecycle": true
+    "v1_5_slice_006_memory_feedback_lifecycle": true,
+    "v1_5_graduated": true,
+    "v1_5_graduated_at": "2026-09-30T17:27:52Z",
+    "v1_5_graduation_evidence": ".autodev/campaign-evidence/v1.5-development-memory-proof-002.json",
+    "v1_5_proof_target_final_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+    "v1_5_runtime_verification_id": "rv-4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+    "v1_5_proof_002_memory_id": "mem-786d667480ca61ad8f1a9f0f",
+    "v1_5_final_store_fingerprint": "d64743456ef0a231d5a86d471d1697a5daf7eef3825822037bd4ebd9c25229de"
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
   "status": "READY",
-  "updated_at": "2026-09-30T17:26:54.116160+00:00"
+  "updated_at": "2026-09-30T17:27:52Z"
 }
