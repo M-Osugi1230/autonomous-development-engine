@@ -403,8 +403,8 @@ def audit(
         and len(plan_tasks) == 1
         and isinstance(task_id, str)
         and exact_tests_scope
-        and accepted_task.get("new_paths") == []
-        and accepted_task.get("human_only") is False
+        and accepted_task.get("new_paths", []) == []
+        and accepted_task.get("human_only", False) is False
         and task.get("task_id") == task_id
         and _positive_int(task.get("zero_touch_run"))
         and _positive_int(task.get("implementation_run"))
