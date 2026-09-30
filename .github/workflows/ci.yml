@@ -138,6 +138,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python .github/trusted/v1_6_backlog_successor_probe.py
 
+      - name: Autonomous Backlog finalizer proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/v1_6_backlog_finalize_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
