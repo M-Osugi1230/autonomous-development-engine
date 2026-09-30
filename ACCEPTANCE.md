@@ -253,7 +253,7 @@
 - [x] A deterministic Development Memory proof is mandatory in CI.
 - [x] Trusted controller code derives memory records automatically from verified Campaign, recovery, runtime-verification, and human-decision evidence.
 - [x] Supersession/conflict handling prevents obsolete or contradicted memory from silently remaining authoritative.
-- [ ] Autonomous Planner integration consumes bounded memory as data while deterministic trusted proposal validation remains authoritative.
+- [x] Autonomous Planner integration consumes bounded memory as data while deterministic trusted proposal validation remains authoritative.
 - [ ] A real external-repository proof demonstrates useful memory reuse across later work without scope expansion or manual per-task memory authoring.
 - [ ] A dedicated v1.5 Graduation audit proves the trusted memory path end to end.
 

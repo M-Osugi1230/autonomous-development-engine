@@ -4,7 +4,7 @@ import hashlib
 import json
 import sys
 from datetime import UTC, datetime
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
@@ -14,6 +14,10 @@ from ade.autonomous_planner import (
     PlannerProposal,
     PlannerValidationError,
     plan_high_level_goal,
+)
+from ade.development_memory_planning import (
+    DevelopmentMemoryPlanningBundle,
+    build_planning_memory_bundle,
 )
 from ade.jules_planner import JulesPlannerConfig, JulesPlannerError, JulesPlanningProvider
 from ade.models import ProjectState
@@ -214,6 +218,44 @@ def _collect_repository_intelligence(
     return snapshot, content_summary, relationship_graph, context
 
 
+def _collect_development_memory(
+    *,
+    request: PlanningGoalRequest,
+    snapshot: RepositorySnapshot,
+    previous_state: ProjectState,
+) -> DevelopmentMemoryPlanningBundle | None:
+    raw_path = previous_state.metadata.get("v1_4_graduation_evidence")
+    if raw_path is None:
+        return None
+    if not isinstance(raw_path, str) or not raw_path:
+        raise ValueError("development memory evidence path is invalid")
+    if "\\" in raw_path or raw_path.startswith("/"):
+        raise ValueError("development memory evidence path is unsafe")
+    parsed = PurePosixPath(raw_path)
+    if "." in parsed.parts or ".." in parsed.parts or str(parsed) != raw_path:
+        raise ValueError("development memory evidence path must be normalized")
+    if not raw_path.startswith(".autodev/campaign-evidence/"):
+        raise ValueError(
+            "development memory evidence must remain inside trusted campaign evidence"
+        )
+
+    path = Path(raw_path)
+    if not path.exists():
+        raise ValueError("development memory evidence file is missing")
+    evidence = _load(path)
+    if evidence.get("target_repository") != request.target_repository:
+        return None
+
+    return build_planning_memory_bundle(
+        evidence_path=raw_path,
+        evidence_payload=evidence,
+        repository=request.target_repository,
+        current_source_sha=snapshot.source_sha,
+        max_results=8,
+        max_chars=4000,
+    )
+
+
 def _persist_activation(
     gh: GitHubClient,
     *,
@@ -226,6 +268,7 @@ def _persist_activation(
     relationship_graph: RepositoryRelationshipGraph,
     repository_context: RepositoryPlannerContext,
     attempt: int,
+    development_memory: DevelopmentMemoryPlanningBundle | None = None,
 ) -> None:
     proposal = PlannerProposal.from_dict(result.raw_proposal).canonical_dict()
     proposed_paths = tuple(
@@ -272,6 +315,16 @@ def _persist_activation(
         "repository_relationship_graph_fingerprint": relationship_graph.fingerprint(),
         "repository_impact_analysis_fingerprint": impact_analysis.fingerprint(),
         "repository_source_sha": snapshot.source_sha,
+        "development_memory": (
+            development_memory.evidence_dict()
+            if development_memory is not None
+            else {
+                "schema_version": 1,
+                "used": False,
+                "authority": "advisory-data-only",
+                "reason": "no-trusted-memory-evidence-for-target",
+            }
+        ),
     }
 
     # AcceptedPlan is deliberately persisted last. Every canonical execution
@@ -302,6 +355,24 @@ def _persist_activation(
     metadata["repository_intelligence_relationship_fingerprint"] = relationship_graph.fingerprint()
     metadata["repository_intelligence_impact_fingerprint"] = impact_analysis.fingerprint()
     metadata["repository_intelligence_source_sha"] = snapshot.source_sha
+    if development_memory is not None:
+        memory_evidence = development_memory.evidence_dict()
+        metadata["development_memory_source_evidence_fingerprint"] = (
+            memory_evidence["source_evidence_fingerprint"]
+        )
+        metadata["development_memory_resolution_fingerprint"] = (
+            memory_evidence["resolution_fingerprint"]
+        )
+        metadata["development_memory_retrieval_fingerprint"] = (
+            memory_evidence["retrieval_fingerprint"]
+        )
+        metadata["development_memory_context_fingerprint"] = (
+            memory_evidence["context_fingerprint"]
+        )
+        metadata["development_memory_retrieved_record_count"] = (
+            memory_evidence["retrieved_record_count"]
+        )
+        metadata["development_memory_source_sha"] = snapshot.source_sha
     state_payload["updated_at"] = datetime.now(UTC).isoformat()
     gh.upsert_json_file(
         ".autodev/state.json",
@@ -340,6 +411,16 @@ def _persist_activation(
             "accepted_plan_fingerprint": bundle.accepted_plan.fingerprint,
             "campaign_id": bundle.campaign.campaign_id,
             "first_task_id": bundle.cycle_task.task_id,
+            "development_memory_context_fingerprint": (
+                development_memory.context.fingerprint
+                if development_memory is not None
+                else None
+            ),
+            "development_memory_record_count": (
+                development_memory.retrieved_record_count
+                if development_memory is not None
+                else 0
+            ),
         },
     )
     gh.upsert_json_file(
@@ -424,6 +505,12 @@ def main() -> int:
             gh,
             request,
         )
+        previous_state = ProjectState.from_dict(_load(STATE_PATH))
+        development_memory = _collect_development_memory(
+            request=request,
+            snapshot=snapshot,
+            previous_state=previous_state,
+        )
 
         provider = JulesPlanningProvider(
             client,
@@ -441,6 +528,11 @@ def main() -> int:
             policy=request.planner_policy(),
             id_prefix=request.id_prefix,
             repository_context=repository_context.serialized,
+            development_memory_context=(
+                development_memory.context
+                if development_memory is not None
+                else None
+            ),
             existing_paths=frozenset(snapshot.paths),
         )
 
@@ -467,6 +559,16 @@ def main() -> int:
                     "policy_fingerprint": result.validated.policy_fingerprint,
                     "planning_only": True,
                     "plan_approved": False,
+                    "development_memory": (
+                        development_memory.evidence_dict()
+                        if development_memory is not None
+                        else {
+                            "schema_version": 1,
+                            "used": False,
+                            "authority": "advisory-data-only",
+                            "reason": "no-trusted-memory-evidence-for-target",
+                        }
+                    ),
                     "disposition": "HUMAN_WAIT",
                 },
                 message=f"planner: human wait evidence {request.request_id}",
@@ -478,7 +580,6 @@ def main() -> int:
         if result.accepted_plan is None:
             raise PlannerValidationError("accepted planner result did not produce AcceptedPlan")
 
-        previous_state = ProjectState.from_dict(_load(STATE_PATH))
         bundle = build_planning_activation(
             request=request,
             validated=result.validated,
@@ -494,6 +595,7 @@ def main() -> int:
             content_summary=content_summary,
             relationship_graph=relationship_graph,
             repository_context=repository_context,
+            development_memory=development_memory,
             attempt=attempt,
         )
         print(json.dumps({
@@ -504,6 +606,11 @@ def main() -> int:
             "task_count": len(bundle.campaign.task_ids),
             "planning_only": True,
             "plan_approved": False,
+            "development_memory_record_count": (
+                development_memory.retrieved_record_count
+                if development_memory is not None
+                else 0
+            ),
         }, sort_keys=True))
         return 0
 
