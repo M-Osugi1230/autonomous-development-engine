@@ -121,6 +121,10 @@ class TrustedResumeRoutingTests(unittest.TestCase):
 
         self.assertIn('cron: "7,22,37,52 * * * *"', workflow)
         self.assertNotIn('cron: "*/15 * * * *"', workflow)
+        self.assertIn("workflow_run:", workflow)
+        self.assertIn('workflows: ["CI"]', workflow)
+        self.assertIn("types: [completed]", workflow)
+        self.assertIn("branches: [main]", workflow)
         self.assertIn("repository_dispatch:", workflow)
         self.assertIn("types: [ade_resume_watch]", workflow)
         self.assertIn("push:", workflow)
