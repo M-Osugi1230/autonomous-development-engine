@@ -278,19 +278,52 @@ class GitHubClient:
         message: str,
         branch: str = "main",
     ) -> None:
-        sha: str | None = None
-        try:
-            _, sha = self.get_json_file(path, ref=branch)
-        except GitHubError as exc:
-            if "GitHub HTTP 404:" not in str(exc):
-                raise
-        self.put_json_file(
-            path,
-            payload,
-            sha=sha,
-            message=message,
-            branch=branch,
-        )
+        previous_sha_marker = object()
+        previous_sha: str | None | object = previous_sha_marker
+
+        for attempt in range(1, self.retry_policy.max_attempts + 1):
+            current_payload: dict[str, Any] | None = None
+            current_sha: str | None = None
+            exists = False
+            try:
+                current_payload, current_sha = self.get_json_file(path, ref=branch)
+                exists = True
+            except GitHubError as exc:
+                if "GitHub HTTP 404:" not in str(exc):
+                    raise
+
+            # A concurrent writer may have completed the exact same idempotent
+            # write after our previous attempt conflicted. Treat that as success.
+            if exists and current_payload == payload:
+                return
+
+            # Retry a branch-level 409 only when this exact JSON file has not
+            # changed. Never overwrite a concurrent semantic mutation to the
+            # same durable state/evidence path.
+            if previous_sha is not previous_sha_marker and current_sha != previous_sha:
+                raise GitHubError(
+                    "concurrent JSON file mutation detected during upsert"
+                )
+
+            try:
+                self.put_json_file(
+                    path,
+                    payload,
+                    sha=current_sha,
+                    message=message,
+                    branch=branch,
+                )
+                return
+            except GitHubError as exc:
+                if (
+                    "GitHub HTTP 409:" not in str(exc)
+                    or attempt >= self.retry_policy.max_attempts
+                ):
+                    raise
+                previous_sha = current_sha
+                self.sleep(retry_delay(self.retry_policy, attempt))
+
+        raise GitHubError("JSON file upsert retry budget exhausted")
 
     def dispatch(self, event_type: str, payload: dict[str, Any] | None = None) -> None:
         self._request(
