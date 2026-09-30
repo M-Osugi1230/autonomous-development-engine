@@ -63,11 +63,12 @@
     "v14rv1-001",
     "v14rv2-001",
     "v14rv3-001",
-    "v15mem1-001"
+    "v15mem1-001",
+    "v15mem2-001"
   ],
-  "current_task_id": "v15mem2-001",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 63,
+  "iteration": 64,
   "metadata": {
     "accepted_plan_fingerprint": "5d2fc1f34955613652ffa9d33a0469cc304e3dacee377c9d3f9f018e597cba6e",
     "campaign_id": "v1.5-development-memory-campaign-002",
@@ -127,7 +128,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "repository_intelligence_content_fingerprint": "2c2ebc446eeba2f257898d625f36d259695bfb0b375a3ecaed3cc00752b4e01d",
     "repository_intelligence_context_fingerprint": "29d03564fe866b1d7c7c95ff79e8c2f7d8cc1bf47c3e6c4960fc5d9a0cfbd2d4",
     "repository_intelligence_impact_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
@@ -210,6 +211,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-09-30T17:20:46.326999+00:00"
+  "status": "READY",
+  "updated_at": "2026-09-30T17:26:54.116160+00:00"
 }
