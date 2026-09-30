@@ -524,6 +524,26 @@ class V16AutonomousBacklogAuditTests(unittest.TestCase):
                 result,
             )
 
+    def test_canonical_omitted_task_defaults_can_graduate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root)
+            accepted = json.loads((root / ACCEPTED_PLAN_PATH).read_text())
+            task = accepted["plan"]["tasks"][0]
+            task.pop("new_paths", None)
+            task.pop("human_only", None)
+            write(root, ACCEPTED_PLAN_PATH, accepted)
+
+            result = audit(root)
+            self.assertTrue(
+                result["checks"]["accepted_plan_bounded"],
+                result,
+            )
+            self.assertTrue(
+                result["v1_6_autonomous_backlog_graduated"],
+                result,
+            )
+
     def test_accepted_plan_scope_expansion_blocks_graduation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

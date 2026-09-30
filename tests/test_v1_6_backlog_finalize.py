@@ -209,6 +209,24 @@ class V16BacklogFinalizeTests(unittest.TestCase):
         finally:
             module._api_json = original
 
+    def test_canonical_task_defaults_are_safely_equivalent(self) -> None:
+        omitted = {
+            "allowed_paths": ["tests/test_pipeline.py"],
+        }
+        self.assertEqual(omitted.get("new_paths", []), [])
+        self.assertIs(omitted.get("human_only", False), False)
+
+        explicit_bad_new = {
+            "new_paths": ["tests/new_file.py"],
+            "human_only": False,
+        }
+        explicit_bad_human = {
+            "new_paths": [],
+            "human_only": True,
+        }
+        self.assertNotEqual(explicit_bad_new.get("new_paths", []), [])
+        self.assertIsNot(explicit_bad_human.get("human_only", False), False)
+
     def test_positive_run_id_accepts_durable_string_or_int_only(self) -> None:
         self.assertEqual(module._positive_int(7, field="run"), 7)
         self.assertEqual(module._positive_int("8", field="run"), 8)
