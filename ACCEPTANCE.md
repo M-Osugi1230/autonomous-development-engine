@@ -241,3 +241,18 @@
 - [x] Failed runtime/deployment verification enters bounded recovery or HUMAN_WAIT and never silently marks the Campaign complete.
 - [x] A real external-repository proof demonstrates merge -> runtime/deployment verification -> durable VERIFIED evidence through the trusted controller.
 
+## ADE v1.5 — Development Memory
+
+- [x] Development memory records use a strict versioned immutable schema with deterministic fingerprints.
+- [x] Every memory record is bound to an explicit repository and source SHA and requires trusted `.autodev/` evidence references plus SHA-256 evidence fingerprints.
+- [x] The memory ledger is order-deterministic, duplicate-ID safe, immutable on append, and fingerprinted independently of input ordering.
+- [x] Memory statements are bounded single-line facts; control characters, URLs, and common secret/token markers fail closed.
+- [x] Planner memory context is repository-filtered and character/record bounded.
+- [x] Memory supplied to planning is explicitly advisory-only and cannot grant execution authority, expand trusted scope, or override Acceptance.
+- [x] A deterministic Development Memory proof is mandatory in CI.
+- [ ] Trusted controller code derives memory records automatically from verified Campaign, recovery, runtime-verification, and human-decision evidence.
+- [ ] Supersession/conflict handling prevents obsolete or contradicted memory from silently remaining authoritative.
+- [ ] Autonomous Planner integration consumes bounded memory as data while deterministic trusted proposal validation remains authoritative.
+- [ ] A real external-repository proof demonstrates useful memory reuse across later work without scope expansion or manual per-task memory authoring.
+- [ ] A dedicated v1.5 Graduation audit proves the trusted memory path end to end.
+
