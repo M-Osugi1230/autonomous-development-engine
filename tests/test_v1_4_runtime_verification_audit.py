@@ -26,12 +26,12 @@ def _evidence() -> dict:
     return {
         "schema_version": 1,
         "version": "v1.4",
-        "request_id": "v1.4-runtime-verification-proof-001",
-        "campaign_id": "v1.4-runtime-verification-campaign-001",
+        "request_id": "v1.4-runtime-verification-proof-002",
+        "campaign_id": "v1.4-runtime-verification-campaign-002",
         "target_repository": "M-Osugi1230/one-minute-thought-experiments",
         "human_authored_per_task_work_items": False,
         "task": {
-            "task_id": "v14rv1-001",
+            "task_id": "v14rv2-001",
             "planner_workflow_run": 101,
             "zero_touch_run": 102,
             "jules_cycle_run": 103,
@@ -66,7 +66,7 @@ def _evidence() -> dict:
             "receipt": {
                 "schema_version": 1,
                 "verification_id": "rv-" + SHA_B,
-                "task_id": "v14rv1-001",
+                "task_id": "v14rv2-001",
                 "target_repository": "M-Osugi1230/one-minute-thought-experiments",
                 "source_sha": SHA_B,
                 "contract_fingerprint": HASH_A,
@@ -119,10 +119,10 @@ def _evidence() -> dict:
         "manual_campaign_progress_after_goal_submission": False,
         "terminal_snapshot": {
             "campaign": {
-                "campaign_id": "v1.4-runtime-verification-campaign-001",
+                "campaign_id": "v1.4-runtime-verification-campaign-002",
                 "status": "COMPLETED",
-                "task_ids": ["v14rv1-001"],
-                "completed_task_ids": ["v14rv1-001"],
+                "task_ids": ["v14rv2-001"],
+                "completed_task_ids": ["v14rv2-001"],
             },
             "state": {
                 "status": "READY",
@@ -137,7 +137,7 @@ class V14RuntimeVerificationAuditTests(unittest.TestCase):
     def _fixture(self, root: Path, evidence: dict) -> None:
         _write(
             root,
-            ".autodev/campaign-evidence/v1.4-runtime-verification-proof-001.json",
+            ".autodev/campaign-evidence/v1.4-runtime-verification-proof-002.json",
             json.dumps(evidence, indent=2) + "\n",
         )
         _write(

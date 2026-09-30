@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "request_id": "v1.4-runtime-verification-proof-001",
-  "campaign_id": "v1.4-runtime-verification-campaign-001",
-  "id_prefix": "v14rv1",
-  "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses Unicode whitespace such as non-breaking space and em space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+  "request_id": "v1.4-runtime-verification-proof-002",
+  "campaign_id": "v1.4-runtime-verification-campaign-002",
+  "id_prefix": "v14rv2",
+  "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses additional Unicode whitespace forms such as ideographic space and thin space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
   "target_repository": "M-Osugi1230/one-minute-thought-experiments",
   "base_branch": "main",
   "allowed_path_prefixes": [
