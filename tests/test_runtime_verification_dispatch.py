@@ -58,6 +58,10 @@ class RuntimeVerificationDispatchTests(unittest.TestCase):
             "target_repository": receipt.target_repository,
             "source_sha": receipt.source_sha,
             "source": "remote-pr-monitor",
+            "remote_monitor_workflow_run_id": 101,
+            "pull_request_number": 19,
+            "pull_request_head_sha": "d" * 40,
+            "trusted_merge_sha": receipt.source_sha,
         }
         return contract, receipt, event
 
@@ -78,6 +82,9 @@ class RuntimeVerificationDispatchTests(unittest.TestCase):
             ("verification_id", f"rv-{'d' * 40}"),
             ("target_repository", "other/target"),
             ("source_sha", "d" * 40),
+            ("trusted_merge_sha", "d" * 40),
+            ("pull_request_number", 0),
+            ("remote_monitor_workflow_run_id", 0),
         ):
             with self.subTest(key=key):
                 changed = dict(event)
@@ -169,6 +176,39 @@ class RuntimeVerificationDispatchTests(unittest.TestCase):
             ),
             "WAITING_FOR_DURABLE_MEMORY",
         )
+
+    def test_verified_v15_proof002_dispatches_graduation_finalizer(self) -> None:
+        module = load_module()
+        contract, _, _ = self._values()
+        receipt = RuntimeVerificationReceipt(
+            verification_id=contract.verification_id,
+            task_id="v15mem2-001",
+            target_repository=contract.target_repository,
+            source_sha=contract.source_sha,
+            contract_fingerprint=contract.fingerprint(),
+            registry_fingerprint="b" * 64,
+            policy_fingerprint="c" * 64,
+            status="VERIFIED",
+            dispatch_count=1,
+        )
+
+        class FakeGitHub:
+            def __init__(self) -> None:
+                self.calls: list[tuple[str, dict]] = []
+
+            def dispatch(self, event_type: str, payload: dict) -> None:
+                self.calls.append((event_type, dict(payload)))
+
+        gh = FakeGitHub()
+        outcome = module._dispatch_v1_5_graduation_finalizer(
+            gh,
+            receipt=receipt,
+            provenance={"runtime_workflow_run_id": 501},
+        )
+        self.assertEqual(outcome, "DISPATCHED")
+        self.assertEqual(gh.calls[0][0], "ade_v1_5_graduation_finalize")
+        self.assertEqual(gh.calls[0][1]["task_id"], "v15mem2-001")
+        self.assertEqual(gh.calls[0][1]["runtime_workflow_run_id"], 501)
 
     def test_runtime_evidence_paths_reject_unsafe_task_id(self) -> None:
         from ade.runtime_verification_trigger import runtime_verification_paths
