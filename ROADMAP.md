@@ -162,3 +162,17 @@ Proof002 scheduler hardening: while `v14rv2-001` was safely `PAUSED_QUOTA`, the 
 Proof001 retirement: the first real v1.4 proof completed Goal -> Planner -> Zero-Touch -> external PR #15 -> CI/trusted merge, then runtime verification entered fail-closed HUMAN_WAIT before durable target/report evidence was persisted. The failed receipt and recovery fingerprint are preserved and proof001 is excluded from graduation. PR #167 hardened trusted JSON evidence writes so unrelated main-branch movement can be retried while same-path concurrent mutations still fail closed. Graduation is retargeted to proof002; proof001 is not rewritten as success.
 
 Graduated: clean proof `v1.4-runtime-verification-proof-003` completed high-level Goal -> Jules planning-only proposal -> trusted validation -> automatic Zero-Touch -> Jules task `v14rv3-001` -> external PR #17 -> target CI run `36691307632` -> trusted remote gate run `36691380061` -> exact merge SHA `d3073a165a902b58cb2dfee9b16736fc7eaa43d9` -> Runtime Verification run `36691433088`. Both trusted probes (`offline-cli-smoke`, `production-import-smoke`) passed on attempt 1; the durable receipt is `VERIFIED`, Campaign `v1.4-runtime-verification-campaign-003` is COMPLETED, Project state is READY with failed=0, and no recovery/HUMAN_WAIT or unrelated controller-CI recovery occurred during the active proof. Immutable graduation evidence is stored at `.autodev/campaign-evidence/v1.4-runtime-verification-proof-003.json`. The dedicated v1.4 Graduation audit is mandatory in CI. Proof001 and proof002 remain preserved as non-graduation evidence and are not rewritten as successes.
+
+## ADE v1.5 — Development Memory 🚧
+Persist reusable, evidence-backed development lessons so future planning and recovery can use prior outcomes without allowing memory to become an execution authority.
+
+Build order:
+1. immutable advisory-only Development Memory Record and bounded durable ledger
+2. trusted extraction from completed Campaign, runtime verification, recovery, and human-decision evidence
+3. contradiction, supersession, freshness, and repository/source binding
+4. bounded sanitized memory context for Planner and Recovery
+5. durable idempotent append/update lifecycle plus Mission Control observability
+6. real cross-cycle reuse proof and v1.5 graduation audit
+
+Slice 001 complete: ADE now defines a deterministic DevelopmentMemoryRecord whose identity is derived from canonical content. Every record is repository/scope bound, backed by trusted `.autodev/` evidence plus SHA-256 fingerprints, timestamp-normalized, secret/traceback filtered, and hard-coded to `ADVISORY`. Persisted records cannot grant execution authority, expand write scope, or bypass HUMAN_WAIT. DevelopmentMemoryLedger is schema-versioned, bounded, deterministic, duplicate-safe, and initialized at `.autodev/development-memory.json`. A trusted CI probe proves round-trip integrity and rejects authority escalation and secret-bearing memory.
+
