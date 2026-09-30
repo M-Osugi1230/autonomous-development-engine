@@ -1,13 +1,13 @@
 {
-  "campaign_id": "abgproof-campaign-777c97294d4bc932",
+  "campaign_id": "v1.7-multi-agent-campaign-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-30T17:32:26.415031+00:00",
-  "plan_fingerprint": "86d2f69c6bb21a1c46a70560710a2d89d213bba10b6e754a8008fbd6594ef75a",
+  "dispatched_at": "2026-09-30T23:18:53.936504+00:00",
+  "plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
   "run_attempt": "1",
-  "run_id": "36752097727",
+  "run_id": "36790422503",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "c2012dc68965103522b7db799c23aa893df96d39",
+  "source_sha": "a35e544acfaff83b8ef1ed8372ded0d1518f821d",
   "status": "DISPATCHED",
-  "task_id": "abgproof-777c97294d-001"
+  "task_id": "v17ma1-001"
 }
