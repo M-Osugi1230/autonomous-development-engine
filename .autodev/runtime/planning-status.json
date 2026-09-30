@@ -1,15 +1,15 @@
 {
-  "accepted_plan_fingerprint": "5d2fc1f34955613652ffa9d33a0469cc304e3dacee377c9d3f9f018e597cba6e",
+  "accepted_plan_fingerprint": "86d2f69c6bb21a1c46a70560710a2d89d213bba10b6e754a8008fbd6594ef75a",
   "attempt": 1,
-  "campaign_id": "v1.5-development-memory-campaign-002",
-  "development_memory_context_fingerprint": "cd0d9f06f447c627e5b28da86f5592f24148a34ba50c0219d692722a21bba770",
+  "campaign_id": "abgproof-campaign-777c97294d4bc932",
+  "development_memory_context_fingerprint": "358a4ad85b1104ccd76a34ebf513d0cf14fe0a0d9f990b33fd8036f3d55eb234",
   "development_memory_record_count": 1,
-  "first_task_id": "v15mem2-001",
-  "proposal_fingerprint": "d915ee6723f241a39d022ff531b500752d867f51c9076b80cbab22c35d35b4d7",
+  "first_task_id": "abgproof-777c97294d-001",
+  "proposal_fingerprint": "fbd2930597f4062e5629068f97e4c60afe0a27a962b6693a40dcf817dee628d4",
   "reason": "trusted-plan-accepted",
-  "request_fingerprint": "978eda0917f0420239916262006f3c26a9a5ae19585f8df21fbdc2a89cc7f971",
-  "request_id": "v1.5-development-memory-proof-002",
+  "request_fingerprint": "be60fba89697942072d4b5d279550908e035766d2a5601d807b0ca5eafdf46c6",
+  "request_id": "abgproof-request-777c97294d4bc932",
   "schema_version": 1,
   "state": "ACCEPTED",
-  "updated_at": "2026-09-30T11:11:17.143134+00:00"
+  "updated_at": "2026-09-30T17:32:16.641840+00:00"
 }
