@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
@@ -322,6 +323,16 @@ def _persist_activation(
         ),
         "planning_only": not bool(
             getattr(provider, "last_execution_boundary_crossed", False)
+        ),
+        "workflow_run_id": (
+            int(os.environ["GITHUB_RUN_ID"])
+            if os.environ.get("GITHUB_RUN_ID", "").isdigit()
+            else None
+        ),
+        "workflow_run_attempt": (
+            int(os.environ["GITHUB_RUN_ATTEMPT"])
+            if os.environ.get("GITHUB_RUN_ATTEMPT", "").isdigit()
+            else None
         ),
         "plan_approved": False,
         "implementation_output_accepted": False,
