@@ -1,0 +1,33 @@
+{
+  "auto_dispatch": false,
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "auto_dispatch": false,
+      "candidate_id": "backlog-ba0e89dca2644d15388d33be",
+      "evidence_fingerprints": [
+        "d64743456ef0a231d5a86d471d1697a5daf7eef3825822037bd4ebd9c25229de",
+        "dbe24350a2fe6c0b7ab58494af3518af0aa7e97928312a4c733b03f4c059bb53"
+      ],
+      "evidence_paths": [
+        ".autodev/autonomous-backlog/source-memory-store.json"
+      ],
+      "execution_authority": false,
+      "human_only": false,
+      "kind": "MEMORY_FOLLOWUP",
+      "may_expand_scope": false,
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "schema_version": 1,
+      "source_phase": "v1.6-autonomous-backlog",
+      "source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+      "statement": "Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority.",
+      "tags": [
+        "memory",
+        "runtime",
+        "verified"
+      ]
+    }
+  ],
+  "execution_authority": false,
+  "schema_version": 1
+}
