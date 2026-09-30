@@ -110,6 +110,23 @@ class TrustedResumeRoutingTests(unittest.TestCase):
             source.index('print("RESUME: quota window elapsed; starting a new Jules session")'),
         )
 
+
+    def test_resume_workflow_has_staggered_schedule_and_event_fallbacks(self) -> None:
+        workflow = (
+            Path(__file__).resolve().parents[1]
+            / ".github"
+            / "workflows"
+            / "ade-resume.yml"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn('cron: "7,22,37,52 * * * *"', workflow)
+        self.assertNotIn('cron: "*/15 * * * *"', workflow)
+        self.assertIn("repository_dispatch:", workflow)
+        self.assertIn("types: [ade_resume_watch]", workflow)
+        self.assertIn("push:", workflow)
+        self.assertIn('".github/trusted/jules_resume.py"', workflow)
+        self.assertIn('".github/trusted/jules_cycle.py"', workflow)
+
     def test_cloud_probe_helper(self) -> None:
         module = load_trusted_module("resume_probe.py", "trusted_resume_probe_test")
         result = module.run_probe()
