@@ -237,3 +237,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/v1_5_development_memory_audit.py
+
+      - name: ADE v1.6 Autonomous Backlog Graduation audit
+        env:
+          PYTHONPATH: src
+        run: python scripts/v1_6_autonomous_backlog_audit.py
