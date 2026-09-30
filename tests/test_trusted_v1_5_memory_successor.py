@@ -54,6 +54,85 @@ def verified_receipt() -> RuntimeVerificationReceipt:
 
 
 class TrustedV15MemorySuccessorTests(unittest.TestCase):
+    def test_due_quota_cross_watch_dispatches_existing_resume_watch(self) -> None:
+        module = load_module()
+
+        class FakeGitHub:
+            def __init__(self) -> None:
+                self.calls: list[tuple[str, dict]] = []
+
+            def dispatch(self, event_type: str, payload: dict) -> None:
+                self.calls.append((event_type, dict(payload)))
+
+        gh = FakeGitHub()
+        state = {
+            "status": "PAUSED_QUOTA",
+            "current_task_id": "v15mem1-001",
+        }
+        checkpoint = {
+            "task_id": "v15mem1-001",
+            "state": "PAUSED_QUOTA",
+            "provider_session_id": None,
+            "resume_after": "2026-09-30T10:31:37+00:00",
+        }
+        result = module._wake_due_quota_resume(
+            gh,
+            state_payload=state,
+            checkpoint_payload=checkpoint,
+            now=module.datetime.fromisoformat("2026-09-30T10:43:00+00:00"),
+        )
+        self.assertEqual(result, "DISPATCHED")
+        self.assertEqual(
+            gh.calls,
+            [
+                (
+                    "ade_resume_watch",
+                    {
+                        "task_id": "v15mem1-001",
+                        "source": "development-memory-successor-cross-watch",
+                    },
+                )
+            ],
+        )
+
+    def test_quota_cross_watch_waits_before_due_and_rejects_other_tasks(self) -> None:
+        module = load_module()
+
+        class FakeGitHub:
+            def dispatch(self, event_type: str, payload: dict) -> None:
+                raise AssertionError("dispatch must not be called")
+
+        checkpoint = {
+            "task_id": "v15mem1-001",
+            "state": "PAUSED_QUOTA",
+            "provider_session_id": None,
+            "resume_after": "2026-09-30T10:31:37+00:00",
+        }
+        self.assertEqual(
+            module._wake_due_quota_resume(
+                FakeGitHub(),
+                state_payload={
+                    "status": "PAUSED_QUOTA",
+                    "current_task_id": "v15mem1-001",
+                },
+                checkpoint_payload=checkpoint,
+                now=module.datetime.fromisoformat("2026-09-30T10:28:00+00:00"),
+            ),
+            "WAIT",
+        )
+        self.assertEqual(
+            module._wake_due_quota_resume(
+                FakeGitHub(),
+                state_payload={
+                    "status": "PAUSED_QUOTA",
+                    "current_task_id": "other-task",
+                },
+                checkpoint_payload=checkpoint,
+                now=module.datetime.fromisoformat("2026-09-30T10:43:00+00:00"),
+            ),
+            "NOT_APPLICABLE",
+        )
+
     def test_verified_receipt_replays_only_runtime_feedback_path(self) -> None:
         module = load_module()
 

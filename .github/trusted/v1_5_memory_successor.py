@@ -19,6 +19,7 @@ from ade.development_memory_successor import (
 )
 from ade.runtime_verification_trigger import RuntimeVerificationReceipt
 from github_client import GitHubClient, GitHubError
+from jules_resume import decide_checkpoint_action
 
 
 RESULT_PATH = Path(".autodev/runtime/v1-5-memory-successor-result.json")
@@ -30,6 +31,7 @@ PLANNER_EVIDENCE_PATH = (
 REMOTE_EXECUTION_PATH = ".autodev/runtime/remote-execution.json"
 MEMORY_STORE_PATH = ".autodev/development-memory.json"
 PLANNING_GOAL_PATH = ".autodev/planning-goal.json"
+CHECKPOINT_PATH = ".autodev/runtime/checkpoint.json"
 
 
 def _write(payload: dict[str, Any]) -> None:
@@ -50,6 +52,42 @@ def _optional_json(gh: GitHubClient, path: str) -> dict[str, Any] | None:
     if not isinstance(payload, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return payload
+
+
+def _wake_due_quota_resume(
+    gh: GitHubClient,
+    *,
+    state_payload: dict[str, Any],
+    checkpoint_payload: dict[str, Any] | None,
+    now: datetime,
+) -> str:
+    if state_payload.get("status") != "PAUSED_QUOTA":
+        return "NOT_APPLICABLE"
+    task_id = state_payload.get("current_task_id")
+    if task_id not in {"v15mem1-001", "v15mem2-001"}:
+        return "NOT_APPLICABLE"
+    if checkpoint_payload is None:
+        return "CHECKPOINT_MISSING"
+    if checkpoint_payload.get("task_id") != task_id:
+        return "CHECKPOINT_TASK_MISMATCH"
+    action, _ = decide_checkpoint_action(checkpoint_payload, now=now)
+    if action == "WAIT":
+        return "WAIT"
+    if action == "NOOP":
+        return "NOOP"
+    if action not in {"START_NEW", "MONITOR"}:
+        return "NOT_APPLICABLE"
+    try:
+        gh.dispatch(
+            "ade_resume_watch",
+            {
+                "task_id": task_id,
+                "source": "development-memory-successor-cross-watch",
+            },
+        )
+    except GitHubError:
+        return "DISPATCH_FAILED"
+    return "DISPATCHED"
 
 
 def _retry_verified_memory_feedback(
@@ -102,6 +140,32 @@ def main() -> int:
         phase = metadata.get("phase")
         if phase != "v1.5-development-memory":
             payload = _result("NOOP", "project-not-in-v1.5-development-memory")
+            _write(payload)
+            print(json.dumps(payload, sort_keys=True))
+            return 0
+
+        checkpoint_payload = _optional_json(gh, CHECKPOINT_PATH)
+        quota_wakeup = _wake_due_quota_resume(
+            gh,
+            state_payload=state_payload,
+            checkpoint_payload=checkpoint_payload,
+            now=datetime.now(UTC),
+        )
+        if state_payload.get("status") == "PAUSED_QUOTA":
+            payload = _result(
+                (
+                    "WOKE_RESUME"
+                    if quota_wakeup == "DISPATCHED"
+                    else "NOOP"
+                ),
+                (
+                    "due-quota-resume-dispatched"
+                    if quota_wakeup == "DISPATCHED"
+                    else "quota-resume-not-due-or-not-dispatchable"
+                ),
+                quota_resume_wakeup=quota_wakeup,
+                task_id=state_payload.get("current_task_id"),
+            )
             _write(payload)
             print(json.dumps(payload, sort_keys=True))
             return 0
