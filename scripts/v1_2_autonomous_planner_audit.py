@@ -37,6 +37,19 @@ def _sha40(value: object) -> bool:
     return isinstance(value, str) and SHA40.fullmatch(value) is not None
 
 
+def _resume_watchdog_declared(workflow: str) -> bool:
+    legacy = 'cron: "*/15 * * * *"' in workflow
+    hardened = (
+        'cron: "7,22,37,52 * * * *"' in workflow
+        and "repository_dispatch:" in workflow
+        and "types: [ade_resume_watch]" in workflow
+        and "push:" in workflow
+        and '".github/trusted/jules_resume.py"' in workflow
+        and '".github/trusted/jules_cycle.py"' in workflow
+    )
+    return legacy or hardened
+
+
 def _task_evidence(task: object) -> bool:
     if not isinstance(task, dict):
         return False
@@ -157,7 +170,7 @@ def audit(
             and quota.get("execution_lease_reclaimed") is True
             and _positive_int(quota.get("resume_run"))
         ),
-        "resume_watchdog": 'cron: "*/15 * * * *"' in resume,
+        "resume_watchdog": _resume_watchdog_declared(resume),
         "real_multi_task_evidence": len(tasks) >= 2
         and all(_task_evidence(task) for task in tasks),
         "no_manual_campaign_progress": evidence.get(
