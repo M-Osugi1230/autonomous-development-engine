@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from ade.development_memory_feedback import runtime_report_from_wrapper
 from ade.runtime_probe_executor import execute_runtime_verification_bounded
 from ade.runtime_verification import (
     RuntimeVerificationContract,
@@ -22,6 +23,11 @@ from ade.runtime_verification_trigger import (
     runtime_verification_paths,
     runtime_verification_report_path,
     runtime_verification_target_path,
+)
+from development_memory_feedback import (
+    feedback_failure,
+    persist_recovery_feedback,
+    persist_verified_runtime_feedback,
 )
 from github_client import GitHubClient, GitHubError
 from recovery_controller import RECOVERY_PATH, load_recovery
@@ -102,6 +108,49 @@ def _contain_failure(
     return transition.receipt
 
 
+def _persist_verified_feedback_safely(
+    gh: GitHubClient,
+    *,
+    contract: RuntimeVerificationContract,
+    receipt: RuntimeVerificationReceipt,
+    report,
+    contract_path: str,
+    receipt_path: str,
+    report_path: str,
+) -> dict[str, Any]:
+    try:
+        return persist_verified_runtime_feedback(
+            gh,
+            contract=contract,
+            receipt=receipt,
+            report=report,
+            contract_path=contract_path,
+            receipt_path=receipt_path,
+            report_path=report_path,
+        )
+    except Exception as exc:
+        return feedback_failure(exc)
+
+
+def _persist_recovery_feedback_safely(
+    gh: GitHubClient,
+    *,
+    receipt: RuntimeVerificationReceipt,
+) -> dict[str, Any]:
+    try:
+        recovery, _ = load_recovery(gh)
+        if recovery is None or recovery.task_id != receipt.task_id:
+            raise ValueError("runtime recovery feedback record is unavailable")
+        return persist_recovery_feedback(
+            gh,
+            recovery=recovery,
+            repository=receipt.target_repository,
+            source_sha=receipt.source_sha,
+        )
+    except Exception as exc:
+        return feedback_failure(exc)
+
+
 def validate_dispatch_payload(
     *,
     event_payload: dict[str, Any],
@@ -144,6 +193,18 @@ def main() -> int:
         )
 
         if receipt.status == "VERIFIED":
+            report_path = runtime_verification_report_path(receipt.task_id)
+            report_wrapper, _ = gh.get_json_file(report_path)
+            report = runtime_report_from_wrapper(report_wrapper)
+            memory_feedback = _persist_verified_feedback_safely(
+                gh,
+                contract=contract,
+                receipt=receipt,
+                report=report,
+                contract_path=contract_path,
+                receipt_path=receipt_path,
+                report_path=report_path,
+            )
             result = {
                 "schema_version": 1,
                 "state": "VERIFIED",
@@ -154,12 +215,17 @@ def main() -> int:
                 "source_sha": receipt.source_sha,
                 "dispatch_count": receipt.dispatch_count,
                 "reason": "runtime-verification-already-verified",
+                "development_memory_feedback": memory_feedback,
             }
             _write(result)
             print(json.dumps(result, sort_keys=True))
             return 0
 
         if receipt.status == "HUMAN_WAIT":
+            memory_feedback = _persist_recovery_feedback_safely(
+                gh,
+                receipt=receipt,
+            )
             result = {
                 "schema_version": 1,
                 "state": "HUMAN_WAIT",
@@ -170,6 +236,7 @@ def main() -> int:
                 "source_sha": receipt.source_sha,
                 "dispatch_count": receipt.dispatch_count,
                 "reason": "runtime-verification-already-human-wait",
+                "development_memory_feedback": memory_feedback,
             }
             _write(result)
             print(json.dumps(result, sort_keys=True))
@@ -239,6 +306,22 @@ def main() -> int:
                 report=execution.report,
             )
 
+        if final_receipt.status == "VERIFIED":
+            memory_feedback = _persist_verified_feedback_safely(
+                gh,
+                contract=contract,
+                receipt=final_receipt,
+                report=execution.report,
+                contract_path=contract_path,
+                receipt_path=receipt_path,
+                report_path=report_path,
+            )
+        else:
+            memory_feedback = _persist_recovery_feedback_safely(
+                gh,
+                receipt=final_receipt,
+            )
+
         result = {
             "schema_version": 1,
             "state": final_receipt.status,
@@ -262,6 +345,7 @@ def main() -> int:
                 {"probe_id": probe_id, "attempts": attempts}
                 for probe_id, attempts in execution.attempts_by_probe
             ],
+            "development_memory_feedback": memory_feedback,
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
