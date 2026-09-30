@@ -272,6 +272,6 @@
 - [x] Eligibility selection is repository/source-SHA bound, excludes human-only work, and selects at most one next Goal candidate.
 - [x] Selected candidates become high-level PlanningGoal input only; Autonomous Planner + AcceptedPlan remain the sole task/scope authority.
 - [x] Completion feedback retires a candidate only after trusted merge/runtime evidence proves the selected Goal outcome.
-- [ ] A real external-repository proof demonstrates evidence -> backlog candidate -> selected Goal -> AcceptedPlan -> trusted execution -> verified retirement without manual per-task authoring.
-- [ ] A dedicated v1.6 Graduation audit proves the Autonomous Backlog path end to end.
+- [x] A real external-repository proof demonstrates evidence -> backlog candidate -> selected Goal -> AcceptedPlan -> trusted execution -> verified retirement without manual per-task authoring.
+- [x] A dedicated v1.6 Graduation audit proves the Autonomous Backlog path end to end.
 
