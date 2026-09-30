@@ -203,6 +203,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/multi_agent_foundation_probe.py
 
+      - name: Multi-Agent trusted derivation proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/multi_agent_planning_probe.py
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
