@@ -163,6 +163,7 @@ class AutonomousBacklogResolution:
     current_sources: tuple[tuple[str, str], ...]
     supersessions: tuple[BacklogSupersession, ...]
     entries: tuple[BacklogResolutionEntry, ...]
+    retirements: tuple[BacklogRetirementRecord, ...] = ()
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -191,6 +192,16 @@ class AutonomousBacklogResolution:
             "entries",
             tuple(sorted(self.entries, key=lambda item: item.candidate_id)),
         )
+        object.__setattr__(
+            self,
+            "retirements",
+            tuple(
+                sorted(
+                    self.retirements,
+                    key=lambda item: (item.candidate_id, item.retirement_id),
+                )
+            ),
+        )
 
     def canonical_dict(self) -> dict[str, Any]:
         return {
@@ -201,6 +212,7 @@ class AutonomousBacklogResolution:
                 for repository, source_sha in self.current_sources
             ],
             "supersessions": [item.canonical_dict() for item in self.supersessions],
+            "retirements": [item.canonical_dict() for item in self.retirements],
             "entries": [entry.canonical_dict() for entry in self.entries],
             "priority_policy": "controller-kind-policy-v1",
             "execution_authority": False,
@@ -404,4 +416,5 @@ def resolve_autonomous_backlog(
         current_sources=sources,
         supersessions=links,
         entries=entries,
+        retirements=retirement_records,
     )
