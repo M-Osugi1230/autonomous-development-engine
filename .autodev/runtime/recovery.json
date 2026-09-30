@@ -1,14 +1,14 @@
 {
-  "action": "HUMAN_WAIT",
-  "failure": "RUNTIME_VERIFICATION",
-  "fingerprint": "c08b4fbd4302d42331d26600446b04ea5246fa327f638271c9b97f6bc4c1e010",
+  "action": "REPAIR",
+  "failure": "CI_FAILURE",
+  "fingerprint": "000270883d57fddfadf8dc3ac55a3d46e628ceb2f1457a325f8c74b678534bea",
   "progress": {
     "rebases": 0,
-    "repairs": 0,
+    "repairs": 1,
     "repeated_failures": 1,
     "replans": 0,
     "retries": 0
   },
   "schema_version": 1,
-  "task_id": "v14rv1-001"
+  "task_id": "v14rv2-001"
 }
