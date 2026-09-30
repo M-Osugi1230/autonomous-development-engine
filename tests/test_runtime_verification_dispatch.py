@@ -281,6 +281,50 @@ class RuntimeVerificationDispatchTests(unittest.TestCase):
             "NOT_APPLICABLE",
         )
 
+    def test_verified_v17_phase_dispatches_multi_agent_finalizer(self) -> None:
+        module = load_module()
+        contract, _, _ = self._values()
+        receipt = RuntimeVerificationReceipt(
+            verification_id=contract.verification_id,
+            task_id="v17ma1-001",
+            target_repository=contract.target_repository,
+            source_sha=contract.source_sha,
+            contract_fingerprint=contract.fingerprint(),
+            registry_fingerprint="b" * 64,
+            policy_fingerprint="c" * 64,
+            status="VERIFIED",
+            dispatch_count=1,
+        )
+
+        class FakeGitHub:
+            def __init__(self) -> None:
+                self.calls: list[tuple[str, dict]] = []
+
+            def dispatch(self, event_type: str, payload: dict) -> None:
+                self.calls.append((event_type, dict(payload)))
+
+        gh = FakeGitHub()
+        outcome = module._dispatch_v1_7_multi_agent_finalizer(
+            gh,
+            receipt=receipt,
+            provenance={"runtime_workflow_run_id": 801},
+            phase="v1.7-multi-agent",
+        )
+        self.assertEqual(outcome, "DISPATCHED")
+        self.assertEqual(gh.calls[0][0], "ade_v1_7_multi_agent_finalize")
+        self.assertEqual(gh.calls[0][1]["task_id"], "v17ma1-001")
+        self.assertEqual(gh.calls[0][1]["runtime_workflow_run_id"], 801)
+
+        self.assertEqual(
+            module._dispatch_v1_7_multi_agent_finalizer(
+                gh,
+                receipt=receipt,
+                provenance={"runtime_workflow_run_id": 801},
+                phase="v1.6-autonomous-backlog",
+            ),
+            "NOT_APPLICABLE",
+        )
+
     def test_runtime_evidence_paths_reject_unsafe_task_id(self) -> None:
         from ade.runtime_verification_trigger import runtime_verification_paths
 
