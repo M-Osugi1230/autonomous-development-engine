@@ -1,0 +1,47 @@
+name: ADE v1.5 Graduation Finalizer
+
+on:
+  repository_dispatch:
+    types:
+      - ade_v1_5_graduation_finalize
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: ade-v1-5-graduation-finalizer
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Freeze audited v1.5 proof002 evidence
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/v1_5_graduation_finalize.py
+
+      - name: Upload v1.5 finalizer result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-v1-5-graduation-finalizer-result
+          path: .autodev/runtime/v1-5-graduation-finalize-result.json
+          if-no-files-found: error
+          retention-days: 30

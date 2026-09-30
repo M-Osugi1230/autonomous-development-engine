@@ -335,14 +335,25 @@ def monitor_existing(
     session_url: str | None = None,
 ) -> int:
     task_id = str(task["task_id"])
+    execution_metadata: dict[str, Any] = {
+        "next_system_action": "monitor-provider-session",
+        "next_required_human_action": None,
+    }
+    workflow_run_id = os.environ.get("GITHUB_RUN_ID")
+    if isinstance(workflow_run_id, str) and workflow_run_id.isdigit():
+        execution_metadata["implementation_workflow_run_id"] = int(workflow_run_id)
+    workflow_name = os.environ.get("GITHUB_WORKFLOW")
+    if isinstance(workflow_name, str) and workflow_name.strip():
+        execution_metadata["implementation_workflow_name"] = workflow_name.strip()
+    workflow_event = os.environ.get("GITHUB_EVENT_NAME")
+    if isinstance(workflow_event, str) and workflow_event.strip():
+        execution_metadata["implementation_workflow_event"] = workflow_event.strip()
+
     _set_project_status(
         gh,
         task_id=task_id,
         status="RUNNING",
-        metadata_updates={
-            "next_system_action": "monitor-provider-session",
-            "next_required_human_action": None,
-        },
+        metadata_updates=execution_metadata,
         clear_pause_metadata=True,
     )
     timeout_seconds = int(task.get("timeout_seconds", 1800))

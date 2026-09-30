@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -64,6 +65,7 @@ def main() -> int:
         gh,
         state=state,
         receipt=_remote_receipt(),
+        trusted_head_sha="d" * 40,
         trusted_merge_sha=MERGE_SHA,
     )
     assert first is not None
@@ -85,6 +87,10 @@ def main() -> int:
                 "target_repository": TARGET,
                 "source_sha": MERGE_SHA,
                 "source": "remote-pr-monitor",
+                "remote_monitor_workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
+                "pull_request_number": 15,
+                "pull_request_head_sha": "d" * 40,
+                "trusted_merge_sha": MERGE_SHA,
             },
         )
     ]
@@ -93,6 +99,7 @@ def main() -> int:
         gh,
         state=state,
         receipt=_remote_receipt(),
+        trusted_head_sha="d" * 40,
         trusted_merge_sha=MERGE_SHA,
     )
     assert replay == first
@@ -113,6 +120,7 @@ def main() -> int:
             recorded_at="2026-09-30T00:00:00+00:00",
             status="PR_CREATED",
         ),
+        trusted_head_sha="e" * 40,
         trusted_merge_sha="c" * 40,
     )
     assert v1_5 is not None
@@ -130,6 +138,7 @@ def main() -> int:
             recorded_at="2026-09-29T00:00:00+00:00",
             status="PR_CREATED",
         ),
+        trusted_head_sha="f" * 40,
         trusted_merge_sha="b" * 40,
     )
     assert old_phase is None
