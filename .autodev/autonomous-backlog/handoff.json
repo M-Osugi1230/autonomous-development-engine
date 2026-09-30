@@ -1,0 +1,25 @@
+{
+  "accepted_plan_authority": false,
+  "auto_dispatch": false,
+  "candidate_fingerprint": "0b4f7d541923d25778af869f92eeb6d889274de9a371e973720ab8845ae4251d",
+  "candidate_id": "backlog-ba0e89dca2644d15388d33be",
+  "execution_authority": false,
+  "handoff_target": "AutonomousPlanner",
+  "planning_goal_request": {
+    "allowed_path_prefixes": [
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "abgproof-campaign-777c97294d4bc932",
+    "goal": "Resolve trusted Autonomous Backlog candidate: Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority.",
+    "id_prefix": "abgproof-777c97294d",
+    "max_tasks": 1,
+    "request_id": "abgproof-request-777c97294d4bc932",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "policy_fingerprint": "058eef8563a79d74e53be1239edd39fb4f454418d602c1c2cfe2981f50e77afe",
+  "resolution_fingerprint": "e10859860bb0d9d558096e1a5dcc2fcf31d2b0f84c0433fbc64b397b8b3080fd",
+  "schema_version": 1,
+  "selection_fingerprint": "bd52d37d4b21c55cafe341f210fec24bb45c50808334f023faf9d90aa1924f4a"
+}
