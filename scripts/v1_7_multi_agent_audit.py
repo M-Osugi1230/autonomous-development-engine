@@ -63,6 +63,7 @@ REQUIRED_CI_PROOFS = (
     "Multi-Agent role session lifecycle proof",
     "Multi-Agent bounded correction loop proof",
     "Multi-Agent reviewer clearance proof",
+    "Multi-Agent graduation finalizer proof",
     "Human decision boundary proof",
     "ADE v1.6 Autonomous Backlog Graduation audit",
 )
@@ -93,6 +94,29 @@ def _positive_int(value: object) -> bool:
 
 def _authority_free(payload: dict[str, Any], fields: tuple[str, ...]) -> bool:
     return all(payload.get(field, False) is False for field in fields)
+
+
+def _planner_request_matches_goal(
+    request: object,
+    goal: dict[str, Any],
+) -> bool:
+    if not isinstance(request, dict):
+        return False
+    fields = (
+        "schema_version",
+        "request_id",
+        "campaign_id",
+        "id_prefix",
+        "goal",
+        "target_repository",
+        "base_branch",
+        "allowed_path_prefixes",
+        "max_tasks",
+    )
+    return (
+        all(request.get(field) == goal.get(field) for field in fields)
+        and request.get("min_tasks", 1) == goal.get("min_tasks", 1)
+    )
 
 
 def audit(
@@ -201,7 +225,10 @@ def audit(
         and list(task.allowed_paths) == [EXPECTED_PATH]
         and len(accepted.plan.tasks) == 1,
         "planner_evidence_bound": planner_evidence.get("schema_version") == 1
-        and planner_evidence.get("request") == goal
+        and _planner_request_matches_goal(
+            planner_evidence.get("request"),
+            goal,
+        )
         and planner_evidence.get("campaign_id") == CAMPAIGN_ID
         and planner_evidence.get("planning_only") is True
         and planner_evidence.get("provider_execution_boundary_crossed") is False
@@ -318,7 +345,15 @@ def audit(
         and _positive_int(runtime_provenance.get("implementation_workflow_run_id"))
         and _positive_int(runtime_provenance.get("remote_monitor_workflow_run_id"))
         and _positive_int(runtime_provenance.get("runtime_workflow_run_id")),
-        "evidence_summary_bound": task_summary.get("task_id") == TASK_ID
+        "evidence_summary_bound": evidence.get("planning", {}).get("request_id")
+        == REQUEST_ID
+        and evidence.get("planning", {}).get("campaign_id") == CAMPAIGN_ID
+        and evidence.get("planning", {}).get("planner_workflow_run")
+        == planner_evidence.get("workflow_run_id")
+        and evidence.get("planning", {}).get("accepted_plan_fingerprint")
+        == accepted.fingerprint
+        and evidence.get("planning", {}).get("source_sha") == plan.source_sha
+        and task_summary.get("task_id") == TASK_ID
         and task_summary.get("pull_request") == target.get("pull_request")
         and task_summary.get("head_sha") == target.get("head_sha")
         and task_summary.get("merge_sha") == target.get("merge_sha")
