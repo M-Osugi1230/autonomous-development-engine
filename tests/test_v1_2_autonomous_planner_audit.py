@@ -182,6 +182,38 @@ class V12AutonomousPlannerAuditTests(unittest.TestCase):
             self.assertEqual(result["missing_proofs"], [])
             self.assertTrue(all(result["checks"].values()))
 
+    def test_hardened_resume_watchdog_preserves_graduation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._fixture(root, _evidence())
+            _write(
+                root,
+                ".github/workflows/ade-resume.yml",
+                (
+                    "on:\n"
+                    "  repository_dispatch:\n"
+                    "    types: [ade_resume_watch]\n"
+                    "  push:\n"
+                    "    paths:\n"
+                    "      - \".github/trusted/jules_resume.py\"\n"
+                    "      - \".github/trusted/jules_cycle.py\"\n"
+                    "  schedule:\n"
+                    "    - cron: \"7,22,37,52 * * * *\"\n"
+                ),
+            )
+            result = audit(root)
+            self.assertTrue(result["checks"]["resume_watchdog"])
+            self.assertTrue(result["v1_2_autonomous_planner_graduated"], result)
+
+    def test_missing_resume_watchdog_cannot_graduate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._fixture(root, _evidence())
+            _write(root, ".github/workflows/ade-resume.yml", "on:\n  workflow_dispatch:\n")
+            result = audit(root)
+            self.assertFalse(result["checks"]["resume_watchdog"])
+            self.assertFalse(result["v1_2_autonomous_planner_graduated"])
+
     def test_missing_planner_retry_chain_cannot_graduate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

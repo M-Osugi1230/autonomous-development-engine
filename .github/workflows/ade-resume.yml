@@ -2,8 +2,16 @@ name: ADE Resume Watch
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [ade_resume_watch]
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ade-resume.yml"
+      - ".github/trusted/jules_resume.py"
+      - ".github/trusted/jules_cycle.py"
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7,22,37,52 * * * *"
 
 permissions:
   contents: write
