@@ -151,6 +151,33 @@ def _persist_recovery_feedback_safely(
         return feedback_failure(exc)
 
 
+def _dispatch_development_memory_successor(
+    gh: GitHubClient,
+    *,
+    receipt: RuntimeVerificationReceipt,
+    memory_feedback: dict[str, Any],
+) -> str:
+    if receipt.status != "VERIFIED":
+        return "NOT_APPLICABLE"
+    if receipt.task_id != "v15mem1-001":
+        return "NOT_APPLICABLE"
+    if memory_feedback.get("state") not in {"ADDED", "UNCHANGED"}:
+        return "WAITING_FOR_DURABLE_MEMORY"
+    try:
+        gh.dispatch(
+            "ade_development_memory_successor",
+            {
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "source_sha": receipt.source_sha,
+                "source": "runtime-verification-memory-feedback",
+            },
+        )
+    except GitHubError:
+        return "SCHEDULED_FALLBACK"
+    return "DISPATCHED"
+
+
 def validate_dispatch_payload(
     *,
     event_payload: dict[str, Any],
@@ -205,6 +232,11 @@ def main() -> int:
                 receipt_path=receipt_path,
                 report_path=report_path,
             )
+            memory_successor = _dispatch_development_memory_successor(
+                gh,
+                receipt=receipt,
+                memory_feedback=memory_feedback,
+            )
             result = {
                 "schema_version": 1,
                 "state": "VERIFIED",
@@ -216,6 +248,7 @@ def main() -> int:
                 "dispatch_count": receipt.dispatch_count,
                 "reason": "runtime-verification-already-verified",
                 "development_memory_feedback": memory_feedback,
+                "development_memory_successor": memory_successor,
             }
             _write(result)
             print(json.dumps(result, sort_keys=True))
@@ -316,11 +349,17 @@ def main() -> int:
                 receipt_path=receipt_path,
                 report_path=report_path,
             )
+            memory_successor = _dispatch_development_memory_successor(
+                gh,
+                receipt=final_receipt,
+                memory_feedback=memory_feedback,
+            )
         else:
             memory_feedback = _persist_recovery_feedback_safely(
                 gh,
                 receipt=final_receipt,
             )
+            memory_successor = "NOT_APPLICABLE"
 
         result = {
             "schema_version": 1,
@@ -346,6 +385,7 @@ def main() -> int:
                 for probe_id, attempts in execution.attempts_by_probe
             ],
             "development_memory_feedback": memory_feedback,
+            "development_memory_successor": memory_successor,
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
