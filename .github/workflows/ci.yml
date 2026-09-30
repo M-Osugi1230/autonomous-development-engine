@@ -98,6 +98,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python .github/trusted/development_memory_feedback_probe.py
 
+      - name: Development Memory successor handoff proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/development_memory_successor_probe.py
+
       - name: Runtime Verification post-merge trigger proof
         env:
           PYTHONPATH: src:.github/trusted
