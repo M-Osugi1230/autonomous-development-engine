@@ -76,6 +76,21 @@ class MultiAgentSessionTests(unittest.TestCase):
         with self.assertRaisesRegex(RoleSessionError, "live provider session"):
             assert_no_duplicate_live_session(ready, (running,))
 
+    def test_role_session_round_trip_rejects_authority_escalation(self) -> None:
+        plan, reviewer = _plan()
+        running = start_role_session(
+            role_session_for_assignment(plan, reviewer),
+            provider_id="reviewer-agent",
+            provider_session_id="review-1",
+        )
+        payload = running.canonical_dict()
+        restored = type(running).from_dict(payload)
+        self.assertEqual(restored.fingerprint(), running.fingerprint())
+
+        payload["merge_authority"] = True
+        with self.assertRaisesRegex(RoleSessionError, "merge authority"):
+            type(running).from_dict(payload)
+
     def test_quota_resume_is_due_time_bound_and_session_is_reused(self) -> None:
         plan, reviewer = _plan()
         running = start_role_session(

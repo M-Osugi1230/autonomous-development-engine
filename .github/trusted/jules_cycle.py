@@ -129,6 +129,27 @@ def _persist_remote_execution(
             file=sys.stderr,
         )
 
+    try:
+        state_payload, _ = gh.get_json_file(STATE_PATH)
+        metadata = state_payload.get("metadata")
+        metadata = metadata if isinstance(metadata, dict) else {}
+        if metadata.get("phase") == "v1.7-multi-agent":
+            gh.dispatch(
+                "ade_multi_agent_review",
+                {
+                    "task_id": task_id,
+                    "target_repository": target_repository,
+                    "pull_request_url": pull_request_url,
+                    "source": "jules-cycle",
+                },
+            )
+    except GitHubError as exc:
+        print(
+            "WARNING: immediate Multi-Agent review dispatch failed; scheduled reviewer watchdog remains armed: "
+            + _safe_error(exc),
+            file=sys.stderr,
+        )
+
 
 def _set_project_status(
     gh: GitHubClient,
