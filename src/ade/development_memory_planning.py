@@ -45,6 +45,7 @@ class DevelopmentMemoryPlanningBundle:
     def evidence_dict(self) -> dict[str, Any]:
         return {
             "schema_version": 1,
+            "used": self.retrieved_record_count > 0,
             "authority": "advisory-data-only",
             "execution_authority": False,
             "memory_may_expand_scope": False,
