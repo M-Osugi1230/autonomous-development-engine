@@ -1,0 +1,34 @@
+{
+  "auto_dispatch": false,
+  "campaign_id": "abgproof-campaign-777c97294d4bc932",
+  "candidate_fingerprint": "0b4f7d541923d25778af869f92eeb6d889274de9a371e973720ab8845ae4251d",
+  "candidate_id": "backlog-ba0e89dca2644d15388d33be",
+  "evidence_fingerprints": [
+    "138afc678e29bdd385f38d00a37ac6a41fab0f720868be21418681326ce39dfd",
+    "c19f4c3bc9b5051d85b65712cedd369bddf34879e30463b63712692e5d66ff37",
+    "522a0f738315c571096cf4dbc06a31dbf1a10d1f6a9138b6be7b4c65ce438358",
+    "86379058c4ab58f9499dcf2c23513528ce17e447c13516f51e50041a9f44ccbd",
+    "8300b258bba2f0c0141d6568dd6c62a7e0aa90cfa968d0da681844855e02ff51",
+    "81ebfdafa0aa17036fd16a6563a6095ea797f67098d397abc3395e0092c95575",
+    "fc6aea3099e0a9918c5e60e9f172c14e8f6be82fae89c7ce461b637c58df2bb3"
+  ],
+  "evidence_paths": [
+    ".autodev/autonomous-backlog/handoff.json",
+    ".autodev/autonomous-backlog/proof/campaign.json",
+    ".autodev/autonomous-backlog/proof/state.json",
+    ".autodev/autonomous-backlog/proof/remote-execution.json",
+    ".autodev/runtime-verification/abgproof-777c97294d-001/contract.json",
+    ".autodev/runtime-verification/abgproof-777c97294d-001/receipt.json",
+    ".autodev/runtime-verification/abgproof-777c97294d-001/report.json"
+  ],
+  "execution_authority": false,
+  "final_task_id": "abgproof-777c97294d-001",
+  "goal_handoff_fingerprint": "138afc678e29bdd385f38d00a37ac6a41fab0f720868be21418681326ce39dfd",
+  "original_source_sha": "4357dc7b6dfb1b882d9ea7f65aae44e302e73a6b",
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "request_id": "abgproof-request-777c97294d4bc932",
+  "retirement_authority": "trusted-verified-completion-v1",
+  "retirement_id": "retire-f2dd36372c1d1e111588bda5",
+  "schema_version": 1,
+  "verified_source_sha": "d9b8f0387525bb40dcc1baba8d730b7c4b4cdc30"
+}
