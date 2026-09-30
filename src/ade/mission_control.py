@@ -265,6 +265,9 @@ class MissionControlSnapshot:
     campaign: dict[str, Any] | None = None
     lifecycle_status: str = "RUNNING"
     zero_touch_start: dict[str, Any] | None = None
+    next_system_action: str | None = None
+    next_required_human_action: str | None = None
+    resume_after: str | None = None
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -322,6 +325,9 @@ class MissionControlSnapshot:
             "campaign": self.campaign,
             "lifecycle_status": self.lifecycle_status,
             "zero_touch_start": self.zero_touch_start,
+            "next_system_action": self.next_system_action,
+            "next_required_human_action": self.next_required_human_action,
+            "resume_after": self.resume_after,
         }
 
 
@@ -552,4 +558,10 @@ def build_mission_control_snapshot(
         campaign=campaign_payload,
         lifecycle_status=lifecycle_status,
         zero_touch_start=zero_touch_start_payload,
+        next_system_action=_optional_metadata_text(metadata, "next_system_action"),
+        next_required_human_action=_optional_metadata_text(
+            metadata,
+            "next_required_human_action",
+        ),
+        resume_after=_optional_metadata_text(metadata, "resume_after"),
     )
