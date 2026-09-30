@@ -5,7 +5,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from ade.development_memory import DevelopmentMemoryRecord, MemoryKind
+from ade.development_memory import (
+    DevelopmentMemoryLedger,
+    DevelopmentMemoryRecord,
+    MemoryKind,
+)
 from ade.development_memory_feedback import build_verified_runtime_feedback_record
 from ade.development_memory_planning import build_planning_memory_bundle_from_store
 from ade.development_memory_store import DevelopmentMemoryStore, merge_memory_records
