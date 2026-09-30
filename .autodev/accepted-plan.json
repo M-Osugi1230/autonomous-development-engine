@@ -1,7 +1,7 @@
 {
-  "fingerprint": "e6fb3847224ddee3c2cf053abf7acac0bd1c49a8ef355a2ccceb51cb0904770e",
+  "fingerprint": "5d2fc1f34955613652ffa9d33a0469cc304e3dacee377c9d3f9f018e597cba6e",
   "plan": {
-    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses OGHAM SPACE MARK (U+1680) and FIGURE SPACE (U+2007) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses EN SPACE (U+2002) and HAIR SPACE (U+200A) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
     "human_boundaries": [
       "destructive or irreversible operation",
       "credential or secret access",
@@ -11,16 +11,16 @@
     "tasks": [
       {
         "acceptance": [
-          "Add regression test for U+1680 (OGHAM SPACE MARK) and U+2007 (FIGURE SPACE) in `tests/test_models.py` to verify variant label display_label whitespace collapsing and key generation.",
+          "Add a regression test for EN SPACE and HAIR SPACE handling in `normalize_experiment_variant_label` in `tests/test_models.py`.",
           "Repository CI remains green"
         ],
         "allowed_paths": [
           "tests/test_models.py"
         ],
         "depends_on": [],
-        "prompt": "Goal: Add a focused regression test confirming that the existing experiment variant label normalizer collapses OGHAM SPACE MARK (U+1680) and FIGURE SPACE (U+2007) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files. Outcome: Add regression test for U+1680 (OGHAM SPACE MARK) and U+2007 (FIGURE SPACE) in `tests/test_models.py` to verify variant label display_label whitespace collapsing and key generation. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "v15mem1-001",
-        "title": "Add regression test for U+1680 (OGHAM SPACE MARK) and U+2007 (FIGURE SPACE) in `tests/test_models.py` to verify variant label display_label whitespace collapsing and key generation."
+        "prompt": "Goal: Add a focused regression test confirming that the existing experiment variant label normalizer collapses EN SPACE (U+2002) and HAIR SPACE (U+200A) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files. Outcome: Add a regression test for EN SPACE and HAIR SPACE handling in `normalize_experiment_variant_label` in `tests/test_models.py`. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "v15mem2-001",
+        "title": "Add a regression test for EN SPACE and HAIR SPACE handling in `normalize_experiment_variant_label` in `tests/test_models.py`."
       }
     ]
   },
