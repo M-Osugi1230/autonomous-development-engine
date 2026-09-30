@@ -93,11 +93,19 @@ def _persist_merged_receipt(
     )
 
 
+RUNTIME_VERIFICATION_PHASES = frozenset(
+    {
+        "v1.4-runtime-deployment-verification",
+        "v1.5-development-memory",
+    }
+)
+
+
 def _runtime_verification_enabled(state: dict[str, Any]) -> bool:
     metadata = state.get("metadata")
     if not isinstance(metadata, dict):
         return False
-    return metadata.get("phase") == "v1.4-runtime-deployment-verification"
+    return metadata.get("phase") in RUNTIME_VERIFICATION_PHASES
 
 
 def _load_runtime_receipt(
