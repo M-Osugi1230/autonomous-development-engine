@@ -37,6 +37,7 @@ from runtime_workspace import prepare_repository_runtime_workspace
 
 RESULT_PATH = Path(".autodev/runtime/runtime-verification-dispatch-result.json")
 V1_5_FINALIZER_TASK_ID = "v15mem2-001"
+V1_6_BACKLOG_PHASE = "v1.6-autonomous-backlog"
 
 
 def _runtime_provenance_path(task_id: str) -> str:
@@ -261,6 +262,39 @@ def _persist_runtime_provenance(
     return payload
 
 
+def _active_phase(gh: GitHubClient) -> str | None:
+    state_payload, _ = gh.get_json_file(".autodev/state.json")
+    metadata = state_payload.get("metadata")
+    metadata = metadata if isinstance(metadata, dict) else {}
+    phase = metadata.get("phase")
+    return phase if isinstance(phase, str) and phase else None
+
+
+def _dispatch_v1_6_backlog_finalizer(
+    gh: GitHubClient,
+    *,
+    receipt: RuntimeVerificationReceipt,
+    provenance: dict[str, Any],
+    phase: str | None,
+) -> str:
+    if receipt.status != "VERIFIED" or phase != V1_6_BACKLOG_PHASE:
+        return "NOT_APPLICABLE"
+    try:
+        gh.dispatch(
+            "ade_v1_6_backlog_finalize",
+            {
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "source_sha": receipt.source_sha,
+                "runtime_workflow_run_id": provenance["runtime_workflow_run_id"],
+                "source": "runtime-verification",
+            },
+        )
+    except GitHubError:
+        return "SCHEDULED_FALLBACK"
+    return "DISPATCHED"
+
+
 def _dispatch_v1_5_graduation_finalizer(
     gh: GitHubClient,
     *,
@@ -357,19 +391,36 @@ def main() -> int:
                 memory_feedback=memory_feedback,
             )
             graduation_finalizer = "NOT_APPLICABLE"
+            backlog_finalizer = "NOT_APPLICABLE"
             runtime_provenance = None
-            if receipt.task_id == V1_5_FINALIZER_TASK_ID and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
+            phase = _active_phase(gh)
+            needs_provenance = (
+                receipt.task_id == V1_5_FINALIZER_TASK_ID
+                or phase == V1_6_BACKLOG_PHASE
+            )
+            if needs_provenance and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
                 try:
                     runtime_provenance, _ = gh.get_json_file(
                         _runtime_provenance_path(receipt.task_id)
                     )
-                    graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
-                        gh,
-                        receipt=receipt,
-                        provenance=runtime_provenance,
-                    )
+                    if receipt.task_id == V1_5_FINALIZER_TASK_ID:
+                        graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
+                            gh,
+                            receipt=receipt,
+                            provenance=runtime_provenance,
+                        )
+                    elif phase == V1_6_BACKLOG_PHASE:
+                        backlog_finalizer = _dispatch_v1_6_backlog_finalizer(
+                            gh,
+                            receipt=receipt,
+                            provenance=runtime_provenance,
+                            phase=phase,
+                        )
                 except GitHubError:
-                    graduation_finalizer = "WAITING_FOR_PROVENANCE"
+                    if receipt.task_id == V1_5_FINALIZER_TASK_ID:
+                        graduation_finalizer = "WAITING_FOR_PROVENANCE"
+                    elif phase == V1_6_BACKLOG_PHASE:
+                        backlog_finalizer = "WAITING_FOR_PROVENANCE"
             result = {
                 "schema_version": 1,
                 "state": "VERIFIED",
@@ -384,6 +435,7 @@ def main() -> int:
                 "development_memory_successor": memory_successor,
                 "runtime_provenance": runtime_provenance,
                 "v1_5_graduation_finalizer": graduation_finalizer,
+                "v1_6_backlog_finalizer": backlog_finalizer,
             }
             _write(result)
             print(json.dumps(result, sort_keys=True))
@@ -476,6 +528,7 @@ def main() -> int:
 
         runtime_provenance = None
         graduation_finalizer = "NOT_APPLICABLE"
+        backlog_finalizer = "NOT_APPLICABLE"
         if final_receipt.status == "VERIFIED":
             memory_feedback = _persist_verified_feedback_safely(
                 gh,
@@ -491,8 +544,13 @@ def main() -> int:
                 receipt=final_receipt,
                 memory_feedback=memory_feedback,
             )
-            if (
+            phase = _active_phase(gh)
+            needs_provenance = (
                 final_receipt.task_id == V1_5_FINALIZER_TASK_ID
+                or phase == V1_6_BACKLOG_PHASE
+            )
+            if (
+                needs_provenance
                 and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}
             ):
                 runtime_provenance = _persist_runtime_provenance(
@@ -504,11 +562,19 @@ def main() -> int:
                     report_fingerprint=execution.report.fingerprint(),
                     memory_feedback=memory_feedback,
                 )
-                graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
-                    gh,
-                    receipt=final_receipt,
-                    provenance=runtime_provenance,
-                )
+                if final_receipt.task_id == V1_5_FINALIZER_TASK_ID:
+                    graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
+                        gh,
+                        receipt=final_receipt,
+                        provenance=runtime_provenance,
+                    )
+                elif phase == V1_6_BACKLOG_PHASE:
+                    backlog_finalizer = _dispatch_v1_6_backlog_finalizer(
+                        gh,
+                        receipt=final_receipt,
+                        provenance=runtime_provenance,
+                        phase=phase,
+                    )
         else:
             memory_feedback = _persist_recovery_feedback_safely(
                 gh,
@@ -543,6 +609,7 @@ def main() -> int:
             "development_memory_successor": memory_successor,
             "runtime_provenance": runtime_provenance,
             "v1_5_graduation_finalizer": graduation_finalizer,
+            "v1_6_backlog_finalizer": backlog_finalizer,
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
