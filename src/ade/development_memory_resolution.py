@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 import hashlib
 import json
+from pathlib import PurePosixPath
 import re
 from typing import Any, Iterable
 
@@ -16,6 +17,8 @@ from .development_memory import (
 
 
 _SHA40 = re.compile(r"^[0-9a-f]{40}$")
+_SHA256 = re.compile(r"^[0-9a-f]{64}$")
+_CONTROL = re.compile(r"[\\x00-\\x1f\\x7f]")
 
 
 class MemoryResolutionStatus(str, Enum):
@@ -32,11 +35,36 @@ class MemorySupersessionReason(str, Enum):
     RETIRED = "RETIRED"
 
 
+def _validated_supersession_evidence_path(value: object) -> str:
+    if not isinstance(value, str) or not value or len(value) > 240:
+        raise DevelopmentMemoryError("supersession evidence path is invalid")
+    if value.startswith("/") or "\\" in value or _CONTROL.search(value):
+        raise DevelopmentMemoryError("supersession evidence path is unsafe")
+    path = PurePosixPath(value)
+    if "." in path.parts or ".." in path.parts or str(path) != value:
+        raise DevelopmentMemoryError("supersession evidence path must be normalized")
+    if not value.startswith(".autodev/"):
+        raise DevelopmentMemoryError(
+            "supersession evidence path must remain inside .autodev/"
+        )
+    return value
+
+
+def _validated_supersession_fingerprint(value: object) -> str:
+    if not isinstance(value, str) or _SHA256.fullmatch(value) is None:
+        raise DevelopmentMemoryError(
+            "supersession evidence fingerprint must be sha256"
+        )
+    return value
+
+
 @dataclass(frozen=True, slots=True)
 class MemorySupersession:
     superseded_memory_id: str
     successor_memory_id: str
     reason: MemorySupersessionReason
+    evidence_path: str
+    evidence_fingerprint: str
 
     def __post_init__(self) -> None:
         if (
@@ -50,12 +78,24 @@ class MemorySupersession:
             raise DevelopmentMemoryError("memory cannot supersede itself")
         if not isinstance(self.reason, MemorySupersessionReason):
             raise DevelopmentMemoryError("supersession reason is invalid")
+        object.__setattr__(
+            self,
+            "evidence_path",
+            _validated_supersession_evidence_path(self.evidence_path),
+        )
+        object.__setattr__(
+            self,
+            "evidence_fingerprint",
+            _validated_supersession_fingerprint(self.evidence_fingerprint),
+        )
 
     def canonical_dict(self) -> dict[str, str]:
         return {
             "superseded_memory_id": self.superseded_memory_id,
             "successor_memory_id": self.successor_memory_id,
             "reason": self.reason.value,
+            "evidence_path": self.evidence_path,
+            "evidence_fingerprint": self.evidence_fingerprint,
         }
 
 
@@ -185,6 +225,10 @@ def _validate_supersessions(
             raise DevelopmentMemoryError(
                 "supersession cannot cross repository boundaries"
             )
+        if _subject_key(old) != _subject_key(new):
+            raise DevelopmentMemoryError(
+                "supersession cannot cross memory subjects"
+            )
         if item.superseded_memory_id in seen_old:
             raise DevelopmentMemoryError(
                 "one memory cannot have multiple supersession successors"
@@ -204,8 +248,16 @@ def _validate_supersessions(
     return normalized
 
 
-def _subject_key(record: DevelopmentMemoryRecord) -> tuple[str, str, tuple[str, ...]]:
-    return (record.repository, record.kind.value, record.tags)
+def _subject_key(
+    record: DevelopmentMemoryRecord,
+) -> tuple[str, str, tuple[str, ...], str | None, str | None]:
+    return (
+        record.repository,
+        record.kind.value,
+        record.tags,
+        record.task_id,
+        record.campaign_id,
+    )
 
 
 def resolve_development_memory(
@@ -256,7 +308,7 @@ def resolve_development_memory(
         )
 
     current_groups: dict[
-        tuple[str, str, tuple[str, ...]],
+        tuple[str, str, tuple[str, ...], str | None, str | None],
         list[ResolvedMemoryRecord],
     ] = {}
     for item in preliminary.values():
