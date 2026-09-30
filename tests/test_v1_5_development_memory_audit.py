@@ -339,6 +339,7 @@ class V15DevelopmentMemoryAuditTests(unittest.TestCase):
                     "Development Memory retrieval proof",
                     "Development Memory planner integration proof",
                     "Development Memory feedback lifecycle proof",
+                    "Development Memory successor handoff proof",
                     "Runtime Verification post-merge trigger proof",
                     "Runtime Verification bounded execution proof",
                     "Runtime Verification real repository probe proof",
