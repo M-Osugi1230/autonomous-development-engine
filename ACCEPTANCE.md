@@ -248,6 +248,7 @@
 - [x] The memory ledger is order-deterministic, duplicate-ID safe, immutable on append, and fingerprinted independently of input ordering.
 - [x] Memory statements are bounded single-line facts; control characters, URLs, and common secret/token markers fail closed.
 - [x] Planner memory context is repository-filtered and character/record bounded.
+- [x] Memory retrieval is deterministic, repository/current-SHA bound, result-bounded, and historical lessons require an explicit trusted relevance signal.
 - [x] Memory supplied to planning is explicitly advisory-only and cannot grant execution authority, expand trusted scope, or override Acceptance.
 - [x] A deterministic Development Memory proof is mandatory in CI.
 - [x] Trusted controller code derives memory records automatically from verified Campaign, recovery, runtime-verification, and human-decision evidence.
