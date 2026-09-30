@@ -36,6 +36,19 @@ from runtime_targets import build_runtime_target_registry
 from runtime_workspace import prepare_repository_runtime_workspace
 
 RESULT_PATH = Path(".autodev/runtime/runtime-verification-dispatch-result.json")
+V1_5_FINALIZER_TASK_ID = "v15mem2-001"
+
+
+def _runtime_provenance_path(task_id: str) -> str:
+    return f".autodev/runtime-verification/{task_id}/provenance.json"
+
+
+def _positive_run_id(value: object, *, field: str) -> int:
+    if isinstance(value, int) and value > 0:
+        return value
+    if isinstance(value, str) and value.isdigit() and int(value) > 0:
+        return int(value)
+    raise ValueError(f"{field} must be a positive workflow run id")
 
 
 def _write(payload: dict[str, Any]) -> None:
@@ -178,6 +191,100 @@ def _dispatch_development_memory_successor(
     return "DISPATCHED"
 
 
+def _persist_runtime_provenance(
+    gh: GitHubClient,
+    *,
+    event_payload: dict[str, Any],
+    contract: RuntimeVerificationContract,
+    receipt: RuntimeVerificationReceipt,
+    dependency_fingerprint: str,
+    report_fingerprint: str,
+    memory_feedback: dict[str, Any],
+) -> dict[str, Any]:
+    runtime_run_id = _positive_run_id(
+        os.environ.get("GITHUB_RUN_ID"),
+        field="GITHUB_RUN_ID",
+    )
+    remote_monitor_run_id = _positive_run_id(
+        event_payload.get("remote_monitor_workflow_run_id"),
+        field="remote_monitor_workflow_run_id",
+    )
+    pull_request_number = event_payload.get("pull_request_number")
+    if type(pull_request_number) is not int or pull_request_number < 1:
+        raise ValueError("pull_request_number must be positive")
+    pull_request_head_sha = event_payload.get("pull_request_head_sha")
+    trusted_merge_sha = event_payload.get("trusted_merge_sha")
+    if pull_request_head_sha is None or not isinstance(pull_request_head_sha, str):
+        raise ValueError("pull_request_head_sha is required")
+    if trusted_merge_sha != contract.source_sha:
+        raise ValueError("trusted_merge_sha does not match runtime source SHA")
+    if memory_feedback.get("state") not in {"ADDED", "UNCHANGED"}:
+        raise ValueError("durable memory feedback is not complete")
+
+    state_payload, _ = gh.get_json_file(".autodev/state.json")
+    metadata = state_payload.get("metadata")
+    metadata = metadata if isinstance(metadata, dict) else {}
+    implementation_run_id = _positive_run_id(
+        metadata.get("implementation_workflow_run_id"),
+        field="implementation_workflow_run_id",
+    )
+    implementation_workflow_name = metadata.get("implementation_workflow_name")
+    implementation_workflow_event = metadata.get("implementation_workflow_event")
+    if not isinstance(implementation_workflow_name, str) or not implementation_workflow_name:
+        raise ValueError("implementation workflow name is missing")
+    if not isinstance(implementation_workflow_event, str) or not implementation_workflow_event:
+        raise ValueError("implementation workflow event is missing")
+
+    payload = {
+        "schema_version": 1,
+        "task_id": receipt.task_id,
+        "verification_id": receipt.verification_id,
+        "runtime_workflow_run_id": runtime_run_id,
+        "runtime_workflow_event": os.environ.get("GITHUB_EVENT_NAME", ""),
+        "remote_monitor_workflow_run_id": remote_monitor_run_id,
+        "implementation_workflow_run_id": implementation_run_id,
+        "implementation_workflow_name": implementation_workflow_name,
+        "implementation_workflow_event": implementation_workflow_event,
+        "pull_request_number": pull_request_number,
+        "pull_request_head_sha": pull_request_head_sha,
+        "trusted_merge_sha": trusted_merge_sha,
+        "workspace_source_sha": contract.source_sha,
+        "dependency_fingerprint": dependency_fingerprint,
+        "report_fingerprint": report_fingerprint,
+        "development_memory_feedback": memory_feedback,
+    }
+    gh.upsert_json_file(
+        _runtime_provenance_path(receipt.task_id),
+        payload,
+        message=f"runtime: provenance {receipt.verification_id}",
+    )
+    return payload
+
+
+def _dispatch_v1_5_graduation_finalizer(
+    gh: GitHubClient,
+    *,
+    receipt: RuntimeVerificationReceipt,
+    provenance: dict[str, Any],
+) -> str:
+    if receipt.status != "VERIFIED" or receipt.task_id != V1_5_FINALIZER_TASK_ID:
+        return "NOT_APPLICABLE"
+    try:
+        gh.dispatch(
+            "ade_v1_5_graduation_finalize",
+            {
+                "task_id": receipt.task_id,
+                "verification_id": receipt.verification_id,
+                "source_sha": receipt.source_sha,
+                "runtime_workflow_run_id": provenance["runtime_workflow_run_id"],
+                "source": "runtime-verification",
+            },
+        )
+    except GitHubError:
+        return "SCHEDULED_FALLBACK"
+    return "DISPATCHED"
+
+
 def validate_dispatch_payload(
     *,
     event_payload: dict[str, Any],
@@ -200,6 +307,18 @@ def validate_dispatch_payload(
         raise ValueError("runtime verification contract/receipt repository mismatch")
     if contract.fingerprint() != receipt.contract_fingerprint:
         raise ValueError("runtime verification contract fingerprint mismatch")
+    if event_payload.get("trusted_merge_sha") != receipt.source_sha:
+        raise ValueError("runtime verification trusted merge SHA mismatch")
+    head_sha = event_payload.get("pull_request_head_sha")
+    if not isinstance(head_sha, str) or len(head_sha) != 40:
+        raise ValueError("runtime verification pull request head SHA is invalid")
+    _positive_run_id(
+        event_payload.get("remote_monitor_workflow_run_id"),
+        field="remote_monitor_workflow_run_id",
+    )
+    pull_request_number = event_payload.get("pull_request_number")
+    if type(pull_request_number) is not int or pull_request_number < 1:
+        raise ValueError("runtime verification pull request number is invalid")
 
 
 def main() -> int:
@@ -237,6 +356,20 @@ def main() -> int:
                 receipt=receipt,
                 memory_feedback=memory_feedback,
             )
+            graduation_finalizer = "NOT_APPLICABLE"
+            runtime_provenance = None
+            if receipt.task_id == V1_5_FINALIZER_TASK_ID and memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
+                try:
+                    runtime_provenance, _ = gh.get_json_file(
+                        _runtime_provenance_path(receipt.task_id)
+                    )
+                    graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
+                        gh,
+                        receipt=receipt,
+                        provenance=runtime_provenance,
+                    )
+                except GitHubError:
+                    graduation_finalizer = "WAITING_FOR_PROVENANCE"
             result = {
                 "schema_version": 1,
                 "state": "VERIFIED",
@@ -249,6 +382,8 @@ def main() -> int:
                 "reason": "runtime-verification-already-verified",
                 "development_memory_feedback": memory_feedback,
                 "development_memory_successor": memory_successor,
+                "runtime_provenance": runtime_provenance,
+                "v1_5_graduation_finalizer": graduation_finalizer,
             }
             _write(result)
             print(json.dumps(result, sort_keys=True))
@@ -339,6 +474,8 @@ def main() -> int:
                 report=execution.report,
             )
 
+        runtime_provenance = None
+        graduation_finalizer = "NOT_APPLICABLE"
         if final_receipt.status == "VERIFIED":
             memory_feedback = _persist_verified_feedback_safely(
                 gh,
@@ -354,6 +491,21 @@ def main() -> int:
                 receipt=final_receipt,
                 memory_feedback=memory_feedback,
             )
+            if memory_feedback.get("state") in {"ADDED", "UNCHANGED"}:
+                runtime_provenance = _persist_runtime_provenance(
+                    gh,
+                    event_payload=event,
+                    contract=contract,
+                    receipt=final_receipt,
+                    dependency_fingerprint=dependency_fingerprint,
+                    report_fingerprint=execution.report.fingerprint(),
+                    memory_feedback=memory_feedback,
+                )
+                graduation_finalizer = _dispatch_v1_5_graduation_finalizer(
+                    gh,
+                    receipt=final_receipt,
+                    provenance=runtime_provenance,
+                )
         else:
             memory_feedback = _persist_recovery_feedback_safely(
                 gh,
@@ -386,6 +538,8 @@ def main() -> int:
             ],
             "development_memory_feedback": memory_feedback,
             "development_memory_successor": memory_successor,
+            "runtime_provenance": runtime_provenance,
+            "v1_5_graduation_finalizer": graduation_finalizer,
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
