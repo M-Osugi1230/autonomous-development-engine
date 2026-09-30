@@ -114,6 +114,8 @@ class DevelopmentMemoryResolutionTests(unittest.TestCase):
             superseded_memory_id="memory-001",
             successor_memory_id="memory-002",
             reason=MemorySupersessionReason.CORRECTED,
+            evidence_path=".autodev/evidence/supersession.json",
+            evidence_fingerprint="3" * 64,
         )
         result = resolve_development_memory(
             DevelopmentMemoryLedger(records=(old, new)),
@@ -178,6 +180,51 @@ class DevelopmentMemoryResolutionTests(unittest.TestCase):
         self.assertFalse(result.conflicted)
         self.assertEqual(len(result.eligible_ledger().records), 2)
 
+
+    def test_supersession_requires_trusted_evidence_and_same_subject(self) -> None:
+        old = memory(
+            "memory-001",
+            kind=MemoryKind.REMEDIATION,
+            source_sha=OLD_SHA,
+            statement="Earlier recovery lesson.",
+            tags=("recovery", "rule"),
+        )
+        different_subject = DevelopmentMemoryRecord(
+            memory_id="memory-002",
+            kind=MemoryKind.REMEDIATION,
+            repository="owner/repo",
+            source_sha=CURRENT_SHA,
+            statement="Different task recovery lesson.",
+            evidence_paths=(".autodev/evidence/memory-002.json",),
+            evidence_fingerprints=(HASH_B,),
+            tags=("recovery", "rule"),
+            task_id="task-002",
+        )
+        ledger = DevelopmentMemoryLedger(records=(old, different_subject))
+
+        with self.assertRaisesRegex(DevelopmentMemoryError, "inside .autodev"):
+            MemorySupersession(
+                superseded_memory_id="memory-001",
+                successor_memory_id="memory-002",
+                reason=MemorySupersessionReason.CORRECTED,
+                evidence_path="README.md",
+                evidence_fingerprint="3" * 64,
+            )
+
+        link = MemorySupersession(
+            superseded_memory_id="memory-001",
+            successor_memory_id="memory-002",
+            reason=MemorySupersessionReason.CORRECTED,
+            evidence_path=".autodev/evidence/supersession.json",
+            evidence_fingerprint="3" * 64,
+        )
+        with self.assertRaisesRegex(DevelopmentMemoryError, "memory subjects"):
+            resolve_development_memory(
+                ledger,
+                current_source_shas={"owner/repo": CURRENT_SHA},
+                supersessions=(link,),
+            )
+
     def test_missing_current_source_and_bad_supersession_fail_closed(self) -> None:
         first = memory(
             "memory-001",
@@ -203,11 +250,15 @@ class DevelopmentMemoryResolutionTests(unittest.TestCase):
                 "memory-001",
                 "memory-002",
                 MemorySupersessionReason.RETIRED,
+                ".autodev/evidence/supersession-a.json",
+                "3" * 64,
             ),
             MemorySupersession(
                 "memory-002",
                 "memory-001",
                 MemorySupersessionReason.RETIRED,
+                ".autodev/evidence/supersession-b.json",
+                "4" * 64,
             ),
         )
         with self.assertRaisesRegex(DevelopmentMemoryError, "cycle"):
