@@ -206,6 +206,76 @@ class TrustedPrGateDagTests(unittest.TestCase):
         self.assertEqual(selected, "fifo-next")
         self.assertEqual(api.dispatches, [("ade_next_cycle", {"task_id": "fifo-next"})])
 
+    def test_ci_failure_recovery_rejects_external_target_and_unmanaged_pr(self) -> None:
+        module = load_gate()
+        state = base_state("current")
+        state["metadata"] = {
+            "target_repository": "owner/external-target",
+        }
+        pr = {
+            "state": "open",
+            "draft": False,
+            "body": (
+                "Implemented requested change.\n\n"
+                "---\n*PR created automatically by Jules for task "
+                "[123](https://jules.google.com/task/123)*"
+            ),
+            "head": {
+                "ref": "feat/demo",
+                "sha": "abc123",
+                "repo": {"full_name": "owner/controller"},
+            },
+        }
+
+        belongs, reason = module.ci_failure_belongs_to_active_task(
+            controller_repository="owner/controller",
+            state=state,
+            pull_request=pr,
+            files=[{"filename": "src/ade/example.py"}],
+        )
+        self.assertFalse(belongs)
+        self.assertIn("different repository", reason)
+
+        state["metadata"]["target_repository"] = "owner/controller"
+        pr["body"] = "ordinary maintenance pull request"
+        belongs, reason = module.ci_failure_belongs_to_active_task(
+            controller_repository="owner/controller",
+            state=state,
+            pull_request=pr,
+            files=[{"filename": "src/ade/example.py"}],
+        )
+        self.assertFalse(belongs)
+        self.assertIn("not from a managed Jules pull request", reason)
+
+    def test_ci_failure_recovery_accepts_managed_current_repository_pr(self) -> None:
+        module = load_gate()
+        state = base_state("current")
+        state["metadata"] = {
+            "target_repository": "owner/controller",
+        }
+        pr = {
+            "state": "open",
+            "draft": False,
+            "body": (
+                "Implemented requested change.\n\n"
+                "---\n*PR created automatically by Jules for task "
+                "[123](https://jules.google.com/task/123)*"
+            ),
+            "head": {
+                "ref": "feat/demo",
+                "sha": "abc123",
+                "repo": {"full_name": "owner/controller"},
+            },
+        }
+
+        belongs, reason = module.ci_failure_belongs_to_active_task(
+            controller_repository="owner/controller",
+            state=state,
+            pull_request=pr,
+            files=[{"filename": "src/ade/example.py"}],
+        )
+        self.assertTrue(belongs, reason)
+
     def test_state_current_task_mismatch_is_rejected(self) -> None:
         module = load_gate()
         api = FakeApi(
