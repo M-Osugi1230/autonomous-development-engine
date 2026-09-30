@@ -1,0 +1,13 @@
+{
+  "environment": "repository",
+  "max_attempts": 2,
+  "required_probe_ids": [
+    "offline-cli-smoke",
+    "production-import-smoke"
+  ],
+  "schema_version": 1,
+  "source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "timeout_seconds": 300,
+  "verification_id": "rv-2f357413b318105cbb030cf2c6bbe474689b0e46"
+}
