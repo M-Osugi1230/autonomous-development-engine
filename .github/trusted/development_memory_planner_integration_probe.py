@@ -166,6 +166,10 @@ def main() -> int:
         "trusted_path_validation_unchanged": True,
         "stale_memory_excluded": True,
         "memory_record_count": memory.retrieved_record_count,
+        "memory_record_fingerprint_count": len(memory.memory_fingerprints),
+        "memory_record_fingerprints_present": (
+            len(memory.memory_fingerprints) == memory.retrieved_record_count
+        ),
         "memory_context_fingerprint": memory.context.fingerprint,
     }, sort_keys=True))
     return 0

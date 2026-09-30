@@ -43,6 +43,10 @@ class DevelopmentMemoryPlanningBundle:
     def memory_ids(self) -> tuple[str, ...]:
         return tuple(hit.record.memory_id for hit in self.retrieval.hits)
 
+    @property
+    def memory_fingerprints(self) -> tuple[str, ...]:
+        return tuple(hit.record.fingerprint() for hit in self.retrieval.hits)
+
     def evidence_dict(self) -> dict[str, Any]:
         return {
             "schema_version": 1,
@@ -59,6 +63,7 @@ class DevelopmentMemoryPlanningBundle:
             "extracted_record_count": self.extracted_record_count,
             "retrieved_record_count": self.retrieved_record_count,
             "memory_ids": list(self.memory_ids),
+            "memory_fingerprints": list(self.memory_fingerprints),
             "current_source_sha": self.retrieval.query.current_source_sha,
             "repository": self.retrieval.query.repository,
         }

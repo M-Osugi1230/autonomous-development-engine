@@ -88,6 +88,14 @@ class DevelopmentMemoryPlanningTests(unittest.TestCase):
         self.assertEqual(bundle.extracted_record_count, 2)
         self.assertEqual(bundle.retrieved_record_count, 2)
         self.assertTrue(bundle.evidence_dict()["used"])
+        self.assertEqual(
+            len(bundle.evidence_dict()["memory_fingerprints"]),
+            bundle.retrieved_record_count,
+        )
+        self.assertEqual(
+            bundle.evidence_dict()["memory_fingerprints"],
+            [hit.record.fingerprint() for hit in bundle.retrieval.hits],
+        )
         self.assertEqual(bundle.context.payload["authority"], "advisory-data-only")
         self.assertFalse(bundle.context.payload["execution_authority"])
         self.assertFalse(bundle.context.payload["memory_may_expand_scope"])
@@ -135,6 +143,10 @@ class DevelopmentMemoryPlanningTests(unittest.TestCase):
         self.assertEqual(
             current.evidence_dict()["source_evidence_path"],
             ".autodev/development-memory.json",
+        )
+        self.assertEqual(
+            current.evidence_dict()["memory_fingerprints"],
+            [record.fingerprint()],
         )
 
         stale = build_planning_memory_bundle_from_store(
