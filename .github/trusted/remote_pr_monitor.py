@@ -98,6 +98,7 @@ RUNTIME_VERIFICATION_PHASES = frozenset(
         "v1.4-runtime-deployment-verification",
         "v1.5-development-memory",
         "v1.6-autonomous-backlog",
+        "v1.7-multi-agent",
     }
 )
 
