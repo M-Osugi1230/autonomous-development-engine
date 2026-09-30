@@ -1,0 +1,87 @@
+{
+  "accepted_plan_fingerprint": "e6fb3847224ddee3c2cf053abf7acac0bd1c49a8ef355a2ccceb51cb0904770e",
+  "campaign_id": "v1.5-development-memory-campaign-001",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "459c72ae869e9fd1b9a2c47df01f18f8538433bfc6245926f3b4071fb9376d62",
+    "current_source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+    "execution_authority": false,
+    "extracted_record_count": 2,
+    "memory_ids": [
+      "mem-bbe21eba48d98909b1482e8d",
+      "mem-ece808aff9fb89dc61413b58"
+    ],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "resolution_fingerprint": "b577600c94341e381da133dbab0b4c2482346163f1a064507f4c1b970c007ef5",
+    "retrieval_fingerprint": "82dd3fb1f1a44612a7ab69cee8c6ace44ec7251f0e4f09e8f726c95dec874834",
+    "retrieved_record_count": 2,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "74d5db26bb2d3314d9ed7cf0bfc6c22b97f9a34ddc88e5ab8c98e6d82adccae9",
+    "source_evidence_path": ".autodev/campaign-evidence/v1.4-runtime-verification-proof-003.json",
+    "used": true
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "e4bb792a008504b2c2620275e2351ddd57512b910afefd738a31879823b26119",
+  "proposal": {
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses OGHAM SPACE MARK (U+1680) and FIGURE SPACE (U+2007) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Add regression test for U+1680 (OGHAM SPACE MARK) and U+2007 (FIGURE SPACE) in `tests/test_models.py` to verify variant label display_label whitespace collapsing and key generation.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_models.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Add regression test for U+1680 (OGHAM SPACE MARK) and U+2007 (FIGURE SPACE) in `tests/test_models.py` to verify variant label display_label whitespace collapsing and key generation.",
+        "title": "Add regression test for U+1680 (OGHAM SPACE MARK) and U+2007 (FIGURE SPACE) in `tests/test_models.py` to verify variant label display_label whitespace collapsing and key generation."
+      }
+    ]
+  },
+  "proposal_fingerprint": "71da1bcfb2cc3c28402320511a4e3341b2f3ae89fd9caaa837fe8946b4fb220d",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 1,
+  "provider_plan_steps_sha256": "f21b06620913f9594d07cb43fb7d401d4e09c3ffc59fed47bac941ab6feef4d9",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "c09d201e3d5e698f3f545ae1624c5f4eb15a5317b32f87b466e9332be10e81d9",
+  "repository_context_fingerprint": "98e95bfd85b836838f156503bab4bb8ca59dd2716deabbcee69871cde46a6ab1",
+  "repository_impact_analysis_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "276257e363e9cab06e1149b43224cd1ddb76f9304180cf8a8aef3ef279bf14d5",
+  "repository_source_sha": "d3073a165a902b58cb2dfee9b16736fc7eaa43d9",
+  "request": {
+    "allowed_path_prefixes": [
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "v1.5-development-memory-campaign-001",
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses OGHAM SPACE MARK (U+1680) and FIGURE SPACE (U+2007) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "id_prefix": "v15mem1",
+    "max_tasks": 1,
+    "request_id": "v1.5-development-memory-proof-001",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "request_fingerprint": "10202ae1b5b100b36c23655cb8bd3d0ca60a142315b668b203536374b002287b",
+  "schema_version": 1,
+  "task_ids": [
+    "v15mem1-001"
+  ]
+}
