@@ -115,6 +115,70 @@ class RoleSession:
     def fingerprint(self) -> str:
         return _fingerprint(self.canonical_dict())
 
+    @classmethod
+    def from_dict(cls, payload: object) -> "RoleSession":
+        if not isinstance(payload, dict):
+            raise RoleSessionError("role session must be a JSON object")
+        allowed = {
+            "schema_version",
+            "plan_fingerprint",
+            "assignment_fingerprint",
+            "assignment_id",
+            "role",
+            "provider_id",
+            "repository",
+            "source_sha",
+            "campaign_id",
+            "task_id",
+            "accepted_plan_fingerprint",
+            "state",
+            "provider_session_id",
+            "attempt",
+            "resume_after",
+            "execution_authority",
+            "merge_authority",
+            "acceptance_authority",
+            "may_expand_scope",
+        }
+        unknown = set(payload) - allowed
+        if unknown:
+            raise RoleSessionError(
+                f"unknown role session fields: {sorted(unknown)}"
+            )
+        for field in (
+            "execution_authority",
+            "merge_authority",
+            "acceptance_authority",
+            "may_expand_scope",
+        ):
+            if payload.get(field, False) is not False:
+                raise RoleSessionError(
+                    f"role session cannot grant {field.replace('_', ' ')}"
+                )
+        return cls(
+            schema_version=payload.get("schema_version", 0),
+            plan_fingerprint=payload.get("plan_fingerprint", ""),
+            assignment_fingerprint=payload.get(
+                "assignment_fingerprint",
+                "",
+            ),
+            assignment_id=payload.get("assignment_id", ""),
+            role=payload.get("role", ""),
+            provider_id=payload.get("provider_id", ""),
+            repository=payload.get("repository", ""),
+            source_sha=payload.get("source_sha", ""),
+            campaign_id=payload.get("campaign_id", ""),
+            task_id=payload.get("task_id", ""),
+            accepted_plan_fingerprint=payload.get(
+                "accepted_plan_fingerprint",
+                "",
+            ),
+            state=payload.get("state", ""),
+            provider_session_id=payload.get("provider_session_id"),
+            attempt=payload.get("attempt", 0),
+            resume_after=payload.get("resume_after"),
+        )
+
 
 def role_session_for_assignment(plan: MultiAgentPlan, assignment: AgentAssignment) -> RoleSession:
     if assignment not in plan.assignments:
