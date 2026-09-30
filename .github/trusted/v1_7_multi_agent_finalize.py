@@ -50,7 +50,6 @@ from scripts.v1_7_multi_agent_audit import (
 from v1_5_graduation_finalize import (
     _api_json,
     _get_controller_run,
-    select_remote_gate_run,
     select_target_ci_run,
     validate_controller_run,
 )
@@ -157,6 +156,47 @@ def _select_review_run(
     return max(candidates, key=lambda row: _positive_int(row.get("id"), field="review run"))
 
 
+def _select_target_gate_run(
+    runs: list[dict[str, Any]],
+    *,
+    ci_updated_at: str,
+    merged_at: str,
+) -> dict[str, Any]:
+    from datetime import UTC, datetime, timedelta
+
+    def parse(value: object) -> datetime:
+        if not isinstance(value, str) or not value:
+            raise ValueError("target gate workflow timestamp is missing")
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if parsed.tzinfo is None or parsed.utcoffset() is None:
+            raise ValueError("target gate workflow timestamp must be timezone-aware")
+        return parsed.astimezone(UTC)
+
+    start = parse(ci_updated_at) - timedelta(seconds=10)
+    merge_time = parse(merged_at)
+    end = merge_time + timedelta(minutes=2)
+    candidates = [
+        row
+        for row in runs
+        if isinstance(row, dict)
+        and row.get("name") == "ADE Remote PR Gate"
+        and row.get("event") in {"workflow_run", "schedule"}
+        and row.get("conclusion") == "success"
+        and start <= parse(row.get("created_at")) <= end
+    ]
+    if not candidates:
+        raise ValueError(
+            "no successful trusted target gate run is bound to the CI/merge window"
+        )
+    return min(
+        candidates,
+        key=lambda row: (
+            abs((parse(row.get("created_at")) - merge_time).total_seconds()),
+            -_positive_int(row.get("id"), field="target gate run"),
+        ),
+    )
+
+
 def _target_observations(
     *,
     remote: RemoteExecutionReceipt,
@@ -216,9 +256,9 @@ def _target_observations(
         pr_created_at=pr.get("created_at"),
         merged_at=pr.get("merged_at"),
     )
-    gate_run = select_remote_gate_run(
+    gate_run = _select_target_gate_run(
         target_runs,
-        ci_run=ci_run,
+        ci_updated_at=ci_run.get("updated_at"),
         merged_at=pr.get("merged_at"),
     )
 
@@ -273,7 +313,11 @@ def _validate_controller_provenance(
         (zero_touch_run, "ADE Zero-Touch Start", ("repository_dispatch",)),
         (implementation_run, "ADE Jules Cycle", ("repository_dispatch",)),
         (review_run, "ADE Multi-Agent Review", ("repository_dispatch",)),
-        (remote_monitor_run, "ADE Remote PR Monitor", ("repository_dispatch",)),
+        (
+            remote_monitor_run,
+            "ADE Remote PR Monitor",
+            ("repository_dispatch", "schedule", "push"),
+        ),
         (runtime_run, "ADE Runtime Verification", ("repository_dispatch",)),
     )
     for run_id, name, events in expectations:
