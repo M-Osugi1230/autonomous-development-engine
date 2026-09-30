@@ -350,7 +350,9 @@ def main() -> int:
             or "\\" in allowed_paths[0]
         ):
             raise ValueError("v1.6 AcceptedPlan must allow exactly one normalized tests/ path")
-        if task.get("new_paths") != [] or task.get("human_only") is not False:
+        new_paths = task.get("new_paths", [])
+        human_only = task.get("human_only", False)
+        if new_paths != [] or human_only is not False:
             raise ValueError("v1.6 AcceptedPlan violates bounded execution contract")
 
         if zero_touch.get("campaign_id") != handoff.request.campaign_id:
