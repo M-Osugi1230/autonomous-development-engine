@@ -225,6 +225,8 @@ def _planner_evidence(memory: dict) -> dict:
         "campaign_id": "v1.5-development-memory-campaign-002",
         "accepted_plan_fingerprint": PLAN_HASH,
         "planning_only": True,
+        "workflow_run_id": 201,
+        "workflow_run_attempt": 1,
         "repository_source_sha": BASE_SHA,
         "development_memory": memory,
     }
@@ -390,6 +392,18 @@ class V15DevelopmentMemoryAuditTests(unittest.TestCase):
             result = audit(root)
             self.assertFalse(result["v1_5_development_memory_graduated"])
             self.assertFalse(result["checks"]["durable_store_is_planner_source"])
+
+    def test_planner_workflow_run_must_match_raw_planner_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            evidence = _evidence()
+            self._fixture(root, evidence)
+            raw = _planner_evidence(evidence["planner"]["development_memory"])
+            raw["workflow_run_id"] = 999
+            _write(root, PLANNER_PATH, raw)
+            result = audit(root)
+            self.assertFalse(result["v1_5_development_memory_graduated"])
+            self.assertFalse(result["checks"]["planner_chain"])
 
     def test_raw_planner_memory_must_match_final_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

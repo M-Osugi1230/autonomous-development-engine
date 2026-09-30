@@ -239,6 +239,8 @@ def audit(
         and bootstrap.get("runtime_verification", {}).get("status") == "VERIFIED"
         and bootstrap.get("runtime_verification", {}).get("source_sha") == base_sha,
         "planner_chain": _positive_int(planner.get("workflow_run"))
+        and planner_evidence.get("workflow_run_id") == planner.get("workflow_run")
+        and _positive_int(planner_evidence.get("workflow_run_id"))
         and planner.get("planning_only") is True
         and _sha256(planner.get("accepted_plan_fingerprint"))
         and planner.get("repository_source_sha") == base_sha,
