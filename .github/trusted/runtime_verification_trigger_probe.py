@@ -98,6 +98,28 @@ def main() -> int:
     assert replay == first
     assert len(gh.dispatches) == 1
 
+    v1_5 = remote_pr_monitor._arm_post_merge_runtime_verification(
+        gh,
+        state={
+            "metadata": {
+                "phase": "v1.5-development-memory",
+                "target_repository": TARGET,
+            }
+        },
+        receipt=RemoteExecutionReceipt(
+            task_id="v15mem-proof-001",
+            target_repository=TARGET,
+            pull_request_url=f"https://github.com/{TARGET}/pull/18",
+            recorded_at="2026-09-30T00:00:00+00:00",
+            status="PR_CREATED",
+        ),
+        trusted_merge_sha="c" * 40,
+    )
+    assert v1_5 is not None
+    assert v1_5.source_sha == "c" * 40
+    assert v1_5.status == "DISPATCHED"
+    assert len(gh.dispatches) == 2
+
     old_phase = remote_pr_monitor._arm_post_merge_runtime_verification(
         gh,
         state={"metadata": {"phase": "v1.3-repository-intelligence"}},
@@ -111,7 +133,7 @@ def main() -> int:
         trusted_merge_sha="b" * 40,
     )
     assert old_phase is None
-    assert len(gh.dispatches) == 1
+    assert len(gh.dispatches) == 2
 
     print(json.dumps({
         "ok": True,
@@ -120,6 +142,7 @@ def main() -> int:
         "durable_receipt_persisted": True,
         "post_merge_dispatch_recorded": True,
         "duplicate_dispatch_suppressed": True,
+        "v1_5_runtime_verification_enabled": True,
         "pre_v1_4_behavior_preserved": True,
     }, sort_keys=True))
     return 0
