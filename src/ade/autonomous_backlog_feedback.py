@@ -67,7 +67,7 @@ def _repository(value: str) -> str:
 def _evidence_path(value: str) -> str:
     if not isinstance(value, str) or not value or len(value) > 240:
         raise AutonomousBacklogError("retirement evidence path is invalid")
-    if value.startswith("/") or "\" in value:
+    if value.startswith("/") or "\\" in value:
         raise AutonomousBacklogError("retirement evidence path is unsafe")
     path = PurePosixPath(value)
     if "." in path.parts or ".." in path.parts or str(path) != value:
