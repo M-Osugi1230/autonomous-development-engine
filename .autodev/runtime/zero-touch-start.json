@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.5-development-memory-campaign-001",
+  "campaign_id": "v1.5-development-memory-campaign-002",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-30T09:29:32.062223+00:00",
-  "plan_fingerprint": "e6fb3847224ddee3c2cf053abf7acac0bd1c49a8ef355a2ccceb51cb0904770e",
+  "dispatched_at": "2026-09-30T11:11:28.316279+00:00",
+  "plan_fingerprint": "5d2fc1f34955613652ffa9d33a0469cc304e3dacee377c9d3f9f018e597cba6e",
   "run_attempt": "1",
-  "run_id": "36696433516",
+  "run_id": "36706989643",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "bbb4fb9e7ba0a6d67d952bdf92d7c34cb3edd814",
+  "source_sha": "3950fcefbd8ba65ce430b26274104d58034fffb6",
   "status": "DISPATCHED",
-  "task_id": "v15mem1-001"
+  "task_id": "v15mem2-001"
 }
