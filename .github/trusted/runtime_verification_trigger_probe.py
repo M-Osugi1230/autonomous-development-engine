@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -86,7 +87,7 @@ def main() -> int:
                 "target_repository": TARGET,
                 "source_sha": MERGE_SHA,
                 "source": "remote-pr-monitor",
-                "remote_monitor_workflow_run_id": None,
+                "remote_monitor_workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
                 "pull_request_number": 15,
                 "pull_request_head_sha": "d" * 40,
                 "trusted_merge_sha": MERGE_SHA,
