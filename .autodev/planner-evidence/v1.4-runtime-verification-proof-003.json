@@ -1,0 +1,66 @@
+{
+  "accepted_plan_fingerprint": "65a168f047c1a3051ae296fd5f147726fd537ffce0d3e179f3868eb55da92ab6",
+  "campaign_id": "v1.4-runtime-verification-campaign-003",
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "e4bb792a008504b2c2620275e2351ddd57512b910afefd738a31879823b26119",
+  "proposal": {
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses narrow no-break space (U+202F) and medium mathematical space (U+205F) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Add regression test for U+202F and U+205F space normalization in tests/test_models.py.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_models.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Add regression test for U+202F and U+205F space normalization in tests/test_models.py.",
+        "title": "Add regression test for U+202F and U+205F space normalization in tests/test_models.py."
+      }
+    ]
+  },
+  "proposal_fingerprint": "9113d11a9832ea0d66a13be2b6c134ce01d913b9137f1908dc4e14a689c472dc",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 1,
+  "provider_plan_steps_sha256": "5a0463981bc2f3b386884bed63cade9aaa72f7d3f2624091b5f1f72d76f62bbb",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "f40ae8a2e0349fafce5a248b8e3f5328572e18851a8ef76d690c20121293351e",
+  "repository_context_fingerprint": "dc6261f5e336966d707e12665c3269dcb0788b9b8d0439533864c95ed7e04581",
+  "repository_impact_analysis_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "84424a63b0277b1d124e6d434059586d98e116d4f3cac25d5b7967f286192476",
+  "repository_source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+  "request": {
+    "allowed_path_prefixes": [
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "v1.4-runtime-verification-campaign-003",
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses narrow no-break space (U+202F) and medium mathematical space (U+205F) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "id_prefix": "v14rv3",
+    "max_tasks": 1,
+    "request_id": "v1.4-runtime-verification-proof-003",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "request_fingerprint": "93433420f793dfe9d1829ceb011ba5c10fd6f48373bc39b068cfa448d5b641a3",
+  "schema_version": 1,
+  "task_ids": [
+    "v14rv3-001"
+  ]
+}
