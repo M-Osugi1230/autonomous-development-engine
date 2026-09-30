@@ -16,6 +16,9 @@ STORE_PATH = ".autodev/development-memory.json"
 TARGET_REPOSITORY = "M-Osugi1230/one-minute-thought-experiments"
 SOURCE_MEMORY_EVIDENCE = ".autodev/campaign-evidence/v1.4-runtime-verification-proof-003.json"
 PLANNER_EVIDENCE = ".autodev/planner-evidence/v1.5-development-memory-proof-001.json"
+RUNTIME_CONTRACT = ".autodev/runtime-verification/v15mem1-001/contract.json"
+RUNTIME_RECEIPT = ".autodev/runtime-verification/v15mem1-001/receipt.json"
+RUNTIME_REPORT = ".autodev/runtime-verification/v15mem1-001/report.json"
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_CI_PROOFS = (
@@ -77,6 +80,13 @@ def audit(
     evidence = _load(root, evidence_path)
     planner_evidence = _load(root, PLANNER_EVIDENCE)
     source_memory_evidence = _load(root, SOURCE_MEMORY_EVIDENCE)
+    raw_runtime_contract = _load(root, RUNTIME_CONTRACT)
+    raw_runtime_receipt = _load(root, RUNTIME_RECEIPT)
+    raw_runtime_report_wrapper = _load(root, RUNTIME_REPORT)
+    raw_runtime_report = raw_runtime_report_wrapper.get("report")
+    raw_runtime_report = (
+        raw_runtime_report if isinstance(raw_runtime_report, dict) else {}
+    )
     store_payload = _load(root, store_path)
     store = DevelopmentMemoryStore.from_dict(store_payload)
     ci = (root / ".github/workflows/ci.yml").read_text(encoding="utf-8")
@@ -194,6 +204,11 @@ def audit(
         and _sha40(task.get("head_sha"))
         and _sha40(merge_sha)
         and task.get("changed_paths") == ["tests/test_models.py"],
+        "runtime_raw_evidence_bound": raw_runtime_contract == contract
+        and raw_runtime_receipt == receipt
+        and raw_runtime_report == report
+        and raw_runtime_report_wrapper.get("report_fingerprint")
+        == runtime.get("report_fingerprint"),
         "runtime_workflow": _positive_int(runtime.get("workflow_run"))
         and runtime.get("trigger_source") == "repository_dispatch"
         and runtime.get("manual_workflow_dispatch") is False,
@@ -243,9 +258,9 @@ def audit(
         and _sha256(runtime.get("report_fingerprint"))
         and store_record.evidence_fingerprints
         == (
-            receipt.get("contract_fingerprint"),
-            _fingerprint(receipt),
-            runtime.get("report_fingerprint"),
+            raw_runtime_receipt.get("contract_fingerprint"),
+            _fingerprint(raw_runtime_receipt),
+            raw_runtime_report_wrapper.get("report_fingerprint"),
         ),
         "campaign_completed": campaign.get("campaign_id")
         == "v1.5-development-memory-campaign-001"
