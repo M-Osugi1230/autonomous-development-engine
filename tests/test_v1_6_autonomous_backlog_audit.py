@@ -40,6 +40,7 @@ from scripts.v1_6_autonomous_backlog_audit import (
     POLICY_PATH,
     POST_RESOLUTION_PATH,
     POST_SELECTION_PATH,
+    PROOF_PROVENANCE_PATH,
     REMOTE_PATH,
     RESOLUTION_PATH,
     RETIREMENT_PATH,
@@ -414,6 +415,44 @@ def fixture(root: Path) -> dict:
         POST_SELECTION_PATH,
         chain["post_selection"].canonical_dict(),
     )
+    write(
+        root,
+        PROOF_PROVENANCE_PATH,
+        {
+            "schema_version": 1,
+            "task_id": TASK_ID,
+            "planner_workflow_run": 601,
+            "zero_touch_receipt": {
+                "schema_version": 1,
+                "campaign_id": handoff.request.campaign_id,
+                "task_id": TASK_ID,
+                "status": "DISPATCHED",
+                "dispatch_count": 1,
+                "source": "repository_dispatch",
+                "run_id": "602",
+            },
+            "runtime_provenance": {
+                "schema_version": 1,
+                "task_id": TASK_ID,
+                "pull_request_number": 21,
+                "pull_request_head_sha": HEAD_SHA,
+                "trusted_merge_sha": MERGE_SHA,
+                "implementation_workflow_run_id": 603,
+                "remote_monitor_workflow_run_id": 606,
+                "runtime_workflow_run_id": 607,
+                "runtime_workflow_event": "repository_dispatch",
+            },
+            "target_pull_request": {
+                "pull_request": 21,
+                "base_sha": BASE_SHA,
+                "head_sha": HEAD_SHA,
+                "merge_sha": MERGE_SHA,
+                "changed_paths": ["tests/test_models.py"],
+                "ci_run": 604,
+                "remote_gate_run": 605,
+            },
+        },
+    )
     write(root, EVIDENCE_PATH, evidence(chain))
     write(root, ".github/workflows/ci.yml", "\n".join(CI_PROOFS) + "\n")
     return chain
@@ -501,6 +540,17 @@ class V16AutonomousBacklogAuditTests(unittest.TestCase):
             self.assertFalse(
                 result["checks"]["post_retirement_no_reselection"]
             )
+
+    def test_provenance_snapshot_tampering_blocks_graduation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fixture(root)
+            payload = json.loads((root / PROOF_PROVENANCE_PATH).read_text())
+            payload["runtime_provenance"]["trusted_merge_sha"] = "f" * 40
+            write(root, PROOF_PROVENANCE_PATH, payload)
+            result = audit(root)
+            self.assertFalse(result["v1_6_autonomous_backlog_graduated"])
+            self.assertFalse(result["checks"]["provenance_snapshot_bound"])
 
     def test_missing_mandatory_ci_proof_blocks_graduation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
