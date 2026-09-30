@@ -49,6 +49,7 @@ REMOTE_PATH = ".autodev/autonomous-backlog/proof/remote-execution.json"
 RETIREMENT_PATH = ".autodev/autonomous-backlog/retirement.json"
 POST_RESOLUTION_PATH = ".autodev/autonomous-backlog/post-retirement-resolution.json"
 POST_SELECTION_PATH = ".autodev/autonomous-backlog/post-retirement-selection.json"
+PROOF_PROVENANCE_PATH = ".autodev/autonomous-backlog/proof/provenance.json"
 
 TARGET_REPOSITORY = "M-Osugi1230/one-minute-thought-experiments"
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
@@ -102,6 +103,14 @@ def _positive_int(value: object) -> bool:
     return type(value) is int and value > 0
 
 
+def _run_id(value: object) -> int | None:
+    if type(value) is int and value > 0:
+        return value
+    if isinstance(value, str) and value.isdigit() and int(value) > 0:
+        return int(value)
+    return None
+
+
 def _proof_policy() -> BacklogPlanningPolicy:
     return BacklogPlanningPolicy(
         repository=TARGET_REPOSITORY,
@@ -135,6 +144,7 @@ def audit(
     stored_retirement = _load(root, RETIREMENT_PATH)
     stored_post_resolution = _load(root, POST_RESOLUTION_PATH)
     stored_post_selection = _load(root, POST_SELECTION_PATH)
+    proof_provenance = _load(root, PROOF_PROVENANCE_PATH)
 
     source = evidence.get("source_memory")
     source = source if isinstance(source, dict) else {}
@@ -292,6 +302,21 @@ def audit(
             post_resolution = None
             post_selection = None
 
+    zero_touch_provenance = proof_provenance.get("zero_touch_receipt")
+    zero_touch_provenance = (
+        zero_touch_provenance
+        if isinstance(zero_touch_provenance, dict)
+        else {}
+    )
+    runtime_provenance = proof_provenance.get("runtime_provenance")
+    runtime_provenance = (
+        runtime_provenance if isinstance(runtime_provenance, dict) else {}
+    )
+    target_provenance = proof_provenance.get("target_pull_request")
+    target_provenance = (
+        target_provenance if isinstance(target_provenance, dict) else {}
+    )
+
     ci = (root / ".github/workflows/ci.yml").read_text(encoding="utf-8")
     missing_proofs = [name for name in REQUIRED_CI_PROOFS if name not in ci]
 
@@ -431,6 +456,45 @@ def audit(
         and post.get("selection_fingerprint")
         == post_selection.fingerprint()
         and post.get("selected_candidate_id") is None,
+        "provenance_snapshot_bound": proof_provenance.get("schema_version") == 1
+        and proof_provenance.get("task_id") == task_id
+        and _run_id(proof_provenance.get("planner_workflow_run"))
+        == planner_evidence.get("workflow_run_id")
+        and _run_id(proof_provenance.get("planner_workflow_run"))
+        == planning.get("planner_workflow_run")
+        and zero_touch_provenance.get("campaign_id")
+        == handoff.request.campaign_id
+        and zero_touch_provenance.get("task_id") == task_id
+        and zero_touch_provenance.get("status") == "DISPATCHED"
+        and zero_touch_provenance.get("dispatch_count") == 1
+        and zero_touch_provenance.get("source") == "repository_dispatch"
+        and _run_id(zero_touch_provenance.get("run_id"))
+        == task.get("zero_touch_run")
+        and runtime_provenance.get("task_id") == task_id
+        and runtime_provenance.get("pull_request_number")
+        == task.get("pull_request")
+        and runtime_provenance.get("pull_request_head_sha")
+        == task.get("head_sha")
+        and runtime_provenance.get("trusted_merge_sha")
+        == task.get("merge_sha")
+        and _run_id(runtime_provenance.get("implementation_workflow_run_id"))
+        == task.get("implementation_run")
+        and _run_id(runtime_provenance.get("remote_monitor_workflow_run_id"))
+        == task.get("remote_monitor_run")
+        and _run_id(runtime_provenance.get("runtime_workflow_run_id"))
+        == runtime.get("workflow_run")
+        and runtime_provenance.get("runtime_workflow_event")
+        == "repository_dispatch"
+        and target_provenance.get("pull_request")
+        == task.get("pull_request")
+        and target_provenance.get("base_sha") == candidate.source_sha
+        and target_provenance.get("head_sha") == task.get("head_sha")
+        and target_provenance.get("merge_sha") == task.get("merge_sha")
+        and target_provenance.get("changed_paths")
+        == task.get("changed_paths")
+        and target_provenance.get("ci_run") == task.get("ci_run")
+        and target_provenance.get("remote_gate_run")
+        == task.get("remote_gate_run"),
         "execution_provenance_clean": evidence.get(
             "execution_provenance_clean"
         )
