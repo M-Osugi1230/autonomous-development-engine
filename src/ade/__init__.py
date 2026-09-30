@@ -56,6 +56,15 @@ from .decisions import (
     DecisionResponse,
     DecisionStatus,
 )
+from .development_memory import (
+    DevelopmentMemoryAuthority,
+    DevelopmentMemoryError,
+    DevelopmentMemoryEvidence,
+    DevelopmentMemoryKind,
+    DevelopmentMemoryLedger,
+    DevelopmentMemoryRecord,
+    build_development_memory_record,
+)
 from .health import health_snapshot
 from .human_interrupt import HumanInterruptCoordinator
 from .jules_planner import (
@@ -191,6 +200,12 @@ __all__ = [
     "DecisionResponse",
     "DecisionStatus",
     "DecisionStore",
+    "DevelopmentMemoryAuthority",
+    "DevelopmentMemoryError",
+    "DevelopmentMemoryEvidence",
+    "DevelopmentMemoryKind",
+    "DevelopmentMemoryLedger",
+    "DevelopmentMemoryRecord",
     "DryRunCheckStatus",
     "FailureKind",
     "HumanInputRequired",
@@ -271,6 +286,7 @@ __all__ = [
     "StartDecision",
     "StartDisposition",
     "accept_validated_proposal",
+    "build_development_memory_record",
     "build_mission_control_snapshot",
     "build_planning_activation",
     "build_planner_prompt",
