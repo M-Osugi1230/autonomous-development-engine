@@ -456,7 +456,9 @@ def audit(
         and post.get("selection_fingerprint")
         == post_selection.fingerprint()
         and post.get("selected_candidate_id") is None,
-        "provenance_snapshot_bound": proof_provenance.get("schema_version") == 1
+        "provenance_snapshot_bound": handoff is not None
+        and candidate is not None
+        and proof_provenance.get("schema_version") == 1
         and proof_provenance.get("task_id") == task_id
         and _run_id(proof_provenance.get("planner_workflow_run"))
         == planner_evidence.get("workflow_run_id")
