@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-DEFAULT_EVIDENCE = ".autodev/campaign-evidence/v1.4-runtime-verification-proof-002.json"
+DEFAULT_EVIDENCE = ".autodev/campaign-evidence/v1.4-runtime-verification-proof-003.json"
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_CI_PROOFS = (
@@ -86,12 +86,13 @@ def audit(
         "evidence_schema": evidence.get("schema_version") == 1
         and evidence.get("version") == "v1.4",
         "proof_identity": evidence.get("request_id")
-        == "v1.4-runtime-verification-proof-002"
+        == "v1.4-runtime-verification-proof-003"
         and evidence.get("campaign_id")
-        == "v1.4-runtime-verification-campaign-002",
+        == "v1.4-runtime-verification-campaign-003",
         "target_repository": evidence.get("target_repository")
         == "M-Osugi1230/one-minute-thought-experiments",
         "goal_only_submission": evidence.get("human_authored_per_task_work_items") is False,
+        "execution_provenance_clean": evidence.get("execution_provenance_clean") is True,
         "external_task_chain": isinstance(task.get("task_id"), str)
         and bool(task["task_id"].strip())
         and _positive_int(task.get("planner_workflow_run"))

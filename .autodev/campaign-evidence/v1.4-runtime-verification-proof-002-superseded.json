@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "version": "v1.4",
+  "request_id": "v1.4-runtime-verification-proof-002",
+  "campaign_id": "v1.4-runtime-verification-campaign-002",
+  "task_id": "v14rv2-001",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "outcome": "VERIFIED_BUT_EXCLUDED",
+  "graduation_eligible": false,
+  "exclusion_reason": "controller-ci-failure-provenance-misbinding",
+  "planner_workflow_run": 36651576689,
+  "zero_touch_run": 36651700795,
+  "initial_jules_cycle_run": 36651713129,
+  "initial_outcome": "PAUSED_QUOTA",
+  "resume_after": "2026-09-30T06:56:17.017175+00:00",
+  "scheduler_delivery_gap": {
+    "last_pre_due_resume_watch_run": 36674811488,
+    "last_pre_due_observation": "WAIT",
+    "due_at": "2026-09-30T06:56:17.017175+00:00",
+    "observation_after_due": "2026-09-30T08:20:00+00:00",
+    "scheduled_run_delivered_after_due_before_observation": false
+  },
+  "provenance_contamination": {
+    "unrelated_controller_pull_request": 170,
+    "unrelated_failed_ci_run": 36689393254,
+    "erroneous_pr_gate_run": 36689431302,
+    "erroneous_recovery_failure": "CI_FAILURE",
+    "erroneous_recovery_action": "REPAIR",
+    "dispatched_event": "ade_next_cycle",
+    "repair_jules_cycle_run": 36689451958
+  },
+  "external_execution": {
+    "pull_request": 16,
+    "head_sha": "bae1a76794b4af329c11f32c238e720caa2f43e6",
+    "target_ci_run": 36689914982,
+    "remote_gate_run": 36689987596,
+    "merge_commit": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+    "remote_monitor_run": 36689921025
+  },
+  "runtime_verification": {
+    "workflow_run": 36690020952,
+    "trigger_source": "repository_dispatch",
+    "source_sha": "2f357413b318105cbb030cf2c6bbe474689b0e46",
+    "receipt_status": "VERIFIED",
+    "dispatch_count": 1,
+    "contract_fingerprint": "7a1f59853a1ee26b6149cf26a80d182661c271f69d904b975b8cc5a66b58f479",
+    "report_fingerprint": "f45a88a39f6f3bd872d5b656664e8e47742fa4bae6eb9a02c7deb6c6c6e03baf",
+    "probes": [
+      {
+        "probe_id": "offline-cli-smoke",
+        "status": "PASS",
+        "detail_code": "offline-cli-pass",
+        "attempt": 1
+      },
+      {
+        "probe_id": "production-import-smoke",
+        "status": "PASS",
+        "detail_code": "production-import-pass",
+        "attempt": 1
+      }
+    ]
+  },
+  "remediation": {
+    "pull_request": 173,
+    "merge_commit": "e50e558e820964ea1e1882685da46b90ed472265",
+    "change": "CI failure recovery now requires controller target, checkpoint task, trusted Jules PR, and exact provider-session binding."
+  },
+  "successor_request_id": "v1.4-runtime-verification-proof-003",
+  "evidence_policy": "Preserve proof002 runtime success as factual evidence, but exclude the proof from graduation because its execution trigger provenance was contaminated. Do not rewrite it as a clean success."
+}
