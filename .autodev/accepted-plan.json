@@ -1,7 +1,7 @@
 {
-  "fingerprint": "e99456955b7248ffb3adb2bd319783ea273c86144e8fadf47fe6ed267b7cf743",
+  "fingerprint": "65a168f047c1a3051ae296fd5f147726fd537ffce0d3e179f3868eb55da92ab6",
   "plan": {
-    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses additional Unicode whitespace forms such as ideographic space and thin space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+    "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses narrow no-break space (U+202F) and medium mathematical space (U+205F) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
     "human_boundaries": [
       "destructive or irreversible operation",
       "credential or secret access",
@@ -11,16 +11,16 @@
     "tasks": [
       {
         "acceptance": [
-          "Add a regression test in `tests/test_models.py` to confirm experiment variant label normalization collapses Unicode whitespace forms such as ideographic space and thin space.",
+          "Add regression test for U+202F and U+205F space normalization in tests/test_models.py.",
           "Repository CI remains green"
         ],
         "allowed_paths": [
           "tests/test_models.py"
         ],
         "depends_on": [],
-        "prompt": "Goal: Add a focused regression test confirming that the existing experiment variant label normalizer collapses additional Unicode whitespace forms such as ideographic space and thin space to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files. Outcome: Add a regression test in `tests/test_models.py` to confirm experiment variant label normalization collapses Unicode whitespace forms such as ideographic space and thin space. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "v14rv2-001",
-        "title": "Add a regression test in `tests/test_models.py` to confirm experiment variant label normalization collapses Unicode whitespace forms such as ideographic space and thin space."
+        "prompt": "Goal: Add a focused regression test confirming that the existing experiment variant label normalizer collapses narrow no-break space (U+202F) and medium mathematical space (U+205F) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files. Outcome: Add regression test for U+202F and U+205F space normalization in tests/test_models.py. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "v14rv3-001",
+        "title": "Add regression test for U+202F and U+205F space normalization in tests/test_models.py."
       }
     ]
   },
