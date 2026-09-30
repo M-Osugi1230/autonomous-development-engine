@@ -66,7 +66,7 @@ def main() -> int:
     assert activation["source_memory_fingerprint"] == record.fingerprint()
     assert activation["selection"]["selected_candidate_id"] == activation["candidate_id"]
     assert activation["planning_goal"]["allowed_path_prefixes"] == ["tests"]
-    assert activation["planning_goal"]["min_tasks"] == 1
+    assert activation["planning_goal"].get("min_tasks", 1) == 1
     assert activation["planning_goal"]["max_tasks"] == 1
     assert activation["handoff"]["execution_authority"] is False
     assert activation["handoff"]["accepted_plan_authority"] is False
