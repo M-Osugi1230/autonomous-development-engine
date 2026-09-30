@@ -18,7 +18,7 @@ from .development_memory import (
 
 _SHA40 = re.compile(r"^[0-9a-f]{40}$")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
-_CONTROL = re.compile(r"[\\x00-\\x1f\\x7f]")
+_CONTROL = re.compile(r"[\x00-\x1f\x7f]")
 
 
 class MemoryResolutionStatus(str, Enum):
