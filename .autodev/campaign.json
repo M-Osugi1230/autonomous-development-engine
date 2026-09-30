@@ -1,9 +1,11 @@
 {
   "campaign_id": "abgproof-campaign-777c97294d4bc932",
-  "completed_task_ids": [],
+  "completed_task_ids": [
+    "abgproof-777c97294d-001"
+  ],
   "goal": "Resolve trusted Autonomous Backlog candidate: Trusted verified outcome mem-786d667480ca61ad8f1a9f0f is available for one bounded regression follow-up without granting execution authority.",
   "schema_version": 1,
-  "status": "RUNNING",
+  "status": "COMPLETED",
   "task_ids": [
     "abgproof-777c97294d-001"
   ]
