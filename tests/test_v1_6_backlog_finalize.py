@@ -72,6 +72,37 @@ class FakeGitHub:
 
 
 class V16BacklogFinalizeTests(unittest.TestCase):
+    def test_graduated_state_is_terminal_noop_guard(self) -> None:
+        self.assertTrue(
+            module._v1_6_already_graduated(
+                {
+                    "status": "READY",
+                    "metadata": {
+                        "phase": module.PHASE,
+                        "v1_6_graduated": True,
+                    },
+                }
+            )
+        )
+        self.assertFalse(
+            module._v1_6_already_graduated(
+                {
+                    "status": "READY",
+                    "metadata": {
+                        "phase": module.PHASE,
+                        "v1_6_graduated": False,
+                    },
+                }
+            )
+        )
+        self.assertFalse(
+            module._v1_6_already_graduated(
+                {"status": "READY", "metadata": {}}
+            )
+        )
+        with self.assertRaisesRegex(ValueError, "ProjectState"):
+            module._v1_6_already_graduated([])
+
     def test_reconstruct_chain_is_deterministic_and_tests_only(self) -> None:
         payload = source_store().canonical_dict()
         left = module._reconstruct_chain(source_store_payload=payload)
