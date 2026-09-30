@@ -1,0 +1,60 @@
+{
+  "candidate": {
+    "backlog_fingerprint": "50f5d88bb7a4197d43db7f793189b1fa82dedc5d5689cbd0397d495d34d77bf1",
+    "candidate_fingerprint": "0b4f7d541923d25778af869f92eeb6d889274de9a371e973720ab8845ae4251d",
+    "candidate_id": "backlog-ba0e89dca2644d15388d33be"
+  },
+  "execution_provenance_clean": true,
+  "human_authored_per_task_work_items": false,
+  "manual_campaign_progress_after_goal_submission": false,
+  "planning": {
+    "campaign_id": "abgproof-campaign-777c97294d4bc932",
+    "handoff_fingerprint": "138afc678e29bdd385f38d00a37ac6a41fab0f720868be21418681326ce39dfd",
+    "planner_workflow_run": 36751985370,
+    "policy_fingerprint": "058eef8563a79d74e53be1239edd39fb4f454418d602c1c2cfe2981f50e77afe",
+    "request_id": "abgproof-request-777c97294d4bc932",
+    "resolution_fingerprint": "e10859860bb0d9d558096e1a5dcc2fcf31d2b0f84c0433fbc64b397b8b3080fd",
+    "selection_fingerprint": "bd52d37d4b21c55cafe341f210fec24bb45c50808334f023faf9d90aa1924f4a"
+  },
+  "post_retirement": {
+    "resolution_fingerprint": "3b76f2840b7ad1c0a1c0e375847ca96b5ccc54c683d7678e9f849ebd5a4f7d24",
+    "selected_candidate_id": null,
+    "selection_fingerprint": "dc255e3056cbab8b9715a030c1eaf12033016ff4a337b473d6786d36071c7ab3"
+  },
+  "retirement": {
+    "candidate_id": "backlog-ba0e89dca2644d15388d33be",
+    "retirement_fingerprint": "7321adafe946c231a7a5d2e40c9b985d3c4e9a6d3f7cb16fc7b0ff0e05adf7ff",
+    "retirement_id": "retire-f2dd36372c1d1e111588bda5"
+  },
+  "runtime_verification": {
+    "contract_path": ".autodev/runtime-verification/abgproof-777c97294d-001/contract.json",
+    "manual_workflow_dispatch": false,
+    "receipt_path": ".autodev/runtime-verification/abgproof-777c97294d-001/receipt.json",
+    "report_fingerprint": "9120ec149818dcf3b44bea85ffafd60bbf35f23125c29ce0d692e1fc4c0e638f",
+    "report_path": ".autodev/runtime-verification/abgproof-777c97294d-001/report.json",
+    "workflow_run": 36752806598
+  },
+  "schema_version": 1,
+  "source_memory": {
+    "memory_fingerprint": "dbe24350a2fe6c0b7ab58494af3518af0aa7e97928312a4c733b03f4c059bb53",
+    "memory_id": "mem-786d667480ca61ad8f1a9f0f",
+    "path": ".autodev/autonomous-backlog/source-memory-store.json",
+    "store_fingerprint": "d64743456ef0a231d5a86d471d1697a5daf7eef3825822037bd4ebd9c25229de"
+  },
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "task": {
+    "changed_paths": [
+      "tests/test_pipeline.py"
+    ],
+    "ci_run": 36752625571,
+    "head_sha": "9f708d4380b15c6af98bd597c8f1bd68a314cc4b",
+    "implementation_run": 36752114620,
+    "merge_sha": "d9b8f0387525bb40dcc1baba8d730b7c4b4cdc30",
+    "pull_request": 20,
+    "remote_gate_run": 36752714827,
+    "remote_monitor_run": 36752631935,
+    "task_id": "abgproof-777c97294d-001",
+    "zero_touch_run": 36752097727
+  },
+  "version": "v1.6"
+}
