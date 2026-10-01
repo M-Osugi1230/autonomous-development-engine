@@ -316,7 +316,7 @@
 - [x] Signal statements/tags are bounded and reject control characters, URLs, common secret markers, duplicate tags, and unsafe evidence paths.
 - [x] Improvement lineage is explicit and generation-bounded; root/successor parent rules fail closed before later loop orchestration is introduced.
 - [x] Serialized signals grant no planning, execution, auto-dispatch, release, scope-expansion, Acceptance-mutation, or human-decision authority, and a deterministic foundation proof is mandatory in CI.
-- [ ] Trusted feedback extraction creates signals only from controller-verified release/runtime/recovery/telemetry evidence; a successful release alone cannot fabricate an actionable development gap.
+- [x] Trusted feedback extraction creates signals only from controller-verified release/runtime/recovery/telemetry evidence; a successful release alone cannot fabricate an actionable development gap.
 - [ ] Signal resolution, deduplication, supersession, cooldown, and lineage-cycle limits are controller-owned and deterministic.
 - [ ] Actionable signals can feed Development Memory and Autonomous Backlog without bypassing existing Backlog resolution/selection authority.
 - [ ] At most one eligible successor PlanningGoal is handed off per loop cycle, with bounded cycle budgets and no automatic execution authority gained from signal existence.

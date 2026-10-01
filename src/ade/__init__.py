@@ -67,6 +67,11 @@ from .improvement_signal import (
     build_improvement_signal,
     build_improvement_signal_id,
 )
+from .improvement_signal_extraction import (
+    ImprovementSignalExtractionError,
+    extract_actionable_release_gap_signal,
+    extract_verified_release_followup_signal,
+)
 from .jules_planner import (
     JulesPlannerClient,
     JulesPlannerConfig,
@@ -278,6 +283,7 @@ __all__ = [
     "ImprovementSignal",
     "ImprovementSignalError",
     "ImprovementSignalKind",
+    "ImprovementSignalExtractionError",
     "JulesPlannerClient",
     "JulesPlannerConfig",
     "JulesPlannerError",
@@ -429,6 +435,8 @@ __all__ = [
     "validate_planner_proposal",
     "build_improvement_signal",
     "build_improvement_signal_id",
+    "extract_actionable_release_gap_signal",
+    "extract_verified_release_followup_signal",
     "health_snapshot",
     "latest_plan_steps",
     "map_repair_execution",
