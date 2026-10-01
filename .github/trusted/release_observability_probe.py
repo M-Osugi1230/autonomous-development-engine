@@ -135,20 +135,33 @@ def main() -> int:
             if "Release" not in html:
                 raise AssertionError("release section missing from HTML")
 
-            for forbidden in (
+            for forbidden_value in (
                 RAW_DEPLOYMENT_ID,
                 RAW_CREDENTIAL,
                 "private-adapter-v1",
                 "private-idempotency-key",
+            ):
+                if forbidden_value in combined:
+                    raise AssertionError(
+                        "sensitive release value leaked: "
+                        + forbidden_value
+                    )
+
+            release_payload = snapshot.to_dict().get("release")
+            if not isinstance(release_payload, dict):
+                raise AssertionError("release payload missing")
+            for forbidden_key in (
                 "deployment_id",
                 "adapter_implementation_id",
                 "idempotency_key",
+                "registry_fingerprint",
                 "decision_context",
                 "provider_session_id",
             ):
-                if forbidden in combined:
+                if forbidden_key in release_payload:
                     raise AssertionError(
-                        f"sensitive release value leaked: {forbidden}"
+                        "sensitive release field exposed: "
+                        + forbidden_key
                     )
 
             tampered = release.canonical_dict()
