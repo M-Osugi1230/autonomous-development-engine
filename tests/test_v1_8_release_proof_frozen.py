@@ -43,26 +43,32 @@ class V18ReleaseProofFrozenTests(unittest.TestCase):
                 decision_store_path=Path(temp_dir) / "decisions.json",
             )
 
-        expected = {
+        immutable_expected = {
             "source-manifest.json": bundle["source_manifest"],
             "readiness.json": bundle["readiness"],
             "candidate.json": bundle["candidate"],
             "transition.json": bundle["transition"],
-            "decision-record.json": bundle["decision_record"],
-            "approval.json": bundle["approval"],
-            "state.json": bundle["proof_state"],
         }
-        for filename, payload in expected.items():
+        for filename, payload in immutable_expected.items():
             with self.subTest(filename=filename):
                 self.assertEqual(
                     load_json(PROOF_DIR / filename),
                     payload,
                 )
 
-        self.assertEqual(
-            load_json(ROOT / ".autodev" / "release" / "mission-control.json"),
-            bundle["mission_control"],
-        )
+        preapproval_dir = PROOF_DIR / "preapproval"
+        lifecycle_expected = {
+            "decision-record.json": bundle["decision_record"],
+            "approval.json": bundle["approval"],
+            "state.json": bundle["proof_state"],
+            "mission-control.json": bundle["mission_control"],
+        }
+        for filename, payload in lifecycle_expected.items():
+            with self.subTest(preapproval_filename=filename):
+                self.assertEqual(
+                    load_json(preapproval_dir / filename),
+                    payload,
+                )
 
     def test_frozen_provenance_binds_successful_prepare_run(self) -> None:
         provenance = load_json(
