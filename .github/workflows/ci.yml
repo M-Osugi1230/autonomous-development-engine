@@ -343,6 +343,11 @@ jobs:
           PYTHONPATH: src
         run: python scripts/v1_7_multi_agent_audit.py
 
+      - name: Continuous Improvement Signal foundation proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/improvement_signal_probe.py
+
       - name: ADE v1.8 Autonomous Release Graduation audit
         env:
           PYTHONPATH: src:.github/trusted
