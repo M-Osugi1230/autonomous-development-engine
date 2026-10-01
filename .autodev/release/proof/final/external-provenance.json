@@ -1,0 +1,21 @@
+{
+  "controller_dispatch_merge_sha": "2ad92d3b69b875956b2c9595e095f5f1271491d0",
+  "controller_dispatch_merged_at": "2026-10-01T15:11:44Z",
+  "controller_dispatch_pull_request": 239,
+  "deployment_id": "preview-ref-ade-preview",
+  "force_update_used": false,
+  "post_dispatch_ci": true,
+  "preview_ref": "refs/heads/ade-preview",
+  "preview_source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "proof_id": "v1.8-autonomous-release-proof-001",
+  "schema_version": 1,
+  "target_ci_conclusion": "success",
+  "target_ci_created_at": "2026-10-01T15:12:09Z",
+  "target_ci_event": "push",
+  "target_ci_head_branch": "ade-preview",
+  "target_ci_head_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "target_ci_run_id": 36882390659,
+  "target_ci_updated_at": "2026-10-01T15:12:48Z",
+  "target_ci_workflow_name": "Phase 1 and 2 checks",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+}
