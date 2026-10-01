@@ -278,6 +278,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python -m unittest tests.test_v1_8_release_proof_prepare -v
 
+      - name: ADE v1.8 frozen preapproval proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python -m unittest tests.test_v1_8_release_proof_frozen -v
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
