@@ -263,6 +263,28 @@ def _verified_release_identity(
         finalization.get("outcome"),
         field="release verification outcome",
     )
+    _require_exact_keys(
+        outcome,
+        allowed={
+            "schema_version",
+            "binding_fingerprint",
+            "target_evidence_fingerprint",
+            "runtime_report_fingerprint",
+            "disposition",
+            "deployment_id",
+            "environment",
+            "failure_fingerprint",
+            "promotion_verified",
+            "next_required_human_action",
+            "rollback_authority",
+            "auto_promote_next_environment",
+        },
+        field="release verification outcome",
+    )
+    if outcome.get("schema_version") != 1:
+        raise ImprovementSignalExtractionError(
+            "release verification outcome schema_version drift"
+        )
     if (
         outcome.get("disposition") != "VERIFIED"
         or outcome.get("promotion_verified") is not True
@@ -281,6 +303,26 @@ def _verified_release_identity(
         finalization.get("receipt"),
         field="release verification receipt",
     )
+    _require_exact_keys(
+        receipt,
+        allowed={
+            "schema_version",
+            "verification_id",
+            "task_id",
+            "target_repository",
+            "source_sha",
+            "contract_fingerprint",
+            "registry_fingerprint",
+            "policy_fingerprint",
+            "status",
+            "dispatch_count",
+        },
+        field="release verification receipt",
+    )
+    if receipt.get("schema_version") != 1:
+        raise ImprovementSignalExtractionError(
+            "release verification receipt schema_version drift"
+        )
     if (
         receipt.get("status") != "VERIFIED"
         or receipt.get("dispatch_count") != 1
@@ -311,10 +353,54 @@ def _verified_release_identity(
         raise ImprovementSignalExtractionError(
             "runtime target evidence schema_version drift"
         )
+    spec = _object(
+        target.get("spec"),
+        field="runtime target spec",
+    )
+    _require_exact_keys(
+        spec,
+        allowed={
+            "schema_version",
+            "target_id",
+            "environment",
+            "kind",
+            "deployment_required",
+            "max_age_seconds",
+            "max_future_skew_seconds",
+        },
+        field="runtime target spec",
+    )
     evidence = _object(
         target.get("evidence"),
         field="runtime target observation",
     )
+    _require_exact_keys(
+        evidence,
+        allowed={
+            "schema_version",
+            "target_id",
+            "kind",
+            "target_repository",
+            "environment",
+            "source_sha",
+            "observed_at",
+            "provenance_id",
+            "deployment_id",
+        },
+        field="runtime target observation",
+    )
+    if (
+        spec.get("schema_version") != 1
+        or spec.get("deployment_required") is not True
+        or spec.get("environment") != environment
+        or spec.get("kind") != environment
+        or spec.get("target_id") != evidence.get("target_id")
+        or evidence.get("schema_version") != 1
+        or evidence.get("kind") != environment
+    ):
+        raise ImprovementSignalExtractionError(
+            "runtime target spec/observation drift"
+        )
     if (
         evidence.get("target_repository") != repository
         or evidence.get("source_sha") != source_sha
@@ -440,6 +526,19 @@ def extract_actionable_release_gap_signal(
         gap_evidence_payload,
         field="trusted gap evidence",
     )
+    _require_exact_keys(
+        gap_payload,
+        allowed={
+            "schema_version",
+            "repository",
+            "source_sha",
+            "release_candidate_id",
+            "release_environment",
+            "signal_kind",
+            "detail_fingerprint",
+        },
+        field="trusted gap evidence",
+    )
     if gap_payload.get("schema_version") != 1:
         raise ImprovementSignalExtractionError(
             "trusted gap evidence schema_version drift"
@@ -470,7 +569,7 @@ def extract_actionable_release_gap_signal(
         raise ImprovementSignalExtractionError(
             "trusted gap evidence signal kind drift"
         )
-    detail_fingerprint = _require_sha256(
+    _require_sha256(
         gap_payload.get("detail_fingerprint"),
         field="trusted gap detail fingerprint",
     )
