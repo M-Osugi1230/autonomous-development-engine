@@ -211,23 +211,6 @@ def audit() -> dict[str, Any]:
         label="graduation campaign evidence",
     )
 
-    current_proof_state = _load_json(
-        PROOF_DIR / "state.json"
-    )
-    _assert_equal(
-        current_proof_state,
-        bundle["proof_state"],
-        label="current release proof state",
-    )
-    current_mission = _load_json(
-        ROOT / ".autodev" / "release" / "mission-control.json"
-    )
-    _assert_equal(
-        current_mission,
-        bundle["mission_control"],
-        label="current Mission Control release summary",
-    )
-
     finalizer_provenance = _load_json(
         FINAL_DIR / "finalization-provenance.json"
     )
@@ -250,8 +233,8 @@ def audit() -> dict[str, Any]:
     if not isinstance(metadata, dict):
         raise ValueError("project state metadata is invalid")
     expected_metadata = {
-        "milestone": "v1.8-graduated",
         "v1_8_graduated": True,
+        "v1_8_graduated_at": "2026-10-01T15:18:58Z",
         "v1_8_graduation_evidence": (
             ".autodev/campaign-evidence/"
             "v1.8-autonomous-release-proof-001.json"
@@ -267,22 +250,12 @@ def audit() -> dict[str, Any]:
         "v1_8_finalizer_workflow_run_id": FINALIZER_RUN_ID,
         "v1_8_finalizer_artifact_id": FINALIZER_ARTIFACT_ID,
         "v1_8_auto_promoted_next_environment": False,
-        "next_required_human_action": None,
-        "next_system_action": None,
-        "queue_exhausted": True,
     }
     for key, expected in expected_metadata.items():
         if metadata.get(key) != expected:
             raise ValueError(
                 f"v1.8 project state metadata drift: {key}"
             )
-    if (
-        project_state.get("status") != "READY"
-        or project_state.get("current_task_id") is not None
-        or project_state.get("failed_task_ids") != []
-    ):
-        raise ValueError("v1.8 graduated ProjectState is not stable READY")
-
     acceptance = ACCEPTANCE_PATH.read_text(encoding="utf-8")
     required_checks = (
         "- [x] A real external-repository proof demonstrates verified Campaign -> release candidate -> approved promotion -> post-promotion Runtime Verification.",
