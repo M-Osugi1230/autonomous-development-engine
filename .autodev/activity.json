@@ -181,6 +181,13 @@
       "occurred_at": "2026-09-30T17:38:18.434809+00:00",
       "summary": "Merged Jules PR #20",
       "task_id": "abgproof-777c97294d-001"
+    },
+    {
+      "event_id": "pr-merged-22-a65b1222648b",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-10-01T03:11:09.450677+00:00",
+      "summary": "Merged Jules PR #22",
+      "task_id": "v17ma1-001"
     }
   ],
   "schema_version": 1
