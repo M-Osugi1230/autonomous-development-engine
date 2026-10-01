@@ -342,3 +342,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/v1_7_multi_agent_audit.py
+
+      - name: ADE v1.8 Autonomous Release Graduation audit
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python scripts/v1_8_release_audit.py
