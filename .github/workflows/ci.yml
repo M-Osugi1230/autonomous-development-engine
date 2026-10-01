@@ -263,6 +263,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/release_deployment_probe.py
 
+      - name: Autonomous Release post-promotion Runtime Verification proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/release_post_verification_probe.py
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
