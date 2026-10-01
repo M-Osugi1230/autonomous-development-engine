@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "proof_id": "v1.8-autonomous-release-proof-001",
+  "controller_source_sha": "7cbfd0a3ab00c390f5f0f58ab467b61d98c2e311",
+  "workflow_name": "ADE v1.8 Release Proof Finalize",
+  "workflow_run_id": 36883246706,
+  "artifact_id": 11171907360,
+  "finalizer_conclusion": "success",
+  "target_ci_run_id": 36882390659,
+  "external_write_after_preview_creation": false
+}
