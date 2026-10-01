@@ -18,10 +18,17 @@
       "transition_id": "promotion-ec00d85452f6e71181590bdb"
     },
     "decision_id": "release-approval-ea7386c7ca3d03d5d54fb3f7",
-    "options": ["approve", "reject"],
+    "options": [
+      "approve",
+      "reject"
+    ],
     "priority": "P0",
     "question": "Approve release promotion for M-Osugi1230/one-minute-thought-experiments from none to preview?"
   },
-  "response": null,
-  "status": "OPEN"
+  "response": {
+    "decision_id": "release-approval-ea7386c7ca3d03d5d54fb3f7",
+    "text": "approve",
+    "selected_option": "approve"
+  },
+  "status": "RESOLVED"
 }
