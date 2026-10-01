@@ -294,4 +294,7 @@ Preapproval proof frozen: ReleaseCandidate `release-a4cd075b270b6ad434ae2602` bi
 
 Explicit preview approval recorded: decision `release-approval-ea7386c7ca3d03d5d54fb3f7` is now RESOLVED with selected option `approve`. Trusted reconstruction derives approval fingerprint `d54edd1dbdba8e7ded1506a5fd52a7204a758c43828d0bdf79e2f18573ab22d1`, registry fingerprint `5f0d1ca69e2ff6e0bd9cde384329c727bc7c52c54b354423f98a10ccb4b459da`, and deployment request `deployment-6f14207b35475d00a64d6621`. Its durable receipt is persisted as DISPATCHED with dispatch_count=1 before any external side effect. CI reconstructs the exact approval and dispatch and forbids adapter execution inside the proof step.
 
+Real preview side effect executed: target ref `refs/heads/ade-preview` was created at exact source SHA `726431b60db8b25cdd4bc15bb1493a0060f36327` after controller dispatch merge `2ad92d3b69b875956b2c9595e095f5f1271491d0`. Target push CI run `36882390659` started after dispatch and completed successfully on the same branch/SHA. The read-only v1.8 finalizer independently re-fetches this ref/run, rejects pre-dispatch or mismatched evidence, then reconstructs DEPLOYED receipt and exact-deployment Runtime Verification without further target writes.
+
+
 

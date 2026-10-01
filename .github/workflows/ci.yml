@@ -288,6 +288,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python -m unittest tests.test_v1_8_release_approved_dispatch -v
 
+      - name: ADE v1.8 real release proof finalizer
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python -m unittest tests.test_v1_8_release_proof_finalize -v
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
