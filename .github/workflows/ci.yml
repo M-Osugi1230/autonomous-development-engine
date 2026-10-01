@@ -273,6 +273,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/release_observability_probe.py
 
+      - name: ADE v1.8 real release proof preparation
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python -m unittest tests.test_v1_8_release_proof_prepare -v
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
