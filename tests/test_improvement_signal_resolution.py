@@ -263,7 +263,11 @@ class ImprovementSignalResolutionTests(unittest.TestCase):
             statement="Investigate generation zero.",
         )
         signals.append(parent)
-        for generation in range(1, 6):
+        generation_seeds = ("c", "d", "e", "f", "1")
+        for generation, seed in enumerate(
+            generation_seeds,
+            start=1,
+        ):
             child = make_signal(
                 kind=ImprovementSignalKind.RUNTIME_GAP,
                 statement=(
@@ -273,7 +277,7 @@ class ImprovementSignalResolutionTests(unittest.TestCase):
                 ),
                 parent_signal_id=parent.signal_id,
                 generation=generation,
-                evidence_seed=chr(ord("c") + generation),
+                evidence_seed=seed,
             )
             signals.append(child)
             parent = child
