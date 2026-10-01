@@ -1,0 +1,11 @@
+{
+  "environment": "preview",
+  "max_attempts": 1,
+  "required_probe_ids": [
+    "preview-ci-green",
+    "preview-ref-exact"
+  ],
+  "schema_version": 1,
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "timeout_seconds": 300
+}

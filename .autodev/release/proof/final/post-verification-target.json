@@ -1,0 +1,25 @@
+{
+  "evidence": {
+    "deployment_id": "preview-ref-ade-preview",
+    "environment": "preview",
+    "kind": "preview",
+    "observed_at": "2026-10-01T15:12:48+00:00",
+    "provenance_id": "github-preview-ref-observer-v1",
+    "schema_version": 1,
+    "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "target_id": "ade-preview",
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "evidence_fingerprint": "8a103c733b9c753abd841c3376d8449410b00f5658c6c17dfff528df1deaae7f",
+  "registry_fingerprint": "5b85e709c106ff58e415054826cb8b72f3f37e4de15d52da653de0ef120a672d",
+  "schema_version": 1,
+  "spec": {
+    "deployment_required": true,
+    "environment": "preview",
+    "kind": "preview",
+    "max_age_seconds": 86400,
+    "max_future_skew_seconds": 60,
+    "schema_version": 1,
+    "target_id": "ade-preview"
+  }
+}

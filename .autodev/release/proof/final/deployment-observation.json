@@ -1,0 +1,8 @@
+{
+  "deployment_id": "preview-ref-ade-preview",
+  "environment": "preview",
+  "idempotency_key": "ade-release-6f14207b35475d00a64d66217fda151c",
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "schema_version": 1,
+  "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327"
+}

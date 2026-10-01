@@ -1,0 +1,30 @@
+{
+  "report": {
+    "contract_fingerprint": "c3223c4b410bf6af3017032e1c1750a5884ae10dd5e8b81297383fbef24dfba8",
+    "disposition": "VERIFIED",
+    "missing_probe_ids": [],
+    "results": [
+      {
+        "attempt": 1,
+        "detail_code": "preview-ci-green",
+        "probe_id": "preview-ci-green",
+        "schema_version": 1,
+        "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+        "status": "PASS"
+      },
+      {
+        "attempt": 1,
+        "detail_code": "preview-ref-exact",
+        "probe_id": "preview-ref-exact",
+        "schema_version": 1,
+        "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+        "status": "PASS"
+      }
+    ],
+    "schema_version": 1,
+    "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "verification_id": "release-rv-2c0dd1ac3dd567d46444aa8a"
+  },
+  "report_fingerprint": "8a74ce0e29ce7478a4ea194d701b8cdaf00df736110a76ce5f476d011701a372",
+  "schema_version": 1
+}

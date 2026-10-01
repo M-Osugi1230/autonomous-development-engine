@@ -260,7 +260,7 @@ v1.7 graduation finalization gate: post-merge Runtime Verification now dispatche
 
 v1.7 Graduation complete: high-level Goal `v1.7-multi-agent-proof-001` was accepted as the one-task tests-only task `v17ma1-001`, dispatched through Zero-Touch run `36790422503`, and implemented by Jules run `36790432422`. External PR #22 changed only `tests/test_models.py`; target CI run `36790874136` passed. An independent reviewer RoleSession used a provider session distinct from the implementer session, Multi-Agent Review run `36790892539` emitted exactly one trusted CLEAR verdict, and immutable review clearance `08525ff4cdf0cf062b4ef33afba5c33eae7f5ae77648e8a4c09e4ef3388b680e` bound the exact reviewed head SHA. Trusted target gate run `36804820190` merged exact SHA `726431b60db8b25cdd4bc15bb1493a0060f36327`; Remote PR Monitor run `36809306560` dispatched Runtime Verification run `36809322346`, which completed single-dispatch VERIFIED against that exact merge SHA. Dedicated finalizer run `36809370303` reconstructed the full Planner -> AcceptedPlan -> implementer -> independent reviewer -> CLEAR reconciliation/clearance -> trusted merge -> Runtime Verification chain and froze immutable evidence at `.autodev/campaign-evidence/v1.7-multi-agent-proof-001.json`. The dedicated v1.7 Graduation audit is mandatory in repository CI; reviewer evidence remains advisory and neither reviewer nor finalizer gains execution, Acceptance, merge, or Runtime Verification authority.
 
-## ADE v1.8 — Autonomous Release Orchestration
+## ADE v1.8 — Autonomous Release Orchestration ✅
 
 Turn verified development output into evidence-bound release candidates and orchestrate safe environment promotion without treating merge or CI success as deployment authority.
 
@@ -298,3 +298,4 @@ Real preview side effect executed: target ref `refs/heads/ade-preview` was creat
 
 
 
+Graduation complete: ADE v1.8 Autonomous Release Orchestration is frozen against real external preview proof `v1.8-autonomous-release-proof-001`. The proof binds verified source SHA `726431b60db8b25cdd4bc15bb1493a0060f36327` to ReleaseCandidate `release-a4cd075b270b6ad434ae2602`, explicit decision `release-approval-ea7386c7ca3d03d5d54fb3f7`, deployment `preview-ref-ade-preview`, target CI run `36882390659`, and exact-deployment Runtime Verification `release-rv-2c0dd1ac3dd567d46444aa8a`. No staging/production auto-promotion occurred. The dedicated Graduation audit deterministically reconstructs candidate -> transition -> explicit approval -> single dispatch -> external preview identity -> post-dispatch target CI -> VERIFIED Runtime Verification -> Mission Control/campaign evidence and fails closed on drift.
