@@ -1,0 +1,21 @@
+{
+  "acceptance_authority": false,
+  "accepted_plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
+  "campaign_id": "v1.7-multi-agent-campaign-001",
+  "contribution_fingerprints": [
+    "7974ed7b305fd394a5892e3ed61f1f5ff1dfa4d89bcbab9f00a961460aac90c1"
+  ],
+  "disposition": "CLEAR",
+  "execution_authority": false,
+  "human_decision_id": null,
+  "majority_voting": false,
+  "merge_authority": false,
+  "multi_agent_plan_fingerprint": "6d99fef24d19d73ebaf01131230ec02d51b6bef4742530c2b0c8e5dbe4763234",
+  "policy_fingerprint": "717757096efb82ee658384eeaf3706d19ec0ae64a0b2fac0cfae7b7c9480eb6a",
+  "reason": "ALL_CLEAR",
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "runtime_verification_authority": false,
+  "schema_version": 1,
+  "source_sha": "01729fb00f49b4d6013a958a0a9adf7924c4aa2c",
+  "task_id": "v17ma1-001"
+}
