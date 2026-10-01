@@ -158,7 +158,10 @@ class V18ReleaseApprovedDispatchTests(unittest.TestCase):
     def test_dispatch_is_exactly_preview_and_has_not_executed_yet(self) -> None:
         invocation = load_json("deployment-invocation.json")
         receipt = load_json("deployment-receipt.json")
-        state = load_json("state.json")
+        with (
+            PROOF / "dispatch" / "state.json"
+        ).open("r", encoding="utf-8") as handle:
+            state = json.load(handle)
 
         self.assertEqual(
             invocation["repository"],
