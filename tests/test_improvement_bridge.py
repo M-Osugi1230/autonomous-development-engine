@@ -267,6 +267,8 @@ class ImprovementBridgeTests(unittest.TestCase):
         selection = select_next_backlog_candidate(
             backlog,
             backlog_resolution,
+            repository=REPOSITORY,
+            source_sha=SOURCE_SHA,
         )
         self.assertEqual(
             selection.selected_candidate_id,
