@@ -290,3 +290,20 @@
 - [x] Reviewer CHANGES_REQUIRED feedback can trigger only a bounded controller-owned correction request that reuses the frozen AcceptedPlan scope/Acceptance; reviewer data cannot directly dispatch, expand scope, merge, or approve work, and correction-budget exhaustion enters HUMAN_WAIT.
 - [x] A real external-repository proof demonstrates bounded implementer + independent reviewer collaboration through the existing trusted merge/runtime gates.
 - [x] A dedicated v1.7 Graduation audit reconstructs the multi-agent proof end to end.
+
+## ADE v1.8 — Autonomous Release Orchestration
+
+- [x] Release candidates use a strict versioned immutable schema with deterministic content-bound IDs and fingerprints.
+- [x] Every candidate is bound to an explicit repository, exact source SHA, Campaign, AcceptedPlan fingerprint, Runtime Verification identity, target environment, and trusted .autodev evidence.
+- [x] AcceptedPlan, Campaign, and Runtime Verification evidence are mandatory; duplicate evidence kinds, unsafe paths, unknown fields, schema drift, and candidate-ID drift fail closed.
+- [x] Serialized release-candidate data grants no deployment, promotion, auto-promotion, scope-expansion, or Acceptance-mutation authority.
+- [x] Under the current safety contract every preview, staging, and production promotion remains explicitly human-approval gated.
+- [x] A deterministic Autonomous Release Candidate foundation proof is mandatory in CI.
+- [ ] Trusted controller logic derives a release candidate only from a terminal verified Campaign and exact post-merge Runtime Verification evidence.
+- [ ] Release policy defines legal preview / staging / production transitions without allowing provider-authored environment or authority changes.
+- [ ] Externally consequential promotion integrates with the Human Decision Queue and cannot proceed without a matching explicit approval.
+- [ ] Trusted deployment adapters are controller-owned, idempotent, source-SHA-bound, and duplicate-suppressed.
+- [ ] Every completed promotion is followed by exact-deployment Runtime Verification; failure triggers bounded containment or HUMAN_WAIT instead of silent success.
+- [ ] Mission Control exposes release-candidate, approval, promotion, verification, and containment state without secrets or deployment credentials.
+- [ ] A real external-repository proof demonstrates verified Campaign -> release candidate -> approved promotion -> post-promotion Runtime Verification.
+- [ ] A dedicated v1.8 Graduation audit reconstructs the release proof end to end.
