@@ -248,6 +248,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/release_readiness_probe.py
 
+      - name: Autonomous Release Promotion policy proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/release_policy_probe.py
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
