@@ -11,8 +11,15 @@ from ade.release_deployment import (
 from ade.release_post_verification import (
     ReleasePostVerificationDisposition,
     ReleasePostVerificationError,
+    arm_release_post_verification,
     build_release_post_verification_binding,
     evaluate_release_post_verification,
+    finalize_release_post_verification,
+)
+from ade.runtime_probe_registry import (
+    RuntimeProbeObservation,
+    RuntimeProbeRegistration,
+    TrustedRuntimeProbeRegistry,
 )
 from ade.runtime_target_registry import (
     RuntimeTargetKind,
@@ -25,6 +32,10 @@ from ade.runtime_verification import (
     RuntimeProbeResult,
     RuntimeProbeStatus,
     evaluate_runtime_verification,
+)
+from ade.runtime_verification_trigger import (
+    RuntimeVerificationPolicy,
+    record_runtime_verification_dispatch,
 )
 
 
@@ -283,6 +294,232 @@ class ReleasePostVerificationTests(unittest.TestCase):
                 binding=binding,
                 target=target,
                 report=drifted_report,
+            )
+
+
+    def test_durable_runtime_receipt_verifies_exact_deployment(self) -> None:
+        registry = TrustedRuntimeProbeRegistry(
+            (
+                RuntimeProbeRegistration(
+                    probe_id="preview-health",
+                    implementation_id="preview-health-v1",
+                    runner=lambda invocation: RuntimeProbeObservation(
+                        status=RuntimeProbeStatus.PASS,
+                    ),
+                ),
+            )
+        )
+        policy = RuntimeVerificationPolicy(
+            target_repository=REPOSITORY,
+            environment="preview",
+            required_probe_ids=("preview-health",),
+            max_attempts=1,
+            timeout_seconds=60,
+        )
+        activation = arm_release_post_verification(
+            deployment_receipt=deployment_receipt(),
+            policy=policy,
+            registry=registry,
+            task_id="task-final",
+        )
+        self.assertTrue(activation.should_dispatch)
+        dispatched = record_runtime_verification_dispatch(
+            contract=activation.binding.runtime_contract,
+            registry=registry,
+            receipt=activation.receipt,
+        ).receipt
+        self.assertEqual(dispatched.status, "DISPATCHED")
+        self.assertEqual(dispatched.dispatch_count, 1)
+
+        resumed = arm_release_post_verification(
+            deployment_receipt=deployment_receipt(),
+            policy=policy,
+            registry=registry,
+            task_id="task-final",
+            existing_receipt=dispatched,
+        )
+        self.assertFalse(resumed.should_dispatch)
+
+        target = target_resolution(activation.binding)
+        report = evaluate_runtime_verification(
+            activation.binding.runtime_contract,
+            (
+                RuntimeProbeResult(
+                    probe_id="preview-health",
+                    status=RuntimeProbeStatus.PASS,
+                    source_sha=SOURCE_SHA,
+                ),
+            ),
+        )
+        finalization = finalize_release_post_verification(
+            activation=activation,
+            target=target,
+            dispatched_receipt=dispatched,
+            report=report,
+            state_payload={
+                "status": "READY",
+                "current_task_id": None,
+                "metadata": {"target_repository": REPOSITORY},
+            },
+            campaign_payload={
+                "campaign_id": "campaign-release-proof",
+                "goal": "ship verified release",
+                "task_ids": ["task-final"],
+                "completed_task_ids": ["task-final"],
+                "status": "COMPLETED",
+            },
+        )
+        self.assertTrue(finalization.promotion_verified)
+        self.assertTrue(finalization.next_environment_allowed)
+        self.assertEqual(finalization.receipt.status, "VERIFIED")
+        self.assertIsNone(finalization.recovery)
+
+    def test_failed_runtime_receipt_reopens_campaign_to_human_wait(self) -> None:
+        registry = TrustedRuntimeProbeRegistry(
+            (
+                RuntimeProbeRegistration(
+                    probe_id="preview-health",
+                    implementation_id="preview-health-v1",
+                    runner=lambda invocation: RuntimeProbeObservation(
+                        status=RuntimeProbeStatus.FAIL,
+                        detail_code="health-check-failed",
+                    ),
+                ),
+            )
+        )
+        policy = RuntimeVerificationPolicy(
+            target_repository=REPOSITORY,
+            environment="preview",
+            required_probe_ids=("preview-health",),
+            max_attempts=1,
+            timeout_seconds=60,
+        )
+        activation = arm_release_post_verification(
+            deployment_receipt=deployment_receipt(),
+            policy=policy,
+            registry=registry,
+            task_id="task-final",
+        )
+        dispatched = record_runtime_verification_dispatch(
+            contract=activation.binding.runtime_contract,
+            registry=registry,
+            receipt=activation.receipt,
+        ).receipt
+        target = target_resolution(activation.binding)
+        report = evaluate_runtime_verification(
+            activation.binding.runtime_contract,
+            (
+                RuntimeProbeResult(
+                    probe_id="preview-health",
+                    status=RuntimeProbeStatus.FAIL,
+                    source_sha=SOURCE_SHA,
+                    detail_code="health-check-failed",
+                ),
+            ),
+        )
+        finalization = finalize_release_post_verification(
+            activation=activation,
+            target=target,
+            dispatched_receipt=dispatched,
+            report=report,
+            state_payload={
+                "status": "READY",
+                "current_task_id": None,
+                "metadata": {"target_repository": REPOSITORY},
+            },
+            campaign_payload={
+                "campaign_id": "campaign-release-proof",
+                "goal": "ship verified release",
+                "task_ids": ["task-final"],
+                "completed_task_ids": ["task-final"],
+                "status": "COMPLETED",
+            },
+        )
+        self.assertFalse(finalization.promotion_verified)
+        self.assertFalse(finalization.next_environment_allowed)
+        self.assertEqual(finalization.receipt.status, "HUMAN_WAIT")
+        self.assertEqual(finalization.state["status"], "HUMAN_WAIT")
+        self.assertEqual(finalization.campaign["status"], "HUMAN_WAIT")
+        self.assertEqual(
+            finalization.state["metadata"]["next_required_human_action"],
+            "review-release-runtime-verification-failure",
+        )
+        self.assertIsNone(
+            finalization.state["metadata"]["next_system_action"]
+        )
+        self.assertFalse(
+            finalization.state["metadata"]["automatic_rollback"]
+        )
+        self.assertFalse(
+            finalization.state["metadata"]["auto_promote_next_environment"]
+        )
+        self.assertIsNotNone(finalization.recovery)
+        self.assertEqual(
+            finalization.recovery.action.value,
+            "HUMAN_WAIT",
+        )
+
+    def test_finalization_requires_exact_completed_campaign_final_task(self) -> None:
+        registry = TrustedRuntimeProbeRegistry(
+            (
+                RuntimeProbeRegistration(
+                    probe_id="preview-health",
+                    implementation_id="preview-health-v1",
+                    runner=lambda invocation: RuntimeProbeObservation(
+                        status=RuntimeProbeStatus.PASS,
+                    ),
+                ),
+            )
+        )
+        policy = RuntimeVerificationPolicy(
+            target_repository=REPOSITORY,
+            environment="preview",
+            required_probe_ids=("preview-health",),
+            max_attempts=1,
+            timeout_seconds=60,
+        )
+        activation = arm_release_post_verification(
+            deployment_receipt=deployment_receipt(),
+            policy=policy,
+            registry=registry,
+            task_id="task-final",
+        )
+        dispatched = record_runtime_verification_dispatch(
+            contract=activation.binding.runtime_contract,
+            registry=registry,
+            receipt=activation.receipt,
+        ).receipt
+        target = target_resolution(activation.binding)
+        report = evaluate_runtime_verification(
+            activation.binding.runtime_contract,
+            (
+                RuntimeProbeResult(
+                    probe_id="preview-health",
+                    status=RuntimeProbeStatus.PASS,
+                    source_sha=SOURCE_SHA,
+                ),
+            ),
+        )
+        with self.assertRaisesRegex(
+            ReleasePostVerificationError,
+            "exact completed Campaign final task",
+        ):
+            finalize_release_post_verification(
+                activation=activation,
+                target=target,
+                dispatched_receipt=dispatched,
+                report=report,
+                state_payload={
+                    "status": "READY",
+                    "metadata": {"target_repository": REPOSITORY},
+                },
+                campaign_payload={
+                    "campaign_id": "campaign-release-proof",
+                    "goal": "ship verified release",
+                    "task_ids": ["task-final", "task-later"],
+                    "completed_task_ids": ["task-final", "task-later"],
+                    "status": "COMPLETED",
+                },
             )
 
 
