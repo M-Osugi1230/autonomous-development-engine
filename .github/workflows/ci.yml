@@ -268,6 +268,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/release_post_verification_probe.py
 
+      - name: Autonomous Release Mission Control observability proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/release_observability_probe.py
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
