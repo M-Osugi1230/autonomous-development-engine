@@ -1,0 +1,48 @@
+name: ADE v1.8 Release Proof Finalize
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/trusted/v1_8_release_proof_finalize.py"
+      - ".github/workflows/v1-8-release-proof-finalize.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ade-v1-8-release-proof-finalize
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Reconstruct exact external preview release proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/v1_8_release_proof_finalize.py
+
+      - name: Upload finalized release proof artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-v1-8-release-proof-finalized
+          path: |
+            .autodev/release/finalized
+            .autodev/runtime/v1-8-release-proof-finalize-result.json
+          if-no-files-found: error
+          retention-days: 30
