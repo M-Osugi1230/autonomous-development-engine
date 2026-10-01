@@ -1,0 +1,16 @@
+{
+  "activity_fingerprint": "c118f529db97d439f41d4a3668a9adb7882961171ae6d41f76e9bcf82efc741c",
+  "agent_message_count": 1,
+  "execution_authority": false,
+  "merge_authority": false,
+  "provider_session_fingerprint": "34408246878a77336c2193494eb8744e328ea0e303ff8a5705f9bb7f9948d25e",
+  "provider_state": "COMPLETED",
+  "pull_request_number": 22,
+  "raw_activity_text_persisted": false,
+  "reviewed_head_sha": "a65b1222648b8c888f391c530e33a88f24d64dcd",
+  "reviewer_role_session_fingerprint": "4f1f4b725f584cc2eaf6876a42f239732ca2c3bdc747b1d12c95fdd540e3d71f",
+  "schema_version": 1,
+  "task_id": "v17ma1-001",
+  "verdict": "CLEAR",
+  "verdict_marker_count": 1
+}
