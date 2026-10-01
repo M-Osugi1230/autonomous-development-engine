@@ -1,0 +1,15 @@
+{
+  "accepted_plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
+  "campaign_id": "v1.7-multi-agent-campaign-001",
+  "manual_campaign_progress": false,
+  "proof_id": "v1.8-autonomous-release-proof-001",
+  "runtime_report_fingerprint": "a2e32d07bb2ef54e7df0d85f221fbff4326ca3dab5af52d646c57bff99501e22",
+  "runtime_verification_id": "rv-726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "schema_version": 1,
+  "source_runtime_verified": true,
+  "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "source_task_id": "v17ma1-001",
+  "source_version": "v1.7",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "v1_7_graduation_evidence_path": ".autodev/campaign-evidence/v1.7-multi-agent-proof-001.json"
+}
