@@ -167,6 +167,8 @@ def main() -> int:
         selection = select_next_backlog_candidate(
             backlog,
             backlog_resolution,
+            repository=REPOSITORY,
+            source_sha=SOURCE_SHA,
         )
         if (
             selection.selected_candidate_id
