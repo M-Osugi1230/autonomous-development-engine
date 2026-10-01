@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "deployment_request_id": "deployment-6f14207b35475d00a64d6621",
+  "idempotency_key": "ade-release-6f14207b35475d00a64d66217fda151c",
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "environment": "preview",
+  "transition_id": "promotion-ec00d85452f6e71181590bdb",
+  "transition_fingerprint": "ea7386c7ca3d03d5d54fb3f7dd84292a5f2fadb0a900eb9467f857d2f38e10d9",
+  "approval_fingerprint": "d54edd1dbdba8e7ded1506a5fd52a7204a758c43828d0bdf79e2f18573ab22d1",
+  "adapter_implementation_id": "github-preview-ref-v1",
+  "registry_fingerprint": "5f0d1ca69e2ff6e0bd9cde384329c727bc7c52c54b354423f98a10ccb4b459da",
+  "provider_defined": false,
+  "contains_credentials": false
+}

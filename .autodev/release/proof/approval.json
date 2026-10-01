@@ -1,12 +1,12 @@
 {
-  "approval_satisfied": false,
-  "auto_promote": false,
-  "decision_id": "release-approval-ea7386c7ca3d03d5d54fb3f7",
-  "deployment_authority": false,
-  "disposition": "HUMAN_WAIT",
-  "promotion_authority": false,
   "schema_version": 1,
-  "selected_option": null,
+  "decision_id": "release-approval-ea7386c7ca3d03d5d54fb3f7",
+  "transition_id": "promotion-ec00d85452f6e71181590bdb",
   "transition_fingerprint": "ea7386c7ca3d03d5d54fb3f7dd84292a5f2fadb0a900eb9467f857d2f38e10d9",
-  "transition_id": "promotion-ec00d85452f6e71181590bdb"
+  "disposition": "APPROVED",
+  "selected_option": "approve",
+  "approval_satisfied": true,
+  "deployment_authority": false,
+  "promotion_authority": false,
+  "auto_promote": false
 }

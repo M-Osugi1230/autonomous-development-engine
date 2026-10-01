@@ -283,6 +283,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python -m unittest tests.test_v1_8_release_proof_frozen -v
 
+      - name: ADE v1.8 approved deployment dispatch proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python -m unittest tests.test_v1_8_release_approved_dispatch -v
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
