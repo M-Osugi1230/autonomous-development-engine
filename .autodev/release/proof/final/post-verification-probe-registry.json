@@ -1,0 +1,13 @@
+{
+  "registrations": [
+    {
+      "implementation_id": "github-actions-preview-ci-v1",
+      "probe_id": "preview-ci-green"
+    },
+    {
+      "implementation_id": "github-preview-ref-check-v1",
+      "probe_id": "preview-ref-exact"
+    }
+  ],
+  "schema_version": 1
+}
