@@ -58,6 +58,11 @@ def main() -> int:
         },
     }
 
+    assert module._v1_6_graduated(state) is False
+    graduated_state = json.loads(json.dumps(state))
+    graduated_state["metadata"]["v1_6_graduated"] = True
+    assert module._v1_6_graduated(graduated_state) is True
+
     activation = module.build_activation(
         state_payload=state,
         store_payload=store.canonical_dict(),
@@ -88,6 +93,7 @@ def main() -> int:
             {
                 "ok": True,
                 "requires_v1_5_graduation": True,
+                "post_v1_6_graduation_noop_guard": True,
                 "requires_exact_proof002_verified_memory": True,
                 "source_store_snapshot_bound": True,
                 "single_candidate": True,
