@@ -14,6 +14,7 @@ from ade.development_memory_feedback import runtime_report_from_wrapper
 from ade.human_interrupt import HumanInterruptCoordinator
 from ade.release_approval import (
     ReleaseApprovalDisposition,
+    build_release_approval_request,
     evaluate_release_approval,
     request_release_approval,
 )
@@ -219,13 +220,14 @@ def build_release_proof(
 
     store = DecisionStore(decision_store_path)
     coordinator = HumanInterruptCoordinator(store)
-    request_release_approval(
-        coordinator=coordinator,
-        transition=transition,
-    )
-    record = store.get(
-        "release-approval-" + transition.fingerprint()[:24]
-    )
+    request = build_release_approval_request(transition)
+    record = store.get(request.decision_id)
+    if record is None:
+        request_release_approval(
+            coordinator=coordinator,
+            transition=transition,
+        )
+        record = store.get(request.decision_id)
     if record is None:
         raise ValueError("release approval decision was not persisted")
     approval = evaluate_release_approval(
