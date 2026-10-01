@@ -78,6 +78,7 @@ from .mission_control import (
     MissionControlSnapshot,
     MissionDecisionSummary,
     MissionPreviewSummary,
+    MissionReleaseSummary,
     MissionTelemetrySummary,
     build_mission_control_snapshot,
 )
@@ -210,6 +211,16 @@ from .release_post_verification import (
     evaluate_release_post_verification,
     finalize_release_post_verification,
 )
+from .release_observability import (
+    ReleaseApprovalViewState,
+    ReleaseContainmentViewState,
+    ReleaseDeploymentViewState,
+    ReleaseObservabilityError,
+    ReleaseObservabilitySnapshot,
+    ReleasePromotionViewState,
+    ReleaseVerificationViewState,
+    build_release_observability_snapshot,
+)
 from .resume import ResumeAction, ResumeDecision, decide_resume
 from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
 from .task_graph_store import TaskGraphStore
@@ -262,6 +273,7 @@ __all__ = [
     "MissionControlSnapshot",
     "MissionDecisionSummary",
     "MissionPreviewSummary",
+    "MissionReleaseSummary",
     "MissionTelemetrySummary",
     "PlannerDisposition",
     "PlannerPolicy",
@@ -346,6 +358,13 @@ __all__ = [
     "ReleasePostVerificationError",
     "ReleasePostVerificationFinalization",
     "ReleasePostVerificationOutcome",
+    "ReleaseApprovalViewState",
+    "ReleaseContainmentViewState",
+    "ReleaseDeploymentViewState",
+    "ReleaseObservabilityError",
+    "ReleaseObservabilitySnapshot",
+    "ReleasePromotionViewState",
+    "ReleaseVerificationViewState",
     "ResumeAction",
     "ResumeDecision",
     "TaskCheckpoint",
@@ -377,6 +396,7 @@ __all__ = [
     "build_release_post_verification_binding",
     "evaluate_release_post_verification",
     "finalize_release_post_verification",
+    "build_release_observability_snapshot",
     "checkpoint_for_completed",
     "checkpoint_for_repair_plan",
     "checkpoint_for_session",
