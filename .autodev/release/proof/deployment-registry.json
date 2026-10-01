@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "registrations": [
+    {
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "environment": "preview",
+      "implementation_id": "github-preview-ref-v1",
+      "controller_owned": true,
+      "idempotency_required": true
+    }
+  ],
+  "provider_defined": false
+}
