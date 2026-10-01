@@ -307,3 +307,20 @@
 - [x] Mission Control exposes release-candidate, approval, promotion, verification, and containment state without secrets or deployment credentials.
 - [x] A real external-repository proof demonstrates verified Campaign -> release candidate -> approved promotion -> post-promotion Runtime Verification.
 - [x] A dedicated v1.8 Graduation audit reconstructs the release proof end to end.
+
+## ADE v1.9 — Continuous Improvement Loop
+
+- [x] Improvement signals use a strict versioned immutable schema with deterministic content-bound IDs and fingerprints.
+- [x] Every signal is bound to one repository, exact release source SHA, ReleaseCandidate identity, release environment, and trusted .autodev evidence.
+- [x] Release evidence and post-promotion verification evidence are mandatory; duplicate evidence kinds, unsafe paths, unknown fields, and schema drift fail closed.
+- [x] Signal statements/tags are bounded and reject control characters, URLs, common secret markers, duplicate tags, and unsafe evidence paths.
+- [x] Improvement lineage is explicit and generation-bounded; root/successor parent rules fail closed before later loop orchestration is introduced.
+- [x] Serialized signals grant no planning, execution, auto-dispatch, release, scope-expansion, Acceptance-mutation, or human-decision authority, and a deterministic foundation proof is mandatory in CI.
+- [ ] Trusted feedback extraction creates signals only from controller-verified release/runtime/recovery/telemetry evidence; a successful release alone cannot fabricate an actionable development gap.
+- [ ] Signal resolution, deduplication, supersession, cooldown, and lineage-cycle limits are controller-owned and deterministic.
+- [ ] Actionable signals can feed Development Memory and Autonomous Backlog without bypassing existing Backlog resolution/selection authority.
+- [ ] At most one eligible successor PlanningGoal is handed off per loop cycle, with bounded cycle budgets and no automatic execution authority gained from signal existence.
+- [ ] Verified successor outcomes retire or supersede their originating signal lineage so identical improvements cannot recur forever.
+- [ ] Mission Control exposes safe Continuous Improvement state without raw telemetry, provider sessions, credentials, or hidden control payloads.
+- [ ] A real external-repository proof demonstrates verified release -> trusted improvement signal -> backlog/PlanningGoal -> trusted execution -> verified outcome without manual per-task authoring.
+- [ ] A dedicated v1.9 Graduation audit reconstructs the Continuous Improvement proof end to end.
