@@ -1,0 +1,51 @@
+{
+  "execution_provenance_clean": true,
+  "human_authored_per_task_work_items": false,
+  "manual_campaign_progress_after_goal_submission": false,
+  "multi_agent_review": {
+    "clearance_fingerprint": "08525ff4cdf0cf062b4ef33afba5c33eae7f5ae77648e8a4c09e4ef3388b680e",
+    "contribution_fingerprint": "7974ed7b305fd394a5892e3ed61f1f5ff1dfa4d89bcbab9f00a961460aac90c1",
+    "correction_rounds": 0,
+    "plan_fingerprint": "6d99fef24d19d73ebaf01131230ec02d51b6bef4742530c2b0c8e5dbe4763234",
+    "reconciliation_fingerprint": "0d7566a40c3c7e200f82aebf07e4ca31a2130bc9ef793d87922546f4cee8b0b0",
+    "review_workflow_run": 36790892539,
+    "reviewer_assignment_fingerprint": "7442ce0d4e73239d3f7dc4b407de8b44bce787716c540c8b5b4cca8647ac80e4",
+    "reviewer_assignment_id": "agent-reviewer-1d9fcb4d1c2b5302",
+    "reviewer_provider_id": "jules",
+    "reviewer_role_session_fingerprint": "4f1f4b725f584cc2eaf6876a42f239732ca2c3bdc747b1d12c95fdd540e3d71f",
+    "verdict": "CLEAR"
+  },
+  "planning": {
+    "accepted_plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
+    "campaign_id": "v1.7-multi-agent-campaign-001",
+    "planner_workflow_run": 36790235775,
+    "request_id": "v1.7-multi-agent-proof-001",
+    "source_sha": "01729fb00f49b4d6013a958a0a9adf7924c4aa2c"
+  },
+  "runtime_verification": {
+    "contract_path": ".autodev/runtime-verification/v17ma1-001/contract.json",
+    "manual_workflow_dispatch": false,
+    "receipt_path": ".autodev/runtime-verification/v17ma1-001/receipt.json",
+    "report_fingerprint": "a2e32d07bb2ef54e7df0d85f221fbff4326ca3dab5af52d646c57bff99501e22",
+    "report_path": ".autodev/runtime-verification/v17ma1-001/report.json",
+    "verification_id": "rv-726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "workflow_run": 36809322346
+  },
+  "schema_version": 1,
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "task": {
+    "changed_paths": [
+      "tests/test_models.py"
+    ],
+    "ci_run": 36790874136,
+    "head_sha": "a65b1222648b8c888f391c530e33a88f24d64dcd",
+    "implementation_run": 36790432422,
+    "merge_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "pull_request": 22,
+    "remote_gate_run": 36804820190,
+    "remote_monitor_run": 36809306560,
+    "task_id": "v17ma1-001",
+    "zero_touch_run": 36790422503
+  },
+  "version": "v1.7"
+}
