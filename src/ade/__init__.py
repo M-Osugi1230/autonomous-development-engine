@@ -182,6 +182,14 @@ from .release_approval import (
     evaluate_release_approval,
     request_release_approval,
 )
+from .release_approval import (
+    ReleaseApprovalDecision,
+    ReleaseApprovalDisposition,
+    ReleaseApprovalError,
+    build_release_approval_request,
+    evaluate_release_approval,
+    request_release_approval,
+)
 from .resume import ResumeAction, ResumeDecision, decide_resume
 from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
 from .task_graph_store import TaskGraphStore
@@ -302,6 +310,9 @@ __all__ = [
     "ReleaseApprovalDecision",
     "ReleaseApprovalDisposition",
     "ReleaseApprovalError",
+    "ReleaseApprovalDecision",
+    "ReleaseApprovalDisposition",
+    "ReleaseApprovalError",
     "ResumeAction",
     "ResumeDecision",
     "TaskCheckpoint",
@@ -322,6 +333,9 @@ __all__ = [
     "build_release_candidate_id",
     "derive_release_readiness",
     "plan_release_transition",
+    "build_release_approval_request",
+    "evaluate_release_approval",
+    "request_release_approval",
     "build_release_approval_request",
     "evaluate_release_approval",
     "request_release_approval",
