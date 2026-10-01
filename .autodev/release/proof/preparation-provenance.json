@@ -1,0 +1,10 @@
+{
+  "artifact_id": 11171310220,
+  "controller_source_sha": "c60e72620986659e0167817ae38ab0d709fe575c",
+  "external_side_effect_executed": false,
+  "proof_id": "v1.8-autonomous-release-proof-001",
+  "schema_version": 1,
+  "workflow_event": "push",
+  "workflow_name": "ADE v1.8 Release Proof Prepare",
+  "workflow_run_id": 36878989307
+}
