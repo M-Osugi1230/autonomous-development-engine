@@ -170,6 +170,41 @@ def _campaign_card(snapshot: MissionControlSnapshot) -> str:
     )
 
 
+def _release_card(snapshot: MissionControlSnapshot) -> str:
+    release = snapshot.release
+    if release is None:
+        return '<p class="empty">No release orchestration state.</p>'
+    return """<dl class="detail-grid">
+      <div><dt>Candidate</dt><dd>{candidate}</dd></div>
+      <div><dt>Repository</dt><dd>{repository}</dd></div>
+      <div><dt>Source SHA</dt><dd>{source_sha}</dd></div>
+      <div><dt>Target</dt><dd>{target}</dd></div>
+      <div><dt>Approval</dt><dd>{approval}</dd></div>
+      <div><dt>Promotion</dt><dd>{promotion}</dd></div>
+      <div><dt>Deployment</dt><dd>{deployment}</dd></div>
+      <div><dt>Deployment identity</dt><dd>{deployment_identity}</dd></div>
+      <div><dt>Runtime verification</dt><dd>{verification}</dd></div>
+      <div><dt>Containment</dt><dd>{containment}</dd></div>
+      <div><dt>Human action</dt><dd>{human_action}</dd></div>
+    </dl>""".format(
+        candidate=_text(release.release_candidate_id),
+        repository=_text(release.repository),
+        source_sha=_text(release.source_sha),
+        target=_text(release.target_environment),
+        approval=_text(release.approval_state),
+        promotion=_text(release.promotion_state),
+        deployment=_text(release.deployment_state),
+        deployment_identity=(
+            "present"
+            if release.deployment_identity_present
+            else "none"
+        ),
+        verification=_text(release.verification_state),
+        containment=_text(release.containment_state),
+        human_action=_text(release.next_required_human_action),
+    )
+
+
 def _zero_touch_start_card(snapshot: MissionControlSnapshot) -> str:
     start = snapshot.zero_touch_start
     if start is None:
@@ -338,6 +373,11 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
       $campaign
     </section>
 
+    <section class="card" aria-labelledby="release-heading">
+      <h2 id="release-heading">Release</h2>
+      $release
+    </section>
+
     <section class="card" aria-labelledby="zero-touch-heading">
       <h2 id="zero-touch-heading">Zero-touch start</h2>
       $zero_touch_start
@@ -395,6 +435,7 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
         lifecycle_status=_text(snapshot.lifecycle_status),
         planning=_planning_card(snapshot),
         campaign=_campaign_card(snapshot),
+        release=_release_card(snapshot),
         zero_touch_start=_zero_touch_start_card(snapshot),
         iteration=_text(snapshot.iteration),
         completed=_text(snapshot.completed_tasks),
