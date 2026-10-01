@@ -319,7 +319,7 @@
 - [x] Trusted feedback extraction creates signals only from controller-verified release/runtime/recovery/telemetry evidence; a successful release alone cannot fabricate an actionable development gap.
 - [x] Signal resolution, deduplication, supersession, cooldown, and lineage-cycle limits are controller-owned and deterministic.
 - [x] Actionable signals can feed Development Memory and Autonomous Backlog without bypassing existing Backlog resolution/selection authority.
-- [ ] At most one eligible successor PlanningGoal is handed off per loop cycle, with bounded cycle budgets and no automatic execution authority gained from signal existence.
+- [x] At most one eligible successor PlanningGoal is handed off per loop cycle, with bounded cycle budgets and no automatic execution authority gained from signal existence.
 - [ ] Verified successor outcomes retire or supersede their originating signal lineage so identical improvements cannot recur forever.
 - [ ] Mission Control exposes safe Continuous Improvement state without raw telemetry, provider sessions, credentials, or hidden control payloads.
 - [ ] A real external-repository proof demonstrates verified release -> trusted improvement signal -> backlog/PlanningGoal -> trusted execution -> verified outcome without manual per-task authoring.

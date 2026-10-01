@@ -91,6 +91,15 @@ from .improvement_bridge import (
     ImprovementBridgeError,
     build_improvement_memory_backlog_bridge,
 )
+from .improvement_goal_handoff import (
+    ImprovementCyclePolicy,
+    ImprovementGoalHandoffError,
+    ImprovementGoalHandoffReceipt,
+    ImprovementGoalReceiptStatus,
+    ImprovementPlanningGoalActivation,
+    arm_improvement_planning_goal_handoff,
+    record_improvement_planning_goal_handoff,
+)
 from .jules_planner import (
     JulesPlannerClient,
     JulesPlannerConfig,
@@ -313,6 +322,11 @@ __all__ = [
     "ImprovementSignalResolutionError",
     "ImprovementBridgeBundle",
     "ImprovementBridgeError",
+    "ImprovementCyclePolicy",
+    "ImprovementGoalHandoffError",
+    "ImprovementGoalHandoffReceipt",
+    "ImprovementGoalReceiptStatus",
+    "ImprovementPlanningGoalActivation",
     "JulesPlannerClient",
     "JulesPlannerConfig",
     "JulesPlannerError",
@@ -462,7 +476,9 @@ __all__ = [
     "evaluate_provider_availability_state",
     "evaluate_zero_touch_start",
     "validate_planner_proposal",
+    "arm_improvement_planning_goal_handoff",
     "build_improvement_memory_backlog_bridge",
+    "record_improvement_planning_goal_handoff",
     "build_improvement_signal",
     "build_improvement_signal_id",
     "extract_actionable_release_gap_signal",
