@@ -292,3 +292,6 @@ Proof preparation installed: v1.8 reuses the frozen v1.7 external proof only as 
 
 Preapproval proof frozen: ReleaseCandidate `release-a4cd075b270b6ad434ae2602` binds exact source SHA `726431b60db8b25cdd4bc15bb1493a0060f36327` to preview. Transition `promotion-ec00d85452f6e71181590bdb` and decision `release-approval-ea7386c7ca3d03d5d54fb3f7` are frozen in HUMAN_WAIT with no deployment started. CI reconstructs the proof from trusted v1.7 evidence and requires byte-equivalent JSON semantics before the proof can advance.
 
+Explicit preview approval recorded: decision `release-approval-ea7386c7ca3d03d5d54fb3f7` is now RESOLVED with selected option `approve`. Trusted reconstruction derives approval fingerprint `d54edd1dbdba8e7ded1506a5fd52a7204a758c43828d0bdf79e2f18573ab22d1`, registry fingerprint `5f0d1ca69e2ff6e0bd9cde384329c727bc7c52c54b354423f98a10ccb4b459da`, and deployment request `deployment-6f14207b35475d00a64d6621`. Its durable receipt is persisted as DISPATCHED with dispatch_count=1 before any external side effect. CI reconstructs the exact approval and dispatch and forbids adapter execution inside the proof step.
+
+
