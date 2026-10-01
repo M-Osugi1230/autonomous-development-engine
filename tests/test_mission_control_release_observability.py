@@ -136,7 +136,9 @@ class MissionControlReleaseObservabilityTests(unittest.TestCase):
         self.assertEqual(snapshot.release.containment_state, "NONE")
         self.assertTrue(snapshot.release.deployment_identity_present)
 
-        serialized = json.dumps(snapshot.to_dict(), sort_keys=True)
+        serialized_payload = snapshot.to_dict()
+        release_payload = serialized_payload["release"]
+        assert isinstance(release_payload, dict)
         for forbidden_key in (
             "deployment_id",
             "decision_context",
@@ -145,7 +147,9 @@ class MissionControlReleaseObservabilityTests(unittest.TestCase):
             "registry_fingerprint",
             "provider_session_id",
         ):
-            self.assertNotIn(forbidden_key, serialized)
+            self.assertNotIn(forbidden_key, release_payload)
+        serialized = json.dumps(serialized_payload, sort_keys=True)
+        self.assertNotIn("dep-preview-private-001", serialized)
 
     def test_html_renders_release_state_without_deployment_identity(self) -> None:
         self.write_json(
