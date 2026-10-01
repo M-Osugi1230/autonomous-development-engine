@@ -1,0 +1,58 @@
+name: ADE v1.8 Release Proof Prepare
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/trusted/v1_8_release_proof_prepare.py"
+      - ".github/workflows/v1-8-release-proof-prepare.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-v1-8-release-proof-prepare
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Prepare exact v1.8 release proof
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python .github/trusted/v1_8_release_proof_prepare.py
+
+      - name: Freeze prepared proof and human decision
+        run: |
+          git config user.name "ade-release-proof"
+          git config user.email "actions@users.noreply.github.com"
+          git add             .autodev/decisions.json             .autodev/release/proof             .autodev/release/mission-control.json
+          if git diff --cached --quiet; then
+            echo "No v1.8 release proof changes to commit."
+            exit 0
+          fi
+          git commit -m "release: prepare v1.8 external preview proof"
+          git push origin HEAD:main
+
+      - name: Upload preparation result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-v1-8-release-proof-prepare-result
+          path: .autodev/runtime/v1-8-release-proof-prepare-result.json
+          if-no-files-found: error
+          retention-days: 30
