@@ -343,9 +343,33 @@ class ReleaseObservabilityTests(unittest.TestCase):
 
     def test_cross_release_evidence_drift_fails_closed(self) -> None:
         item = transition()
-        changed_candidate = replace(
-            candidate(),
-            release_candidate_id="release-different",
+        changed_candidate = build_release_candidate(
+            repository=REPOSITORY,
+            source_sha=SOURCE_SHA,
+            campaign_id="v1.8-release-observability-other",
+            accepted_plan_fingerprint="f" * 64,
+            runtime_verification_id=f"rv-{SOURCE_SHA}",
+            target_environment=ReleaseEnvironment.PREVIEW,
+            evidence_refs=(
+                ReleaseEvidenceRef(
+                    kind=ReleaseEvidenceKind.ACCEPTED_PLAN,
+                    path=".autodev/accepted-plan.json",
+                    fingerprint="f" * 64,
+                ),
+                ReleaseEvidenceRef(
+                    kind=ReleaseEvidenceKind.CAMPAIGN,
+                    path=".autodev/campaign.json",
+                    fingerprint="2" * 64,
+                ),
+                ReleaseEvidenceRef(
+                    kind=ReleaseEvidenceKind.RUNTIME_VERIFICATION,
+                    path=(
+                        ".autodev/runtime-verification/"
+                        "task-final/report.json"
+                    ),
+                    fingerprint="3" * 64,
+                ),
+            ),
         )
         with self.assertRaisesRegex(
             ReleaseObservabilityError,
