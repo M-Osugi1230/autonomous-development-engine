@@ -199,12 +199,16 @@ from .release_deployment import (
     record_release_deployment_observation,
 )
 from .release_post_verification import (
+    ReleasePostVerificationActivation,
     ReleasePostVerificationBinding,
     ReleasePostVerificationDisposition,
     ReleasePostVerificationError,
+    ReleasePostVerificationFinalization,
     ReleasePostVerificationOutcome,
+    arm_release_post_verification,
     build_release_post_verification_binding,
     evaluate_release_post_verification,
+    finalize_release_post_verification,
 )
 from .resume import ResumeAction, ResumeDecision, decide_resume
 from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
@@ -336,9 +340,11 @@ __all__ = [
     "ReleaseDeploymentReceipt",
     "ReleaseDeploymentStatus",
     "TrustedReleaseDeploymentRegistry",
+    "ReleasePostVerificationActivation",
     "ReleasePostVerificationBinding",
     "ReleasePostVerificationDisposition",
     "ReleasePostVerificationError",
+    "ReleasePostVerificationFinalization",
     "ReleasePostVerificationOutcome",
     "ResumeAction",
     "ResumeDecision",
@@ -367,8 +373,10 @@ __all__ = [
     "execute_trusted_release_deployment",
     "record_release_deployment_dispatch",
     "record_release_deployment_observation",
+    "arm_release_post_verification",
     "build_release_post_verification_binding",
     "evaluate_release_post_verification",
+    "finalize_release_post_verification",
     "checkpoint_for_completed",
     "checkpoint_for_repair_plan",
     "checkpoint_for_session",
