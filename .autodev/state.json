@@ -101,9 +101,9 @@
       "target_pull_request": "https://github.com/M-Osugi1230/one-minute-thought-experiments/pull/16",
       "task_id": "v14rv2-001"
     },
-    "milestone": "v1.7-real-proof-001-pending",
+    "milestone": "v1.7-graduated",
     "next_required_human_action": null,
-    "next_system_action": "monitor-provider-session",
+    "next_system_action": null,
     "phase": "v1.7-multi-agent",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -234,11 +234,21 @@
     "v1_6_source_memory_fingerprint": "dbe24350a2fe6c0b7ab58494af3518af0aa7e97928312a4c733b03f4c059bb53",
     "v1_6_source_memory_id": "mem-786d667480ca61ad8f1a9f0f",
     "v1_6_source_store_fingerprint": "d64743456ef0a231d5a86d471d1697a5daf7eef3825822037bd4ebd9c25229de",
-    "v1_7_proof_001_armed": true
+    "v1_7_proof_001_armed": true,
+    "v1_7_graduated": true,
+    "v1_7_graduated_at": "2026-10-01T04:16:00Z",
+    "v1_7_graduation_evidence": ".autodev/campaign-evidence/v1.7-multi-agent-proof-001.json",
+    "v1_7_target_pull_request": 22,
+    "v1_7_proof_target_final_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "v1_7_runtime_verification_id": "rv-726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "v1_7_review_workflow_run_id": 36790892539,
+    "v1_7_finalizer_workflow_run_id": 36809370303,
+    "v1_7_review_clearance_fingerprint": "08525ff4cdf0cf062b4ef33afba5c33eae7f5ae77648e8a4c09e4ef3388b680e",
+    "v1_7_reviewer_role_session_fingerprint": "4f1f4b725f584cc2eaf6876a42f239732ca2c3bdc747b1d12c95fdd540e3d71f"
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
   "status": "READY",
-  "updated_at": "2026-10-01T03:11:05.170539+00:00"
+  "updated_at": "2026-10-01T04:16:00Z"
 }
