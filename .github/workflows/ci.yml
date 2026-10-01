@@ -258,11 +258,6 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/release_approval_probe.py
 
-      - name: Autonomous Release human approval gate proof
-        env:
-          PYTHONPATH: src
-        run: python .github/trusted/release_approval_probe.py
-
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
