@@ -303,7 +303,7 @@
 - [x] Release policy defines legal preview / staging / production transitions without allowing provider-authored environment or authority changes.
 - [x] Externally consequential promotion integrates with the Human Decision Queue and cannot proceed without a matching explicit approval.
 - [x] Trusted deployment adapters are controller-owned, idempotent, source-SHA-bound, and duplicate-suppressed.
-- [ ] Every completed promotion is followed by exact-deployment Runtime Verification; failure triggers bounded containment or HUMAN_WAIT instead of silent success.
+- [x] Every completed promotion is followed by exact-deployment Runtime Verification; failure triggers bounded containment or HUMAN_WAIT instead of silent success.
 - [ ] Mission Control exposes release-candidate, approval, promotion, verification, and containment state without secrets or deployment credentials.
 - [ ] A real external-repository proof demonstrates verified Campaign -> release candidate -> approved promotion -> post-promotion Runtime Verification.
 - [ ] A dedicated v1.8 Graduation audit reconstructs the release proof end to end.
