@@ -58,6 +58,15 @@ from .decisions import (
 )
 from .health import health_snapshot
 from .human_interrupt import HumanInterruptCoordinator
+from .improvement_signal import (
+    ImprovementEvidenceKind,
+    ImprovementEvidenceRef,
+    ImprovementSignal,
+    ImprovementSignalError,
+    ImprovementSignalKind,
+    build_improvement_signal,
+    build_improvement_signal_id,
+)
 from .jules_planner import (
     JulesPlannerClient,
     JulesPlannerConfig,
@@ -264,6 +273,11 @@ __all__ = [
     "GitHubCopilotProvider",
     "GraphTaskStatus",
     "HumanInterruptCoordinator",
+    "ImprovementEvidenceKind",
+    "ImprovementEvidenceRef",
+    "ImprovementSignal",
+    "ImprovementSignalError",
+    "ImprovementSignalKind",
     "JulesPlannerClient",
     "JulesPlannerConfig",
     "JulesPlannerError",
@@ -413,6 +427,8 @@ __all__ = [
     "evaluate_provider_availability_state",
     "evaluate_zero_touch_start",
     "validate_planner_proposal",
+    "build_improvement_signal",
+    "build_improvement_signal_id",
     "health_snapshot",
     "latest_plan_steps",
     "map_repair_execution",

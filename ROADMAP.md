@@ -299,3 +299,19 @@ Real preview side effect executed: target ref `refs/heads/ade-preview` was creat
 
 
 Graduation complete: ADE v1.8 Autonomous Release Orchestration is frozen against real external preview proof `v1.8-autonomous-release-proof-001`. The proof binds verified source SHA `726431b60db8b25cdd4bc15bb1493a0060f36327` to ReleaseCandidate `release-a4cd075b270b6ad434ae2602`, explicit decision `release-approval-ea7386c7ca3d03d5d54fb3f7`, deployment `preview-ref-ade-preview`, target CI run `36882390659`, and exact-deployment Runtime Verification `release-rv-2c0dd1ac3dd567d46444aa8a`. No staging/production auto-promotion occurred. The dedicated Graduation audit deterministically reconstructs candidate -> transition -> explicit approval -> single dispatch -> external preview identity -> post-dispatch target CI -> VERIFIED Runtime Verification -> Mission Control/campaign evidence and fails closed on drift.
+
+## ADE v1.9 — Continuous Improvement Loop
+
+Close the product-development loop after a verified release. ADE should turn trusted post-release evidence into bounded improvement signals, resolve only genuinely actionable opportunities, and feed those opportunities back through the existing Development Memory -> Autonomous Backlog -> Autonomous Planner path without treating release success, telemetry, or provider prose as execution authority.
+
+Build order:
+1. immutable ImprovementSignal contract bound to exact verified release evidence and bounded lineage
+2. trusted post-release feedback extraction from release/runtime/recovery/telemetry evidence
+3. deterministic signal ledger resolution, deduplication, supersession, cooldown, and cycle-depth control
+4. Development Memory + Autonomous Backlog bridge for actionable signals only
+5. bounded successor PlanningGoal handoff through existing planner authority
+6. verified completion feedback that retires/supersedes signal lineages and prevents self-repeating loops
+7. Mission Control Continuous Improvement observability
+8. real external-repository closed-loop proof and dedicated v1.9 Graduation audit
+
+Slice 001 complete: ADE now has an immutable ImprovementSignal foundation. A signal is content-bound to one repository, exact source SHA, ReleaseCandidate, release environment, finite signal kind, bounded statement/tags, mandatory release + post-verification evidence, and explicit parent/generation lineage. Evidence remains inside trusted `.autodev/` paths and duplicate evidence kinds fail closed. Statement text rejects URLs, control characters, and common secret markers. Lineage depth is capped before any autonomous successor orchestration exists. Serialized signal data explicitly grants no planning, execution, auto-dispatch, release, scope-expansion, Acceptance-mutation, or human-decision authority. Verified release success can therefore become advisory evidence, but cannot by itself start another development Campaign. A dedicated foundation proof is mandatory in CI.
