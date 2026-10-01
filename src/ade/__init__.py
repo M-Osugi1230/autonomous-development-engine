@@ -163,6 +163,11 @@ from .release_candidate import (
     build_release_candidate,
     build_release_candidate_id,
 )
+from .release_readiness import (
+    ReleaseReadinessDecision,
+    ReleaseReadinessError,
+    derive_release_readiness,
+)
 from .resume import ResumeAction, ResumeDecision, decide_resume
 from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
 from .task_graph_store import TaskGraphStore
@@ -275,6 +280,8 @@ __all__ = [
     "ReleaseEnvironment",
     "ReleaseEvidenceKind",
     "ReleaseEvidenceRef",
+    "ReleaseReadinessDecision",
+    "ReleaseReadinessError",
     "ResumeAction",
     "ResumeDecision",
     "TaskCheckpoint",
@@ -293,6 +300,7 @@ __all__ = [
     "build_report",
     "build_release_candidate",
     "build_release_candidate_id",
+    "derive_release_readiness",
     "checkpoint_for_completed",
     "checkpoint_for_repair_plan",
     "checkpoint_for_session",
