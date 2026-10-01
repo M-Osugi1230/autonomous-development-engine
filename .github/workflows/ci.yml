@@ -353,6 +353,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/improvement_signal_extraction_probe.py
 
+      - name: Continuous Improvement signal resolution proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/improvement_signal_resolution_probe.py
+
       - name: ADE v1.8 Autonomous Release Graduation audit
         env:
           PYTHONPATH: src:.github/trusted
