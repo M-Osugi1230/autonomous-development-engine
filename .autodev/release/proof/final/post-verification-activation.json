@@ -1,0 +1,48 @@
+{
+  "auto_promote_next_environment": false,
+  "automatic_rollback": false,
+  "binding": {
+    "ci_success_is_not_runtime_success": true,
+    "deployment_id": "preview-ref-ade-preview",
+    "deployment_identity_required": true,
+    "deployment_receipt_fingerprint": "04405a131aa9a87b1303452daa4405bf0aa48ab74638863fee963d0af17d41a1",
+    "deployment_request_id": "deployment-6f14207b35475d00a64d6621",
+    "environment": "preview",
+    "expected_target_kind": "preview",
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "runtime_contract": {
+      "environment": "preview",
+      "max_attempts": 1,
+      "required_probe_ids": [
+        "preview-ci-green",
+        "preview-ref-exact"
+      ],
+      "schema_version": 1,
+      "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+      "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+      "timeout_seconds": 300,
+      "verification_id": "release-rv-2c0dd1ac3dd567d46444aa8a"
+    },
+    "runtime_contract_fingerprint": "c3223c4b410bf6af3017032e1c1750a5884ae10dd5e8b81297383fbef24dfba8",
+    "schema_version": 1,
+    "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327"
+  },
+  "binding_fingerprint": "8518f3b9fc93509dd86a65e4e9ef4f68fd0a58bf9533486de4aa999de6f457c8",
+  "deployment_identity_required": true,
+  "policy_fingerprint": "6698dab394f729fd50136685873db0649de405294dec5dd6fff4f1eb0cd91d68",
+  "receipt": {
+    "contract_fingerprint": "c3223c4b410bf6af3017032e1c1750a5884ae10dd5e8b81297383fbef24dfba8",
+    "dispatch_count": 0,
+    "policy_fingerprint": "6698dab394f729fd50136685873db0649de405294dec5dd6fff4f1eb0cd91d68",
+    "registry_fingerprint": "2b65849a9a003dbedfa3376e7b7ad56c831c130df2ba6e7fe07e4cf11b7d005e",
+    "schema_version": 1,
+    "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "status": "ARMED",
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+    "task_id": "v17ma1-001",
+    "verification_id": "release-rv-2c0dd1ac3dd567d46444aa8a"
+  },
+  "registry_fingerprint": "2b65849a9a003dbedfa3376e7b7ad56c831c130df2ba6e7fe07e4cf11b7d005e",
+  "schema_version": 1,
+  "should_dispatch": true
+}
