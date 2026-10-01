@@ -1,0 +1,69 @@
+{
+  "acceptance_authority": false,
+  "accepted_plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
+  "assignments": [
+    {
+      "acceptance_authority": false,
+      "accepted_plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
+      "assignment_id": "agent-implementer-628836a7f0efb34d",
+      "auto_dispatch": false,
+      "campaign_id": "v1.7-multi-agent-campaign-001",
+      "evidence_fingerprints": [
+        "0c2d7b1ec614e4528c0e4162eae2fd3786553c32947258073e45df2def170c99",
+        "c39370695de152d9184e9142cb55309c9d0787eed6c067f98ab578b0c1205e43"
+      ],
+      "evidence_paths": [
+        ".autodev/accepted-plan.json",
+        ".autodev/multi-agent/provider-availability.json"
+      ],
+      "execution_authority": false,
+      "may_expand_scope": false,
+      "merge_authority": false,
+      "objective": "Implement AcceptedPlan task v17ma1-001: Add a regression test for U+2004 and U+2006 space collapsing to `tests/test_models.py`",
+      "provider_id": "jules",
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "role": "IMPLEMENTER",
+      "schema_version": 1,
+      "source_sha": "01729fb00f49b4d6013a958a0a9adf7924c4aa2c",
+      "task_id": "v17ma1-001"
+    },
+    {
+      "acceptance_authority": false,
+      "accepted_plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
+      "assignment_id": "agent-reviewer-1d9fcb4d1c2b5302",
+      "auto_dispatch": false,
+      "campaign_id": "v1.7-multi-agent-campaign-001",
+      "evidence_fingerprints": [
+        "0c2d7b1ec614e4528c0e4162eae2fd3786553c32947258073e45df2def170c99",
+        "c39370695de152d9184e9142cb55309c9d0787eed6c067f98ab578b0c1205e43"
+      ],
+      "evidence_paths": [
+        ".autodev/accepted-plan.json",
+        ".autodev/multi-agent/provider-availability.json"
+      ],
+      "execution_authority": false,
+      "may_expand_scope": false,
+      "merge_authority": false,
+      "objective": "Review AcceptedPlan task v17ma1-001 against its frozen acceptance criteria and trusted scope.",
+      "provider_id": "jules",
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "role": "REVIEWER",
+      "schema_version": 1,
+      "source_sha": "01729fb00f49b4d6013a958a0a9adf7924c4aa2c",
+      "task_id": "v17ma1-001"
+    }
+  ],
+  "auto_dispatch": false,
+  "campaign_id": "v1.7-multi-agent-campaign-001",
+  "execution_authority": false,
+  "may_expand_scope": false,
+  "merge_authority": false,
+  "plan_id": "multi-agent-82e74afcfe3d7c3542a3436f",
+  "provider_ids": [
+    "jules"
+  ],
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "schema_version": 1,
+  "source_sha": "01729fb00f49b4d6013a958a0a9adf7924c4aa2c",
+  "task_id": "v17ma1-001"
+}
