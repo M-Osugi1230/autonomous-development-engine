@@ -300,7 +300,7 @@
 - [x] Under the current safety contract every preview, staging, and production promotion remains explicitly human-approval gated.
 - [x] A deterministic Autonomous Release Candidate foundation proof is mandatory in CI.
 - [x] Trusted controller logic derives a release candidate only from a terminal verified Campaign and exact post-merge Runtime Verification evidence.
-- [ ] Release policy defines legal preview / staging / production transitions without allowing provider-authored environment or authority changes.
+- [x] Release policy defines legal preview / staging / production transitions without allowing provider-authored environment or authority changes.
 - [ ] Externally consequential promotion integrates with the Human Decision Queue and cannot proceed without a matching explicit approval.
 - [ ] Trusted deployment adapters are controller-owned, idempotent, source-SHA-bound, and duplicate-suppressed.
 - [ ] Every completed promotion is followed by exact-deployment Runtime Verification; failure triggers bounded containment or HUMAN_WAIT instead of silent success.
