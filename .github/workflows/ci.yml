@@ -238,6 +238,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python -m unittest discover -s tests -p 'test_v1_7_multi_agent_*.py' -v
 
+      - name: Autonomous Release Candidate foundation proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/release_candidate_probe.py
+
       - name: Checkpoint restart proof
         env:
           PYTHONPATH: src
