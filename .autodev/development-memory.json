@@ -1,6 +1,6 @@
 {
   "ledger": {
-    "record_count": 3,
+    "record_count": 4,
     "records": [
       {
         "campaign_id": null,
@@ -76,10 +76,35 @@
           "verified"
         ],
         "task_id": "abgproof-777c97294d-001"
+      },
+      {
+        "campaign_id": null,
+        "evidence_fingerprints": [
+          "3cbf03444ca09f5be882cc77f59c429b3970c35e5365a638865351248cfa7e45",
+          "90731d10cb4241db5c4e7549d95c254c4fe7c4bf0ae29638de90377817a0e9f7",
+          "a2e32d07bb2ef54e7df0d85f221fbff4326ca3dab5af52d646c57bff99501e22"
+        ],
+        "evidence_paths": [
+          ".autodev/runtime-verification/v17ma1-001/contract.json",
+          ".autodev/runtime-verification/v17ma1-001/receipt.json",
+          ".autodev/runtime-verification/v17ma1-001/report.json"
+        ],
+        "kind": "VERIFIED_OUTCOME",
+        "memory_id": "mem-e36fdeb5b5580417fc1786ba",
+        "repository": "M-Osugi1230/one-minute-thought-experiments",
+        "schema_version": 1,
+        "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+        "statement": "Trusted runtime verification completed with every required probe passing against the exact source SHA.",
+        "tags": [
+          "feedback",
+          "runtime",
+          "verified"
+        ],
+        "task_id": "v17ma1-001"
       }
     ],
     "schema_version": 1
   },
-  "ledger_fingerprint": "4182754b1b555dc1046d473991d35b265d6ccb34ddc6782d528212a092240f2b",
+  "ledger_fingerprint": "98bb181aa7f0ecd25e0daeee6912798852cedff38470701399f3960333de2cec",
   "schema_version": 1
 }
