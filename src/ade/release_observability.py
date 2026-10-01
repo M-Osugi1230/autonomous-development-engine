@@ -72,6 +72,21 @@ class ReleasePromotionViewState(StrEnum):
 def _safe_id(value: str, *, field: str) -> str:
     if not isinstance(value, str) or _ID.fullmatch(value) is None:
         raise ReleaseObservabilityError(f"{field} is invalid")
+    folded = value.casefold()
+    if any(
+        marker in folded
+        for marker in (
+            "github_pat_",
+            "ghp_",
+            "gho_",
+            "ghs_",
+            "akia",
+            "bearer",
+        )
+    ):
+        raise ReleaseObservabilityError(
+            f"{field} contains a secret-like marker"
+        )
     return value
 
 
