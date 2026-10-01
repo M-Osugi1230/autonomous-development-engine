@@ -363,6 +363,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/improvement_bridge_probe.py
 
+      - name: Continuous Improvement bounded PlanningGoal handoff proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/improvement_goal_handoff_probe.py
+
       - name: ADE v1.8 Autonomous Release Graduation audit
         env:
           PYTHONPATH: src:.github/trusted
