@@ -1,0 +1,27 @@
+{
+  "request": {
+    "blocking_task_id": "promotion-ec00d85452f6e71181590bdb",
+    "context": {
+      "auto_promote": false,
+      "deployment_authority": false,
+      "from_environment": null,
+      "kind": "release_promotion",
+      "policy_fingerprint": "6f84a65a61aa07fcff9fac61e567a6fc1a2c4a57746d91009bee225f29fe8e39",
+      "promotion_authority": false,
+      "release_candidate_fingerprint": "db8e3ac99e13a7724d73c39e6e3976fe0d2b71e29211baaf5f3e5c3bff7750ca",
+      "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "schema_version": 1,
+      "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+      "to_environment": "preview",
+      "transition_fingerprint": "ea7386c7ca3d03d5d54fb3f7dd84292a5f2fadb0a900eb9467f857d2f38e10d9",
+      "transition_id": "promotion-ec00d85452f6e71181590bdb"
+    },
+    "decision_id": "release-approval-ea7386c7ca3d03d5d54fb3f7",
+    "options": ["approve", "reject"],
+    "priority": "P0",
+    "question": "Approve release promotion for M-Osugi1230/one-minute-thought-experiments from none to preview?"
+  },
+  "response": null,
+  "status": "OPEN"
+}

@@ -1,0 +1,14 @@
+{
+  "approval_state": "HUMAN_WAIT",
+  "containment_state": "NONE",
+  "deployment_identity_present": false,
+  "deployment_state": "NOT_STARTED",
+  "next_required_human_action": "review-release-promotion-approval",
+  "promotion_state": "AWAITING_APPROVAL",
+  "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "schema_version": 1,
+  "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "target_environment": "preview",
+  "verification_state": "NOT_STARTED"
+}
