@@ -86,6 +86,11 @@ from .improvement_signal_resolution import (
     resolve_improvement_signals,
     signal_priority,
 )
+from .improvement_bridge import (
+    ImprovementBridgeBundle,
+    ImprovementBridgeError,
+    build_improvement_memory_backlog_bridge,
+)
 from .jules_planner import (
     JulesPlannerClient,
     JulesPlannerConfig,
@@ -306,6 +311,8 @@ __all__ = [
     "ImprovementResolutionState",
     "ImprovementSignalResolution",
     "ImprovementSignalResolutionError",
+    "ImprovementBridgeBundle",
+    "ImprovementBridgeError",
     "JulesPlannerClient",
     "JulesPlannerConfig",
     "JulesPlannerError",
@@ -455,6 +462,7 @@ __all__ = [
     "evaluate_provider_availability_state",
     "evaluate_zero_touch_start",
     "validate_planner_proposal",
+    "build_improvement_memory_backlog_bridge",
     "build_improvement_signal",
     "build_improvement_signal_id",
     "extract_actionable_release_gap_signal",
