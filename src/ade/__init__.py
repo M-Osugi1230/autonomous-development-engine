@@ -154,6 +154,15 @@ from .routed_execution import RoutedCycleExecution, RoutedExecutionOutcome, run_
 from .repair import FailureKind, RepairDisposition, RepairPolicy, RepairState, decide_repair
 from .repair_planner import RepairPlan, plan_repair
 from .repair_runtime import RepairExecution, map_repair_execution, run_cycle_with_repair
+from .release_candidate import (
+    ReleaseCandidate,
+    ReleaseCandidateError,
+    ReleaseEnvironment,
+    ReleaseEvidenceKind,
+    ReleaseEvidenceRef,
+    build_release_candidate,
+    build_release_candidate_id,
+)
 from .resume import ResumeAction, ResumeDecision, decide_resume
 from .task_graph import GraphTaskStatus, TaskGraph, TaskNode
 from .task_graph_store import TaskGraphStore
@@ -261,6 +270,11 @@ __all__ = [
     "RepairPlan",
     "RepairPolicy",
     "RepairState",
+    "ReleaseCandidate",
+    "ReleaseCandidateError",
+    "ReleaseEnvironment",
+    "ReleaseEvidenceKind",
+    "ReleaseEvidenceRef",
     "ResumeAction",
     "ResumeDecision",
     "TaskCheckpoint",
@@ -277,6 +291,8 @@ __all__ = [
     "build_pilot_activation",
     "build_pilot_final_evidence",
     "build_report",
+    "build_release_candidate",
+    "build_release_candidate_id",
     "checkpoint_for_completed",
     "checkpoint_for_repair_plan",
     "checkpoint_for_session",
