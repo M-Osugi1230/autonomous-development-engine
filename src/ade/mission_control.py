@@ -14,6 +14,7 @@ from .decision_store import DecisionStore
 from .decisions import DecisionRecord, DecisionStatus
 from .preview import PreviewManifest, SAFE_PREVIEW_HOSTS
 from .preview_store import PreviewStore
+from .release_observability import ReleaseObservabilitySnapshot
 from .state import StateStore
 
 
@@ -190,6 +191,102 @@ class MissionPreviewSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class MissionReleaseSummary:
+    release_candidate_id: str
+    repository: str
+    source_sha: str
+    target_environment: str
+    approval_state: str
+    promotion_state: str
+    deployment_state: str
+    verification_state: str
+    containment_state: str
+    deployment_identity_present: bool
+    next_required_human_action: str | None = None
+
+    def __post_init__(self) -> None:
+        for field_name in (
+            "release_candidate_id",
+            "repository",
+            "source_sha",
+            "target_environment",
+            "approval_state",
+            "promotion_state",
+            "deployment_state",
+            "verification_state",
+            "containment_state",
+        ):
+            value = getattr(self, field_name)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(
+                    f"{field_name} must be a non-empty string"
+                )
+        if type(self.deployment_identity_present) is not bool:
+            raise ValueError(
+                "deployment_identity_present must be boolean"
+            )
+        if self.next_required_human_action is not None and (
+            not isinstance(self.next_required_human_action, str)
+            or not self.next_required_human_action.strip()
+        ):
+            raise ValueError(
+                "next_required_human_action must be text or None"
+            )
+
+    @classmethod
+    def from_release_snapshot(
+        cls,
+        snapshot: ReleaseObservabilitySnapshot,
+    ) -> "MissionReleaseSummary":
+        if not isinstance(snapshot, ReleaseObservabilitySnapshot):
+            raise ValueError(
+                "snapshot must be ReleaseObservabilitySnapshot"
+            )
+        return cls(
+            release_candidate_id=_redact_display_text(
+                snapshot.release_candidate_id
+            ),
+            repository=_redact_display_text(snapshot.repository),
+            source_sha=snapshot.source_sha,
+            target_environment=snapshot.target_environment.value,
+            approval_state=snapshot.approval_state.value,
+            promotion_state=snapshot.promotion_state.value,
+            deployment_state=snapshot.deployment_state.value,
+            verification_state=snapshot.verification_state.value,
+            containment_state=snapshot.containment_state.value,
+            deployment_identity_present=(
+                snapshot.deployment_identity_present
+            ),
+            next_required_human_action=(
+                _redact_display_text(
+                    snapshot.next_required_human_action
+                )
+                if snapshot.next_required_human_action is not None
+                else None
+            ),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "release_candidate_id": self.release_candidate_id,
+            "repository": self.repository,
+            "source_sha": self.source_sha,
+            "target_environment": self.target_environment,
+            "approval_state": self.approval_state,
+            "promotion_state": self.promotion_state,
+            "deployment_state": self.deployment_state,
+            "verification_state": self.verification_state,
+            "containment_state": self.containment_state,
+            "deployment_identity_present": (
+                self.deployment_identity_present
+            ),
+            "next_required_human_action": (
+                self.next_required_human_action
+            ),
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class MissionCheckpointSummary:
     task_id: str
     state: str
@@ -261,6 +358,7 @@ class MissionControlSnapshot:
     warnings: tuple[str, ...]
     activity: tuple[MissionActivitySummary, ...] = ()
     preview: MissionPreviewSummary | None = None
+    release: MissionReleaseSummary | None = None
     planning: dict[str, Any] | None = None
     campaign: dict[str, Any] | None = None
     lifecycle_status: str = "RUNNING"
@@ -299,6 +397,12 @@ class MissionControlSnapshot:
             self.preview, MissionPreviewSummary
         ):
             raise ValueError("preview must be a MissionPreviewSummary or None")
+        if self.release is not None and not isinstance(
+            self.release, MissionReleaseSummary
+        ):
+            raise ValueError(
+                "release must be a MissionReleaseSummary or None"
+            )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -321,6 +425,7 @@ class MissionControlSnapshot:
             "warnings": list(self.warnings),
             "activity": [event.to_dict() for event in self.activity],
             "preview": self.preview.to_dict() if self.preview is not None else None,
+            "release": self.release.to_dict() if self.release is not None else None,
             "planning": self.planning,
             "campaign": self.campaign,
             "lifecycle_status": self.lifecycle_status,
@@ -421,6 +526,20 @@ def build_mission_control_snapshot(
         else None
     )
 
+    release = None
+    release_path = autodev / "release" / "mission-control.json"
+    if release_path.exists():
+        raw_release = _load_json_object(
+            release_path,
+            label="release Mission Control",
+        )
+        release_snapshot = ReleaseObservabilitySnapshot.from_dict(
+            raw_release
+        )
+        release = MissionReleaseSummary.from_release_snapshot(
+            release_snapshot
+        )
+
     warnings: list[str] = []
     if telemetry.cycles_completed < state.iteration:
         warnings.append("telemetry metrics lag project iteration")
@@ -520,7 +639,15 @@ def build_mission_control_snapshot(
 
     lifecycle_status = "RUNNING"
     planning_state = planning_payload.get("state") if planning_payload is not None else None
-    if open_decisions or state.status.value == "HUMAN_WAIT" or planning_state == "HUMAN_WAIT":
+    if (
+        open_decisions
+        or state.status.value == "HUMAN_WAIT"
+        or planning_state == "HUMAN_WAIT"
+        or (
+            release is not None
+            and release.containment_state == "HUMAN_WAIT"
+        )
+    ):
         lifecycle_status = "HUMAN_WAIT"
     elif state.failed_task_ids or state.status.value == "FAILED":
         lifecycle_status = "FAILED"
@@ -554,14 +681,22 @@ def build_mission_control_snapshot(
         warnings=tuple(warnings),
         activity=activity,
         preview=preview,
+        release=release,
         planning=planning_payload,
         campaign=campaign_payload,
         lifecycle_status=lifecycle_status,
         zero_touch_start=zero_touch_start_payload,
         next_system_action=_optional_metadata_text(metadata, "next_system_action"),
-        next_required_human_action=_optional_metadata_text(
-            metadata,
-            "next_required_human_action",
+        next_required_human_action=(
+            _optional_metadata_text(
+                metadata,
+                "next_required_human_action",
+            )
+            or (
+                release.next_required_human_action
+                if release is not None
+                else None
+            )
         ),
         resume_after=_optional_metadata_text(metadata, "resume_after"),
     )
