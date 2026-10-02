@@ -188,6 +188,13 @@
       "occurred_at": "2026-10-01T03:11:09.450677+00:00",
       "summary": "Merged Jules PR #22",
       "task_id": "v17ma1-001"
+    },
+    {
+      "event_id": "pr-merged-23-4057ebca5c44",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-10-02T11:53:12.467927+00:00",
+      "summary": "Merged Jules PR #23",
+      "task_id": "v19proof-63f46f6d8c-001"
     }
   ],
   "schema_version": 1
