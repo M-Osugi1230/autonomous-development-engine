@@ -1,0 +1,52 @@
+{
+  "actionable_signal_id": "improve-f8657ce395dd3940e2092a62",
+  "closed_loop_verified": true,
+  "closure": {
+    "backlog_retirement_fingerprint": "786c7d8f28c6c6b16b1d6789fc9d2510b3d6c23664ce63a149665391c3991e03",
+    "backlog_retirement_id": "retire-72d37e36ce94678cf686863a",
+    "current_signal_count": 0,
+    "cycle_state": "VERIFIED_RETIRED",
+    "lineage_retirement_count": 1,
+    "lineage_retirement_fingerprint": "eceba0d4aad0a68b6d53e74792d6ee44d20e3d0568ec558234d4973833b806d1",
+    "lineage_retirement_id": "improvement-retire-336135bb9001804ae286272e",
+    "post_backlog_resolution_fingerprint": "bf63fa565a4df88fba907dda37edb049b0e3f5718e71f44251d147c9c31a5e99",
+    "post_resolution_fingerprint": "16d3d24cceabe3dc7740d6bca074b0884e00cfcdfc3c48967a67823d9584ed18",
+    "post_selection_fingerprint": "88d669595144107854ad7108db7e13f07737aae46b98185e36b178723fee50e1",
+    "retired_signal_count": 1
+  },
+  "execution": {
+    "changed_paths": [
+      "tests/test_models.py"
+    ],
+    "head_sha": "4057ebca5c4405573ae73300d03b208edf95ca62",
+    "merge_sha": "fa4f4b3a87f78d2bea596177811247072bca37ce",
+    "pull_request": 23,
+    "target_ci_run_id": 37003361924,
+    "task_id": "v19proof-63f46f6d8c-001"
+  },
+  "execution_provenance_clean": true,
+  "human_authored_per_task_work_items": false,
+  "manual_campaign_progress_after_goal_submission": false,
+  "observation_signal_id": "improve-503863ebf6e20057a71b2386",
+  "planning": {
+    "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+    "goal_receipt_fingerprint": "66d2d8ddb479c0e25878d8e1093ea1a1c59456d3bbf5060d443030f0a61b6f1e",
+    "max_tasks": 1,
+    "planning_request_fingerprint": "d8220417e058d74b99ed484d49984fd13432575a3bee9fd4ee7ec7cc433813b7",
+    "request_id": "v19proof-request-63f46f6d8cca554d",
+    "tests_only": true
+  },
+  "proof_id": "v1.9-continuous-improvement-proof-001",
+  "runtime_verification": {
+    "disposition": "VERIFIED",
+    "remote_monitor_workflow_run_id": 37003386651,
+    "report_fingerprint": "ba7f4c771b0fd5a2004e6215c248b087611509e88ba99f96733489fc13599ddc",
+    "verification_id": "rv-fa4f4b3a87f78d2bea596177811247072bca37ce",
+    "workflow_run_id": 37003477881
+  },
+  "schema_version": 1,
+  "source_release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+  "source_release_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "version": "v1.9"
+}
