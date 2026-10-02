@@ -59,15 +59,23 @@ def _safe_dependency_specs(root: Path) -> tuple[str, ...]:
     return tuple(sorted(dependencies))
 
 
+def _github_archive_headers() -> dict[str, str]:
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "ADE-Runtime-Workspace/1.0",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    target_token = os.environ.get("ADE_TARGET_GITHUB_TOKEN", "").strip()
+    if target_token:
+        headers["Authorization"] = f"Bearer {target_token}"
+    return headers
+
+
 def _download_archive(repository: str, source_sha: str) -> bytes:
     url = f"https://api.github.com/repos/{repository}/tarball/{source_sha}"
     request = Request(
         url,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "ADE-Runtime-Workspace/1.0",
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
+        headers=_github_archive_headers(),
         method="GET",
     )
     with urlopen(request, timeout=60) as response:
