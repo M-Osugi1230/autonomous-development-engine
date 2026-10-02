@@ -1,15 +1,15 @@
 {
-  "accepted_plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
+  "accepted_plan_fingerprint": "f111962ac49763b834a5b1e895550ed20c6ace49068c81e7b6c30cdcc6fbc74a",
   "attempt": 1,
-  "campaign_id": "v1.7-multi-agent-campaign-001",
-  "development_memory_context_fingerprint": "193023ccc1d7976172cbeab70c5bb8dcb114d72d033b885627160b2a762779f3",
-  "development_memory_record_count": 0,
-  "first_task_id": "v17ma1-001",
-  "proposal_fingerprint": "3afc7ae131d65c18e5e125720988adaddd7940c9a9f7acb5772e02e98563042b",
+  "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+  "development_memory_context_fingerprint": "6004278b658af8c42b312355b8d17983394882150ad96d31eb3f2fdc27277461",
+  "development_memory_record_count": 1,
+  "first_task_id": "v19proof-63f46f6d8c-001",
+  "proposal_fingerprint": "e5fee39bb7af511c00b66ae129ee4a6d558a09245a2a92b7687f4f691d2d5206",
   "reason": "trusted-plan-accepted",
-  "request_fingerprint": "970a3499a35a2b88dee1a10a1649c2ee1e32db0098cc8804a9205415510d6932",
-  "request_id": "v1.7-multi-agent-proof-001",
+  "request_fingerprint": "d8220417e058d74b99ed484d49984fd13432575a3bee9fd4ee7ec7cc433813b7",
+  "request_id": "v19proof-request-63f46f6d8cca554d",
   "schema_version": 1,
   "state": "ACCEPTED",
-  "updated_at": "2026-09-30T23:18:43.528284+00:00"
+  "updated_at": "2026-10-02T11:46:57.331307+00:00"
 }
