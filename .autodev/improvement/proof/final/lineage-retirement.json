@@ -1,0 +1,33 @@
+{
+  "auto_dispatch": false,
+  "backlog_retirement_fingerprint": "786c7d8f28c6c6b16b1d6789fc9d2510b3d6c23664ce63a149665391c3991e03",
+  "backlog_retirement_id": "retire-72d37e36ce94678cf686863a",
+  "bridge_fingerprint": "59075ad56f04891ae42c65607ac3b5afabb223d011faa45a5a9323a3830cbd23",
+  "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+  "evidence_fingerprints": [
+    "59075ad56f04891ae42c65607ac3b5afabb223d011faa45a5a9323a3830cbd23",
+    "66d2d8ddb479c0e25878d8e1093ea1a1c59456d3bbf5060d443030f0a61b6f1e",
+    "786c7d8f28c6c6b16b1d6789fc9d2510b3d6c23664ce63a149665391c3991e03"
+  ],
+  "evidence_paths": [
+    ".autodev/improvement/proof/bridge.json",
+    ".autodev/improvement/proof/goal-receipt.json",
+    ".autodev/improvement/proof/final/backlog-retirement.json"
+  ],
+  "execution_authority": false,
+  "origin_signal_fingerprint": "fda23f06c632e6c73a3437d1eef15c0a28bc0f02fcc305e6e490897fb7f10ff4",
+  "origin_signal_id": "improve-f8657ce395dd3940e2092a62",
+  "original_source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "planning_authority": false,
+  "planning_goal_receipt_fingerprint": "66d2d8ddb479c0e25878d8e1093ea1a1c59456d3bbf5060d443030f0a61b6f1e",
+  "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "retired_signal_ids": [
+    "improve-f8657ce395dd3940e2092a62"
+  ],
+  "retirement_authority": "trusted-verified-improvement-completion-v1",
+  "retirement_id": "improvement-retire-336135bb9001804ae286272e",
+  "schema_version": 1,
+  "subject_fingerprint": "c8e948236926eacba30b18ca1e0bd4e60c20e5fffd9036d5e6609c907ab396e1",
+  "verified_source_sha": "fa4f4b3a87f78d2bea596177811247072bca37ce"
+}
