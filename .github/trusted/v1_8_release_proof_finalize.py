@@ -486,8 +486,12 @@ def build_final_proof(
         results,
     )
 
-    state_payload = _load_json(Path(".autodev/state.json"))
-    campaign_payload = _load_json(Path(".autodev/campaign.json"))
+    state_payload = _load_json(
+        Path(".autodev/multi-agent/proof/state.json")
+    )
+    campaign_payload = _load_json(
+        Path(".autodev/multi-agent/proof/campaign.json")
+    )
     campaign = AutonomousCampaign.from_dict(campaign_payload)
     if campaign.status.value != "COMPLETED":
         raise ValueError("source Campaign is no longer COMPLETED")
