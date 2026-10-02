@@ -1,0 +1,24 @@
+{
+  "backlog_fingerprint": "1760b400e12bdf340ba572bd51b793cf2fb6bd09943cd9c05126c5721da153cb",
+  "current_sources": [
+    {
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327"
+    }
+  ],
+  "entries": [
+    {
+      "candidate_id": "backlog-6aeac2eb07cbf3981291c100",
+      "priority_rank": 30,
+      "priority_source": "controller-kind-policy-v1",
+      "reason": "CURRENT_SOURCE",
+      "schema_version": 1,
+      "state": "CURRENT"
+    }
+  ],
+  "execution_authority": false,
+  "priority_policy": "controller-kind-policy-v1",
+  "retirements": [],
+  "schema_version": 1,
+  "supersessions": []
+}
