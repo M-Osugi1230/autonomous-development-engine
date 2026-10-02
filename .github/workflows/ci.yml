@@ -368,6 +368,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/improvement_goal_handoff_probe.py
 
+      - name: Continuous Improvement verified lineage retirement proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/improvement_lineage_feedback_probe.py
+
       - name: ADE v1.8 Autonomous Release Graduation audit
         env:
           PYTHONPATH: src:.github/trusted
