@@ -373,6 +373,11 @@ jobs:
           PYTHONPATH: src
         run: python .github/trusted/improvement_lineage_feedback_probe.py
 
+      - name: Continuous Improvement Mission Control observability proof
+        env:
+          PYTHONPATH: src
+        run: python .github/trusted/improvement_observability_probe.py
+
       - name: ADE v1.8 Autonomous Release Graduation audit
         env:
           PYTHONPATH: src:.github/trusted
