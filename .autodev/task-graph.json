@@ -4,15 +4,15 @@
     {
       "decision_id": null,
       "depends_on": [],
-      "status": "COMPLETED",
+      "status": "RUNNING",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
-        "prompt": "Goal: Add a focused regression test confirming that the existing experiment variant label normalizer collapses THREE-PER-EM SPACE (U+2004) and SIX-PER-EM SPACE (U+2006) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.\nOutcome: Add a regression test for U+2004 and U+2006 space collapsing to `tests/test_models.py`\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: tests/test_models.py\nAcceptance: Add a regression test for U+2004 and U+2006 space collapsing to `tests/test_models.py`; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "prompt": "Goal: Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.\nOutcome: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: tests/test_models.py\nAcceptance: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`.; Repository CI remains green\nDo not modify files outside the allowed paths.",
         "starting_branch": "main",
-        "task_id": "v17ma1-001",
+        "task_id": "v19proof-63f46f6d8c-001",
         "timeout_seconds": 1800,
-        "title": "Add a regression test for U+2004 and U+2006 space collapsing to `tests/test_models.py`"
+        "title": "Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`."
       }
     }
   ]
