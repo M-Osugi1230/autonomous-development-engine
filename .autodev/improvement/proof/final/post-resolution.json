@@ -1,0 +1,32 @@
+{
+  "auto_dispatch": false,
+  "current_signal_ids": [],
+  "entries": [
+    {
+      "generation": 0,
+      "priority_rank": 100,
+      "priority_source": "controller-improvement-kind-policy-v1",
+      "reason": "VERIFIED_RELEASE_OBSERVATION",
+      "schema_version": 1,
+      "signal_id": "improve-503863ebf6e20057a71b2386",
+      "state": "OBSERVATION_ONLY"
+    },
+    {
+      "generation": 0,
+      "priority_rank": 30,
+      "priority_source": "controller-improvement-kind-policy-v1",
+      "reason": "VERIFIED_SUCCESSOR_COMPLETION",
+      "schema_version": 1,
+      "signal_id": "improve-f8657ce395dd3940e2092a62",
+      "state": "RETIRED"
+    }
+  ],
+  "execution_authority": false,
+  "ledger_fingerprint": "0c874f86b57de677253f4f6130a1f3c0ec2d4b94b8197576dad472c66dd31d03",
+  "planning_authority": false,
+  "policy_fingerprint": "89b83e01b7b1355e2b665c41c8ea55664b3e2b194a374e11890a72840394b403",
+  "retirement_fingerprints": [
+    "eceba0d4aad0a68b6d53e74792d6ee44d20e3d0568ec558234d4973833b806d1"
+  ],
+  "schema_version": 1
+}
