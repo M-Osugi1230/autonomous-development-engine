@@ -17,6 +17,28 @@ class ImprovementSignalExtractionError(ValueError):
     """Trusted post-release improvement extraction failed."""
 
 
+_TRUSTED_GAP_DETAILS: dict[
+    str,
+    tuple[
+        ImprovementSignalKind,
+        ImprovementEvidenceKind,
+        str,
+        tuple[str, ...],
+    ],
+] = {
+    "variant-unicode-space-coverage-2005-2008": (
+        ImprovementSignalKind.QUALITY_GAP,
+        ImprovementEvidenceKind.TELEMETRY,
+        (
+            "Add regression coverage for U+2005 FOUR-PER-EM SPACE and "
+            "U+2008 PUNCTUATION SPACE normalization in the existing "
+            "experiment variant label tests without changing application behavior."
+        ),
+        ("unicode-whitespace", "tests-only"),
+    ),
+}
+
+
 def _canonical_json(payload: object) -> str:
     return json.dumps(
         payload,
@@ -535,6 +557,7 @@ def extract_actionable_release_gap_signal(
             "release_candidate_id",
             "release_environment",
             "signal_kind",
+            "detail_code",
             "detail_fingerprint",
         },
         field="trusted gap evidence",
@@ -574,6 +597,34 @@ def extract_actionable_release_gap_signal(
         field="trusted gap detail fingerprint",
     )
 
+    detail_code = gap_payload.get("detail_code")
+    detail_statement: str | None = None
+    detail_tags: tuple[str, ...] = ()
+    if detail_code is not None:
+        if not isinstance(detail_code, str):
+            raise ImprovementSignalExtractionError(
+                "trusted gap detail_code must be text"
+            )
+        detail = _TRUSTED_GAP_DETAILS.get(detail_code)
+        if detail is None:
+            raise ImprovementSignalExtractionError(
+                "trusted gap detail_code is unknown"
+            )
+        (
+            expected_kind,
+            expected_evidence_kind,
+            detail_statement,
+            detail_tags,
+        ) = detail
+        if gap_kind is not expected_kind:
+            raise ImprovementSignalExtractionError(
+                "trusted gap detail_code signal kind drift"
+            )
+        if gap_evidence_kind is not expected_evidence_kind:
+            raise ImprovementSignalExtractionError(
+                "trusted gap detail_code evidence kind drift"
+            )
+
     source_label = (
         "recovery"
         if gap_evidence_kind
@@ -587,11 +638,15 @@ def extract_actionable_release_gap_signal(
         release_environment=identity["release_environment"],
         kind=gap_kind,
         statement=(
-            "Trusted post-release "
-            + source_label
-            + " evidence identifies one bounded "
-            + gap_kind.value.casefold().replace("_", " ")
-            + " after the verified release."
+            detail_statement
+            if detail_statement is not None
+            else (
+                "Trusted post-release "
+                + source_label
+                + " evidence identifies one bounded "
+                + gap_kind.value.casefold().replace("_", " ")
+                + " after the verified release."
+            )
         ),
         evidence_refs=(
             ImprovementEvidenceRef(
@@ -626,5 +681,6 @@ def extract_actionable_release_gap_signal(
             identity["release_environment"],
             source_label,
             "verified-release",
+            *detail_tags,
         ),
     )
