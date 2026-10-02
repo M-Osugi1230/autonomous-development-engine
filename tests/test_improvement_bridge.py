@@ -296,6 +296,26 @@ class ImprovementBridgeTests(unittest.TestCase):
             second.fingerprint(),
         )
 
+    def test_bridge_preserves_trusted_signal_semantics_in_backlog_goal(self) -> None:
+        gap = signal(
+            kind=ImprovementSignalKind.QUALITY_GAP,
+            statement=(
+                "Add regression coverage for U+2005 FOUR-PER-EM SPACE "
+                "and U+2008 PUNCTUATION SPACE normalization in tests only."
+            ),
+            seed="a",
+        )
+        ledger = ImprovementSignalLedger(signals=(gap,))
+        bundle = bridge_for(ledger, gap.signal_id)
+        self.assertIn(
+            "U+2005 FOUR-PER-EM SPACE",
+            bundle.backlog_candidate.statement,
+        )
+        self.assertIn(
+            "U+2008 PUNCTUATION SPACE",
+            bundle.backlog_candidate.statement,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
