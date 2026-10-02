@@ -275,9 +275,8 @@ def build_improvement_memory_backlog_bridge(
     backlog_statement = (
         "Resolve trusted Continuous Improvement signal "
         + signal.signal_id
-        + " for one bounded "
-        + signal.kind.value.casefold().replace("_", " ")
-        + " without bypassing Autonomous Backlog selection."
+        + ": "
+        + signal.statement
     )
     candidate_id = build_candidate_id(
         kind=backlog_kind,

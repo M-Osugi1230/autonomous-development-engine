@@ -279,6 +279,68 @@ class ImprovementSignalExtractionTests(unittest.TestCase):
                 ),
             )
 
+    def test_trusted_detail_code_preserves_semantic_goal(self) -> None:
+        kwargs = base_kwargs()
+        payload = gap_evidence(
+            ImprovementSignalKind.QUALITY_GAP
+        )
+        payload["detail_code"] = (
+            "variant-unicode-space-coverage-2005-2008"
+        )
+        signal = extract_actionable_release_gap_signal(
+            **kwargs,
+            gap_kind=ImprovementSignalKind.QUALITY_GAP,
+            gap_evidence_kind=ImprovementEvidenceKind.TELEMETRY,
+            gap_evidence_payload=payload,
+            gap_evidence_path=(
+                ".autodev/improvement/telemetry-gap.json"
+            ),
+        )
+        self.assertIn("U+2005 FOUR-PER-EM SPACE", signal.statement)
+        self.assertIn("U+2008 PUNCTUATION SPACE", signal.statement)
+        self.assertIn("tests-only", signal.tags)
+        self.assertIn("unicode-whitespace", signal.tags)
+
+    def test_unknown_or_mismatched_detail_code_fails_closed(self) -> None:
+        kwargs = base_kwargs()
+        payload = gap_evidence(
+            ImprovementSignalKind.QUALITY_GAP
+        )
+        payload["detail_code"] = "unknown-gap-detail"
+        with self.assertRaisesRegex(
+            ImprovementSignalExtractionError,
+            "detail_code is unknown",
+        ):
+            extract_actionable_release_gap_signal(
+                **kwargs,
+                gap_kind=ImprovementSignalKind.QUALITY_GAP,
+                gap_evidence_kind=ImprovementEvidenceKind.TELEMETRY,
+                gap_evidence_payload=payload,
+                gap_evidence_path=(
+                    ".autodev/improvement/telemetry-gap.json"
+                ),
+            )
+
+        payload["detail_code"] = (
+            "variant-unicode-space-coverage-2005-2008"
+        )
+        with self.assertRaisesRegex(
+            ImprovementSignalExtractionError,
+            "signal kind drift",
+        ):
+            extract_actionable_release_gap_signal(
+                **kwargs,
+                gap_kind=ImprovementSignalKind.RUNTIME_GAP,
+                gap_evidence_kind=ImprovementEvidenceKind.TELEMETRY,
+                gap_evidence_payload={
+                    **payload,
+                    "signal_kind": ImprovementSignalKind.RUNTIME_GAP.value,
+                },
+                gap_evidence_path=(
+                    ".autodev/improvement/telemetry-gap.json"
+                ),
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
