@@ -1,0 +1,30 @@
+{
+  "approval": {
+    "decision_id": "release-approval-ea7386c7ca3d03d5d54fb3f7",
+    "disposition": "APPROVED",
+    "fingerprint": "d54edd1dbdba8e7ded1506a5fd52a7204a758c43828d0bdf79e2f18573ab22d1"
+  },
+  "auto_promoted_next_environment": false,
+  "deployment": {
+    "deployment_id": "preview-ref-ade-preview",
+    "deployment_request_id": "deployment-6f14207b35475d00a64d6621",
+    "dispatch_count": 1,
+    "preview_ref": "refs/heads/ade-preview",
+    "receipt_fingerprint": "04405a131aa9a87b1303452daa4405bf0aa48ab74638863fee963d0af17d41a1"
+  },
+  "post_promotion_runtime_verification": {
+    "disposition": "VERIFIED",
+    "report_fingerprint": "8a74ce0e29ce7478a4ea194d701b8cdaf00df736110a76ce5f476d011701a372",
+    "target_ci_run_id": 36882390659,
+    "target_evidence_fingerprint": "8a103c733b9c753abd841c3376d8449410b00f5658c6c17dfff528df1deaae7f",
+    "verification_id": "release-rv-2c0dd1ac3dd567d46444aa8a"
+  },
+  "promotion_verified": true,
+  "proof_id": "v1.8-autonomous-release-proof-001",
+  "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+  "schema_version": 1,
+  "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "target_environment": "preview",
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments",
+  "version": "v1.8"
+}
