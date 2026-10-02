@@ -1,12 +1,10 @@
 {
-  "campaign_id": "v1.7-multi-agent-campaign-001",
-  "completed_task_ids": [
-    "v17ma1-001"
-  ],
-  "goal": "Add a focused regression test confirming that the existing experiment variant label normalizer collapses THREE-PER-EM SPACE (U+2004) and SIX-PER-EM SPACE (U+2006) to single plain spaces in the display label while preserving its existing stable-key behavior. Use existing test files only. Do not change production behavior, package exports, CLI behavior, workflows, configuration, deployment, secrets, or irreversible behavior. Do not create new files.",
+  "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+  "completed_task_ids": [],
+  "goal": "Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
   "schema_version": 1,
-  "status": "COMPLETED",
+  "status": "RUNNING",
   "task_ids": [
-    "v17ma1-001"
+    "v19proof-63f46f6d8c-001"
   ]
 }
