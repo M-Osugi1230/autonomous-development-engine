@@ -1,0 +1,10 @@
+{
+  "detail_code": "variant-unicode-space-coverage-2005-2008",
+  "detail_fingerprint": "6713d46b21c6fed2f120fb12328f583bb920c021fbcf2b7d7e0b9279d935aa2a",
+  "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+  "release_environment": "preview",
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "schema_version": 1,
+  "signal_kind": "QUALITY_GAP",
+  "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327"
+}
