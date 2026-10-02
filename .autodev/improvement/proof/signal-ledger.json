@@ -1,0 +1,108 @@
+{
+  "auto_dispatch": false,
+  "execution_authority": false,
+  "planning_authority": false,
+  "release_authority": false,
+  "schema_version": 1,
+  "signal_count": 2,
+  "signals": [
+    {
+      "acceptance_mutation_authority": false,
+      "auto_dispatch": false,
+      "evidence_refs": [
+        {
+          "fingerprint": "7b3773a45be9e211248e23de93b5a011a94b30f3878a66e0f9da34665e713a0d",
+          "kind": "POST_VERIFICATION",
+          "path": ".autodev/improvement/proof/source-post-verification-finalization.json",
+          "schema_version": 1
+        },
+        {
+          "fingerprint": "63cd50cf2d97b0a85d2185fbde2f0d631b92acf5790cd9d369276e466d8f35ea",
+          "kind": "RELEASE_EVIDENCE",
+          "path": ".autodev/improvement/proof/source-release-evidence.json",
+          "schema_version": 1
+        },
+        {
+          "fingerprint": "8a103c733b9c753abd841c3376d8449410b00f5658c6c17dfff528df1deaae7f",
+          "kind": "RUNTIME_TARGET",
+          "path": ".autodev/improvement/proof/source-runtime-target.json",
+          "schema_version": 1
+        },
+        {
+          "fingerprint": "f0e9d28de67bd9ba361ab6d0621f315dc415019872f7c2bf466d3e0badcd0f9a",
+          "kind": "TELEMETRY",
+          "path": ".autodev/improvement/proof/telemetry-gap.json",
+          "schema_version": 1
+        }
+      ],
+      "execution_authority": false,
+      "generation": 0,
+      "human_decision_authority": false,
+      "kind": "QUALITY_GAP",
+      "parent_signal_id": null,
+      "planning_authority": false,
+      "release_authority": false,
+      "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+      "release_environment": "preview",
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "schema_version": 1,
+      "scope_expansion_authority": false,
+      "signal_id": "improve-f8657ce395dd3940e2092a62",
+      "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+      "statement": "Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
+      "tags": [
+        "preview",
+        "quality-gap",
+        "telemetry",
+        "tests-only",
+        "unicode-whitespace",
+        "verified-release"
+      ]
+    },
+    {
+      "acceptance_mutation_authority": false,
+      "auto_dispatch": false,
+      "evidence_refs": [
+        {
+          "fingerprint": "7b3773a45be9e211248e23de93b5a011a94b30f3878a66e0f9da34665e713a0d",
+          "kind": "POST_VERIFICATION",
+          "path": ".autodev/improvement/proof/source-post-verification-finalization.json",
+          "schema_version": 1
+        },
+        {
+          "fingerprint": "63cd50cf2d97b0a85d2185fbde2f0d631b92acf5790cd9d369276e466d8f35ea",
+          "kind": "RELEASE_EVIDENCE",
+          "path": ".autodev/improvement/proof/source-release-evidence.json",
+          "schema_version": 1
+        },
+        {
+          "fingerprint": "8a103c733b9c753abd841c3376d8449410b00f5658c6c17dfff528df1deaae7f",
+          "kind": "RUNTIME_TARGET",
+          "path": ".autodev/improvement/proof/source-runtime-target.json",
+          "schema_version": 1
+        }
+      ],
+      "execution_authority": false,
+      "generation": 0,
+      "human_decision_authority": false,
+      "kind": "RELEASE_FOLLOWUP",
+      "parent_signal_id": null,
+      "planning_authority": false,
+      "release_authority": false,
+      "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+      "release_environment": "preview",
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "schema_version": 1,
+      "scope_expansion_authority": false,
+      "signal_id": "improve-503863ebf6e20057a71b2386",
+      "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+      "statement": "Verified preview release completed exact-deployment Runtime Verification; retain one bounded observation for trusted improvement resolution.",
+      "tags": [
+        "observation",
+        "preview",
+        "release",
+        "verified"
+      ]
+    }
+  ]
+}
