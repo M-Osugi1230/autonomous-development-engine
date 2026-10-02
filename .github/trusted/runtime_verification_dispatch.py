@@ -39,12 +39,17 @@ RESULT_PATH = Path(".autodev/runtime/runtime-verification-dispatch-result.json")
 V1_5_FINALIZER_TASK_ID = "v15mem2-001"
 V1_6_BACKLOG_PHASE = "v1.6-autonomous-backlog"
 V1_7_MULTI_AGENT_PHASE = "v1.7-multi-agent"
+V1_9_CONTINUOUS_IMPROVEMENT_PHASE = "v1.9-continuous-improvement"
 
 
 def _runtime_provenance_required(task_id: str, phase: str | None) -> bool:
     return (
         task_id == V1_5_FINALIZER_TASK_ID
-        or phase in {V1_6_BACKLOG_PHASE, V1_7_MULTI_AGENT_PHASE}
+        or phase in {
+            V1_6_BACKLOG_PHASE,
+            V1_7_MULTI_AGENT_PHASE,
+            V1_9_CONTINUOUS_IMPROVEMENT_PHASE,
+        }
     )
 
 
