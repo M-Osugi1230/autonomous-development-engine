@@ -1,0 +1,45 @@
+{
+  "auto_dispatch": false,
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "auto_dispatch": false,
+      "candidate_id": "backlog-6aeac2eb07cbf3981291c100",
+      "evidence_fingerprints": [
+        "23b64fa4ef9e1450e74793138e0b0498bdd770d9fdc24058fd03807a08940177",
+        "2920e88cb7794a6e1cfdde91925a40c39441b343de2d3c2a4d655fb7bf7e6f5d",
+        "63cd50cf2d97b0a85d2185fbde2f0d631b92acf5790cd9d369276e466d8f35ea",
+        "7b3773a45be9e211248e23de93b5a011a94b30f3878a66e0f9da34665e713a0d",
+        "8a103c733b9c753abd841c3376d8449410b00f5658c6c17dfff528df1deaae7f",
+        "f0e9d28de67bd9ba361ab6d0621f315dc415019872f7c2bf466d3e0badcd0f9a",
+        "fda23f06c632e6c73a3437d1eef15c0a28bc0f02fcc305e6e490897fb7f10ff4"
+      ],
+      "evidence_paths": [
+        ".autodev/improvement/proof/resolution.json",
+        ".autodev/improvement/proof/signal-ledger.json",
+        ".autodev/improvement/proof/source-post-verification-finalization.json",
+        ".autodev/improvement/proof/source-release-evidence.json",
+        ".autodev/improvement/proof/source-runtime-target.json",
+        ".autodev/improvement/proof/telemetry-gap.json"
+      ],
+      "execution_authority": false,
+      "human_only": false,
+      "kind": "VERIFIED_REMEDIATION",
+      "may_expand_scope": false,
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "schema_version": 1,
+      "source_phase": "v1.9-continuous-improvement",
+      "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+      "statement": "Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
+      "tags": [
+        "continuous-improvement",
+        "current",
+        "memory",
+        "quality-gap",
+        "verified"
+      ]
+    }
+  ],
+  "execution_authority": false,
+  "schema_version": 1
+}
