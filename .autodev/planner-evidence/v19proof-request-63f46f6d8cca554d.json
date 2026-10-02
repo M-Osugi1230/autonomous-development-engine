@@ -1,0 +1,91 @@
+{
+  "accepted_plan_fingerprint": "f111962ac49763b834a5b1e895550ed20c6ace49068c81e7b6c30cdcc6fbc74a",
+  "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "6004278b658af8c42b312355b8d17983394882150ad96d31eb3f2fdc27277461",
+    "current_source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "execution_authority": false,
+    "extracted_record_count": 4,
+    "memory_fingerprints": [
+      "e70e9c3d5a5d7d03c42afc33e11882c8d9eb154ea409fa7dc0d00ac6d215983b"
+    ],
+    "memory_ids": [
+      "mem-e36fdeb5b5580417fc1786ba"
+    ],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/one-minute-thought-experiments",
+    "resolution_fingerprint": "5e0160d98afa21ccf2f3031f30fd514d864e1ea67b3efcfc480a3b48ee323704",
+    "retrieval_fingerprint": "4aaa3c4a37c1dede35722a062862cf63fe0a7d9d0b492fadbdc54f8b8b1fd512",
+    "retrieved_record_count": 1,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "9800f06a2bb84a4dcffc4798d526a8aa51ebb28b6175447be1e219205dd3cb74",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": true
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "e4bb792a008504b2c2620275e2351ddd57512b910afefd738a31879823b26119",
+  "proposal": {
+    "goal": "Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_models.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`.",
+        "title": "Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`."
+      }
+    ]
+  },
+  "proposal_fingerprint": "e5fee39bb7af511c00b66ae129ee4a6d558a09245a2a92b7687f4f691d2d5206",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 1,
+  "provider_plan_steps_sha256": "ffc673b7a00ab713c3d6ec39a68dbe06fd6a65e73c8ec7451ea3c26007152bdf",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "d7ae3fc77816376cc697510725f6c330235056bb57c00b5cde33c0de5537d2f7",
+  "repository_context_fingerprint": "d65f007b4c944bac3f9ed1248611b011c24236143e9cc323df1ee3f8e79a06b5",
+  "repository_impact_analysis_fingerprint": "759eec091acc8ba8275f3c504b70bc2bfe2f48e6535c6cadfaa38bfa2f88cad9",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "3eec50c789e80e98c986970061f3a9271cdec87e60375c10ac5b4756063d5f18",
+  "repository_source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "request": {
+    "allowed_path_prefixes": [
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+    "goal": "Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
+    "id_prefix": "v19proof-63f46f6d8c",
+    "max_tasks": 1,
+    "request_id": "v19proof-request-63f46f6d8cca554d",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "request_fingerprint": "d8220417e058d74b99ed484d49984fd13432575a3bee9fd4ee7ec7cc433813b7",
+  "schema_version": 1,
+  "task_ids": [
+    "v19proof-63f46f6d8c-001"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 37002798188
+}
