@@ -1,13 +1,13 @@
 {
-  "campaign_id": "v1.7-multi-agent-campaign-001",
+  "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
   "dispatch_count": 1,
-  "dispatched_at": "2026-09-30T23:18:53.936504+00:00",
-  "plan_fingerprint": "95fe6c30a11c9983cf28c023b807a07e42e174d4bdca398b61500f4b910ce201",
+  "dispatched_at": "2026-10-02T11:47:07.261222+00:00",
+  "plan_fingerprint": "f111962ac49763b834a5b1e895550ed20c6ace49068c81e7b6c30cdcc6fbc74a",
   "run_attempt": "1",
-  "run_id": "36790422503",
+  "run_id": "37002906862",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "a35e544acfaff83b8ef1ed8372ded0d1518f821d",
+  "source_sha": "04ae830190b37ecc407a04fa7845b70048afd0f3",
   "status": "DISPATCHED",
-  "task_id": "v17ma1-001"
+  "task_id": "v19proof-63f46f6d8c-001"
 }
