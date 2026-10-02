@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-09-30T23:19:01.560652+00:00",
+  "acquired_at": "2026-10-02T11:47:15.523833+00:00",
   "attempt": 1,
-  "expires_at": "2026-10-01T00:09:01.560652+00:00",
-  "owner_id": "github-actions:36790432422:1",
+  "expires_at": "2026-10-02T12:37:15.523833+00:00",
+  "owner_id": "github-actions:37002918386:1",
   "schema_version": 1,
-  "task_id": "v17ma1-001"
+  "task_id": "v19proof-63f46f6d8c-001"
 }
