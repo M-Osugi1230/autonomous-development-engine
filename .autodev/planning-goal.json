@@ -1,13 +1,22 @@
 {
-  "allowed_path_prefixes": [
-    "tests"
-  ],
-  "base_branch": "main",
-  "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
-  "goal": "Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
-  "id_prefix": "v19proof-63f46f6d8c",
-  "max_tasks": 1,
-  "request_id": "v19proof-request-63f46f6d8cca554d",
   "schema_version": 1,
-  "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  "request_id": "jquants-prod-grad-request-001",
+  "campaign_id": "jquants-prod-grad-campaign-001",
+  "id_prefix": "jqprod001",
+  "goal": "Bring M-Osugi1230/jquants-research-studio to full Production Graduation. Treat docs/production-graduation.md as the authoritative completion definition. Inspect the current repository first and identify only unmet graduation criteria; preserve already-complete subsystems and the existing cloud-native Supabase plus Vercel architecture. Do not reintroduce Mac or self-hosted production dependencies. Implement the minimum bounded task DAG needed to close real gaps, with deterministic tests and CI. Verify the current Research archive and historical access, quarterly earnings and forecast data paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, error recovery, and production-facing health contracts described by the runbook. After each change, require target CI and trusted merge. Require exact-source repository runtime verification after merges. Do not claim production completion from CI alone: preserve or strengthen source-bound Vercel deployment and Supabase operational-health evidence where the target repository already provides it. If a required external credential, provider connection, destructive production action, or explicit promotion approval cannot be safely performed autonomously, enter HUMAN_WAIT and record the exact human action required rather than weakening the checks. Stop only when docs/production-graduation.md is satisfied or a genuinely human-only boundary is reached.",
+  "target_repository": "M-Osugi1230/jquants-research-studio",
+  "base_branch": "main",
+  "allowed_path_prefixes": [
+    "apps",
+    "providers",
+    "scripts",
+    "supabase",
+    "tests",
+    "docs",
+    "app.py",
+    "vercel.json"
+  ],
+  "execution_phase": "autonomous-development",
+  "min_tasks": 1,
+  "max_tasks": 8
 }
