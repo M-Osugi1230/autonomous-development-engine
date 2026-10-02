@@ -1,0 +1,22 @@
+{
+  "conflicted_count": 0,
+  "cooldown_count": 0,
+  "current_count": 1,
+  "current_signal_id": "improve-f8657ce395dd3940e2092a62",
+  "current_signal_kind": "QUALITY_GAP",
+  "cycle_index": 1,
+  "cycle_limit_count": 0,
+  "cycle_state": "HANDED_OFF",
+  "handoff_count": 1,
+  "latest_retirement_id": null,
+  "lineage_retirement_count": 0,
+  "observation_only_count": 1,
+  "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+  "release_environment": "preview",
+  "repository": "M-Osugi1230/one-minute-thought-experiments",
+  "retired_count": 0,
+  "schema_version": 1,
+  "signal_count": 2,
+  "source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+  "superseded_count": 0
+}
