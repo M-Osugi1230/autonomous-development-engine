@@ -1,15 +1,10 @@
 {
-  "accepted_plan_fingerprint": "f111962ac49763b834a5b1e895550ed20c6ace49068c81e7b6c30cdcc6fbc74a",
   "attempt": 1,
-  "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
-  "development_memory_context_fingerprint": "6004278b658af8c42b312355b8d17983394882150ad96d31eb3f2fdc27277461",
-  "development_memory_record_count": 1,
-  "first_task_id": "v19proof-63f46f6d8c-001",
-  "proposal_fingerprint": "e5fee39bb7af511c00b66ae129ee4a6d558a09245a2a92b7687f4f691d2d5206",
-  "reason": "trusted-plan-accepted",
-  "request_fingerprint": "d8220417e058d74b99ed484d49984fd13432575a3bee9fd4ee7ec7cc433813b7",
-  "request_id": "v19proof-request-63f46f6d8cca554d",
+  "detail": "GitHub HTTP 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/branches/branches#get-a-branch\",\"status\":\"404\"}",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "9cb34885ce1e38cef89dd9c054a467c272f7ca69c976949a0908957bdd397a80",
+  "request_id": "jquants-prod-grad-request-001",
   "schema_version": 1,
-  "state": "ACCEPTED",
-  "updated_at": "2026-10-02T11:46:57.331307+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-02T22:46:58.242537+00:00"
 }
