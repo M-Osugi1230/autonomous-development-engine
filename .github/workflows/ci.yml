@@ -392,3 +392,8 @@ jobs:
         env:
           PYTHONPATH: src:.github/trusted
         run: python scripts/v1_8_release_audit.py
+
+      - name: ADE v1.9 Continuous Improvement Graduation audit
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python scripts/v1_9_improvement_audit.py
