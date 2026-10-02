@@ -59,6 +59,7 @@ class RuntimeVerificationDispatchTests(unittest.TestCase):
         )
 
     def test_v19_phase_requires_runtime_provenance(self) -> None:
+        module = load_module()
         self.assertTrue(
             module._runtime_provenance_required(
                 "v19ci-proof-001",
