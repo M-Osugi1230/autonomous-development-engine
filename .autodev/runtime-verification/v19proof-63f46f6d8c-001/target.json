@@ -1,0 +1,25 @@
+{
+  "evidence": {
+    "deployment_id": null,
+    "environment": "repository",
+    "kind": "repository",
+    "observed_at": "2026-10-02T11:53:15.570601+00:00",
+    "provenance_id": "trusted-merge-sha-v1",
+    "schema_version": 1,
+    "source_sha": "fa4f4b3a87f78d2bea596177811247072bca37ce",
+    "target_id": "repository-runtime",
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "evidence_fingerprint": "d14d1a5c1d7c8e94b2624ccc14365b88a9f65d192a9a1035e579576d677db996",
+  "registry_fingerprint": "5c63ba520e12cf48f1552ce013e722ce2eb583dfcd53bd7612bcf5cf738b719d",
+  "schema_version": 1,
+  "spec": {
+    "deployment_required": false,
+    "environment": "repository",
+    "kind": "repository",
+    "max_age_seconds": 300,
+    "max_future_skew_seconds": 60,
+    "schema_version": 1,
+    "target_id": "repository-runtime"
+  }
+}
