@@ -862,9 +862,7 @@ def main() -> int:
                     "lineage_retirement"
                 ]["retirement_id"],
                 "v1_9_lineage_retirement_fingerprint": (
-                    build_final_proof()[
-                        "campaign_evidence"
-                    ]["closure"][
+                    bundle["campaign_evidence"]["closure"][
                         "lineage_retirement_fingerprint"
                     ]
                 ),
