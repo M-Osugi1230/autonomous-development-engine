@@ -28,6 +28,7 @@ class PlanningGoalRequest:
     target_repository: str
     base_branch: str
     allowed_path_prefixes: tuple[str, ...]
+    execution_phase: str | None = None
     min_tasks: int = 1
     max_tasks: int = 8
     schema_version: int = 1
@@ -47,6 +48,12 @@ class PlanningGoalRequest:
             raise ValueError("target_repository must be owner/name")
         if not isinstance(self.base_branch, str) or not self.base_branch.strip() or "/" in self.base_branch.strip():
             raise ValueError("base_branch must be a simple non-empty branch name")
+        if self.execution_phase is not None:
+            if (
+                not isinstance(self.execution_phase, str)
+                or _ID.fullmatch(self.execution_phase) is None
+            ):
+                raise ValueError("execution_phase must be a safe identifier")
         if type(self.min_tasks) is not int or type(self.max_tasks) is not int:
             raise ValueError("planner task bounds must be integers")
         if self.min_tasks < 1 or self.max_tasks < 1 or self.min_tasks > self.max_tasks:
@@ -80,7 +87,9 @@ class PlanningGoalRequest:
             "base_branch": self.base_branch,
             "allowed_path_prefixes": list(self.allowed_path_prefixes),
         }
-        # Preserve the v1 request fingerprint when default bounds are used.
+        # Preserve the v1 request fingerprint when optional fields use legacy defaults.
+        if self.execution_phase is not None:
+            payload["execution_phase"] = self.execution_phase
         if self.min_tasks != 1:
             payload["min_tasks"] = self.min_tasks
         if self.max_tasks != 8:
@@ -100,6 +109,7 @@ class PlanningGoalRequest:
             "target_repository",
             "base_branch",
             "allowed_path_prefixes",
+            "execution_phase",
             "min_tasks",
             "max_tasks",
         }
@@ -118,6 +128,11 @@ class PlanningGoalRequest:
             target_repository=str(payload.get("target_repository", "")),
             base_branch=str(payload.get("base_branch", "")),
             allowed_path_prefixes=tuple(str(item) for item in prefixes),
+            execution_phase=(
+                str(payload["execution_phase"])
+                if payload.get("execution_phase") is not None
+                else None
+            ),
             min_tasks=int(payload.get("min_tasks", 1)),
             max_tasks=int(payload.get("max_tasks", 8)),
         )
@@ -202,9 +217,11 @@ def build_planning_activation(
     running_first = graph.require(first.task_id)
 
     metadata = dict(previous_state.metadata)
-    phase = metadata.get("phase")
-    if not isinstance(phase, str) or not phase.strip():
-        phase = "v1.2-autonomous-planner"
+    phase = request.execution_phase
+    if phase is None:
+        phase = metadata.get("phase")
+        if not isinstance(phase, str) or not phase.strip():
+            phase = "v1.2-autonomous-planner"
     metadata.update(
         {
             "campaign_id": campaign.campaign_id,

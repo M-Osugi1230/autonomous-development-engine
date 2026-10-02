@@ -100,6 +100,7 @@ RUNTIME_VERIFICATION_PHASES = frozenset(
         "v1.6-autonomous-backlog",
         "v1.7-multi-agent",
         "v1.9-continuous-improvement",
+        "autonomous-development",
     }
 )
 

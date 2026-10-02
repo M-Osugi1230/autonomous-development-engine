@@ -132,6 +132,55 @@ class PlanningActivationTests(unittest.TestCase):
             bundle.accepted_plan.fingerprint,
         )
 
+    def test_request_execution_phase_round_trip_and_activation_override(self):
+        request = PlanningGoalRequest(
+            request_id="prod-request-001",
+            campaign_id="prod-campaign-001",
+            id_prefix="prod",
+            goal="Complete bounded production work.",
+            target_repository="example/target",
+            base_branch="main",
+            allowed_path_prefixes=("src", "tests"),
+            execution_phase="autonomous-development",
+        )
+        payload = request.to_dict()
+        self.assertEqual(payload["execution_phase"], "autonomous-development")
+        loaded = PlanningGoalRequest.from_dict(payload)
+        self.assertEqual(loaded.execution_phase, "autonomous-development")
+
+        state = self.previous_state()
+        state.metadata["phase"] = "v1.9-continuous-improvement"
+        bundle = build_planning_activation(
+            request=request,
+            validated=validate_planner_proposal(
+                high_level_goal=request.goal,
+                proposal_payload={
+                    "schema_version": 1,
+                    "goal": request.goal,
+                    "tasks": [
+                        {
+                            "key": "work",
+                            "title": "Complete production work",
+                            "outcome": "Complete the bounded production work.",
+                            "depends_on": [],
+                            "allowed_paths": ["src/helper.py"],
+                            "acceptance": ["work is complete"],
+                            "human_only": False,
+                            "human_reason": None,
+                        }
+                    ],
+                    "human_boundaries": BOUNDARIES,
+                },
+                policy=request.planner_policy(),
+                id_prefix=request.id_prefix,
+            ),
+            previous_state=state,
+        )
+        self.assertEqual(
+            bundle.state.metadata["phase"],
+            "autonomous-development",
+        )
+
     def test_activation_preserves_existing_phase_metadata(self):
         state = self.previous_state()
         state.metadata["phase"] = "v1.3-repository-intelligence"
