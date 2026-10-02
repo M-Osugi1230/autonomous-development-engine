@@ -14,6 +14,7 @@ from .decision_store import DecisionStore
 from .decisions import DecisionRecord, DecisionStatus
 from .preview import PreviewManifest, SAFE_PREVIEW_HOSTS
 from .preview_store import PreviewStore
+from .improvement_observability import ImprovementObservabilitySnapshot
 from .release_observability import ReleaseObservabilitySnapshot
 from .state import StateStore
 
@@ -287,6 +288,101 @@ class MissionReleaseSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class MissionImprovementSummary:
+    release_candidate_id: str
+    repository: str
+    source_sha: str
+    release_environment: str
+    signal_count: int
+    observation_only_count: int
+    current_count: int
+    cooldown_count: int
+    superseded_count: int
+    conflicted_count: int
+    cycle_limit_count: int
+    retired_count: int
+    current_signal_id: str | None
+    current_signal_kind: str | None
+    cycle_state: str
+    cycle_index: int | None
+    handoff_count: int
+    lineage_retirement_count: int
+    latest_retirement_id: str | None
+
+    @classmethod
+    def from_improvement_snapshot(
+        cls,
+        snapshot: ImprovementObservabilitySnapshot,
+    ) -> "MissionImprovementSummary":
+        if not isinstance(snapshot, ImprovementObservabilitySnapshot):
+            raise ValueError(
+                "snapshot must be ImprovementObservabilitySnapshot"
+            )
+        return cls(
+            release_candidate_id=_redact_display_text(
+                snapshot.release_candidate_id
+            ),
+            repository=_redact_display_text(snapshot.repository),
+            source_sha=snapshot.source_sha,
+            release_environment=snapshot.release_environment,
+            signal_count=snapshot.signal_count,
+            observation_only_count=snapshot.observation_only_count,
+            current_count=snapshot.current_count,
+            cooldown_count=snapshot.cooldown_count,
+            superseded_count=snapshot.superseded_count,
+            conflicted_count=snapshot.conflicted_count,
+            cycle_limit_count=snapshot.cycle_limit_count,
+            retired_count=snapshot.retired_count,
+            current_signal_id=(
+                _redact_display_text(snapshot.current_signal_id)
+                if snapshot.current_signal_id is not None
+                else None
+            ),
+            current_signal_kind=(
+                _redact_display_text(snapshot.current_signal_kind)
+                if snapshot.current_signal_kind is not None
+                else None
+            ),
+            cycle_state=snapshot.cycle_state.value,
+            cycle_index=snapshot.cycle_index,
+            handoff_count=snapshot.handoff_count,
+            lineage_retirement_count=(
+                snapshot.lineage_retirement_count
+            ),
+            latest_retirement_id=(
+                _redact_display_text(snapshot.latest_retirement_id)
+                if snapshot.latest_retirement_id is not None
+                else None
+            ),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "release_candidate_id": self.release_candidate_id,
+            "repository": self.repository,
+            "source_sha": self.source_sha,
+            "release_environment": self.release_environment,
+            "signal_count": self.signal_count,
+            "observation_only_count": self.observation_only_count,
+            "current_count": self.current_count,
+            "cooldown_count": self.cooldown_count,
+            "superseded_count": self.superseded_count,
+            "conflicted_count": self.conflicted_count,
+            "cycle_limit_count": self.cycle_limit_count,
+            "retired_count": self.retired_count,
+            "current_signal_id": self.current_signal_id,
+            "current_signal_kind": self.current_signal_kind,
+            "cycle_state": self.cycle_state,
+            "cycle_index": self.cycle_index,
+            "handoff_count": self.handoff_count,
+            "lineage_retirement_count": (
+                self.lineage_retirement_count
+            ),
+            "latest_retirement_id": self.latest_retirement_id,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class MissionCheckpointSummary:
     task_id: str
     state: str
@@ -359,6 +455,7 @@ class MissionControlSnapshot:
     activity: tuple[MissionActivitySummary, ...] = ()
     preview: MissionPreviewSummary | None = None
     release: MissionReleaseSummary | None = None
+    improvement: MissionImprovementSummary | None = None
     planning: dict[str, Any] | None = None
     campaign: dict[str, Any] | None = None
     lifecycle_status: str = "RUNNING"
@@ -403,6 +500,12 @@ class MissionControlSnapshot:
             raise ValueError(
                 "release must be a MissionReleaseSummary or None"
             )
+        if self.improvement is not None and not isinstance(
+            self.improvement, MissionImprovementSummary
+        ):
+            raise ValueError(
+                "improvement must be a MissionImprovementSummary or None"
+            )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -426,6 +529,11 @@ class MissionControlSnapshot:
             "activity": [event.to_dict() for event in self.activity],
             "preview": self.preview.to_dict() if self.preview is not None else None,
             "release": self.release.to_dict() if self.release is not None else None,
+            "improvement": (
+                self.improvement.to_dict()
+                if self.improvement is not None
+                else None
+            ),
             "planning": self.planning,
             "campaign": self.campaign,
             "lifecycle_status": self.lifecycle_status,
@@ -538,6 +646,20 @@ def build_mission_control_snapshot(
         )
         release = MissionReleaseSummary.from_release_snapshot(
             release_snapshot
+        )
+
+    improvement = None
+    improvement_path = autodev / "improvement" / "mission-control.json"
+    if improvement_path.exists():
+        raw_improvement = _load_json_object(
+            improvement_path,
+            label="Continuous Improvement Mission Control",
+        )
+        improvement_snapshot = ImprovementObservabilitySnapshot.from_dict(
+            raw_improvement
+        )
+        improvement = MissionImprovementSummary.from_improvement_snapshot(
+            improvement_snapshot
         )
 
     warnings: list[str] = []
@@ -682,6 +804,7 @@ def build_mission_control_snapshot(
         activity=activity,
         preview=preview,
         release=release,
+        improvement=improvement,
         planning=planning_payload,
         campaign=campaign_payload,
         lifecycle_status=lifecycle_status,

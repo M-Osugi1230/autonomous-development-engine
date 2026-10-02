@@ -205,6 +205,57 @@ def _release_card(snapshot: MissionControlSnapshot) -> str:
     )
 
 
+def _improvement_card(snapshot: MissionControlSnapshot) -> str:
+    improvement = snapshot.improvement
+    if improvement is None:
+        return '<p class="empty">No Continuous Improvement state.</p>'
+    return """<dl class="detail-grid">
+      <div><dt>Release candidate</dt><dd>{release_candidate}</dd></div>
+      <div><dt>Repository</dt><dd>{repository}</dd></div>
+      <div><dt>Source SHA</dt><dd>{source_sha}</dd></div>
+      <div><dt>Environment</dt><dd>{environment}</dd></div>
+      <div><dt>Signals</dt><dd>{signal_count}</dd></div>
+      <div><dt>Observation only</dt><dd>{observation_only}</dd></div>
+      <div><dt>Current</dt><dd>{current}</dd></div>
+      <div><dt>Cooldown</dt><dd>{cooldown}</dd></div>
+      <div><dt>Superseded</dt><dd>{superseded}</dd></div>
+      <div><dt>Conflicted</dt><dd>{conflicted}</dd></div>
+      <div><dt>Cycle limit</dt><dd>{cycle_limit}</dd></div>
+      <div><dt>Retired</dt><dd>{retired}</dd></div>
+      <div><dt>Current signal</dt><dd>{current_signal}</dd></div>
+      <div><dt>Current kind</dt><dd>{current_kind}</dd></div>
+      <div><dt>Cycle state</dt><dd>{cycle_state}</dd></div>
+      <div><dt>Cycle index</dt><dd>{cycle_index}</dd></div>
+      <div><dt>Handoff count</dt><dd>{handoff_count}</dd></div>
+      <div><dt>Lineage retirements</dt><dd>{lineage_retirements}</dd></div>
+      <div><dt>Latest retirement</dt><dd>{latest_retirement}</dd></div>
+    </dl>""".format(
+        release_candidate=_text(improvement.release_candidate_id),
+        repository=_text(improvement.repository),
+        source_sha=_text(improvement.source_sha),
+        environment=_text(improvement.release_environment),
+        signal_count=_text(improvement.signal_count),
+        observation_only=_text(improvement.observation_only_count),
+        current=_text(improvement.current_count),
+        cooldown=_text(improvement.cooldown_count),
+        superseded=_text(improvement.superseded_count),
+        conflicted=_text(improvement.conflicted_count),
+        cycle_limit=_text(improvement.cycle_limit_count),
+        retired=_text(improvement.retired_count),
+        current_signal=_text(improvement.current_signal_id),
+        current_kind=_text(improvement.current_signal_kind),
+        cycle_state=_text(improvement.cycle_state),
+        cycle_index=_text(improvement.cycle_index),
+        handoff_count=_text(improvement.handoff_count),
+        lineage_retirements=_text(
+            improvement.lineage_retirement_count
+        ),
+        latest_retirement=_text(
+            improvement.latest_retirement_id
+        ),
+    )
+
+
 def _zero_touch_start_card(snapshot: MissionControlSnapshot) -> str:
     start = snapshot.zero_touch_start
     if start is None:
@@ -378,6 +429,11 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
       $release
     </section>
 
+    <section class="card" aria-labelledby="improvement-heading">
+      <h2 id="improvement-heading">Continuous Improvement</h2>
+      $improvement
+    </section>
+
     <section class="card" aria-labelledby="zero-touch-heading">
       <h2 id="zero-touch-heading">Zero-touch start</h2>
       $zero_touch_start
@@ -436,6 +492,7 @@ def render_mission_control(snapshot: MissionControlSnapshot) -> str:
         planning=_planning_card(snapshot),
         campaign=_campaign_card(snapshot),
         release=_release_card(snapshot),
+        improvement=_improvement_card(snapshot),
         zero_touch_start=_zero_touch_start_card(snapshot),
         iteration=_text(snapshot.iteration),
         completed=_text(snapshot.completed_tasks),

@@ -321,6 +321,6 @@
 - [x] Actionable signals can feed Development Memory and Autonomous Backlog without bypassing existing Backlog resolution/selection authority.
 - [x] At most one eligible successor PlanningGoal is handed off per loop cycle, with bounded cycle budgets and no automatic execution authority gained from signal existence.
 - [x] Verified successor outcomes retire or supersede their originating signal lineage so identical improvements cannot recur forever.
-- [ ] Mission Control exposes safe Continuous Improvement state without raw telemetry, provider sessions, credentials, or hidden control payloads.
+- [x] Mission Control exposes safe Continuous Improvement state without raw telemetry, provider sessions, credentials, or hidden control payloads.
 - [ ] A real external-repository proof demonstrates verified release -> trusted improvement signal -> backlog/PlanningGoal -> trusted execution -> verified outcome without manual per-task authoring.
 - [ ] A dedicated v1.9 Graduation audit reconstructs the Continuous Improvement proof end to end.

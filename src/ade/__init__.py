@@ -106,6 +106,12 @@ from .improvement_lineage_feedback import (
     ImprovementLineageRetirement,
     build_verified_improvement_lineage_retirement,
 )
+from .improvement_observability import (
+    ImprovementCycleViewState,
+    ImprovementObservabilityError,
+    ImprovementObservabilitySnapshot,
+    build_improvement_observability_snapshot,
+)
 from .jules_planner import (
     JulesPlannerClient,
     JulesPlannerConfig,
@@ -125,6 +131,7 @@ from .mission_control import (
     MissionCheckpointSummary,
     MissionControlSnapshot,
     MissionDecisionSummary,
+    MissionImprovementSummary,
     MissionPreviewSummary,
     MissionReleaseSummary,
     MissionTelemetrySummary,
@@ -335,6 +342,9 @@ __all__ = [
     "ImprovementPlanningGoalActivation",
     "ImprovementLineageFeedbackError",
     "ImprovementLineageRetirement",
+    "ImprovementCycleViewState",
+    "ImprovementObservabilityError",
+    "ImprovementObservabilitySnapshot",
     "JulesPlannerClient",
     "JulesPlannerConfig",
     "JulesPlannerError",
@@ -343,6 +353,7 @@ __all__ = [
     "MissionCheckpointSummary",
     "MissionControlSnapshot",
     "MissionDecisionSummary",
+    "MissionImprovementSummary",
     "MissionPreviewSummary",
     "MissionReleaseSummary",
     "MissionTelemetrySummary",
@@ -487,6 +498,7 @@ __all__ = [
     "arm_improvement_planning_goal_handoff",
     "build_improvement_memory_backlog_bridge",
     "build_verified_improvement_lineage_retirement",
+    "build_improvement_observability_snapshot",
     "record_improvement_planning_goal_handoff",
     "build_improvement_signal",
     "build_improvement_signal_id",
