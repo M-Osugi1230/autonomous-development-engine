@@ -39,6 +39,7 @@ jobs:
         env:
           PYTHONPATH: src
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
         run: python .github/trusted/remote_pr_monitor.py
 
       - name: Upload remote monitor evidence
