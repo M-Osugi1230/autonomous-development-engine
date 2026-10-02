@@ -174,6 +174,29 @@ def main() -> int:
     assert v1_7.status == "DISPATCHED"
     assert len(gh.dispatches) == 4
 
+    v1_9 = remote_pr_monitor._arm_post_merge_runtime_verification(
+        gh,
+        state={
+            "metadata": {
+                "phase": "v1.9-continuous-improvement",
+                "target_repository": TARGET,
+            }
+        },
+        receipt=RemoteExecutionReceipt(
+            task_id="v19ci-proof-001",
+            target_repository=TARGET,
+            pull_request_url=f"https://github.com/{TARGET}/pull/23",
+            recorded_at="2026-10-02T01:00:00+00:00",
+            status="PR_CREATED",
+        ),
+        trusted_head_sha="3" * 40,
+        trusted_merge_sha="9" * 40,
+    )
+    assert v1_9 is not None
+    assert v1_9.source_sha == "9" * 40
+    assert v1_9.status == "DISPATCHED"
+    assert len(gh.dispatches) == 5
+
     old_phase = remote_pr_monitor._arm_post_merge_runtime_verification(
         gh,
         state={"metadata": {"phase": "v1.3-repository-intelligence"}},
@@ -188,7 +211,7 @@ def main() -> int:
         trusted_merge_sha="b" * 40,
     )
     assert old_phase is None
-    assert len(gh.dispatches) == 4
+    assert len(gh.dispatches) == 5
 
     print(json.dumps({
         "ok": True,
@@ -200,6 +223,7 @@ def main() -> int:
         "v1_5_runtime_verification_enabled": True,
         "v1_6_runtime_verification_enabled": True,
         "v1_7_runtime_verification_enabled": True,
+        "v1_9_runtime_verification_enabled": True,
         "pre_v1_4_behavior_preserved": True,
     }, sort_keys=True))
     return 0
