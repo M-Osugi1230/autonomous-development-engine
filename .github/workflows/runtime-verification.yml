@@ -31,6 +31,7 @@ jobs:
         env:
           PYTHONPATH: src:.github/trusted
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
         run: python .github/trusted/runtime_verification_dispatch.py
 
       - name: Upload runtime verification dispatch evidence

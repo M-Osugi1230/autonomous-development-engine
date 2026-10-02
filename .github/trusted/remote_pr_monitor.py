@@ -51,14 +51,18 @@ def _load_receipt() -> RemoteExecutionReceipt | None:
 
 
 def _public_github_json(path: str) -> dict[str, Any]:
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "ADE-Remote-Monitor/1.0",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Cache-Control": "no-cache",
+    }
+    target_token = os.environ.get("ADE_TARGET_GITHUB_TOKEN", "").strip()
+    if target_token:
+        headers["Authorization"] = f"Bearer {target_token}"
     request = Request(
         "https://api.github.com" + path,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "ADE-Remote-Monitor/1.0",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "Cache-Control": "no-cache",
-        },
+        headers=headers,
         method="GET",
     )
     try:

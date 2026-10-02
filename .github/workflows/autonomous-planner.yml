@@ -40,6 +40,7 @@ jobs:
           PYTHONPATH: src
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
         run: python .github/trusted/autonomous_planner_cycle.py
 
       - name: Upload planner decision evidence

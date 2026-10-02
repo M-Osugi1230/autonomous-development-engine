@@ -166,15 +166,36 @@ def _collect_repository_intelligence(
     RepositoryRelationshipGraph,
     RepositoryPlannerContext,
 ]:
-    source_sha = gh.get_branch_head_sha(
-        request.target_repository,
-        branch=request.base_branch,
+    target_token = os.environ.get("ADE_TARGET_GITHUB_TOKEN", "").strip()
+    reader = (
+        GitHubClient(
+            repository=request.target_repository,
+            token=target_token,
+        )
+        if target_token
+        else gh
     )
-    paths = gh.list_tree_paths(
-        request.target_repository,
-        tree_sha=source_sha,
-        max_entries=5000,
-    )
+    try:
+        source_sha = reader.get_branch_head_sha(
+            request.target_repository,
+            branch=request.base_branch,
+        )
+        paths = reader.list_tree_paths(
+            request.target_repository,
+            tree_sha=source_sha,
+            max_entries=5000,
+        )
+    except GitHubError as exc:
+        if (
+            not target_token
+            and request.target_repository != gh.repository
+            and "GitHub HTTP 404:" in str(exc)
+        ):
+            raise GitHubError(
+                "external target repository is not readable; configure "
+                "ADE_TARGET_GITHUB_TOKEN for private repository access"
+            ) from exc
+        raise
     snapshot = build_repository_snapshot(
         repository=request.target_repository,
         base_branch=request.base_branch,
@@ -190,7 +211,7 @@ def _collect_repository_intelligence(
         max_files=20,
     ):
         try:
-            source, blob_sha = gh.get_text_file(
+            source, blob_sha = reader.get_text_file(
                 request.target_repository,
                 path=path,
                 ref=source_sha,

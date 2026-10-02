@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from io import BytesIO
 import importlib.util
+import os
 import tarfile
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 TRUSTED_DIR = Path(__file__).resolve().parents[1] / ".github" / "trusted"
@@ -37,6 +39,21 @@ def archive_bytes(entries: dict[str, bytes]) -> bytes:
 
 
 class RuntimeWorkspaceTests(unittest.TestCase):
+    def test_private_target_token_is_attached_only_when_configured(self) -> None:
+        module = load_workspace_module()
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("ADE_TARGET_GITHUB_TOKEN", None)
+            self.assertNotIn("Authorization", module._github_archive_headers())
+        with patch.dict(
+            os.environ,
+            {"ADE_TARGET_GITHUB_TOKEN": "test-private-target-token"},
+            clear=False,
+        ):
+            self.assertEqual(
+                module._github_archive_headers()["Authorization"],
+                "Bearer test-private-target-token",
+            )
+
     def test_extracts_single_root_archive_safely(self) -> None:
         module = load_workspace_module()
         data = archive_bytes(
