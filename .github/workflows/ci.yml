@@ -383,6 +383,11 @@ jobs:
           PYTHONPATH: src:.github/trusted
         run: python -m unittest tests.test_v1_9_improvement_successor -v
 
+      - name: ADE v1.9 real proof finalizer reconstruction
+        env:
+          PYTHONPATH: src:.github/trusted
+        run: python -m unittest tests.test_v1_9_improvement_finalize -v
+
       - name: ADE v1.8 Autonomous Release Graduation audit
         env:
           PYTHONPATH: src:.github/trusted
