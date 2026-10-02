@@ -1,0 +1,59 @@
+{
+  "backlog_fingerprint": "1760b400e12bdf340ba572bd51b793cf2fb6bd09943cd9c05126c5721da153cb",
+  "current_sources": [
+    {
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "source_sha": "fa4f4b3a87f78d2bea596177811247072bca37ce"
+    }
+  ],
+  "entries": [
+    {
+      "candidate_id": "backlog-6aeac2eb07cbf3981291c100",
+      "priority_rank": 30,
+      "priority_source": "controller-kind-policy-v1",
+      "reason": "VERIFIED_COMPLETION",
+      "schema_version": 1,
+      "state": "RETIRED"
+    }
+  ],
+  "execution_authority": false,
+  "priority_policy": "controller-kind-policy-v1",
+  "retirements": [
+    {
+      "auto_dispatch": false,
+      "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+      "candidate_fingerprint": "f04722616e81074c52e625c08a16245ed6b59c8ab01fda01467298bba69a5793",
+      "candidate_id": "backlog-6aeac2eb07cbf3981291c100",
+      "evidence_fingerprints": [
+        "14111436159c4bb5056c0940d3d8a1caf61649d2177d9c892b6802d361c15252",
+        "d930ee9bb93982bc5438760496ffb2867b9eb3777c6f2198a93021e815bce607",
+        "00210ac1a63f8bda54061732f2facc4d8272c8ba1d27bd9749b5bd8b37113539",
+        "43960e93e9fb135ac2202b2e803bc175f412f5253ccdbdb1f96fb327e3ebb45d",
+        "4fb9c5fed7f9d5501eb06b07f02311d4b3c1bdbde5dbc1af9da0503b970414de",
+        "8fc5f492ba55ed0e4e43d4c33c19ecce1b07c2d1840bc1871c527f685f0db067",
+        "cb4eba7e65dbfd5245e12269d1f1e8da8195d510a66e0f3594e9ff200ae8c884"
+      ],
+      "evidence_paths": [
+        ".autodev/improvement/proof/backlog-handoff.json",
+        ".autodev/improvement/proof/final/terminal-campaign.json",
+        ".autodev/improvement/proof/final/terminal-state.json",
+        ".autodev/improvement/proof/final/remote-execution.json",
+        ".autodev/improvement/proof/final/runtime-contract.json",
+        ".autodev/improvement/proof/final/runtime-receipt.json",
+        ".autodev/improvement/proof/final/runtime-report.json"
+      ],
+      "execution_authority": false,
+      "final_task_id": "v19proof-63f46f6d8c-001",
+      "goal_handoff_fingerprint": "14111436159c4bb5056c0940d3d8a1caf61649d2177d9c892b6802d361c15252",
+      "original_source_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+      "repository": "M-Osugi1230/one-minute-thought-experiments",
+      "request_id": "v19proof-request-63f46f6d8cca554d",
+      "retirement_authority": "trusted-verified-completion-v1",
+      "retirement_id": "retire-72d37e36ce94678cf686863a",
+      "schema_version": 1,
+      "verified_source_sha": "fa4f4b3a87f78d2bea596177811247072bca37ce"
+    }
+  ],
+  "schema_version": 1,
+  "supersessions": []
+}
