@@ -66,6 +66,7 @@ from .improvement_signal import (
     ImprovementSignalKind,
     build_improvement_signal,
     build_improvement_signal_id,
+    improvement_signal_subject_fingerprint,
 )
 from .improvement_signal_extraction import (
     ImprovementSignalExtractionError,
@@ -99,6 +100,11 @@ from .improvement_goal_handoff import (
     ImprovementPlanningGoalActivation,
     arm_improvement_planning_goal_handoff,
     record_improvement_planning_goal_handoff,
+)
+from .improvement_lineage_feedback import (
+    ImprovementLineageFeedbackError,
+    ImprovementLineageRetirement,
+    build_verified_improvement_lineage_retirement,
 )
 from .jules_planner import (
     JulesPlannerClient,
@@ -327,6 +333,8 @@ __all__ = [
     "ImprovementGoalHandoffReceipt",
     "ImprovementGoalReceiptStatus",
     "ImprovementPlanningGoalActivation",
+    "ImprovementLineageFeedbackError",
+    "ImprovementLineageRetirement",
     "JulesPlannerClient",
     "JulesPlannerConfig",
     "JulesPlannerError",
@@ -478,9 +486,11 @@ __all__ = [
     "validate_planner_proposal",
     "arm_improvement_planning_goal_handoff",
     "build_improvement_memory_backlog_bridge",
+    "build_verified_improvement_lineage_retirement",
     "record_improvement_planning_goal_handoff",
     "build_improvement_signal",
     "build_improvement_signal_id",
+    "improvement_signal_subject_fingerprint",
     "extract_actionable_release_gap_signal",
     "extract_verified_release_followup_signal",
     "resolve_improvement_signals",

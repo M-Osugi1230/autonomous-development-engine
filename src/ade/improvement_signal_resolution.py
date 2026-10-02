@@ -9,6 +9,7 @@ from typing import Any
 from .improvement_signal import (
     ImprovementSignal,
     ImprovementSignalKind,
+    improvement_signal_subject_fingerprint,
 )
 from .improvement_signal_ledger import (
     ImprovementSignalLedger,
@@ -27,6 +28,7 @@ class ImprovementResolutionState(StrEnum):
     COOLDOWN = "COOLDOWN"
     CYCLE_LIMIT = "CYCLE_LIMIT"
     CONFLICTED = "CONFLICTED"
+    RETIRED = "RETIRED"
 
 
 class ImprovementResolutionReason(StrEnum):
@@ -36,6 +38,7 @@ class ImprovementResolutionReason(StrEnum):
     ONE_PER_RELEASE_BUDGET = "ONE_PER_RELEASE_BUDGET"
     GENERATION_LIMIT = "GENERATION_LIMIT"
     LINEAGE_BRANCH_CONFLICT = "LINEAGE_BRANCH_CONFLICT"
+    VERIFIED_SUCCESSOR_COMPLETION = "VERIFIED_SUCCESSOR_COMPLETION"
 
 
 _PRIORITY_BY_KIND: dict[ImprovementSignalKind, int] = {
@@ -160,6 +163,7 @@ class ImprovementSignalResolution:
     ledger_fingerprint: str
     policy_fingerprint: str
     entries: tuple[ImprovementResolutionEntry, ...]
+    retirement_fingerprints: tuple[str, ...] = ()
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -201,6 +205,34 @@ class ImprovementSignalResolution:
             ),
         )
 
+        retirement_fingerprints = tuple(
+            sorted(self.retirement_fingerprints)
+        )
+        if (
+            len(set(retirement_fingerprints))
+            != len(retirement_fingerprints)
+        ):
+            raise ImprovementSignalResolutionError(
+                "resolution contains duplicate retirement fingerprint"
+            )
+        for value in retirement_fingerprints:
+            if (
+                not isinstance(value, str)
+                or len(value) != 64
+                or any(
+                    ch not in "0123456789abcdef"
+                    for ch in value
+                )
+            ):
+                raise ImprovementSignalResolutionError(
+                    "retirement fingerprint must be sha256"
+                )
+        object.__setattr__(
+            self,
+            "retirement_fingerprints",
+            retirement_fingerprints,
+        )
+
     @property
     def current_signal_ids(self) -> tuple[str, ...]:
         return tuple(
@@ -233,6 +265,9 @@ class ImprovementSignalResolution:
                 entry.canonical_dict()
                 for entry in self.entries
             ],
+            "retirement_fingerprints": list(
+                self.retirement_fingerprints
+            ),
             "current_signal_ids": list(
                 self.current_signal_ids
             ),
@@ -260,6 +295,7 @@ def resolve_improvement_signals(
     ledger: ImprovementSignalLedger,
     *,
     policy: ImprovementResolutionPolicy | None = None,
+    retirements: tuple[object, ...] = (),
 ) -> ImprovementSignalResolution:
     if not isinstance(ledger, ImprovementSignalLedger):
         raise ImprovementSignalResolutionError(
@@ -270,6 +306,32 @@ def resolve_improvement_signals(
         raise ImprovementSignalResolutionError(
             "policy must be ImprovementResolutionPolicy"
         )
+
+    from .improvement_lineage_feedback import (
+        ImprovementLineageRetirement,
+    )
+
+    validated_retirements: list[ImprovementLineageRetirement] = []
+    retirement_by_subject: dict[str, ImprovementLineageRetirement] = {}
+    for retirement in retirements:
+        if not isinstance(retirement, ImprovementLineageRetirement):
+            raise ImprovementSignalResolutionError(
+                "retirements must contain ImprovementLineageRetirement values"
+            )
+        prior = retirement_by_subject.get(
+            retirement.subject_fingerprint
+        )
+        if (
+            prior is not None
+            and prior.fingerprint() != retirement.fingerprint()
+        ):
+            raise ImprovementSignalResolutionError(
+                "multiple verified retirements for one improvement subject are forbidden"
+            )
+        retirement_by_subject[
+            retirement.subject_fingerprint
+        ] = retirement
+        validated_retirements.append(retirement)
 
     signals = {
         signal.signal_id: signal
@@ -291,7 +353,60 @@ def resolve_improvement_signals(
         ],
     ] = {}
 
+    for retirement in validated_retirements:
+        origin = signals.get(retirement.origin_signal_id)
+        if origin is None:
+            raise ImprovementSignalResolutionError(
+                "retirement origin signal is absent from ledger"
+            )
+        if (
+            origin.fingerprint()
+            != retirement.origin_signal_fingerprint
+            or origin.release_candidate_id
+            != retirement.release_candidate_id
+            or origin.repository != retirement.repository
+            or origin.source_sha
+            != retirement.original_source_sha
+            or improvement_signal_subject_fingerprint(origin)
+            != retirement.subject_fingerprint
+        ):
+            raise ImprovementSignalResolutionError(
+                "verified improvement retirement identity drift"
+            )
+        for retired_signal_id in retirement.retired_signal_ids:
+            retired_signal = signals.get(retired_signal_id)
+            if retired_signal is None:
+                raise ImprovementSignalResolutionError(
+                    "retired improvement lineage signal is absent from ledger"
+                )
+            state_by_id[retired_signal_id] = (
+                ImprovementResolutionState.RETIRED,
+                ImprovementResolutionReason.VERIFIED_SUCCESSOR_COMPLETION,
+            )
+
     for signal in ledger.signals:
+        retirement = retirement_by_subject.get(
+            improvement_signal_subject_fingerprint(signal)
+        )
+        if retirement is not None:
+            if (
+                signal.release_candidate_id
+                != retirement.release_candidate_id
+                or signal.repository != retirement.repository
+                or signal.source_sha
+                != retirement.original_source_sha
+            ):
+                raise ImprovementSignalResolutionError(
+                    "retired improvement subject crossed release identity"
+                )
+            state_by_id[signal.signal_id] = (
+                ImprovementResolutionState.RETIRED,
+                ImprovementResolutionReason.VERIFIED_SUCCESSOR_COMPLETION,
+            )
+
+    for signal in ledger.signals:
+        if signal.signal_id in state_by_id:
+            continue
         if signal.generation > policy.max_generation:
             state_by_id[signal.signal_id] = (
                 ImprovementResolutionState.CYCLE_LIMIT,
@@ -375,4 +490,8 @@ def resolve_improvement_signals(
         ledger_fingerprint=ledger.fingerprint(),
         policy_fingerprint=policy.fingerprint(),
         entries=entries,
+        retirement_fingerprints=tuple(
+            retirement.fingerprint()
+            for retirement in validated_retirements
+        ),
     )
