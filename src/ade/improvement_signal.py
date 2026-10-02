@@ -688,3 +688,22 @@ def build_improvement_signal(
         generation=generation,
         tags=tag_values,
     )
+
+
+def improvement_signal_subject_fingerprint(
+    signal: ImprovementSignal,
+) -> str:
+    if not isinstance(signal, ImprovementSignal):
+        raise ImprovementSignalError(
+            "signal must be ImprovementSignal"
+        )
+    return _fingerprint(
+        {
+            "repository": signal.repository,
+            "source_sha": signal.source_sha,
+            "release_candidate_id": signal.release_candidate_id,
+            "release_environment": signal.release_environment,
+            "kind": signal.kind.value,
+            "statement": signal.statement,
+        }
+    )
