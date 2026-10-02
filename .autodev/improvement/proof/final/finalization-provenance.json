@@ -1,0 +1,11 @@
+{
+  "external_write_after_successor_merge": false,
+  "finalizer_state": "EVIDENCE_FROZEN",
+  "lineage_retirement_id": "improvement-retire-336135bb9001804ae286272e",
+  "proof_id": "v1.9-continuous-improvement-proof-001",
+  "runtime_workflow_run_id": 37003477881,
+  "schema_version": 1,
+  "target_merge_sha": "fa4f4b3a87f78d2bea596177811247072bca37ce",
+  "target_pull_request": 23,
+  "workflow_run_id": 37006828173
+}
