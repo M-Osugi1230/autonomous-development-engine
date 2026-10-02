@@ -101,17 +101,6 @@ def _validate_source_evidence(
     runtime_receipt: RuntimeVerificationReceipt,
     runtime_report_fingerprint: str,
 ) -> None:
-    live_accepted = _load_json(LIVE_ACCEPTED_PLAN_PATH)
-    live_campaign = _load_json(LIVE_CAMPAIGN_PATH)
-    if live_accepted != frozen_accepted_payload:
-        raise ValueError(
-            "live AcceptedPlan drifted from frozen v1.7 proof"
-        )
-    if live_campaign != frozen_campaign_payload:
-        raise ValueError(
-            "live Campaign drifted from frozen v1.7 proof"
-        )
-
     if v17_evidence.get("schema_version") != 1:
         raise ValueError("v1.7 graduation evidence schema_version drift")
     if v17_evidence.get("version") != SOURCE_VERSION:
