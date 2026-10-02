@@ -1,0 +1,18 @@
+{
+  "accepted_plan_authority": false,
+  "auto_dispatch": false,
+  "backlog_candidate_id": "backlog-6aeac2eb07cbf3981291c100",
+  "backlog_handoff_fingerprint": "14111436159c4bb5056c0940d3d8a1caf61649d2177d9c892b6802d361c15252",
+  "bridge_fingerprint": "59075ad56f04891ae42c65607ac3b5afabb223d011faa45a5a9323a3830cbd23",
+  "cycle_id": "improvement-cycle-fdf84c2319346a23ffa94d85",
+  "cycle_index": 1,
+  "cycle_policy_fingerprint": "df7260895fe1895120af7136e5d96cc52f5f930fba8b26321ab9d2a37defe60a",
+  "execution_authority": false,
+  "handoff_count": 1,
+  "planning_request_fingerprint": "d8220417e058d74b99ed484d49984fd13432575a3bee9fd4ee7ec7cc433813b7",
+  "release_candidate_id": "release-a4cd075b270b6ad434ae2602",
+  "schema_version": 1,
+  "signal_fingerprint": "fda23f06c632e6c73a3437d1eef15c0a28bc0f02fcc305e6e490897fb7f10ff4",
+  "signal_id": "improve-f8657ce395dd3940e2092a62",
+  "status": "HANDED_OFF"
+}
