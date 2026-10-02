@@ -1,9 +1,11 @@
 {
   "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
-  "completed_task_ids": [],
+  "completed_task_ids": [
+    "v19proof-63f46f6d8c-001"
+  ],
   "goal": "Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
   "schema_version": 1,
-  "status": "RUNNING",
+  "status": "COMPLETED",
   "task_ids": [
     "v19proof-63f46f6d8c-001"
   ]
