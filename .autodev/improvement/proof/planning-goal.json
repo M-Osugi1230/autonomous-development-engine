@@ -1,0 +1,13 @@
+{
+  "allowed_path_prefixes": [
+    "tests"
+  ],
+  "base_branch": "main",
+  "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+  "goal": "Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
+  "id_prefix": "v19proof-63f46f6d8c",
+  "max_tasks": 1,
+  "request_id": "v19proof-request-63f46f6d8cca554d",
+  "schema_version": 1,
+  "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+}
