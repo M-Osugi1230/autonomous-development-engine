@@ -1,0 +1,25 @@
+{
+  "accepted_plan_authority": false,
+  "auto_dispatch": false,
+  "candidate_fingerprint": "f04722616e81074c52e625c08a16245ed6b59c8ab01fda01467298bba69a5793",
+  "candidate_id": "backlog-6aeac2eb07cbf3981291c100",
+  "execution_authority": false,
+  "handoff_target": "AutonomousPlanner",
+  "planning_goal_request": {
+    "allowed_path_prefixes": [
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "v19proof-campaign-63f46f6d8cca554d",
+    "goal": "Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.",
+    "id_prefix": "v19proof-63f46f6d8c",
+    "max_tasks": 1,
+    "request_id": "v19proof-request-63f46f6d8cca554d",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/one-minute-thought-experiments"
+  },
+  "policy_fingerprint": "127f7a13135dfd5fc29a4d8bced125f26e9a2f2a6a20d36e0bbf9530c11f048c",
+  "resolution_fingerprint": "1310168b748d913525720866234dac1acfdc5d87097b21e661daa367919b33fc",
+  "schema_version": 1,
+  "selection_fingerprint": "50dc8c0992b25635afd3a8258c852be1114bff754bcf3e101d3756b51b9da10d"
+}
