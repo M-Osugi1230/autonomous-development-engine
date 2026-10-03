@@ -137,7 +137,6 @@ def main() -> int:
             "verification_id": activation.receipt.verification_id,
             "target_repository": activation.receipt.target_repository,
             "source_sha": activation.receipt.source_sha,
-            "source": "runtime-verification-retry",
             "remote_monitor_workflow_run_id": _run_id(),
             "pull_request_number": remote.pull_request_number,
             "pull_request_head_sha": head_sha,
