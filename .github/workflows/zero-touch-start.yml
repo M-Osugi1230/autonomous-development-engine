@@ -17,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ade-zero-touch-start
+  group: ade-zero-touch-start-${{ github.event.client_payload.project_key || github.ref_name || 'default' }}
   cancel-in-progress: false
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout trusted controller from main
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -37,6 +37,8 @@ jobs:
 
       - name: Evaluate and dispatch eligible Campaign
         env:
+          ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
+          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.ref_name || 'default' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/trusted/zero_touch_start.py
 
