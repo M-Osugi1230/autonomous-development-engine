@@ -1,0 +1,40 @@
+{
+  "attempts_by_probe": [
+    {
+      "attempts": 1,
+      "probe_id": "repository-bytecode-smoke"
+    },
+    {
+      "attempts": 1,
+      "probe_id": "repository-entrypoint-smoke"
+    }
+  ],
+  "report": {
+    "contract_fingerprint": "7eb9686afeffa5eb049b0ffe5df4ffa51967ea38bf1af9574faa40302921a8e5",
+    "disposition": "VERIFIED",
+    "missing_probe_ids": [],
+    "results": [
+      {
+        "attempt": 1,
+        "detail_code": "repository-bytecode-pass",
+        "probe_id": "repository-bytecode-smoke",
+        "schema_version": 1,
+        "source_sha": "c54e5541b861f2999878ed0350078870c35f26fe",
+        "status": "PASS"
+      },
+      {
+        "attempt": 1,
+        "detail_code": "repository-entrypoint-pass",
+        "probe_id": "repository-entrypoint-smoke",
+        "schema_version": 1,
+        "source_sha": "c54e5541b861f2999878ed0350078870c35f26fe",
+        "status": "PASS"
+      }
+    ],
+    "schema_version": 1,
+    "source_sha": "c54e5541b861f2999878ed0350078870c35f26fe",
+    "verification_id": "rv-c54e5541b861f2999878ed0350078870c35f26fe"
+  },
+  "report_fingerprint": "bda050a40ce2668d5a217e13df01c3aa7e9c1dc76dd60258adfa1f9ce7119d2d",
+  "schema_version": 1
+}
