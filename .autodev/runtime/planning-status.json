@@ -1,15 +1,10 @@
 {
-  "accepted_plan_fingerprint": "81a423a8791aee5a530996881f50cadc2c82f18738b4de2f86a017006506dbef",
   "attempt": 1,
-  "campaign_id": "jichi-phase15-morioka-pilot-campaign-003",
-  "development_memory_context_fingerprint": null,
-  "development_memory_record_count": 0,
-  "first_task_id": "jip15morioka003-001",
-  "proposal_fingerprint": "739e6c45bacb7016bf0d7563934193bef0baade5fe5c3b905bbaa8139b592afa",
-  "reason": "trusted-plan-accepted",
-  "request_fingerprint": "cd5e33a6a63f562a472fff4ba1078a004d325aec9924cd2cfa05dcee89a54b42",
-  "request_id": "jichi-phase15-morioka-pilot-request-003",
+  "detail": "repository tree exceeds trusted entry budget",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "35e285fa2982abde66a7ee0d41d91aa1448a87cf437851ee4d5d4cd944da5430",
+  "request_id": "chukei-universe-research-request-001",
   "schema_version": 1,
-  "state": "ACCEPTED",
-  "updated_at": "2026-10-03T21:40:55.590889+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-03T22:15:47.020964+00:00"
 }
