@@ -4,15 +4,15 @@
     {
       "decision_id": null,
       "depends_on": [],
-      "status": "COMPLETED",
+      "status": "RUNNING",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
-        "prompt": "Goal: Resolve trusted Autonomous Backlog candidate: Resolve trusted Continuous Improvement signal improve-f8657ce395dd3940e2092a62: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in the existing experiment variant label tests without changing application behavior.\nOutcome: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: tests/test_models.py\nAcceptance: Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "prompt": "Goal: Advance M-Osugi1230/jquants-research-studio toward Production Graduation by completing only non-production, non-credential, repository code and test work that is still unmet. Treat docs/production-graduation.md as read-only authoritative completion criteria. Inspect the current repository and preserve already-complete subsystems. Do not deploy, promote, mutate production infrastructure, access credentials, or modify deployment documentation in this campaign. Focus on deterministic repository changes and tests needed to strengthen or satisfy the existing operational-health and production-readiness contracts, including current and historical Research access, quarterly earnings and forecast paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, recovery contracts, and source-bound health expectations. Use the minimum bounded task DAG, require target CI after each change, and stop when all safely automatable repository code/test gaps are closed. Leave any production deployment, promotion, credential verification, or live infrastructure decision for a separate human-gated verification step.\nOutcome: `tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: tests/test_client_contract.py\nAcceptance: `tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments.; Repository CI remains green\nDo not modify files outside the allowed paths.",
         "starting_branch": "main",
-        "task_id": "v19proof-63f46f6d8c-001",
+        "task_id": "jqprod004-001",
         "timeout_seconds": 1800,
-        "title": "Add regression coverage for U+2005 FOUR-PER-EM SPACE and U+2008 PUNCTUATION SPACE normalization in `tests/test_models.py`."
+        "title": "`tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments."
       }
     }
   ]
