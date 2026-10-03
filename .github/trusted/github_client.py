@@ -144,6 +144,14 @@ class GitHubClient:
                     for item in raw_prefixes.split(",")
                     if item.strip()
                 )
+            elif repository == "M-Osugi1230/chu-kei":
+                include_prefixes = (
+                    "operations/plan-detection",
+                    "operations/research-priority",
+                    "operations/source-research",
+                    "scripts",
+                    "docs",
+                )
         if not isinstance(include_prefixes, tuple):
             raise ValueError("include_prefixes must be a tuple")
         if len(include_prefixes) > 12:
