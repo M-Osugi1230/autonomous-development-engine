@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ade-autonomous-planner-retry-${{ github.event.client_payload.request_fingerprint }}
+  group: ade-autonomous-planner-retry-${{ github.event.client_payload.project_key || 'default' }}-${{ github.event.client_payload.request_fingerprint }}
   cancel-in-progress: true
 
 jobs:
