@@ -371,8 +371,12 @@ class GitHubClient:
         ):
             if self.control_ref:
                 client_payload.setdefault("control_ref", self.control_ref)
-            if self.project_key:
+            if self.project_key and len(client_payload) < 10:
                 client_payload.setdefault("project_key", self.project_key)
+            if len(client_payload) > 10:
+                raise ValueError(
+                    "repository_dispatch client_payload exceeds GitHub 10-property limit"
+                )
         self._request(
             "POST",
             f"/repos/{self.repository}/dispatches",

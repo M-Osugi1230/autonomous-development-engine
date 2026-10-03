@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ade-autonomous-planner-retry-${{ github.event.client_payload.project_key || 'default' }}-${{ github.event.client_payload.request_fingerprint }}
+  group: ade-autonomous-planner-retry-${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || 'default' }}-${{ github.event.client_payload.request_fingerprint }}
   cancel-in-progress: true
 
 jobs:
@@ -34,6 +34,6 @@ jobs:
         env:
           PYTHONPATH: src:.github/trusted
           ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || 'main' }}
-          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || 'default' }}
+          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || 'default' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/trusted/autonomous_planner_retry.py

@@ -89,6 +89,30 @@ class ProjectScopedControlRefTests(unittest.TestCase):
         self.assertEqual(payload["client_payload"]["control_ref"], "ade-chu-kei")
         self.assertEqual(payload["client_payload"]["project_key"], "chu-kei")
 
+
+    def test_dispatch_compacts_scope_at_github_payload_limit(self) -> None:
+        with patch.dict(
+            os.environ,
+            {
+                "GITHUB_REPOSITORY": "M-Osugi1230/autonomous-development-engine",
+                "ADE_CONTROL_REF": "ade-jquants",
+                "ADE_PROJECT_KEY": "jquants",
+            },
+            clear=False,
+        ):
+            client = RecordingGitHubClient(
+                repository="M-Osugi1230/autonomous-development-engine"
+            )
+            client.dispatch(
+                "ade_runtime_verification",
+                {f"field_{index}": index for index in range(9)},
+            )
+
+        payload = client.calls[0][2]["client_payload"]
+        self.assertEqual(len(payload), 10)
+        self.assertEqual(payload["control_ref"], "ade-jquants")
+        self.assertNotIn("project_key", payload)
+
     def test_dispatch_does_not_override_explicit_scope(self) -> None:
         with patch.dict(
             os.environ,
