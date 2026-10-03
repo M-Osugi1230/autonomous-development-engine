@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-10-03T23:25:52.103893+00:00",
+  "acquired_at": "2026-10-03T23:42:22.580132+00:00",
   "attempt": 1,
-  "expires_at": "2026-10-04T00:15:52.103893+00:00",
-  "owner_id": "github-actions:37161742884:1",
+  "expires_at": "2026-10-04T00:32:22.580132+00:00",
+  "owner_id": "github-actions:37162610594:1",
   "schema_version": 1,
-  "task_id": "jqdepth001-001"
+  "task_id": "jqdepth001-002"
 }
