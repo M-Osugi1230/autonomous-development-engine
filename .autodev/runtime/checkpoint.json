@@ -2,9 +2,9 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "506262679090257330",
+  "provider_session_id": "8086266923709706350",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "jip15morioka003-001"
+  "state": "RUNNING",
+  "task_id": "jip15morioka003-002"
 }
