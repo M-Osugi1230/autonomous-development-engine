@@ -21,6 +21,7 @@ from runtime_workspace import PreparedRuntimeWorkspace
 _LEGACY_THOUGHT_PIPELINE_REPOSITORIES = frozenset(
     {"M-Osugi1230/one-minute-thought-experiments"}
 )
+_JICHI_INSIGHT_REPOSITORY = "M-Osugi1230/jichi-insight"
 _MODULE_NAME = re.compile(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$")
 _ATTR_PATH = re.compile(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$")
 
@@ -328,6 +329,120 @@ def _repository_entrypoint_runner(
     return run
 
 
+def _jichi_data_contract_runner(
+    workspace: PreparedRuntimeWorkspace,
+):
+    def run(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+        validator = workspace.root / "scripts" / "validate_repository.py"
+        if not validator.is_file():
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jichi-data-validator-missing",
+            )
+        try:
+            completed = subprocess.run(
+                [str(workspace.python_executable), str(validator)],
+                cwd=workspace.root,
+                env=_probe_environment(workspace),
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=_command_timeout(invocation),
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="jichi-data-validation-timeout",
+            )
+        except OSError:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="jichi-data-validation-exec-error",
+            )
+        return RuntimeProbeObservation(
+            RuntimeProbeStatus.PASS
+            if completed.returncode == 0
+            else RuntimeProbeStatus.FAIL,
+            detail_code=(
+                "jichi-data-validation-pass"
+                if completed.returncode == 0
+                else "jichi-data-validation-nonzero"
+            ),
+        )
+
+    return run
+
+
+def _jichi_next_contract_runner(
+    workspace: PreparedRuntimeWorkspace,
+):
+    def run(_: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+        root_package = workspace.root / "package.json"
+        web_package = workspace.root / "apps" / "web" / "package.json"
+        required_files = (
+            workspace.root / "apps" / "web" / "app" / "layout.tsx",
+            workspace.root / "apps" / "web" / "app" / "page.tsx",
+            workspace.root / "apps" / "web" / "next.config.ts",
+            workspace.root / "apps" / "web" / "tsconfig.json",
+        )
+        if not root_package.is_file() or not web_package.is_file():
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jichi-next-package-missing",
+            )
+        if any(not path.is_file() for path in required_files):
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jichi-next-app-contract-missing",
+            )
+        try:
+            root_payload = json.loads(root_package.read_text(encoding="utf-8"))
+            web_payload = json.loads(web_package.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jichi-next-package-invalid",
+            )
+
+        root_scripts = root_payload.get("scripts")
+        web_scripts = web_payload.get("scripts")
+        web_dependencies = web_payload.get("dependencies")
+        if not all(
+            isinstance(value, dict)
+            for value in (root_scripts, web_scripts, web_dependencies)
+        ):
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jichi-next-package-contract-invalid",
+            )
+
+        required_root_scripts = {"build", "lint", "typecheck", "validate:data", "test:py"}
+        required_web_scripts = {"build", "start", "lint", "typecheck"}
+        required_dependencies = {"next", "react", "react-dom"}
+        if not required_root_scripts.issubset(root_scripts):
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jichi-next-root-scripts-missing",
+            )
+        if not required_web_scripts.issubset(web_scripts):
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jichi-next-web-scripts-missing",
+            )
+        if not required_dependencies.issubset(web_dependencies):
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jichi-next-dependencies-missing",
+            )
+        return RuntimeProbeObservation(
+            RuntimeProbeStatus.PASS,
+            detail_code="jichi-next-contract-pass",
+        )
+
+    return run
+
+
 def _workspace_not_configured(
     _: RuntimeProbeInvocation,
 ) -> RuntimeProbeObservation:
@@ -339,7 +454,34 @@ def _workspace_not_configured(
 
 def build_runtime_probe_registry(
     workspace: PreparedRuntimeWorkspace | None = None,
+    *,
+    target_repository: str | None = None,
 ) -> TrustedRuntimeProbeRegistry:
+    if target_repository == _JICHI_INSIGHT_REPOSITORY:
+        data_runner = (
+            _jichi_data_contract_runner(workspace)
+            if workspace is not None
+            else _workspace_not_configured
+        )
+        next_runner = (
+            _jichi_next_contract_runner(workspace)
+            if workspace is not None
+            else _workspace_not_configured
+        )
+        return TrustedRuntimeProbeRegistry(
+            [
+                RuntimeProbeRegistration(
+                    probe_id="jichi-data-contract-smoke",
+                    implementation_id="jichi-data-contract-smoke-v1",
+                    runner=data_runner,
+                ),
+                RuntimeProbeRegistration(
+                    probe_id="jichi-next-contract-smoke",
+                    implementation_id="jichi-next-contract-smoke-v1",
+                    runner=next_runner,
+                ),
+            ]
+        )
     offline_runner = (
         _offline_cli_runner(workspace)
         if workspace is not None
@@ -393,6 +535,11 @@ def build_runtime_verification_policy(
         required_probe_ids = (
             "offline-cli-smoke",
             "production-import-smoke",
+        )
+    elif target_repository == _JICHI_INSIGHT_REPOSITORY:
+        required_probe_ids = (
+            "jichi-data-contract-smoke",
+            "jichi-next-contract-smoke",
         )
     else:
         required_probe_ids = (
