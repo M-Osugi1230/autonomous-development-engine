@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-10-03T19:00:50.876274+00:00",
+  "acquired_at": "2026-10-03T19:09:37.410526+00:00",
   "attempt": 1,
-  "expires_at": "2026-10-03T19:50:50.876274+00:00",
-  "owner_id": "github-actions:37146344630:1",
+  "expires_at": "2026-10-03T19:59:37.410526+00:00",
+  "owner_id": "github-actions:37146878545:1",
   "schema_version": 1,
-  "task_id": "jqexpand002-002"
+  "task_id": "jqexpand002-003"
 }
