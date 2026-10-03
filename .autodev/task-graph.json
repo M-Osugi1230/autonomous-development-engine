@@ -52,7 +52,7 @@
       "depends_on": [
         "jqexpand002-003"
       ],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
