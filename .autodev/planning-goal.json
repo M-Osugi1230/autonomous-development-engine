@@ -1,16 +1,20 @@
 {
   "schema_version": 1,
-  "request_id": "jichi-phase15-morioka-pilot-request-003",
-  "campaign_id": "jichi-phase15-morioka-pilot-campaign-003",
-  "id_prefix": "jip15morioka003",
-  "goal": "Populate the existing non-public Morioka (032018) Phase 15 review-candidate staging in M-Osugi1230/jichi-insight. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, the canonical Phase 15 queue, data/indexed/morioka-city/source_inventory.json, and completed Phase 15 municipality packages as read-only context. Do not create any file: every task new_paths must be []. Write only data/candidates/morioka-city/review_candidate.json and tests/test_phase15_review_candidate_staging.py. Use official primary sources only and retain stable evidence locations, plan/version/period/fiscal/availability boundaries, source precision, and explicit deferred depth. Set package_state=prepared only when the candidate package is complete enough for human checking. Candidate plan decisions must remain needs_review or not_assessable; human_review.status must remain pending; publication.eligible must remain false; the Phase 15 queue must remain review_in_progress. Never infer unpublished facts, reuse historical actuals as current actuals without official linkage, collapse fiscal/document states or year semantics, promote drafts, create policy-achievement scores, infer causality, or create unverified rankings/political evaluations. Add deterministic assertions in the existing staging test. Success is a green bounded PR containing a complete non-public candidate, followed by HUMAN_WAIT for explicit human primary-source review. Do not promote reviewed_complete or broaden beyond Morioka.",
-  "target_repository": "M-Osugi1230/jichi-insight",
+  "request_id": "jquants-data-depth-request-001",
+  "campaign_id": "jquants-data-depth-campaign-001",
+  "id_prefix": "jqdepth001",
+  "goal": "Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields.",
+  "target_repository": "M-Osugi1230/jquants-research-studio",
   "base_branch": "main",
   "allowed_path_prefixes": [
-    "data/candidates",
+    "apps",
+    "engine",
+    "providers",
+    "scripts",
+    "supabase",
     "tests"
   ],
   "execution_phase": "autonomous-development",
   "min_tasks": 1,
-  "max_tasks": 2
+  "max_tasks": 8
 }
