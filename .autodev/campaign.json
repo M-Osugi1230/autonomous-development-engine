@@ -1,7 +1,8 @@
 {
   "campaign_id": "jquants-data-expansion-campaign-002",
   "completed_task_ids": [
-    "jqexpand002-001"
+    "jqexpand002-001",
+    "jqexpand002-002"
   ],
   "goal": "Expand M-Osugi1230/jquants-research-studio with higher-value investment data without exhausting provider limits. Preserve all working production behavior. First add useful fields that can be derived from existing Supabase/raw/archive data with zero external calls, prioritizing valuation, profitability, growth, financial health, liquidity/volume/volatility, and event-derived signals. Only then add bounded incremental ingestion for genuinely missing data, preferring bulk/date-scoped or no-key/public sources over per-security calls. Never implement unbounded all-security per-symbol fetching. Reuse caches, cursors, queues, deduplication, and point-in-time semantics. All provider paths must fail closed when allowance is unknown, honor configured rate limits and Retry-After, defer safely, and avoid duplicate retries. Preserve EDINET DB's 100 requests/day design, live /usage check, at least 5 requests reserve, max 2 provider calls/company, newest-first retry queue, and existing scheduled ceilings. Preserve the existing J-Quants persistent rate limiter and configured requests-per-minute ceiling; do not raise it. Do not bypass quotas, use extra accounts, expose credentials, upgrade paid plans, or make destructive production changes. Add deterministic tests for no-limit-bypass, idempotent/resumable ingestion, and zero-call derived-data paths. Use the minimum bounded task DAG and complete one safe end-to-end data-expansion vertical slice before broadening.",
   "schema_version": 1,
