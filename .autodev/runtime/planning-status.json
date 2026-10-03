@@ -1,15 +1,15 @@
 {
-  "accepted_plan_fingerprint": "81a423a8791aee5a530996881f50cadc2c82f18738b4de2f86a017006506dbef",
+  "accepted_plan_fingerprint": "4fb1cce259026f0c1389bf87a9c9fe1589dafe573573bf47ea65c181eac562c6",
   "attempt": 1,
-  "campaign_id": "jichi-phase15-morioka-pilot-campaign-003",
-  "development_memory_context_fingerprint": null,
+  "campaign_id": "jquants-data-depth-campaign-001",
+  "development_memory_context_fingerprint": "c26ce52b59ad09ae12fa65bcb6f6e78da7c2fec6d2b30c4cf9505787424827c5",
   "development_memory_record_count": 0,
-  "first_task_id": "jip15morioka003-001",
-  "proposal_fingerprint": "739e6c45bacb7016bf0d7563934193bef0baade5fe5c3b905bbaa8139b592afa",
+  "first_task_id": "jqdepth001-001",
+  "proposal_fingerprint": "b4b5514f4b0967811b1c295c1826bde06486f33b7a42acc98a41a204d928fb14",
   "reason": "trusted-plan-accepted",
-  "request_fingerprint": "cd5e33a6a63f562a472fff4ba1078a004d325aec9924cd2cfa05dcee89a54b42",
-  "request_id": "jichi-phase15-morioka-pilot-request-003",
+  "request_fingerprint": "86be523e9e5730c40e34758b67778552f09a373ad0e90d0e73527e870da7d869",
+  "request_id": "jquants-data-depth-request-001",
   "schema_version": 1,
   "state": "ACCEPTED",
-  "updated_at": "2026-10-03T21:40:55.590889+00:00"
+  "updated_at": "2026-10-03T22:17:03.110951+00:00"
 }
