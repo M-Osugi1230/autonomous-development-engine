@@ -1,0 +1,79 @@
+{
+  "accepted_plan_fingerprint": "e81e85fa855df36979729d64d1e9cb5d50db8f74b1bbcda673ee9aac9aa138ed",
+  "campaign_id": "jquants-prod-grad-campaign-004",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "reason": "no-trusted-memory-evidence-for-target",
+    "schema_version": 1,
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "fa641a49da5831b99c73e7fc8b46ac4f28a454ffb842095c005ac7e40e137915",
+  "proposal": {
+    "goal": "Advance M-Osugi1230/jquants-research-studio toward Production Graduation by completing only non-production, non-credential, repository code and test work that is still unmet. Treat docs/production-graduation.md as read-only authoritative completion criteria. Inspect the current repository and preserve already-complete subsystems. Do not deploy, promote, mutate production infrastructure, access credentials, or modify deployment documentation in this campaign. Focus on deterministic repository changes and tests needed to strengthen or satisfy the existing operational-health and production-readiness contracts, including current and historical Research access, quarterly earnings and forecast paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, recovery contracts, and source-bound health expectations. Use the minimum bounded task DAG, require target CI after each change, and stop when all safely automatable repository code/test gaps are closed. Leave any production deployment, promotion, credential verification, or live infrastructure decision for a separate human-gated verification step.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "`tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_client_contract.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "`tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments.",
+        "title": "`tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments."
+      }
+    ]
+  },
+  "proposal_fingerprint": "f78c3944411ea86a702c55a39d0327d2b3461503ba9ad69145096487342bebdf",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 1,
+  "provider_plan_steps_sha256": "00301ed68e00255d225b88d5b4c270e6c9619cb186288fa41cac5f54d8b4ee91",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "f6e9dfc827ef455f6d61388e06448b9452b753c119096250c09e0bd32008756f",
+  "repository_context_fingerprint": "fa6498a901164c6c32713d1509c18e12d0d1b721ff544b5421fe9c938de12e2a",
+  "repository_impact_analysis_fingerprint": "56969f06c10ce44bc9c7308de163657c24321710b0f7958fe40f86c34424fa27",
+  "repository_relationship_graph_fingerprint": "f653bbd683ec97c83cd020afab8241fb93305ac6446f6d46313e0fa4691cb730",
+  "repository_snapshot_fingerprint": "a022774cedbe0ce450930ec48268b90aac28570c366ebf16fb5a56660d97816d",
+  "repository_source_sha": "c56fb20b881c8917df311167edb5482c2d15d21e",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "engine",
+      "providers",
+      "scripts",
+      "supabase",
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jquants-prod-grad-campaign-004",
+    "execution_phase": "autonomous-development",
+    "goal": "Advance M-Osugi1230/jquants-research-studio toward Production Graduation by completing only non-production, non-credential, repository code and test work that is still unmet. Treat docs/production-graduation.md as read-only authoritative completion criteria. Inspect the current repository and preserve already-complete subsystems. Do not deploy, promote, mutate production infrastructure, access credentials, or modify deployment documentation in this campaign. Focus on deterministic repository changes and tests needed to strengthen or satisfy the existing operational-health and production-readiness contracts, including current and historical Research access, quarterly earnings and forecast paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, recovery contracts, and source-bound health expectations. Use the minimum bounded task DAG, require target CI after each change, and stop when all safely automatable repository code/test gaps are closed. Leave any production deployment, promotion, credential verification, or live infrastructure decision for a separate human-gated verification step.",
+    "id_prefix": "jqprod004",
+    "request_id": "jquants-prod-grad-request-004",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jquants-research-studio"
+  },
+  "request_fingerprint": "31e346dc5a97e694bae38e86e67fd7d03e5d4469edeaecc3a7998e9f6440ef5d",
+  "schema_version": 1,
+  "task_ids": [
+    "jqprod004-001"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 37116082688
+}
