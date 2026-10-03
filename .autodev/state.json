@@ -109,7 +109,7 @@
     },
     "milestone": "v1.9-graduated",
     "next_required_human_action": null,
-    "next_system_action": "monitor-provider-session",
+    "next_system_action": null,
     "phase": "autonomous-development",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -143,8 +143,8 @@
     "repository_intelligence_relationship_fingerprint": "f653bbd683ec97c83cd020afab8241fb93305ac6446f6d46313e0fa4691cb730",
     "repository_intelligence_snapshot_fingerprint": "ec1115ab08add388ceda3a1115f63fcd743e9c096d2a8a01cc7777292499b3ee",
     "repository_intelligence_source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
-    "runtime_verification_id": "rv-be8192299d8247880690806bb8a0c2d21843070d",
-    "runtime_verification_source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
+    "runtime_verification_id": "rv-f05be2a89db297a52ca852441c18cb6adc996ea8",
+    "runtime_verification_source_sha": "f05be2a89db297a52ca852441c18cb6adc996ea8",
     "scheduler": "dag",
     "superseded_v1_4_proofs": [
       {
