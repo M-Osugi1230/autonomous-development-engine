@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jquants-prod-grad-campaign-004",
+  "campaign_id": "jquants-data-expansion-campaign-002",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-03T10:26:37.608323+00:00",
-  "plan_fingerprint": "e81e85fa855df36979729d64d1e9cb5d50db8f74b1bbcda673ee9aac9aa138ed",
+  "dispatched_at": "2026-10-03T18:51:39.062211+00:00",
+  "plan_fingerprint": "3e2c655693ab70c7816e4eacd2fc06fd0d7355fd2f307427beaeb24f0b2f8450",
   "run_attempt": "1",
-  "run_id": "37116428843",
+  "run_id": "37145776940",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "5587efc36e73767cabd58ff32d49d6a48667190c",
+  "source_sha": "06e4e3739af7739a3777a2e0b82181a67edd4bfc",
   "status": "DISPATCHED",
-  "task_id": "jqprod004-001"
+  "task_id": "jqexpand002-001"
 }
