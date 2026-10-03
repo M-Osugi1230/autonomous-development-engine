@@ -37,7 +37,9 @@ def load_json(relative: str):
 class V19ImprovementSuccessorTests(unittest.TestCase):
     def test_build_activation_is_tests_only_and_semantically_bound(self) -> None:
         module = load_module()
-        state = load_json(".autodev/state.json")
+        state = load_json(
+            ".autodev/improvement/proof/final/terminal-state.json"
+        )
         activation = module.build_activation(
             state_payload=state,
             source_release_payload=load_json(
@@ -123,7 +125,9 @@ class V19ImprovementSuccessorTests(unittest.TestCase):
 
     def test_activation_requires_slice007_and_ready_state(self) -> None:
         module = load_module()
-        state = load_json(".autodev/state.json")
+        state = load_json(
+            ".autodev/improvement/proof/final/terminal-state.json"
+        )
         release = load_json(module.SOURCE_RELEASE_PATH)
         finalization = load_json(module.SOURCE_FINALIZATION_PATH)
         target = load_json(module.SOURCE_TARGET_PATH)
