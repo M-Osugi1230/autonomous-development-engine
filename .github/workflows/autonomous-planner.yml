@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+      - ade-jichi-insight
+      - ade-jquants
+      - ade-chu-kei
     paths:
       - ".autodev/planning-goal.json"
   repository_dispatch:
@@ -17,7 +20,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ade-autonomous-planner-${{ github.event.client_payload.project_key || 'default' }}
+  group: ade-autonomous-planner-${{ github.event.client_payload.project_key || github.ref_name || 'default' }}
   cancel-in-progress: false
 
 jobs:
@@ -28,7 +31,7 @@ jobs:
       - name: Checkout trusted controller from main
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.control_ref || 'main' }}
+          ref: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -38,8 +41,8 @@ jobs:
       - name: Plan Goal through trusted boundary
         env:
           PYTHONPATH: src
-          ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || 'main' }}
-          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || 'default' }}
+          ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
+          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.ref_name || 'default' }}
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
