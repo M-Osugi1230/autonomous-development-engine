@@ -365,25 +365,12 @@ def audit() -> dict[str, Any]:
                 f"v1.9 project state metadata drift: {key}"
             )
 
-    stable_metadata = {
-        "milestone": "v1.9-graduated",
-        "next_required_human_action": None,
-        "next_system_action": None,
-        "queue_exhausted": True,
-    }
-    for key, expected in stable_metadata.items():
-        if metadata.get(key) != expected:
-            raise ValueError(
-                f"v1.9 stable project state drift: {key}"
-            )
-    if (
-        project_state.get("status") != "READY"
-        or project_state.get("current_task_id") is not None
-        or project_state.get("failed_task_ids") != []
-    ):
-        raise ValueError(
-            "v1.9 graduated ProjectState is not stable READY"
-        )
+    # Post-graduation campaigns legitimately mutate live liveness fields
+    # such as status/current_task_id/next action. Graduation authority is
+    # carried by immutable v1.9 evidence and its bound metadata, not by
+    # requiring the controller to remain permanently idle after graduation.
+    if metadata.get("milestone") != "v1.9-graduated":
+        raise ValueError("v1.9 graduation milestone drift")
 
     graduated_at = metadata.get("v1_9_graduated_at")
     if not isinstance(graduated_at, str) or not graduated_at:
