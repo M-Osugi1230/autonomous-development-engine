@@ -142,7 +142,9 @@ def _arm_post_merge_runtime_verification(
     if not _runtime_verification_enabled(state):
         return None
 
-    registry = build_runtime_probe_registry(\n        target_repository=receipt.target_repository,\n    )
+    registry = build_runtime_probe_registry(
+        target_repository=receipt.target_repository,
+    )
     policy = build_runtime_verification_policy(receipt.target_repository)
     existing = _load_runtime_receipt(gh, task_id=receipt.task_id)
     activation = arm_post_merge_runtime_verification(
