@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "request_id": "jichi-phase15-morioka-pilot-request-003",
-  "campaign_id": "jichi-phase15-morioka-pilot-campaign-003",
-  "id_prefix": "jip15morioka003",
-  "goal": "Populate the existing non-public Morioka (032018) Phase 15 review-candidate staging in M-Osugi1230/jichi-insight. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, the canonical Phase 15 queue, data/indexed/morioka-city/source_inventory.json, and completed Phase 15 municipality packages as read-only context. Do not create any file: every task new_paths must be []. Write only data/candidates/morioka-city/review_candidate.json and tests/test_phase15_review_candidate_staging.py. Use official primary sources only and retain stable evidence locations, plan/version/period/fiscal/availability boundaries, source precision, and explicit deferred depth. Set package_state=prepared only when the candidate package is complete enough for human checking. Candidate plan decisions must remain needs_review or not_assessable; human_review.status must remain pending; publication.eligible must remain false; the Phase 15 queue must remain review_in_progress. Never infer unpublished facts, reuse historical actuals as current actuals without official linkage, collapse fiscal/document states or year semantics, promote drafts, create policy-achievement scores, infer causality, or create unverified rankings/political evaluations. Add deterministic assertions in the existing staging test. Success is a green bounded PR containing a complete non-public candidate, followed by HUMAN_WAIT for explicit human primary-source review. Do not promote reviewed_complete or broaden beyond Morioka.",
-  "target_repository": "M-Osugi1230/jichi-insight",
+  "request_id": "chukei-universe-research-request-001",
+  "campaign_id": "chukei-universe-research-campaign-001",
+  "id_prefix": "ckuniv001",
+  "goal": "Advance Chu-kei's Universe-first company coverage by executing one bounded, non-public Plan Detection research batch without conflicting with open PR #241. Treat the files changed by PR #241, especially operations/plan-detection/registry-v1.json, operations/plan-detection/research-queue-v1.json, operations/plan-detection/verified-overrides-v1.json, operations/plan-detection/primary-reviewed-overrides-v1.json, operations/research-priority/current-v1.json, operations/source-research/**, operations/universe/current-universe-v1.json, package.json, reports/**, and existing site/data summaries as read-only. Use the current research-priority and plan-detection queues only as selection inputs. Select the smallest useful batch of high-priority not_checked companies and research only official or first-party primary sources. Create new non-public candidate evidence under operations/plan-detection/candidates/ade-batch-001/ and, if needed, a narrowly scoped validator under scripts/. Record company identity, source URL, source/document identity, observed plan/version/period/fiscal semantics, checked time, and explicit review-needed state. Never infer no_formal_plan from missing evidence, never promote candidates into current/verified/reviewed status, never change public frontend data, Deep Verification, human-review decisions, production promotion, rankings, or political/evaluative claims. Run deterministic candidate validation and the existing npm run quality:v43 gate before PR. Success is a green bounded PR that produces reusable official-source candidate evidence for later trusted promotion while leaving all published Plan Detection state unchanged.",
+  "target_repository": "M-Osugi1230/chu-kei",
   "base_branch": "main",
   "allowed_path_prefixes": [
-    "data/candidates",
-    "tests"
+    "operations/plan-detection/candidates",
+    "scripts"
   ],
   "execution_phase": "autonomous-development",
   "min_tasks": 1,
-  "max_tasks": 2
+  "max_tasks": 3
 }
