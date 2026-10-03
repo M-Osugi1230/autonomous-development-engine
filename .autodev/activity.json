@@ -230,6 +230,13 @@
       "occurred_at": "2026-10-03T21:53:48.546558+00:00",
       "summary": "Merged Jules PR #418",
       "task_id": "jip15morioka003-001"
+    },
+    {
+      "event_id": "pr-merged-111-0831fcf75791",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-10-03T23:42:13.930700+00:00",
+      "summary": "Merged Jules PR #111",
+      "task_id": "jqdepth001-001"
     }
   ],
   "schema_version": 1
