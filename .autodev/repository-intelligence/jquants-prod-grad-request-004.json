@@ -1,0 +1,1614 @@
+{
+  "content_summary": {
+    "module_count": 19,
+    "modules": [
+      {
+        "byte_count": 0,
+        "content_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "imports": [],
+        "is_test": false,
+        "module": "apps",
+        "parse_ok": true,
+        "path": "apps/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 0,
+        "content_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "imports": [],
+        "is_test": false,
+        "module": "apps.api",
+        "parse_ok": true,
+        "path": "apps/api/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 188,
+        "content_sha": "95cea94e212f6ddf5ce6c8dd543475ed77cb7fd4",
+        "imports": [],
+        "is_test": false,
+        "module": "apps.api.auth",
+        "parse_ok": true,
+        "path": "apps/api/auth.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 12449,
+        "content_sha": "0d3cf7172660a307912db570be11b3f60cf01ede",
+        "imports": [
+          "__future__",
+          "apps.api.config",
+          "engine.company.access",
+          "engine.company.discovery",
+          "engine.company.history",
+          "engine.company.supabase_archive",
+          "fastapi",
+          "math",
+          "pydantic",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "apps.api.company",
+        "parse_ok": true,
+        "path": "apps/api/company.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "ComparePayload"
+          },
+          {
+            "kind": "class",
+            "name": "PeerScopePayload"
+          },
+          {
+            "kind": "class",
+            "name": "RankPayload"
+          },
+          {
+            "kind": "class",
+            "name": "ScreenConditionPayload"
+          },
+          {
+            "kind": "class",
+            "name": "ScreenPayload"
+          },
+          {
+            "kind": "function",
+            "name": "_bad_request"
+          },
+          {
+            "kind": "function",
+            "name": "_conditions"
+          },
+          {
+            "kind": "function",
+            "name": "_json_safe"
+          },
+          {
+            "kind": "function",
+            "name": "_rows"
+          },
+          {
+            "kind": "function",
+            "name": "_scope"
+          },
+          {
+            "kind": "function",
+            "name": "company_by_code"
+          },
+          {
+            "kind": "function",
+            "name": "company_detail"
+          },
+          {
+            "kind": "function",
+            "name": "company_financial_history"
+          },
+          {
+            "kind": "function",
+            "name": "compare"
+          },
+          {
+            "kind": "function",
+            "name": "get_company_history_service"
+          },
+          {
+            "kind": "function",
+            "name": "get_company_service"
+          },
+          {
+            "kind": "function",
+            "name": "metrics"
+          },
+          {
+            "kind": "function",
+            "name": "rank"
+          },
+          {
+            "kind": "function",
+            "name": "research_status"
+          },
+          {
+            "kind": "function",
+            "name": "screen"
+          },
+          {
+            "kind": "function",
+            "name": "search_companies"
+          }
+        ]
+      },
+      {
+        "byte_count": 3211,
+        "content_sha": "e73bc7bbd0e2f1a54b35a5bf924f21aea951e8d1",
+        "imports": [
+          "pathlib",
+          "pydantic_settings"
+        ],
+        "is_test": false,
+        "module": "apps.api.config",
+        "parse_ok": true,
+        "path": "apps/api/config.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "Settings"
+          }
+        ]
+      },
+      {
+        "byte_count": 14284,
+        "content_sha": "29de6a50980917f8e98c3b40b7f5c6cdc2c53ea6",
+        "imports": [
+          "__future__",
+          "apps.api.config",
+          "apps.api.marketdata",
+          "engine.marketdata.charts",
+          "engine.marketdata.codes",
+          "engine.marketdata.supabase_current",
+          "engine.marketdata.yields",
+          "fastapi",
+          "functools",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "apps.api.current_marketdata",
+        "parse_ok": true,
+        "path": "apps/api/current_marketdata.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_normalize_compare_codes"
+          },
+          {
+            "kind": "function",
+            "name": "_rows_by_code"
+          },
+          {
+            "kind": "function",
+            "name": "current_chart_explorer"
+          },
+          {
+            "kind": "function",
+            "name": "current_market_compare"
+          },
+          {
+            "kind": "function",
+            "name": "current_yield_explorer"
+          },
+          {
+            "kind": "function",
+            "name": "get_current_market_store"
+          },
+          {
+            "kind": "function",
+            "name": "get_local_chart_service"
+          },
+          {
+            "kind": "function",
+            "name": "get_local_yield_service"
+          }
+        ]
+      },
+      {
+        "byte_count": 15655,
+        "content_sha": "789ea21403d6da51958d05deba3a2eac6be71c59",
+        "imports": [
+          "apps.api.company",
+          "apps.api.config",
+          "apps.api.current_marketdata",
+          "apps.api.marketdata",
+          "apps.api.research_v2",
+          "apps.api.workspace_v2",
+          "apps.web.router",
+          "datetime",
+          "engine.ingestion.db",
+          "engine.workspace.benefits_v2",
+          "fastapi",
+          "fastapi.responses",
+          "fastapi.staticfiles",
+          "providers.jquants.auth",
+          "zoneinfo"
+        ],
+        "is_test": false,
+        "module": "apps.api.main",
+        "parse_ok": true,
+        "path": "apps/api/main.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_deep_health_failure"
+          },
+          {
+            "kind": "function",
+            "name": "deep_health"
+          },
+          {
+            "kind": "function",
+            "name": "health"
+          },
+          {
+            "kind": "function",
+            "name": "latest_ingestion"
+          },
+          {
+            "kind": "function",
+            "name": "root"
+          }
+        ]
+      },
+      {
+        "byte_count": 4049,
+        "content_sha": "1cb1f6bc6dea4f874ff596e036811f6e00618bdf",
+        "imports": [
+          "__future__",
+          "apps.api.config",
+          "engine.marketdata.earnings_view",
+          "engine.marketdata.supabase_store",
+          "fastapi",
+          "functools",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "apps.api.marketdata",
+        "parse_ok": true,
+        "path": "apps/api/marketdata.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "earnings_explorer"
+          },
+          {
+            "kind": "function",
+            "name": "get_earnings_explorer_service"
+          }
+        ]
+      },
+      {
+        "byte_count": 8409,
+        "content_sha": "b202a6ef753fc4a1af9437f68fb8c0b920baa05b",
+        "imports": [
+          "__future__",
+          "apps.api.config",
+          "engine.workspace.store",
+          "engine.workspace.supabase_store",
+          "fastapi",
+          "functools",
+          "pydantic",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "apps.api.workspace_v2",
+        "parse_ok": true,
+        "path": "apps/api/workspace_v2.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "CompareSetPayload"
+          },
+          {
+            "kind": "class",
+            "name": "SavedSearchPayload"
+          },
+          {
+            "kind": "class",
+            "name": "WatchPayload"
+          },
+          {
+            "kind": "function",
+            "name": "_store_unavailable"
+          },
+          {
+            "kind": "function",
+            "name": "create_saved_search"
+          },
+          {
+            "kind": "function",
+            "name": "delete_saved_search"
+          },
+          {
+            "kind": "function",
+            "name": "delete_watch"
+          },
+          {
+            "kind": "function",
+            "name": "get_workspace_store"
+          },
+          {
+            "kind": "function",
+            "name": "replace_compare_set"
+          },
+          {
+            "kind": "function",
+            "name": "touch_watch"
+          },
+          {
+            "kind": "function",
+            "name": "update_saved_search"
+          },
+          {
+            "kind": "function",
+            "name": "upsert_watch"
+          },
+          {
+            "kind": "function",
+            "name": "workspace_state"
+          }
+        ]
+      },
+      {
+        "byte_count": 34,
+        "content_sha": "ff630f242cfd259406ed1fad735981cb7fbbee9b",
+        "imports": [],
+        "is_test": false,
+        "module": "apps.web",
+        "parse_ok": true,
+        "path": "apps/web/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 3067,
+        "content_sha": "c5ffbb3c5c5ebf647601dc1293b8093c0b5df26c",
+        "imports": [
+          "fastapi",
+          "fastapi.responses",
+          "pathlib"
+        ],
+        "is_test": false,
+        "module": "apps.web.router",
+        "parse_ok": true,
+        "path": "apps/web/router.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_v2_shell"
+          },
+          {
+            "kind": "function",
+            "name": "charts_page"
+          },
+          {
+            "kind": "function",
+            "name": "company_page"
+          },
+          {
+            "kind": "function",
+            "name": "compare_page"
+          },
+          {
+            "kind": "function",
+            "name": "data_status_page"
+          },
+          {
+            "kind": "function",
+            "name": "earnings_page"
+          },
+          {
+            "kind": "function",
+            "name": "explore_advanced_page"
+          },
+          {
+            "kind": "function",
+            "name": "explore_performance_page"
+          },
+          {
+            "kind": "function",
+            "name": "explore_trend_page"
+          },
+          {
+            "kind": "function",
+            "name": "explore_yield_page"
+          },
+          {
+            "kind": "function",
+            "name": "retired_workspace_login"
+          },
+          {
+            "kind": "function",
+            "name": "watch_page"
+          },
+          {
+            "kind": "function",
+            "name": "workspace"
+          },
+          {
+            "kind": "function",
+            "name": "workspace_legacy"
+          },
+          {
+            "kind": "function",
+            "name": "workspace_manifest"
+          },
+          {
+            "kind": "function",
+            "name": "workspace_service_worker"
+          }
+        ]
+      },
+      {
+        "byte_count": 0,
+        "content_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "imports": [],
+        "is_test": false,
+        "module": "engine",
+        "parse_ok": true,
+        "path": "engine/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 0,
+        "content_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "imports": [],
+        "is_test": false,
+        "module": "engine.analytics",
+        "parse_ok": true,
+        "path": "engine/analytics/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 1555,
+        "content_sha": "c0100011cbcdfb9e03e091595a3d351d40c27dee",
+        "imports": [
+          "duckdb",
+          "pathlib"
+        ],
+        "is_test": false,
+        "module": "engine.analytics.catalog",
+        "parse_ok": true,
+        "path": "engine/analytics/catalog.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "refresh_duckdb_catalog"
+          }
+        ]
+      },
+      {
+        "byte_count": 0,
+        "content_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "imports": [],
+        "is_test": false,
+        "module": "engine.backfill",
+        "parse_ok": true,
+        "path": "engine/backfill/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 4853,
+        "content_sha": "c226f2b90d53a453e012e5d951e15f708bbf0d1a",
+        "imports": [
+          "polars"
+        ],
+        "is_test": false,
+        "module": "engine.backfill.contracts",
+        "parse_ok": true,
+        "path": "engine/backfill/contracts.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "enforce_contract"
+          }
+        ]
+      },
+      {
+        "byte_count": 3256,
+        "content_sha": "3ccdd535cdf299a1de42956de0cc6e43f1865a2b",
+        "imports": [
+          "apps.api.config",
+          "engine.ingestion.service",
+          "gzip",
+          "hashlib",
+          "pathlib",
+          "providers.jquants.client"
+        ],
+        "is_test": false,
+        "module": "engine.backfill.service",
+        "parse_ok": true,
+        "path": "engine/backfill/service.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "BackfillIngestionService"
+          }
+        ]
+      },
+      {
+        "byte_count": 8347,
+        "content_sha": "edd6a70ee7dc6ecdff62366dfaf0b41cf92779d5",
+        "imports": [
+          "datetime",
+          "pathlib",
+          "sqlite3",
+          "uuid"
+        ],
+        "is_test": false,
+        "module": "engine.backfill.state",
+        "parse_ok": true,
+        "path": "engine/backfill/state.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "BackfillState"
+          }
+        ]
+      },
+      {
+        "byte_count": 0,
+        "content_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "imports": [],
+        "is_test": false,
+        "module": "engine.backtest",
+        "parse_ok": true,
+        "path": "engine/backtest/__init__.py",
+        "symbols": []
+      }
+    ],
+    "schema_version": 1
+  },
+  "content_summary_fingerprint": "f6e9dfc827ef455f6d61388e06448b9452b753c119096250c09e0bd32008756f",
+  "impact_analysis": {
+    "affected_paths": [],
+    "affected_test_paths": [],
+    "changed_paths": [
+      "tests/test_client_contract.py"
+    ],
+    "entries": [
+      {
+        "distance": 0,
+        "is_test": true,
+        "path": "tests/test_client_contract.py",
+        "reason": "changed",
+        "via_path": null
+      }
+    ],
+    "schema_version": 1,
+    "truncated": false
+  },
+  "impact_analysis_fingerprint": "56969f06c10ce44bc9c7308de163657c24321710b0f7958fe40f86c34424fa27",
+  "planner_context": {
+    "base_branch": "main",
+    "content_summary_fingerprint": "f6e9dfc827ef455f6d61388e06448b9452b753c119096250c09e0bd32008756f",
+    "content_summary_module_count": 19,
+    "dependency_edges_truncated": true,
+    "documentation_paths": [
+      "docs/api-schemas/equities_daily.json",
+      "docs/api-schemas/equities_master.json",
+      "docs/api-schemas/fins_summary.json",
+      "docs/api-schemas/market_calendar.json",
+      "docs/automated_real_data_validation.md",
+      "docs/cloud-native-edinet-details.md",
+      "docs/cloud-native-edinet-sync.md",
+      "docs/cloud-native-market-sync.md",
+      "docs/company_discovery_core.md",
+      "docs/company_financial_history.md",
+      "docs/company_intelligence_data_core.md",
+      "docs/company_intelligence_source_mapping.md",
+      "docs/company_research_access.md",
+      "docs/market_data_preflight.md",
+      "docs/market_data_preflight_trigger.txt",
+      "docs/private_cloud_mobile_workspace.md",
+      "docs/production-graduation.md",
+      "docs/research_workspace_v1.md",
+      "docs/research_workspace_v2_design_freeze.md",
+      "docs/vercel-production-trigger-2026-10-01.md"
+    ],
+    "internal_dependency_edge_count": 12,
+    "internal_dependency_edges": [],
+    "known_file_count_within_trusted_roots": 391,
+    "known_files_truncated": true,
+    "known_files_within_trusted_roots": [
+      "apps/__init__.py",
+      "apps/api/__init__.py",
+      "apps/api/auth.py",
+      "apps/api/company.py",
+      "apps/api/config.py",
+      "apps/api/current_marketdata.py",
+      "apps/api/main.py",
+      "apps/api/marketdata.py",
+      "apps/api/research_v2.py",
+      "apps/api/workspace_v2.py",
+      "apps/web/__init__.py",
+      "apps/web/router.py",
+      "apps/web/static/app-icon.svg",
+      "apps/web/static/charts.css",
+      "apps/web/static/charts.html",
+      "apps/web/static/charts.js",
+      "apps/web/static/compare.css",
+      "apps/web/static/compare.html",
+      "apps/web/static/compare.js",
+      "apps/web/static/earnings.css",
+      "apps/web/static/earnings.html",
+      "apps/web/static/earnings.js",
+      "apps/web/static/financial_history.css",
+      "apps/web/static/financial_history.js",
+      "apps/web/static/index.html",
+      "apps/web/static/login.html",
+      "apps/web/static/manifest.webmanifest",
+      "apps/web/static/mobile.js",
+      "apps/web/static/service-worker.js",
+      "apps/web/static/v2.css",
+      "apps/web/static/v2.html",
+      "apps/web/static/v2.js",
+      "apps/web/static/workspace.css",
+      "apps/web/static/workspace.js",
+      "apps/web/static/yield.css",
+      "apps/web/static/yield.html",
+      "apps/web/static/yield.js",
+      "engine/__init__.py",
+      "engine/analytics/__init__.py",
+      "engine/analytics/catalog.py",
+      "engine/backfill/__init__.py",
+      "engine/backfill/contracts.py",
+      "engine/backfill/service.py",
+      "engine/backfill/state.py",
+      "engine/backtest/__init__.py",
+      "engine/backtest/analytics.py",
+      "engine/backtest/canonical_execution_v3.py",
+      "engine/backtest/capacity.py",
+      "engine/backtest/capacity_boundary_v3.py",
+      "engine/backtest/capacity_feasibility_v3.py",
+      "engine/backtest/capacity_refinement_v3.py",
+      "engine/backtest/capacity_v3.py",
+      "engine/backtest/capacity_v3.py.pre_d3_1.bak",
+      "engine/backtest/core.py",
+      "engine/backtest/core_v2.py",
+      "engine/backtest/execution_robustness_v3.py",
+      "engine/backtest/execution_robustness_v3.py.pre_terminal_patch.bak",
+      "engine/backtest/execution_v3.py",
+      "engine/backtest/execution_v3.py.pre_phase4f.bak",
+      "engine/backtest/liquidity_attribution_v3.py",
+      "engine/backtest/liquidity_stress_v3.py",
+      "engine/backtest/operational_capital_policy_v1.py",
+      "engine/backtest/operational_capital_v3.py",
+      "engine/company/__init__.py",
+      "engine/company/access.py",
+      "engine/company/discovery.py",
+      "engine/company/history.py",
+      "engine/company/metric_catalog.py",
+      "engine/company/quality.py",
+      "engine/company/snapshot.py",
+      "engine/company/source_contract.py",
+      "engine/company/supabase_archive.py",
+      "engine/features/__init__.py",
+      "engine/features/cross_sectional.py",
+      "engine/features/fundamental_pit.py",
+      "engine/features/security_daily.py",
+      "engine/features/store.py",
+      "engine/ingestion/__init__.py",
+      "engine/ingestion/db.py",
+      "engine/ingestion/raw_reader.py",
+      "engine/ingestion/raw_store.py",
+      "engine/ingestion/service.py",
+      "engine/marketdata/__init__.py",
+      "engine/marketdata/benefit_details.py",
+      "engine/marketdata/benefit_parser.py",
+      "engine/marketdata/charts.py",
+      "engine/marketdata/cloud_charts.py",
+      "engine/marketdata/cloud_earnings.py",
+      "engine/marketdata/cloud_schedule.py",
+      "engine/marketdata/codes.py",
+      "engine/marketdata/detail_queue.py",
+      "engine/marketdata/dividend_history.py",
+      "engine/marketdata/dividend_yield.py",
+      "engine/marketdata/earnings.py",
+      "engine/marketdata/earnings_view.py",
+      "engine/marketdata/events.py",
+      "engine/marketdata/jquants_baseline.py",
+      "engine/marketdata/lifecycle.py",
+      "engine/marketdata/master_sync.py",
+      "engine/marketdata/prices.py",
+      "engine/marketdata/quarterly.py",
+      "engine/marketdata/supabase_current.py",
+      "engine/marketdata/supabase_store.py",
+      "engine/marketdata/yields.py",
+      "engine/normalization/__init__.py",
+      "engine/normalization/conversion.py",
+      "engine/normalization/curators.py",
+      "engine/normalization/identity.py",
+      "engine/normalization/parquet_store.py",
+      "engine/normalization/schema_registry.py",
+      "engine/quality/__init__.py",
+      "engine/quality/schema_quality.py",
+      "engine/quality/snapshot_quality.py",
+      "engine/research/__init__.py",
+      "engine/research/diagnostics.py",
+      "engine/research/evidence.py",
+      "engine/research/factor.py",
+      "engine/research/portfolio.py",
+      "engine/research/robustness.py",
+      "engine/universes/__init__.py",
+      "engine/universes/default.py",
+      "engine/workspace/__init__.py",
+      "engine/workspace/advanced_v2.py",
+      "engine/workspace/benefits_v2.py",
+      "engine/workspace/data_status_v2.py",
+      "engine/workspace/historical_v2.py",
+      "engine/workspace/metric_catalog_v2.py",
+      "engine/workspace/performance_v2.py",
+      "engine/workspace/price_v2.py",
+      "engine/workspace/store.py",
+      "engine/workspace/supabase_historical_v2.py",
+      "engine/workspace/supabase_price_v2.py",
+      "engine/workspace/supabase_store.py",
+      "engine/workspace/yield_v2.py",
+      "providers/__init__.py",
+      "providers/edinetdb/__init__.py",
+      "providers/edinetdb/client.py",
+      "providers/jpx/__init__.py",
+      "providers/jpx/listed_companies.py",
+      "providers/jquants/__init__.py",
+      "providers/jquants/auth.py",
+      "providers/jquants/client.py",
+      "providers/jquants/rate_limiter.py",
+      "providers/yahoo_dividend/__init__.py",
+      "providers/yahoo_dividend/client.py",
+      "providers/yahoo_price/__init__.py",
+      "providers/yahoo_price/client.py",
+      "scripts/__init__.py",
+      "scripts/analyze_execution_capacity_refined_v3.py",
+      "scripts/analyze_liquidity_attribution_v3.py",
+      "scripts/audit_backfill.py",
+      "scripts/audit_backtest_execution_integrity.py",
+      "scripts/audit_company_intelligence_sources.py",
+      "scripts/audit_factor_metric_consistency.py",
+      "scripts/audit_fundamental_pit.py",
+      "scripts/audit_identity_continuity.py",
+      "scripts/audit_identity_registry.py",
+      "scripts/audit_unresolved_financial_identity.py",
+      "scripts/backfill_status.py",
+      "scripts/bootstrap_jquants_runner.sh",
+      "scripts/build_cloud_serving_bundle_milestone6.py",
+      "scripts/build_company_snapshot.py",
+      "scripts/build_cross_sectional_features.py",
+      "scripts/build_default_universe.py",
+      "scripts/build_fundamental_features.py",
+      "scripts/build_security_features.py",
+      "scripts/capture_schemas.sh",
+      "scripts/check_credentials.py",
+      "scripts/ensure_price_history_v2.py",
+      "scripts/fetch_master.py",
+      "scripts/finalize_phase3_research.py",
+      "scripts/inspect_product_categories.py",
+      "scripts/inspect_schemas.py",
+      "scripts/phase1_b2_snapshot.py",
+      "scripts/phase1_backfill.py",
+      "scripts/phase1_probe.py",
+      "scripts/preflight_market_data.py",
+      "scripts/probe_free_window.py",
+      "scripts/recurate_financial_dividends.py",
+      "scripts/resolve_cloud_earnings_budget.py",
+      "scripts/run_backtest_benchmark.py",
+      "scripts/run_canonical_execution_v3.py",
+      "scripts/run_capacity_boundary_refinement_v3.py",
+      "scripts/run_capacity_execution_analysis.py",
+      "scripts/run_capacity_feasibility_map_v3.py",
+      "scripts/run_execution_buy_retry_sensitivity_v3.py",
+      "scripts/run_execution_capacity_refined_v3.py",
+      "scripts/run_execution_capacity_v3.py",
+      "scripts/run_execution_robustness_v3.py",
+      "scripts/run_execution_robustness_v3.py.pre_terminal_patch.bak",
+      "scripts/run_factor_diagnostics.py",
+      "scripts/run_factor_portfolio.py",
+      "scripts/run_factor_research.py",
+      "scripts/run_factor_robustness.py",
+      "scripts/run_liquidity_stress_envelope_v3.py",
+      "scripts/run_operational_capital_envelope_v3.py",
+      "scripts/run_operational_capital_policy_v1.py",
+      "scripts/run_portfolio_feasibility_frontier.py",
+      "scripts/run_portfolio_feasibility_refined.py",
+      "scripts/run_stateful_backtest.py"
+    ],
+    "manifest_paths": [
+      "pyproject.toml"
+    ],
+    "python_module_summaries": [
+      {
+        "byte_count": 0,
+        "content_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "imports": [],
+        "is_test": false,
+        "module": "apps",
+        "parse_ok": true,
+        "path": "apps/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 0,
+        "content_sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "imports": [],
+        "is_test": false,
+        "module": "apps.api",
+        "parse_ok": true,
+        "path": "apps/api/__init__.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 188,
+        "content_sha": "95cea94e212f6ddf5ce6c8dd543475ed77cb7fd4",
+        "imports": [],
+        "is_test": false,
+        "module": "apps.api.auth",
+        "parse_ok": true,
+        "path": "apps/api/auth.py",
+        "symbols": []
+      },
+      {
+        "byte_count": 12449,
+        "content_sha": "0d3cf7172660a307912db570be11b3f60cf01ede",
+        "imports": [
+          "__future__",
+          "apps.api.config",
+          "engine.company.access",
+          "engine.company.discovery",
+          "engine.company.history",
+          "engine.company.supabase_archive",
+          "fastapi",
+          "math",
+          "pydantic",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "apps.api.company",
+        "parse_ok": true,
+        "path": "apps/api/company.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "ComparePayload"
+          },
+          {
+            "kind": "class",
+            "name": "PeerScopePayload"
+          },
+          {
+            "kind": "class",
+            "name": "RankPayload"
+          },
+          {
+            "kind": "class",
+            "name": "ScreenConditionPayload"
+          },
+          {
+            "kind": "class",
+            "name": "ScreenPayload"
+          },
+          {
+            "kind": "function",
+            "name": "_bad_request"
+          },
+          {
+            "kind": "function",
+            "name": "_conditions"
+          },
+          {
+            "kind": "function",
+            "name": "_json_safe"
+          },
+          {
+            "kind": "function",
+            "name": "_rows"
+          },
+          {
+            "kind": "function",
+            "name": "_scope"
+          },
+          {
+            "kind": "function",
+            "name": "company_by_code"
+          },
+          {
+            "kind": "function",
+            "name": "company_detail"
+          },
+          {
+            "kind": "function",
+            "name": "company_financial_history"
+          },
+          {
+            "kind": "function",
+            "name": "compare"
+          },
+          {
+            "kind": "function",
+            "name": "get_company_history_service"
+          },
+          {
+            "kind": "function",
+            "name": "get_company_service"
+          },
+          {
+            "kind": "function",
+            "name": "metrics"
+          },
+          {
+            "kind": "function",
+            "name": "rank"
+          },
+          {
+            "kind": "function",
+            "name": "research_status"
+          },
+          {
+            "kind": "function",
+            "name": "screen"
+          },
+          {
+            "kind": "function",
+            "name": "search_companies"
+          }
+        ]
+      },
+      {
+        "byte_count": 3211,
+        "content_sha": "e73bc7bbd0e2f1a54b35a5bf924f21aea951e8d1",
+        "imports": [
+          "pathlib",
+          "pydantic_settings"
+        ],
+        "is_test": false,
+        "module": "apps.api.config",
+        "parse_ok": true,
+        "path": "apps/api/config.py",
+        "symbols": [
+          {
+            "kind": "class",
+            "name": "Settings"
+          }
+        ]
+      },
+      {
+        "byte_count": 14284,
+        "content_sha": "29de6a50980917f8e98c3b40b7f5c6cdc2c53ea6",
+        "imports": [
+          "__future__",
+          "apps.api.config",
+          "apps.api.marketdata",
+          "engine.marketdata.charts",
+          "engine.marketdata.codes",
+          "engine.marketdata.supabase_current",
+          "engine.marketdata.yields",
+          "fastapi",
+          "functools",
+          "typing"
+        ],
+        "is_test": false,
+        "module": "apps.api.current_marketdata",
+        "parse_ok": true,
+        "path": "apps/api/current_marketdata.py",
+        "symbols": [
+          {
+            "kind": "function",
+            "name": "_normalize_compare_codes"
+          },
+          {
+            "kind": "function",
+            "name": "_rows_by_code"
+          },
+          {
+            "kind": "function",
+            "name": "current_chart_explorer"
+          },
+          {
+            "kind": "function",
+            "name": "current_market_compare"
+          },
+          {
+            "kind": "function",
+            "name": "current_yield_explorer"
+          },
+          {
+            "kind": "function",
+            "name": "get_current_market_store"
+          },
+          {
+            "kind": "function",
+            "name": "get_local_chart_service"
+          },
+          {
+            "kind": "function",
+            "name": "get_local_yield_service"
+          }
+        ]
+      }
+    ],
+    "python_module_summaries_truncated": true,
+    "relationship_graph_fingerprint": "f653bbd683ec97c83cd020afab8241fb93305ac6446f6d46313e0fa4691cb730",
+    "repository": "M-Osugi1230/jquants-research-studio",
+    "schema_version": 1,
+    "snapshot_fingerprint": "a022774cedbe0ce450930ec48268b90aac28570c366ebf16fb5a56660d97816d",
+    "source_roots": [],
+    "source_sha": "c56fb20b881c8917df311167edb5482c2d15d21e",
+    "test_roots": [
+      "tests"
+    ],
+    "test_source_link_count": 0,
+    "test_source_links": [],
+    "test_source_links_truncated": false,
+    "trusted_writable_roots": [
+      "apps",
+      "engine",
+      "providers",
+      "scripts",
+      "supabase",
+      "tests"
+    ],
+    "workflow_paths": [
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/cloud-chart-refresh.yml",
+      ".github/workflows/cloud-deploy.yml",
+      ".github/workflows/cloud-earnings-fallback.yml",
+      ".github/workflows/market-data-preflight.yml",
+      ".github/workflows/market-data-sync.yml",
+      ".github/workflows/real-data.yml"
+    ]
+  },
+  "planner_context_fingerprint": "fa6498a901164c6c32713d1509c18e12d0d1b721ff544b5421fe9c938de12e2a",
+  "relationship_graph": {
+    "dependency_edge_count": 12,
+    "dependency_edges": [
+      {
+        "kind": "import",
+        "source_path": "apps/api/company.py",
+        "target_path": "apps/api/config.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/current_marketdata.py",
+        "target_path": "apps/api/config.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/current_marketdata.py",
+        "target_path": "apps/api/marketdata.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/main.py",
+        "target_path": "apps/api/company.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/main.py",
+        "target_path": "apps/api/config.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/main.py",
+        "target_path": "apps/api/current_marketdata.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/main.py",
+        "target_path": "apps/api/marketdata.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/main.py",
+        "target_path": "apps/api/workspace_v2.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/main.py",
+        "target_path": "apps/web/router.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/marketdata.py",
+        "target_path": "apps/api/config.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "apps/api/workspace_v2.py",
+        "target_path": "apps/api/config.py"
+      },
+      {
+        "kind": "import",
+        "source_path": "engine/backfill/service.py",
+        "target_path": "apps/api/config.py"
+      }
+    ],
+    "schema_version": 1,
+    "test_source_link_count": 0,
+    "test_source_links": []
+  },
+  "relationship_graph_fingerprint": "f653bbd683ec97c83cd020afab8241fb93305ac6446f6d46313e0fa4691cb730",
+  "schema_version": 1,
+  "snapshot": {
+    "base_branch": "main",
+    "documentation_paths": [
+      "docs/api-schemas/equities_daily.json",
+      "docs/api-schemas/equities_master.json",
+      "docs/api-schemas/fins_summary.json",
+      "docs/api-schemas/market_calendar.json",
+      "docs/automated_real_data_validation.md",
+      "docs/cloud-native-edinet-details.md",
+      "docs/cloud-native-edinet-sync.md",
+      "docs/cloud-native-market-sync.md",
+      "docs/company_discovery_core.md",
+      "docs/company_financial_history.md",
+      "docs/company_intelligence_data_core.md",
+      "docs/company_intelligence_source_mapping.md",
+      "docs/company_research_access.md",
+      "docs/market_data_preflight.md",
+      "docs/market_data_preflight_trigger.txt",
+      "docs/private_cloud_mobile_workspace.md",
+      "docs/production-graduation.md",
+      "docs/research_workspace_v1.md",
+      "docs/research_workspace_v2_design_freeze.md",
+      "docs/vercel-production-trigger-2026-10-01.md"
+    ],
+    "manifest_paths": [
+      "pyproject.toml"
+    ],
+    "path_count": 428,
+    "paths": [
+      ".env.example",
+      ".github/trusted/ade_remote_gate.py",
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/cloud-chart-refresh.yml",
+      ".github/workflows/cloud-deploy.yml",
+      ".github/workflows/cloud-earnings-fallback.yml",
+      ".github/workflows/market-data-preflight.yml",
+      ".github/workflows/market-data-sync.yml",
+      ".github/workflows/real-data.yml",
+      ".gitignore",
+      "app.py",
+      "apps/__init__.py",
+      "apps/api/__init__.py",
+      "apps/api/auth.py",
+      "apps/api/company.py",
+      "apps/api/config.py",
+      "apps/api/current_marketdata.py",
+      "apps/api/main.py",
+      "apps/api/marketdata.py",
+      "apps/api/research_v2.py",
+      "apps/api/workspace_v2.py",
+      "apps/web/__init__.py",
+      "apps/web/router.py",
+      "apps/web/static/app-icon.svg",
+      "apps/web/static/charts.css",
+      "apps/web/static/charts.html",
+      "apps/web/static/charts.js",
+      "apps/web/static/compare.css",
+      "apps/web/static/compare.html",
+      "apps/web/static/compare.js",
+      "apps/web/static/earnings.css",
+      "apps/web/static/earnings.html",
+      "apps/web/static/earnings.js",
+      "apps/web/static/financial_history.css",
+      "apps/web/static/financial_history.js",
+      "apps/web/static/index.html",
+      "apps/web/static/login.html",
+      "apps/web/static/manifest.webmanifest",
+      "apps/web/static/mobile.js",
+      "apps/web/static/service-worker.js",
+      "apps/web/static/v2.css",
+      "apps/web/static/v2.html",
+      "apps/web/static/v2.js",
+      "apps/web/static/workspace.css",
+      "apps/web/static/workspace.js",
+      "apps/web/static/yield.css",
+      "apps/web/static/yield.html",
+      "apps/web/static/yield.js",
+      "docs/api-schemas/equities_daily.json",
+      "docs/api-schemas/equities_master.json",
+      "docs/api-schemas/fins_summary.json",
+      "docs/api-schemas/market_calendar.json",
+      "docs/automated_real_data_validation.md",
+      "docs/cloud-native-edinet-details.md",
+      "docs/cloud-native-edinet-sync.md",
+      "docs/cloud-native-market-sync.md",
+      "docs/company_discovery_core.md",
+      "docs/company_financial_history.md",
+      "docs/company_intelligence_data_core.md",
+      "docs/company_intelligence_source_mapping.md",
+      "docs/company_research_access.md",
+      "docs/market_data_preflight.md",
+      "docs/market_data_preflight_trigger.txt",
+      "docs/private_cloud_mobile_workspace.md",
+      "docs/production-graduation.md",
+      "docs/research_workspace_v1.md",
+      "docs/research_workspace_v2_design_freeze.md",
+      "docs/vercel-production-trigger-2026-10-01.md",
+      "engine/__init__.py",
+      "engine/analytics/__init__.py",
+      "engine/analytics/catalog.py",
+      "engine/backfill/__init__.py",
+      "engine/backfill/contracts.py",
+      "engine/backfill/service.py",
+      "engine/backfill/state.py",
+      "engine/backtest/__init__.py",
+      "engine/backtest/analytics.py",
+      "engine/backtest/canonical_execution_v3.py",
+      "engine/backtest/capacity.py",
+      "engine/backtest/capacity_boundary_v3.py",
+      "engine/backtest/capacity_feasibility_v3.py",
+      "engine/backtest/capacity_refinement_v3.py",
+      "engine/backtest/capacity_v3.py",
+      "engine/backtest/capacity_v3.py.pre_d3_1.bak",
+      "engine/backtest/core.py",
+      "engine/backtest/core_v2.py",
+      "engine/backtest/execution_robustness_v3.py",
+      "engine/backtest/execution_robustness_v3.py.pre_terminal_patch.bak",
+      "engine/backtest/execution_v3.py",
+      "engine/backtest/execution_v3.py.pre_phase4f.bak",
+      "engine/backtest/liquidity_attribution_v3.py",
+      "engine/backtest/liquidity_stress_v3.py",
+      "engine/backtest/operational_capital_policy_v1.py",
+      "engine/backtest/operational_capital_v3.py",
+      "engine/company/__init__.py",
+      "engine/company/access.py",
+      "engine/company/discovery.py",
+      "engine/company/history.py",
+      "engine/company/metric_catalog.py",
+      "engine/company/quality.py",
+      "engine/company/snapshot.py",
+      "engine/company/source_contract.py",
+      "engine/company/supabase_archive.py",
+      "engine/features/__init__.py",
+      "engine/features/cross_sectional.py",
+      "engine/features/fundamental_pit.py",
+      "engine/features/security_daily.py",
+      "engine/features/store.py",
+      "engine/ingestion/__init__.py",
+      "engine/ingestion/db.py",
+      "engine/ingestion/raw_reader.py",
+      "engine/ingestion/raw_store.py",
+      "engine/ingestion/service.py",
+      "engine/marketdata/__init__.py",
+      "engine/marketdata/benefit_details.py",
+      "engine/marketdata/benefit_parser.py",
+      "engine/marketdata/charts.py",
+      "engine/marketdata/cloud_charts.py",
+      "engine/marketdata/cloud_earnings.py",
+      "engine/marketdata/cloud_schedule.py",
+      "engine/marketdata/codes.py",
+      "engine/marketdata/detail_queue.py",
+      "engine/marketdata/dividend_history.py",
+      "engine/marketdata/dividend_yield.py",
+      "engine/marketdata/earnings.py",
+      "engine/marketdata/earnings_view.py",
+      "engine/marketdata/events.py",
+      "engine/marketdata/jquants_baseline.py",
+      "engine/marketdata/lifecycle.py",
+      "engine/marketdata/master_sync.py",
+      "engine/marketdata/prices.py",
+      "engine/marketdata/quarterly.py",
+      "engine/marketdata/supabase_current.py",
+      "engine/marketdata/supabase_store.py",
+      "engine/marketdata/yields.py",
+      "engine/normalization/__init__.py",
+      "engine/normalization/conversion.py",
+      "engine/normalization/curators.py",
+      "engine/normalization/identity.py",
+      "engine/normalization/parquet_store.py",
+      "engine/normalization/schema_registry.py",
+      "engine/quality/__init__.py",
+      "engine/quality/schema_quality.py",
+      "engine/quality/snapshot_quality.py",
+      "engine/research/__init__.py",
+      "engine/research/diagnostics.py",
+      "engine/research/evidence.py",
+      "engine/research/factor.py",
+      "engine/research/portfolio.py",
+      "engine/research/robustness.py",
+      "engine/universes/__init__.py",
+      "engine/universes/default.py",
+      "engine/workspace/__init__.py",
+      "engine/workspace/advanced_v2.py",
+      "engine/workspace/benefits_v2.py",
+      "engine/workspace/data_status_v2.py",
+      "engine/workspace/historical_v2.py",
+      "engine/workspace/metric_catalog_v2.py",
+      "engine/workspace/performance_v2.py",
+      "engine/workspace/price_v2.py",
+      "engine/workspace/store.py",
+      "engine/workspace/supabase_historical_v2.py",
+      "engine/workspace/supabase_price_v2.py",
+      "engine/workspace/supabase_store.py",
+      "engine/workspace/yield_v2.py",
+      "providers/__init__.py",
+      "providers/edinetdb/__init__.py",
+      "providers/edinetdb/client.py",
+      "providers/jpx/__init__.py",
+      "providers/jpx/listed_companies.py",
+      "providers/jquants/__init__.py",
+      "providers/jquants/auth.py",
+      "providers/jquants/client.py",
+      "providers/jquants/rate_limiter.py",
+      "providers/yahoo_dividend/__init__.py",
+      "providers/yahoo_dividend/client.py",
+      "providers/yahoo_price/__init__.py",
+      "providers/yahoo_price/client.py",
+      "pyproject.toml",
+      "pytest.ini",
+      "scripts/__init__.py",
+      "scripts/analyze_execution_capacity_refined_v3.py",
+      "scripts/analyze_liquidity_attribution_v3.py",
+      "scripts/audit_backfill.py",
+      "scripts/audit_backtest_execution_integrity.py",
+      "scripts/audit_company_intelligence_sources.py",
+      "scripts/audit_factor_metric_consistency.py",
+      "scripts/audit_fundamental_pit.py",
+      "scripts/audit_identity_continuity.py",
+      "scripts/audit_identity_registry.py",
+      "scripts/audit_unresolved_financial_identity.py",
+      "scripts/backfill_status.py",
+      "scripts/bootstrap_jquants_runner.sh",
+      "scripts/build_cloud_serving_bundle_milestone6.py",
+      "scripts/build_company_snapshot.py",
+      "scripts/build_cross_sectional_features.py",
+      "scripts/build_default_universe.py",
+      "scripts/build_fundamental_features.py",
+      "scripts/build_security_features.py",
+      "scripts/capture_schemas.sh",
+      "scripts/check_credentials.py",
+      "scripts/ensure_price_history_v2.py",
+      "scripts/fetch_master.py",
+      "scripts/finalize_phase3_research.py",
+      "scripts/inspect_product_categories.py",
+      "scripts/inspect_schemas.py",
+      "scripts/phase1_b2_snapshot.py",
+      "scripts/phase1_backfill.py",
+      "scripts/phase1_probe.py",
+      "scripts/preflight_market_data.py",
+      "scripts/probe_free_window.py",
+      "scripts/recurate_financial_dividends.py",
+      "scripts/resolve_cloud_earnings_budget.py",
+      "scripts/run_backtest_benchmark.py",
+      "scripts/run_canonical_execution_v3.py",
+      "scripts/run_capacity_boundary_refinement_v3.py",
+      "scripts/run_capacity_execution_analysis.py",
+      "scripts/run_capacity_feasibility_map_v3.py",
+      "scripts/run_execution_buy_retry_sensitivity_v3.py",
+      "scripts/run_execution_capacity_refined_v3.py",
+      "scripts/run_execution_capacity_v3.py",
+      "scripts/run_execution_robustness_v3.py",
+      "scripts/run_execution_robustness_v3.py.pre_terminal_patch.bak",
+      "scripts/run_factor_diagnostics.py",
+      "scripts/run_factor_portfolio.py",
+      "scripts/run_factor_research.py",
+      "scripts/run_factor_robustness.py",
+      "scripts/run_liquidity_stress_envelope_v3.py",
+      "scripts/run_operational_capital_envelope_v3.py",
+      "scripts/run_operational_capital_policy_v1.py",
+      "scripts/run_portfolio_feasibility_frontier.py",
+      "scripts/run_portfolio_feasibility_refined.py",
+      "scripts/run_stateful_backtest.py",
+      "scripts/run_stateful_backtest_v2.py",
+      "scripts/run_stateful_execution_v3.py",
+      "scripts/sync_cloud_charts.py",
+      "scripts/sync_cloud_earnings.py",
+      "scripts/sync_market_data.py",
+      "scripts/validate_company_discovery_milestone2.py",
+      "scripts/validate_company_financial_history_milestone5.py",
+      "scripts/validate_company_intelligence_milestone1.py",
+      "scripts/validate_company_research_access_milestone3.py",
+      "scripts/validate_private_cloud_mobile_milestone6.py",
+      "scripts/validate_research_workspace_milestone4.py",
+      "scripts/validate_vercel_build_contract.py",
+      "scripts/validate_workspace_v2_acceptance.py",
+      "scripts/validate_workspace_v2_foundation.py",
+      "scripts/validate_workspace_v2_product_flow.py",
+      "storage/cloud/.gitkeep",
+      "storage/raw/.gitkeep",
+      "supabase/functions/cloud-edinet-details/deno.json",
+      "supabase/functions/cloud-edinet-details/index.ts",
+      "supabase/functions/cloud-edinet-events/deno.json",
+      "supabase/functions/cloud-edinet-events/index.ts",
+      "supabase/functions/cloud-jpx-master/deno.json",
+      "supabase/functions/cloud-jpx-master/index.ts",
+      "supabase/functions/cloud-research-archive/deno.json",
+      "supabase/functions/cloud-research-archive/index.ts",
+      "supabase/functions/cloud-research-history/deno.json",
+      "supabase/functions/cloud-research-history/index.ts",
+      "supabase/functions/cloud-yield-sync/deno.json",
+      "supabase/functions/cloud-yield-sync/index.ts",
+      "supabase/migrations/202609250002_saved_search_research_as_of.sql",
+      "supabase/migrations/20260925123633_workspace_v2_private_store.sql",
+      "supabase/migrations/20260925123725_workspace_v2_private_store_deny_browser_access.sql",
+      "supabase/migrations/20260927161433_jq_market_earnings_read_model.sql",
+      "supabase/migrations/20260928151000_cloud_earnings_fallback.sql",
+      "supabase/migrations/20260928184500_jq_market_yield_charts.sql",
+      "supabase/migrations/20260929231541_cloud_security_master_foundation.sql",
+      "supabase/migrations/20260929231719_align_cloud_security_master_with_jpx.sql",
+      "supabase/migrations/20260929231854_schedule_cloud_jpx_master.sql",
+      "supabase/migrations/20260929232012_cloud_native_chart_finalizer.sql",
+      "supabase/migrations/20260929232654_seed_cloud_yield_from_security_master.sql",
+      "supabase/migrations/20260929233429_harden_cloud_master_lifecycle.sql",
+      "supabase/migrations/20260929234056_cloud_benefit_event_safety.sql",
+      "supabase/migrations/20260930003706_fix_market_finalizer_safe_updates.sql",
+      "supabase/migrations/20260930020000_jq_market_yield_effective_dividend.sql",
+      "supabase/migrations/20260930050158_cap_edinet_detail_free_plan_batch.sql",
+      "supabase/migrations/20260930083331_research_cloud_archive_foundation.sql",
+      "supabase/migrations/20260930083848_schedule_research_cloud_archive.sql",
+      "supabase/migrations/20260930084128_harden_research_cloud_archive_worker.sql",
+      "supabase/migrations/20260930084403_secure_research_archive_cron.sql",
+      "supabase/migrations/20260930090000_cloud_native_yield_sync.sql",
+      "supabase/migrations/20260930090620_research_historical_archive_foundation.sql",
+      "supabase/migrations/20260930090752_research_history_walk_bounds.sql",
+      "supabase/migrations/20260930093000_cloud_native_edinet_event_foundation.sql",
+      "supabase/migrations/20260930093500_schedule_cloud_edinet_events.sql",
+      "supabase/migrations/20260930100000_cloud_native_edinet_earnings_foundation.sql",
+      "supabase/migrations/20260930100500_schedule_cloud_edinet_details.sql",
+      "supabase/migrations/20260930101000_align_cloud_yield_split_safety.sql",
+      "supabase/migrations/20260930111013_expand_research_discovery_terminal_suffixes.sql",
+      "supabase/migrations/20260930111144_secure_research_history_worker.sql",
+      "supabase/migrations/20260930111303_schedule_secure_research_history_backfill.sql",
+      "supabase/migrations/20260930111640_allow_history_seed_at_verified_snapshot_cardinality.sql",
+      "supabase/migrations/20260930112044_atomic_research_history_walk_claims.sql",
+      "supabase/migrations/20260930112542_accelerate_research_archive_backfills.sql",
+      "supabase/migrations/20260930113150_resolve_albalink_core_market_entry_boundary.sql",
+      "supabase/migrations/20260930113637_atomic_research_archive_hydrate_claims.sql",
+      "supabase/migrations/20260930134914_retire_completed_research_backfill_cron.sql",
+      "supabase/migrations/20260930135107_guard_current_market_publication_quality.sql",
+      "supabase/migrations/20260930170656_stabilize_yield_cycle_scheduler.sql",
+      "supabase/migrations/20260930171330_add_platform_operational_health.sql",
+      "supabase/migrations/20260930171729_resolve_event_only_benefit_queue.sql",
+      "supabase/migrations/20260930172131_serialize_cloud_yield_invocations.sql",
+      "supabase/migrations/20260930173352_prevent_yahoo_snapshot_date_regression.sql",
+      "supabase/migrations/20260930225344_accelerate_yahoo_chart_finalizer.sql",
+      "supabase/migrations/20260930225702_batch_chart_finalization.sql",
+      "supabase/migrations/20260930230605_optimize_price_history_prune.sql",
+      "supabase/migrations/20261001144742_add_research_price_coverage_summary.sql",
+      "supabase/migrations/20261001160948_add_research_latest_prices_rpc.sql",
+      "supabase/migrations/20261002114500_move_earnings_fallback_to_supabase.sql",
+      "tests/test_auth.py",
+      "tests/test_backfill_contracts.py",
+      "tests/test_backfill_state.py",
+      "tests/test_backfill_status.py",
+      "tests/test_backtest_analytics.py",
+      "tests/test_backtest_capacity.py",
+      "tests/test_calendar_semantics.py",
+      "tests/test_canonical_execution_v3.py",
+      "tests/test_capacity_boundary_v3.py",
+      "tests/test_capacity_feasibility_v3.py",
+      "tests/test_client_contract.py",
+      "tests/test_cloud_deploy_workflow.py",
+      "tests/test_cloud_earnings_fallback.py",
+      "tests/test_cloud_earnings_schedule.py",
+      "tests/test_cloud_native_edinet_details.py",
+      "tests/test_cloud_native_edinet_sync.py",
+      "tests/test_cloud_native_market_sync.py",
+      "tests/test_cloud_research_archive.py",
+      "tests/test_cloud_research_history.py",
+      "tests/test_cloud_security_master.py",
+      "tests/test_cloud_serving_bundle.py",
+      "tests/test_company_access.py",
+      "tests/test_company_api.py",
+      "tests/test_company_discovery.py",
+      "tests/test_company_history.py",
+      "tests/test_company_history_api.py",
+      "tests/test_company_metric_catalog.py",
+      "tests/test_company_quality.py",
+      "tests/test_company_snapshot.py",
+      "tests/test_company_source_contract.py",
+      "tests/test_conversion.py",
+      "tests/test_cross_sectional_features.py",
+      "tests/test_curated_calendar.py",
+      "tests/test_current_marketdata_api.py",
+      "tests/test_deep_health.py",
+      "tests/test_default_universe.py",
+      "tests/test_dividend_history_runtime_boundary.py",
+      "tests/test_dividend_history_store.py",
+      "tests/test_dividend_yield_core.py",
+      "tests/test_edinetdb_ir_client.py",
+      "tests/test_execution_buy_retry_v3.py",
+      "tests/test_execution_capacity_refinement_v3.py",
+      "tests/test_execution_capacity_v3.py",
+      "tests/test_execution_robustness_v3.py",
+      "tests/test_execution_robustness_v3.py.pre_terminal_patch.bak",
+      "tests/test_factor_diagnostics.py",
+      "tests/test_factor_evidence.py",
+      "tests/test_factor_portfolio.py",
+      "tests/test_factor_research.py",
+      "tests/test_factor_robustness.py",
+      "tests/test_financial_nullable_dates.py",
+      "tests/test_fundamental_pit.py",
+      "tests/test_health.py",
+      "tests/test_identity_registry.py",
+      "tests/test_identity_registry_v2.py",
+      "tests/test_ingestion_db.py",
+      "tests/test_jpx_listed_companies.py",
+      "tests/test_liquidity_attribution_v3.py",
+      "tests/test_liquidity_stress_v3.py",
+      "tests/test_marketdata_api.py",
+      "tests/test_marketdata_benefit_details.py",
+      "tests/test_marketdata_benefit_parser.py",
+      "tests/test_marketdata_charts.py",
+      "tests/test_marketdata_cloud_charts.py",
+      "tests/test_marketdata_codes.py",
+      "tests/test_marketdata_detail_queue.py",
+      "tests/test_marketdata_earnings.py",
+      "tests/test_marketdata_earnings_view.py",
+      "tests/test_marketdata_events.py",
+      "tests/test_marketdata_jquants_baseline.py",
+      "tests/test_marketdata_lifecycle.py",
+      "tests/test_marketdata_master_sync.py",
+      "tests/test_marketdata_prices.py",
+      "tests/test_marketdata_providers.py",
+      "tests/test_marketdata_quarterly.py",
+      "tests/test_marketdata_supabase_current.py",
+      "tests/test_marketdata_supabase_store.py",
+      "tests/test_marketdata_sync_workflow.py",
+      "tests/test_marketdata_yields.py",
+      "tests/test_operational_capital_policy_v1.py",
+      "tests/test_operational_capital_v3.py",
+      "tests/test_platform_operational_health.py",
+      "tests/test_raw_store.py",
+      "tests/test_real_data_workflow.py",
+      "tests/test_research_supabase_archive.py",
+      "tests/test_research_supabase_historical.py",
+      "tests/test_research_supabase_price.py",
+      "tests/test_research_v2_contract.py",
+      "tests/test_schema_registry.py",
+      "tests/test_security_features.py",
+      "tests/test_stateful_backtest.py",
+      "tests/test_stateful_backtest_v2.py",
+      "tests/test_stateful_execution_v3.py",
+      "tests/test_workspace.py",
+      "tests/test_workspace_acceptance_v2.py",
+      "tests/test_workspace_advanced_v2.py",
+      "tests/test_workspace_api_v2.py",
+      "tests/test_workspace_auth.py",
+      "tests/test_workspace_benefits_v2.py",
+      "tests/test_workspace_config_v2.py",
+      "tests/test_workspace_data_status_v2.py",
+      "tests/test_workspace_historical_v2.py",
+      "tests/test_workspace_metric_catalog_v2.py",
+      "tests/test_workspace_overview_v2.py",
+      "tests/test_workspace_performance_api_v2.py",
+      "tests/test_workspace_performance_v2.py",
+      "tests/test_workspace_price_api_v2.py",
+      "tests/test_workspace_price_v2.py",
+      "tests/test_workspace_store_v2.py",
+      "tests/test_workspace_supabase_migrations_v2.py",
+      "tests/test_workspace_supabase_store_v2.py",
+      "tests/test_workspace_v2_design_freeze.py",
+      "tests/test_workspace_yield_api_v2.py",
+      "tests/test_workspace_yield_v2.py",
+      "tests/test_yahoo_dividend_client.py",
+      "vercel.json"
+    ],
+    "repository": "M-Osugi1230/jquants-research-studio",
+    "schema_version": 1,
+    "source_roots": [],
+    "source_sha": "c56fb20b881c8917df311167edb5482c2d15d21e",
+    "test_roots": [
+      "tests"
+    ],
+    "workflow_paths": [
+      ".github/workflows/ade-remote-pr-gate.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/cloud-chart-refresh.yml",
+      ".github/workflows/cloud-deploy.yml",
+      ".github/workflows/cloud-earnings-fallback.yml",
+      ".github/workflows/market-data-preflight.yml",
+      ".github/workflows/market-data-sync.yml",
+      ".github/workflows/real-data.yml"
+    ]
+  },
+  "snapshot_fingerprint": "a022774cedbe0ce450930ec48268b90aac28570c366ebf16fb5a56660d97816d"
+}
