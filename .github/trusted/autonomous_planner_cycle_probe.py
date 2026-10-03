@@ -37,10 +37,18 @@ class FakeGitHub:
         assert branch == "main"
         return "a" * 40
 
-    def list_tree_paths(self, repository, *, tree_sha, max_entries=5000):
+    def list_tree_paths(
+        self,
+        repository,
+        *,
+        tree_sha,
+        max_entries=5000,
+        include_prefixes=(),
+    ):
         assert repository == "example/target"
         assert tree_sha == "a" * 40
         assert max_entries == 5000
+        assert include_prefixes == ()
         return [
             "README.md",
             "pyproject.toml",
