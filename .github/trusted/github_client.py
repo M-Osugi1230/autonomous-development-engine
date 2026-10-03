@@ -37,6 +37,9 @@ class GitHubClient:
     ) -> None:
         self.repository = repository or os.environ.get("GITHUB_REPOSITORY", "")
         self.token = token or os.environ.get("GITHUB_TOKEN", "")
+        self.controller_repository = os.environ.get("GITHUB_REPOSITORY", "").strip()
+        self.control_ref = os.environ.get("ADE_CONTROL_REF", "").strip()
+        self.project_key = os.environ.get("ADE_PROJECT_KEY", "").strip()
         if "/" not in self.repository:
             raise ValueError("GITHUB_REPOSITORY must be owner/name")
         if not self.token:
@@ -73,6 +76,16 @@ class GitHubClient:
         if not raw: return {}
         try: return json.loads(raw.decode("utf-8"))
         except json.JSONDecodeError as exc: raise GitHubError("GitHub returned invalid JSON") from exc
+
+    def _effective_controller_ref(self, ref: str) -> str:
+        if (
+            self.control_ref
+            and self.controller_repository
+            and self.repository == self.controller_repository
+            and ref == "main"
+        ):
+            return self.control_ref
+        return ref
 
     @staticmethod
     def _validate_repository_name(repository: str) -> str:
@@ -226,6 +239,7 @@ class GitHubClient:
         return payload
 
     def get_json_file(self, path: str, *, ref: str = "main") -> tuple[dict[str, Any], str]:
+        ref = self._effective_controller_ref(ref)
         payload = self._request(
             "GET", f"/repos/{self.repository}/contents/{path}?ref={ref}"
         )
@@ -253,6 +267,7 @@ class GitHubClient:
         message: str,
         branch: str = "main",
     ) -> None:
+        branch = self._effective_controller_ref(branch)
         content = json.dumps(
             payload, indent=2, ensure_ascii=False, sort_keys=True
         ) + "\n"
@@ -326,8 +341,17 @@ class GitHubClient:
         raise GitHubError("JSON file upsert retry budget exhausted")
 
     def dispatch(self, event_type: str, payload: dict[str, Any] | None = None) -> None:
+        client_payload = dict(payload or {})
+        if (
+            self.controller_repository
+            and self.repository == self.controller_repository
+        ):
+            if self.control_ref:
+                client_payload.setdefault("control_ref", self.control_ref)
+            if self.project_key:
+                client_payload.setdefault("project_key", self.project_key)
         self._request(
             "POST",
             f"/repos/{self.repository}/dispatches",
-            {"event_type": event_type, "client_payload": payload or {}},
+            {"event_type": event_type, "client_payload": client_payload},
         )
