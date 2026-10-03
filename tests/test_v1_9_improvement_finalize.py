@@ -85,9 +85,38 @@ def fake_api(url: str):
 
 
 class V19ImprovementFinalizerTests(unittest.TestCase):
+    def _frozen_inputs(self, module):
+        final = module.FINAL_DIR
+        return {
+            "terminal_state_payload": module._load_json(
+                final / "terminal-state.json"
+            ),
+            "campaign_payload": module._load_json(
+                final / "terminal-campaign.json"
+            ),
+            "remote_payload": module._load_json(
+                final / "remote-execution.json"
+            ),
+            "runtime_contract_payload": module._load_json(
+                final / "runtime-contract.json"
+            ),
+            "runtime_receipt_payload": module._load_json(
+                final / "runtime-receipt.json"
+            ),
+            "runtime_report_payload": module._load_json(
+                final / "runtime-report.json"
+            ),
+            "runtime_provenance_payload": module._load_json(
+                final / "runtime-provenance.json"
+            ),
+        }
+
     def test_real_proof_reconstructs_closed_loop(self) -> None:
         module = load_finalizer()
-        bundle = module.build_final_proof(api_get=fake_api)
+        bundle = module.build_final_proof(
+            api_get=fake_api,
+            **self._frozen_inputs(module),
+        )
 
         evidence = bundle["campaign_evidence"]
         self.assertTrue(evidence["closed_loop_verified"])
@@ -150,14 +179,17 @@ class V19ImprovementFinalizerTests(unittest.TestCase):
             ValueError,
             "changed paths outside",
         ):
-            module.build_final_proof(api_get=drifted)
+            module.build_final_proof(
+                api_get=drifted,
+                **self._frozen_inputs(module),
+            )
 
     def test_failed_runtime_receipt_cannot_finalize(self) -> None:
         module = load_finalizer()
-        receipt = module._load_json(
-            module.RUNTIME_RECEIPT_PATH
-        )
+        inputs = self._frozen_inputs(module)
+        receipt = dict(inputs["runtime_receipt_payload"])
         receipt["status"] = "FAILED"
+        inputs["runtime_receipt_payload"] = receipt
 
         with self.assertRaisesRegex(
             ValueError,
@@ -165,7 +197,7 @@ class V19ImprovementFinalizerTests(unittest.TestCase):
         ):
             module.build_final_proof(
                 api_get=fake_api,
-                runtime_receipt_payload=receipt,
+                **inputs,
             )
 
 
