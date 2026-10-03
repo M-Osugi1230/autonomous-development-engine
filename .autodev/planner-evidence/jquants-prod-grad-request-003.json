@@ -1,0 +1,79 @@
+{
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "reason": "no-trusted-memory-evidence-for-target",
+    "schema_version": 1,
+    "used": false
+  },
+  "disposition": "HUMAN_WAIT",
+  "plan_approved": false,
+  "planning_only": true,
+  "policy_fingerprint": "a7bdc3c8cc37659c95abe65b612cb0a660f20df82c4d6701cef0ea585e805051",
+  "proposal": {
+    "goal": "Bring M-Osugi1230/jquants-research-studio to full Production Graduation. Treat docs/production-graduation.md as the authoritative completion definition. Inspect the current repository first and identify only unmet graduation criteria; preserve already-complete subsystems and the existing cloud-native Supabase plus Vercel architecture. Do not reintroduce Mac or self-hosted production dependencies. Implement the minimum bounded task DAG needed to close real gaps, with deterministic tests and CI. Verify the current Research archive and historical access, quarterly earnings and forecast data paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, error recovery, and production-facing health contracts described by the runbook. After each change, require target CI and trusted merge. Require exact-source repository runtime verification after merges. Do not claim production completion from CI alone: preserve or strengthen source-bound Vercel deployment and Supabase operational-health evidence where the target repository already provides it. If a required external credential, provider connection, destructive production action, or explicit promotion approval cannot be safely performed autonomously, enter HUMAN_WAIT and record the exact human action required rather than weakening the checks. Stop only when docs/production-graduation.md is satisfied or a genuinely human-only boundary is reached.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "- Ensure test coverage validates database operational health RPC expectations and response structure.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_platform_operational_health.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "- Ensure test coverage validates database operational health RPC expectations and response structure.",
+        "title": "Update `tests/test_platform_operational_health.py` to verify operational health contracts."
+      },
+      {
+        "acceptance": [
+          "- Detail the required human promotion and credential verification steps for Vercel and Supabase production graduation.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "docs/production-graduation.md"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "- Detail the required human promotion and credential verification steps for Vercel and Supabase production graduation.",
+        "title": "Update `docs/production-graduation.md` to document production deployment and promotion steps."
+      }
+    ]
+  },
+  "proposal_fingerprint": "12a2c20f8de9f88657523dae98b379e5da951b1e5b9a63339d92a2424143202a",
+  "provider": "jules",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "engine",
+      "providers",
+      "scripts",
+      "supabase",
+      "tests",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jquants-prod-grad-campaign-003",
+    "execution_phase": "autonomous-development",
+    "goal": "Bring M-Osugi1230/jquants-research-studio to full Production Graduation. Treat docs/production-graduation.md as the authoritative completion definition. Inspect the current repository first and identify only unmet graduation criteria; preserve already-complete subsystems and the existing cloud-native Supabase plus Vercel architecture. Do not reintroduce Mac or self-hosted production dependencies. Implement the minimum bounded task DAG needed to close real gaps, with deterministic tests and CI. Verify the current Research archive and historical access, quarterly earnings and forecast data paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, error recovery, and production-facing health contracts described by the runbook. After each change, require target CI and trusted merge. Require exact-source repository runtime verification after merges. Do not claim production completion from CI alone: preserve or strengthen source-bound Vercel deployment and Supabase operational-health evidence where the target repository already provides it. If a required external credential, provider connection, destructive production action, or explicit promotion approval cannot be safely performed autonomously, enter HUMAN_WAIT and record the exact human action required rather than weakening the checks. Stop only when docs/production-graduation.md is satisfied or a genuinely human-only boundary is reached.",
+    "id_prefix": "jqprod003",
+    "request_id": "jquants-prod-grad-request-003",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jquants-research-studio"
+  },
+  "schema_version": 1
+}
