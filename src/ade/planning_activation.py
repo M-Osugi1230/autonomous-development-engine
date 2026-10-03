@@ -28,6 +28,7 @@ class PlanningGoalRequest:
     target_repository: str
     base_branch: str
     allowed_path_prefixes: tuple[str, ...]
+    repository_intelligence_prefixes: tuple[str, ...] = ()
     execution_phase: str | None = None
     min_tasks: int = 1
     max_tasks: int = 8
@@ -72,9 +73,39 @@ class PlanningGoalRequest:
             normalized.append(value)
         if len(set(normalized)) != len(normalized):
             raise ValueError("allowed path prefixes must be unique")
+        if len(self.repository_intelligence_prefixes) > 12:
+            raise ValueError(
+                "repository_intelligence_prefixes must contain at most 12 entries"
+            )
+        normalized_intelligence: list[str] = []
+        for prefix in self.repository_intelligence_prefixes:
+            if not isinstance(prefix, str) or not prefix.strip():
+                raise ValueError(
+                    "repository intelligence prefixes must be non-empty strings"
+                )
+            value = prefix.strip().rstrip("/")
+            if (
+                not value
+                or value.startswith("/")
+                or ".." in value.split("/")
+                or "\\" in value
+            ):
+                raise ValueError(
+                    f"unsafe repository intelligence prefix: {prefix}"
+                )
+            normalized_intelligence.append(value)
+        if len(set(normalized_intelligence)) != len(normalized_intelligence):
+            raise ValueError(
+                "repository intelligence prefixes must be unique"
+            )
         object.__setattr__(self, "goal", " ".join(self.goal.split()))
         object.__setattr__(self, "base_branch", self.base_branch.strip())
         object.__setattr__(self, "allowed_path_prefixes", tuple(normalized))
+        object.__setattr__(
+            self,
+            "repository_intelligence_prefixes",
+            tuple(normalized_intelligence),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         payload: dict[str, Any] = {
@@ -87,7 +118,11 @@ class PlanningGoalRequest:
             "base_branch": self.base_branch,
             "allowed_path_prefixes": list(self.allowed_path_prefixes),
         }
-        # Preserve the v1 request fingerprint when optional fields use legacy defaults.
+        # Preserve legacy request fingerprints when optional fields are absent.
+        if self.repository_intelligence_prefixes:
+            payload["repository_intelligence_prefixes"] = list(
+                self.repository_intelligence_prefixes
+            )
         if self.execution_phase is not None:
             payload["execution_phase"] = self.execution_phase
         if self.min_tasks != 1:
@@ -109,6 +144,7 @@ class PlanningGoalRequest:
             "target_repository",
             "base_branch",
             "allowed_path_prefixes",
+            "repository_intelligence_prefixes",
             "execution_phase",
             "min_tasks",
             "max_tasks",
@@ -119,6 +155,14 @@ class PlanningGoalRequest:
         prefixes = payload.get("allowed_path_prefixes")
         if not isinstance(prefixes, list):
             raise ValueError("allowed_path_prefixes must be a list")
+        intelligence_prefixes = payload.get(
+            "repository_intelligence_prefixes",
+            [],
+        )
+        if not isinstance(intelligence_prefixes, list):
+            raise ValueError(
+                "repository_intelligence_prefixes must be a list"
+            )
         return cls(
             schema_version=payload.get("schema_version", 0),
             request_id=str(payload.get("request_id", "")),
@@ -128,6 +172,9 @@ class PlanningGoalRequest:
             target_repository=str(payload.get("target_repository", "")),
             base_branch=str(payload.get("base_branch", "")),
             allowed_path_prefixes=tuple(str(item) for item in prefixes),
+            repository_intelligence_prefixes=tuple(
+                str(item) for item in intelligence_prefixes
+            ),
             execution_phase=(
                 str(payload["execution_phase"])
                 if payload.get("execution_phase") is not None
