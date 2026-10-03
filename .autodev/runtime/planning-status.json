@@ -1,10 +1,10 @@
 {
   "attempt": 1,
-  "detail": "high-level goal exceeds trusted text budget",
+  "detail": "task jules-step-001 path does not exist in repository snapshot and is not declared new: schemas/phase15_review_candidate.schema.json",
   "reason": "planner-retryable-failure",
-  "request_fingerprint": "3806fa1c785221594fc3f9895261d5a1b491d31003352667a38c3ee40a8a0d8c",
-  "request_id": "jichi-phase15-morioka-pilot-request-001",
+  "request_fingerprint": "ebaccfe8f1a2ab97c5eb38d8572b4e6dddb1a4e59e6fb6608e8f220aaea1a29a",
+  "request_id": "jichi-phase15-morioka-pilot-request-002",
   "schema_version": 1,
   "state": "REPLAN",
-  "updated_at": "2026-10-03T21:21:32.156067+00:00"
+  "updated_at": "2026-10-03T21:30:51.030646+00:00"
 }
