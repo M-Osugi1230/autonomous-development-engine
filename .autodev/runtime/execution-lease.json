@@ -1,8 +1,0 @@
-{
-  "acquired_at": "2026-10-03T21:53:57.888889+00:00",
-  "attempt": 1,
-  "expires_at": "2026-10-03T22:43:57.888889+00:00",
-  "owner_id": "github-actions:37156590609:1",
-  "schema_version": 1,
-  "task_id": "jip15morioka003-002"
-}
