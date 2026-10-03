@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-10-02T11:47:15.523833+00:00",
+  "acquired_at": "2026-10-03T10:26:46.839194+00:00",
   "attempt": 1,
-  "expires_at": "2026-10-02T12:37:15.523833+00:00",
-  "owner_id": "github-actions:37002918386:1",
+  "expires_at": "2026-10-03T11:16:46.839194+00:00",
+  "owner_id": "github-actions:37116436755:1",
   "schema_version": 1,
-  "task_id": "v19proof-63f46f6d8c-001"
+  "task_id": "jqprod004-001"
 }
