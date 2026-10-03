@@ -1,0 +1,13 @@
+{
+  "environment": "repository",
+  "max_attempts": 2,
+  "required_probe_ids": [
+    "repository-bytecode-smoke",
+    "repository-entrypoint-smoke"
+  ],
+  "schema_version": 1,
+  "source_sha": "c20336311877ee6168505398f4818e217ac1da0b",
+  "target_repository": "M-Osugi1230/jichi-insight",
+  "timeout_seconds": 300,
+  "verification_id": "rv-c20336311877ee6168505398f4818e217ac1da0b"
+}
