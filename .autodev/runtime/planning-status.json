@@ -1,10 +1,10 @@
 {
-  "attempt": 2,
+  "attempt": 3,
   "detail": "external target repository is not readable; configure ADE_TARGET_GITHUB_TOKEN for private repository access",
-  "reason": "planner-retryable-failure",
+  "reason": "planner-failure-budget-exhausted",
   "request_fingerprint": "9cb34885ce1e38cef89dd9c054a467c272f7ca69c976949a0908957bdd397a80",
   "request_id": "jquants-prod-grad-request-001",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-10-02T23:14:17.316183+00:00"
+  "state": "HUMAN_WAIT",
+  "updated_at": "2026-10-03T01:56:36.284670+00:00"
 }
