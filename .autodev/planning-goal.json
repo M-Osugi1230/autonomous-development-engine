@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "request_id": "jquants-prod-grad-request-003",
-  "campaign_id": "jquants-prod-grad-campaign-003",
-  "id_prefix": "jqprod003",
-  "goal": "Bring M-Osugi1230/jquants-research-studio to full Production Graduation. Treat docs/production-graduation.md as the authoritative completion definition. Inspect the current repository first and identify only unmet graduation criteria; preserve already-complete subsystems and the existing cloud-native Supabase plus Vercel architecture. Do not reintroduce Mac or self-hosted production dependencies. Implement the minimum bounded task DAG needed to close real gaps, with deterministic tests and CI. Verify the current Research archive and historical access, quarterly earnings and forecast data paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, error recovery, and production-facing health contracts described by the runbook. After each change, require target CI and trusted merge. Require exact-source repository runtime verification after merges. Do not claim production completion from CI alone: preserve or strengthen source-bound Vercel deployment and Supabase operational-health evidence where the target repository already provides it. If a required external credential, provider connection, destructive production action, or explicit promotion approval cannot be safely performed autonomously, enter HUMAN_WAIT and record the exact human action required rather than weakening the checks. Stop only when docs/production-graduation.md is satisfied or a genuinely human-only boundary is reached.",
+  "request_id": "jquants-prod-grad-request-004",
+  "campaign_id": "jquants-prod-grad-campaign-004",
+  "id_prefix": "jqprod004",
+  "goal": "Advance M-Osugi1230/jquants-research-studio toward Production Graduation by completing only non-production, non-credential, repository code and test work that is still unmet. Treat docs/production-graduation.md as read-only authoritative completion criteria. Inspect the current repository and preserve already-complete subsystems. Do not deploy, promote, mutate production infrastructure, access credentials, or modify deployment documentation in this campaign. Focus on deterministic repository changes and tests needed to strengthen or satisfy the existing operational-health and production-readiness contracts, including current and historical Research access, quarterly earnings and forecast paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, recovery contracts, and source-bound health expectations. Use the minimum bounded task DAG, require target CI after each change, and stop when all safely automatable repository code/test gaps are closed. Leave any production deployment, promotion, credential verification, or live infrastructure decision for a separate human-gated verification step.",
   "target_repository": "M-Osugi1230/jquants-research-studio",
   "base_branch": "main",
   "allowed_path_prefixes": [
@@ -12,8 +12,7 @@
     "providers",
     "scripts",
     "supabase",
-    "tests",
-    "docs"
+    "tests"
   ],
   "execution_phase": "autonomous-development",
   "min_tasks": 1,
