@@ -107,7 +107,9 @@ def main() -> int:
             raise ValueError("runtime retry merge SHA does not match failed verification")
 
         policy = build_runtime_verification_policy(remote.target_repository)
-        registry = build_runtime_probe_registry()
+        registry = build_runtime_probe_registry(
+            target_repository=remote.target_repository,
+        )
         activation = arm_post_merge_runtime_verification(
             policy=policy,
             registry=registry,
@@ -135,7 +137,6 @@ def main() -> int:
             "verification_id": activation.receipt.verification_id,
             "target_repository": activation.receipt.target_repository,
             "source_sha": activation.receipt.source_sha,
-            "source": "runtime-verification-retry",
             "remote_monitor_workflow_run_id": _run_id(),
             "pull_request_number": remote.pull_request_number,
             "pull_request_head_sha": head_sha,
