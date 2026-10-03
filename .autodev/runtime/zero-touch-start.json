@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jquants-data-expansion-campaign-002",
+  "campaign_id": "jichi-phase15-morioka-pilot-campaign-003",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-03T18:51:39.062211+00:00",
-  "plan_fingerprint": "3e2c655693ab70c7816e4eacd2fc06fd0d7355fd2f307427beaeb24f0b2f8450",
+  "dispatched_at": "2026-10-03T21:41:05.313068+00:00",
+  "plan_fingerprint": "81a423a8791aee5a530996881f50cadc2c82f18738b4de2f86a017006506dbef",
   "run_attempt": "1",
-  "run_id": "37145776940",
+  "run_id": "37155960726",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "06e4e3739af7739a3777a2e0b82181a67edd4bfc",
+  "source_sha": "c5547101850ed7e63beb38da3842c1c074748362",
   "status": "DISPATCHED",
-  "task_id": "jqexpand002-001"
+  "task_id": "jip15morioka003-001"
 }
