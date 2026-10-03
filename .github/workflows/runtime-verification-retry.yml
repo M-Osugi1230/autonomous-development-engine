@@ -1,0 +1,46 @@
+name: ADE Runtime Verification Retry
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".autodev/runtime-verification-retry.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-runtime-verification-retry
+  cancel-in-progress: false
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Re-arm exact-source Runtime Verification
+        env:
+          PYTHONPATH: src:.github/trusted
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
+        run: python .github/trusted/runtime_verification_retry.py
+
+      - name: Upload retry evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-runtime-verification-retry-result
+          path: .autodev/runtime/runtime-verification-retry-result.json
+          if-no-files-found: error
+          retention-days: 30
