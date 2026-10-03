@@ -365,25 +365,31 @@ def audit() -> dict[str, Any]:
                 f"v1.9 project state metadata drift: {key}"
             )
 
-    stable_metadata = {
-        "milestone": "v1.9-graduated",
-        "next_required_human_action": None,
-        "next_system_action": None,
-        "queue_exhausted": True,
-    }
-    for key, expected in stable_metadata.items():
-        if metadata.get(key) != expected:
+    # Graduation markers must carry forward forever, but operational
+    # ProjectState is intentionally mutable after v1.9. Only require the
+    # historical stable READY shape while the controller is still in the
+    # v1.9 phase itself; later autonomous campaigns may legitimately enter
+    # RUNNING, HUMAN_WAIT, or other bounded states.
+    if metadata.get("phase") == "v1.9-continuous-improvement":
+        stable_metadata = {
+            "milestone": "v1.9-graduated",
+            "next_required_human_action": None,
+            "next_system_action": None,
+            "queue_exhausted": True,
+        }
+        for key, expected in stable_metadata.items():
+            if metadata.get(key) != expected:
+                raise ValueError(
+                    f"v1.9 stable project state drift: {key}"
+                )
+        if (
+            project_state.get("status") != "READY"
+            or project_state.get("current_task_id") is not None
+            or project_state.get("failed_task_ids") != []
+        ):
             raise ValueError(
-                f"v1.9 stable project state drift: {key}"
+                "v1.9 graduated ProjectState is not stable READY"
             )
-    if (
-        project_state.get("status") != "READY"
-        or project_state.get("current_task_id") is not None
-        or project_state.get("failed_task_ids") != []
-    ):
-        raise ValueError(
-            "v1.9 graduated ProjectState is not stable READY"
-        )
 
     graduated_at = metadata.get("v1_9_graduated_at")
     if not isinstance(graduated_at, str) or not graduated_at:

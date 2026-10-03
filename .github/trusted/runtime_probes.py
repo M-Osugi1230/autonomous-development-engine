@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
+import re
 import subprocess
+import tomllib
 
 from ade.runtime_probe_registry import (
     RuntimeProbeInvocation,
@@ -15,6 +18,13 @@ from ade.runtime_verification_trigger import RuntimeVerificationPolicy
 from runtime_workspace import PreparedRuntimeWorkspace
 
 
+_LEGACY_THOUGHT_PIPELINE_REPOSITORIES = frozenset(
+    {"M-Osugi1230/one-minute-thought-experiments"}
+)
+_MODULE_NAME = re.compile(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$")
+_ATTR_PATH = re.compile(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$")
+
+
 def _probe_environment(workspace: PreparedRuntimeWorkspace) -> dict[str, str]:
     home = workspace.root.parent / "probe-home"
     home.mkdir(parents=True, exist_ok=True)
@@ -24,7 +34,12 @@ def _probe_environment(workspace: PreparedRuntimeWorkspace) -> dict[str, str]:
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",
         "PYTHONNOUSERSITE": "1",
-        "PYTHONPATH": str(workspace.root / "src"),
+        "PYTHONPATH": os.pathsep.join(
+            (
+                str(workspace.root),
+                str(workspace.root / "src"),
+            )
+        ),
         "ADE_RUNTIME_CREDENTIAL_AUTHORITY": "none",
         "ADE_RUNTIME_NETWORK_AUTHORITY": "none",
         "ADE_RUNTIME_DEPLOYMENT_AUTHORITY": "none",
@@ -161,6 +176,158 @@ def _production_import_runner(
     return run
 
 
+def _repository_entrypoint(
+    workspace: PreparedRuntimeWorkspace,
+) -> tuple[str, str | None] | None:
+    pyproject = workspace.root / "pyproject.toml"
+    if not pyproject.is_file():
+        return None
+    payload = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+
+    tool = payload.get("tool")
+    if isinstance(tool, dict):
+        vercel = tool.get("vercel")
+        if isinstance(vercel, dict):
+            raw = vercel.get("entrypoint")
+            if isinstance(raw, str) and raw.strip():
+                module, separator, attribute = raw.strip().partition(":")
+                if (
+                    _MODULE_NAME.fullmatch(module) is not None
+                    and (
+                        not separator
+                        or (
+                            attribute
+                            and _ATTR_PATH.fullmatch(attribute) is not None
+                        )
+                    )
+                ):
+                    return module, attribute or None
+
+    if (workspace.root / "app.py").is_file():
+        return "app", None
+
+    project = payload.get("project")
+    name = project.get("name") if isinstance(project, dict) else None
+    if isinstance(name, str) and name.strip():
+        module = name.strip().replace("-", "_")
+        if _MODULE_NAME.fullmatch(module) is not None:
+            if (workspace.root / module / "__init__.py").is_file():
+                return module, None
+            if (workspace.root / "src" / module / "__init__.py").is_file():
+                return module, None
+    return None
+
+
+def _repository_bytecode_runner(
+    workspace: PreparedRuntimeWorkspace,
+):
+    def run(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+        try:
+            completed = subprocess.run(
+                [
+                    str(workspace.python_executable),
+                    "-I",
+                    "-m",
+                    "compileall",
+                    "-q",
+                    str(workspace.root),
+                ],
+                cwd=workspace.root,
+                env=_probe_environment(workspace),
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=_command_timeout(invocation),
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="repository-bytecode-timeout",
+            )
+        except OSError:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="repository-bytecode-exec-error",
+            )
+        return RuntimeProbeObservation(
+            RuntimeProbeStatus.PASS
+            if completed.returncode == 0
+            else RuntimeProbeStatus.FAIL,
+            detail_code=(
+                "repository-bytecode-pass"
+                if completed.returncode == 0
+                else "repository-bytecode-nonzero"
+            ),
+        )
+
+    return run
+
+
+def _repository_entrypoint_runner(
+    workspace: PreparedRuntimeWorkspace,
+):
+    def run(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+        entrypoint = _repository_entrypoint(workspace)
+        if entrypoint is None:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="repository-entrypoint-missing",
+            )
+        module_name, attribute_path = entrypoint
+        script = (
+            "import importlib, sys\n"
+            "from pathlib import Path\n"
+            "root = Path.cwd()\n"
+            "sys.path.insert(0, str(root))\n"
+            "sys.path.insert(0, str(root / 'src'))\n"
+            f"module = importlib.import_module({json.dumps(module_name)})\n"
+            f"attribute_path = {json.dumps(attribute_path)}\n"
+            "if attribute_path:\n"
+            "    value = module\n"
+            "    for part in attribute_path.split('.'):\n"
+            "        value = getattr(value, part)\n"
+        )
+        try:
+            completed = subprocess.run(
+                [
+                    str(workspace.python_executable),
+                    "-I",
+                    "-c",
+                    script,
+                ],
+                cwd=workspace.root,
+                env=_probe_environment(workspace),
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=_command_timeout(invocation),
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="repository-entrypoint-timeout",
+            )
+        except OSError:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="repository-entrypoint-exec-error",
+            )
+        return RuntimeProbeObservation(
+            RuntimeProbeStatus.PASS
+            if completed.returncode == 0
+            else RuntimeProbeStatus.FAIL,
+            detail_code=(
+                "repository-entrypoint-pass"
+                if completed.returncode == 0
+                else "repository-entrypoint-nonzero"
+            ),
+        )
+
+    return run
+
+
 def _workspace_not_configured(
     _: RuntimeProbeInvocation,
 ) -> RuntimeProbeObservation:
@@ -183,6 +350,16 @@ def build_runtime_probe_registry(
         if workspace is not None
         else _workspace_not_configured
     )
+    bytecode_runner = (
+        _repository_bytecode_runner(workspace)
+        if workspace is not None
+        else _workspace_not_configured
+    )
+    entrypoint_runner = (
+        _repository_entrypoint_runner(workspace)
+        if workspace is not None
+        else _workspace_not_configured
+    )
     return TrustedRuntimeProbeRegistry(
         [
             RuntimeProbeRegistration(
@@ -195,6 +372,16 @@ def build_runtime_probe_registry(
                 implementation_id="production-import-smoke-v2",
                 runner=import_runner,
             ),
+            RuntimeProbeRegistration(
+                probe_id="repository-bytecode-smoke",
+                implementation_id="repository-bytecode-smoke-v1",
+                runner=bytecode_runner,
+            ),
+            RuntimeProbeRegistration(
+                probe_id="repository-entrypoint-smoke",
+                implementation_id="repository-entrypoint-smoke-v1",
+                runner=entrypoint_runner,
+            ),
         ]
     )
 
@@ -202,13 +389,20 @@ def build_runtime_probe_registry(
 def build_runtime_verification_policy(
     target_repository: str,
 ) -> RuntimeVerificationPolicy:
+    if target_repository in _LEGACY_THOUGHT_PIPELINE_REPOSITORIES:
+        required_probe_ids = (
+            "offline-cli-smoke",
+            "production-import-smoke",
+        )
+    else:
+        required_probe_ids = (
+            "repository-bytecode-smoke",
+            "repository-entrypoint-smoke",
+        )
     return RuntimeVerificationPolicy(
         target_repository=target_repository,
         environment="repository",
-        required_probe_ids=(
-            "offline-cli-smoke",
-            "production-import-smoke",
-        ),
+        required_probe_ids=required_probe_ids,
         max_attempts=2,
         timeout_seconds=300,
     )

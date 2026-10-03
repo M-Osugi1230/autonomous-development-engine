@@ -81,6 +81,13 @@ RUNTIME_REPORT_PATH = RUNTIME_DIR / "report.json"
 RUNTIME_PROVENANCE_PATH = RUNTIME_DIR / "provenance.json"
 
 FINAL_DIR = Path(".autodev/improvement/proof/final")
+FROZEN_TERMINAL_STATE_PATH = FINAL_DIR / "terminal-state.json"
+FROZEN_TERMINAL_CAMPAIGN_PATH = FINAL_DIR / "terminal-campaign.json"
+FROZEN_REMOTE_PATH = FINAL_DIR / "remote-execution.json"
+FROZEN_RUNTIME_CONTRACT_PATH = FINAL_DIR / "runtime-contract.json"
+FROZEN_RUNTIME_RECEIPT_PATH = FINAL_DIR / "runtime-receipt.json"
+FROZEN_RUNTIME_REPORT_PATH = FINAL_DIR / "runtime-report.json"
+FROZEN_RUNTIME_PROVENANCE_PATH = FINAL_DIR / "runtime-provenance.json"
 CAMPAIGN_EVIDENCE_PATH = Path(
     ".autodev/campaign-evidence/"
     "v1.9-continuous-improvement-proof-001.json"
@@ -275,37 +282,37 @@ def build_final_proof(
     terminal_state = (
         terminal_state_payload
         if terminal_state_payload is not None
-        else _load_json(STATE_PATH)
+        else _load_json(FROZEN_TERMINAL_STATE_PATH)
     )
     campaign = (
         campaign_payload
         if campaign_payload is not None
-        else _load_json(CAMPAIGN_PATH)
+        else _load_json(FROZEN_TERMINAL_CAMPAIGN_PATH)
     )
     remote = (
         remote_payload
         if remote_payload is not None
-        else _load_json(REMOTE_PATH)
+        else _load_json(FROZEN_REMOTE_PATH)
     )
     runtime_contract = (
         runtime_contract_payload
         if runtime_contract_payload is not None
-        else _load_json(RUNTIME_CONTRACT_PATH)
+        else _load_json(FROZEN_RUNTIME_CONTRACT_PATH)
     )
     runtime_receipt = (
         runtime_receipt_payload
         if runtime_receipt_payload is not None
-        else _load_json(RUNTIME_RECEIPT_PATH)
+        else _load_json(FROZEN_RUNTIME_RECEIPT_PATH)
     )
     runtime_report = (
         runtime_report_payload
         if runtime_report_payload is not None
-        else _load_json(RUNTIME_REPORT_PATH)
+        else _load_json(FROZEN_RUNTIME_REPORT_PATH)
     )
     runtime_provenance = (
         runtime_provenance_payload
         if runtime_provenance_payload is not None
-        else _load_json(RUNTIME_PROVENANCE_PATH)
+        else _load_json(FROZEN_RUNTIME_PROVENANCE_PATH)
     )
 
     source_release = _load_json(PROOF_SOURCE_RELEASE_PATH)
