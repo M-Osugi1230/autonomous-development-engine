@@ -1,7 +1,28 @@
 {
   "ledger": {
-    "record_count": 11,
+    "record_count": 12,
     "records": [
+      {
+        "campaign_id": null,
+        "evidence_fingerprints": [
+          "ce26f73bfbf74f789cf5c8561ebc39a7544a26365e59e9e8d15b1d38ae6ba0a5"
+        ],
+        "evidence_paths": [
+          ".autodev/runtime/recovery.json"
+        ],
+        "kind": "FAILURE",
+        "memory_id": "mem-f1e9b6dbff8027701eae9207",
+        "repository": "M-Osugi1230/jichi-insight",
+        "schema_version": 1,
+        "source_sha": "c20336311877ee6168505398f4818e217ac1da0b",
+        "statement": "Trusted recovery classified RUNTIME_VERIFICATION and selected HUMAN_WAIT under bounded recovery policy.",
+        "tags": [
+          "human_wait",
+          "recovery",
+          "runtime_verification"
+        ],
+        "task_id": "jip15morioka003-001"
+      },
       {
         "campaign_id": null,
         "evidence_fingerprints": [
@@ -276,6 +297,6 @@
     ],
     "schema_version": 1
   },
-  "ledger_fingerprint": "ac59c82d078d2c573e25ef728457c141e5df037f8bdf72dae1a2fc0aadb283f6",
+  "ledger_fingerprint": "7fe2f63f49f2061a01ac66561765a8450e8b5bc85d64a9330c015565f8912756",
   "schema_version": 1
 }
