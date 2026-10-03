@@ -334,6 +334,73 @@ class RuntimeVerificationDispatchTests(unittest.TestCase):
             "NOT_APPLICABLE",
         )
 
+    def test_autonomous_development_runtime_success_clears_human_wait(self) -> None:
+        module = load_module()
+        contract, _, _ = self._values()
+        receipt = RuntimeVerificationReceipt(
+            verification_id=contract.verification_id,
+            task_id="task-001",
+            target_repository=contract.target_repository,
+            source_sha=contract.source_sha,
+            contract_fingerprint=contract.fingerprint(),
+            registry_fingerprint="b" * 64,
+            policy_fingerprint="c" * 64,
+            status="VERIFIED",
+            dispatch_count=1,
+        )
+
+        class FakeGitHub:
+            def __init__(self) -> None:
+                self.files = {
+                    ".autodev/state.json": {
+                        "schema_version": 1,
+                        "project_id": "ade",
+                        "status": "HUMAN_WAIT",
+                        "current_task_id": "task-001",
+                        "completed_task_ids": ["task-001"],
+                        "failed_task_ids": [],
+                        "metadata": {
+                            "phase": "autonomous-development",
+                            "recovery_action": "HUMAN_WAIT",
+                            "recovery_failure": "RUNTIME_VERIFICATION",
+                            "runtime_verification_failure_fingerprint": "d" * 64,
+                            "next_required_human_action": "review-runtime-verification-failure",
+                        },
+                    },
+                    ".autodev/campaign.json": {
+                        "schema_version": 1,
+                        "campaign_id": "campaign-001",
+                        "goal": "g",
+                        "status": "HUMAN_WAIT",
+                        "task_ids": ["task-001"],
+                        "completed_task_ids": ["task-001"],
+                    },
+                }
+
+            def get_json_file(self, path: str):
+                return self.files[path], "sha"
+
+            def upsert_json_file(self, path: str, payload: dict, *, message: str):
+                self.files[path] = payload
+
+        gh = FakeGitHub()
+        outcome = module._reconcile_autonomous_development_success(
+            gh,
+            receipt=receipt,
+        )
+        self.assertEqual(outcome, "COMPLETED")
+        self.assertEqual(
+            gh.files[".autodev/campaign.json"]["status"],
+            "COMPLETED",
+        )
+        state = gh.files[".autodev/state.json"]
+        self.assertEqual(state["status"], "READY")
+        self.assertIsNone(state["current_task_id"])
+        self.assertIsNone(
+            state["metadata"]["next_required_human_action"]
+        )
+        self.assertNotIn("recovery_failure", state["metadata"])
+
     def test_runtime_evidence_paths_reject_unsafe_task_id(self) -> None:
         from ade.runtime_verification_trigger import runtime_verification_paths
 
