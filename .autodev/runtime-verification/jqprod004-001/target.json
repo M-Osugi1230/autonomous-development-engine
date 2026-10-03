@@ -3,14 +3,14 @@
     "deployment_id": null,
     "environment": "repository",
     "kind": "repository",
-    "observed_at": "2026-10-03T10:34:50.855870+00:00",
+    "observed_at": "2026-10-03T12:40:04.969621+00:00",
     "provenance_id": "trusted-merge-sha-v1",
     "schema_version": 1,
     "source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
     "target_id": "repository-runtime",
     "target_repository": "M-Osugi1230/jquants-research-studio"
   },
-  "evidence_fingerprint": "b6ef2974a011d533d0f68d3684cbee5c62d2d3d184bdac5d4d9b2e85cc25e9a1",
+  "evidence_fingerprint": "ef07b1d450f61576db0fa3fd85a4912f7918afb3fc14b83b1cf417770660abf3",
   "registry_fingerprint": "1c3875b5ccc42f5bd084db60fc0582bffcc4acb5aae6de995bad0a2ba0c48d9e",
   "schema_version": 1,
   "spec": {
