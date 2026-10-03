@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "evidence_id": "jquants-production-graduation-001",
+  "target_repository": "M-Osugi1230/jquants-research-studio",
+  "campaign_id": "jquants-prod-grad-campaign-004",
+  "task_id": "jqprod004-001",
+  "completion_definition": "docs/production-graduation.md",
+  "status": "GRADUATED",
+  "target_main_sha": "be8192299d8247880690806bb8a0c2d21843070d",
+  "target_pull_request": 105,
+  "target_ci": {
+    "ci_run_id": 37116798392,
+    "ci_conclusion": "success",
+    "real_data_gate_run_id": 37116798397,
+    "real_data_gate_conclusion": "success"
+  },
+  "ade_runtime_verification": {
+    "disposition": "VERIFIED",
+    "source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
+    "probes": {
+      "repository-bytecode-smoke": "PASS",
+      "repository-entrypoint-smoke": "PASS"
+    }
+  },
+  "vercel": {
+    "project_id": "prj_QtuxVRczhcgQYVoQdD0hCGLpyb4V",
+    "deployment_id": "dpl_j2ALS4ww8vSQheFR68LEH1jvo4JN",
+    "target": "production",
+    "ready_state": "READY",
+    "source_ref": "main",
+    "source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
+    "stable_alias_bound": true,
+    "runtime_errors_last_24h": 0
+  },
+  "supabase": {
+    "project_ref": "oeidcmjblnmpttxcpzmt",
+    "operational_health": "healthy",
+    "sync_status": "idle",
+    "sync_stuck": false,
+    "sync_failed": 0,
+    "research_snapshot_rows": 3961,
+    "research_financial_rows": 3961,
+    "research_price_rows": 3961,
+    "research_hydrated_rows": 3961,
+    "research_terminal_failures": 0,
+    "history_done": 3961,
+    "history_incomplete": 0,
+    "current_securities": 3707,
+    "market_yield_rows": 3707,
+    "market_chart_rows": 3707,
+    "market_fresh_rows": 3632,
+    "market_fresh_ratio": 0.979768006474238,
+    "market_date": "2026-10-02",
+    "benefit_pending": 0,
+    "earnings_pending": 104
+  },
+  "production_smoke": {
+    "health": 200,
+    "health_deep": 200,
+    "research_status": 200,
+    "research_context": 200,
+    "research_data_status": 200,
+    "current_company_lookup": 200,
+    "historical_company_lookup": 200,
+    "yield_page": 200,
+    "charts_page": 200,
+    "advanced_page": 200,
+    "compare_page": 200,
+    "earnings_page": 200,
+    "yield_api": 200,
+    "charts_api": 200,
+    "earnings_api": 200,
+    "compare_api": 200
+  },
+  "earnings_freshness_validation": {
+    "before_latest_disclosure_date": "2026-06-30",
+    "after_latest_disclosure_date": "2026-10-02",
+    "safe_quota_aware_retry_used": true,
+    "pending_before": 112,
+    "pending_after": 104,
+    "completed_in_retry": 8,
+    "backend": "supabase",
+    "note": "Remaining earnings queue is intentionally deferred under the EDINET DB Free-plan budget policy and is drained by existing Supabase schedules."
+  },
+  "mac_or_self_hosted_production_dependency": false,
+  "production_store_backends": {
+    "research": "supabase_archive",
+    "workspace": "supabase"
+  }
+}
