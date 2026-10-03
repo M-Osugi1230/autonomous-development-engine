@@ -2,39 +2,39 @@
   "attempts_by_probe": [
     {
       "attempts": 1,
-      "probe_id": "offline-cli-smoke"
+      "probe_id": "repository-bytecode-smoke"
     },
     {
       "attempts": 1,
-      "probe_id": "production-import-smoke"
+      "probe_id": "repository-entrypoint-smoke"
     }
   ],
   "report": {
-    "contract_fingerprint": "d8a8419deaf7392ef388448bcd4ca097a239c0b2d05ce051583f1a61d707e451",
-    "disposition": "FAILED",
+    "contract_fingerprint": "039b2f20a91312917bc5e0b7ba28a9bd7205b54bf14080695718a5c649b76437",
+    "disposition": "VERIFIED",
     "missing_probe_ids": [],
     "results": [
       {
         "attempt": 1,
-        "detail_code": "offline-cli-entrypoint-missing",
-        "probe_id": "offline-cli-smoke",
+        "detail_code": "repository-bytecode-pass",
+        "probe_id": "repository-bytecode-smoke",
         "schema_version": 1,
         "source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "attempt": 1,
-        "detail_code": "production-package-missing",
-        "probe_id": "production-import-smoke",
+        "detail_code": "repository-entrypoint-pass",
+        "probe_id": "repository-entrypoint-smoke",
         "schema_version": 1,
         "source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
-        "status": "FAIL"
+        "status": "PASS"
       }
     ],
     "schema_version": 1,
     "source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
     "verification_id": "rv-be8192299d8247880690806bb8a0c2d21843070d"
   },
-  "report_fingerprint": "a084a872d164fae3156975f0c470e5ea67e762d604abe85cd4df88b58dcfb779",
+  "report_fingerprint": "1b07bb1d138b6ab07a3bbe454ee5b8ee787098150c732e20574129a4de29e6f5",
   "schema_version": 1
 }
