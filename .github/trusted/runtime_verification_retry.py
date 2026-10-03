@@ -81,8 +81,10 @@ def main() -> int:
         contract_path, receipt_path = runtime_verification_paths(task_id)
         receipt_payload, _ = gh.get_json_file(receipt_path)
         existing = RuntimeVerificationReceipt.from_dict(receipt_payload)
-        if existing.status != "HUMAN_WAIT":
-            raise ValueError("runtime retry requires HUMAN_WAIT verification receipt")
+        if existing.status not in {"HUMAN_WAIT", "ARMED"}:
+            raise ValueError(
+                "runtime retry requires HUMAN_WAIT or ARMED verification receipt"
+            )
         if existing.target_repository != remote.target_repository:
             raise ValueError("runtime retry repository drift")
 
