@@ -4,15 +4,63 @@
     {
       "decision_id": null,
       "depends_on": [],
-      "status": "COMPLETED",
+      "status": "RUNNING",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
-        "prompt": "Goal: Advance M-Osugi1230/jquants-research-studio toward Production Graduation by completing only non-production, non-credential, repository code and test work that is still unmet. Treat docs/production-graduation.md as read-only authoritative completion criteria. Inspect the current repository and preserve already-complete subsystems. Do not deploy, promote, mutate production infrastructure, access credentials, or modify deployment documentation in this campaign. Focus on deterministic repository changes and tests needed to strengthen or satisfy the existing operational-health and production-readiness contracts, including current and historical Research access, quarterly earnings and forecast paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, recovery contracts, and source-bound health expectations. Use the minimum bounded task DAG, require target CI after each change, and stop when all safely automatable repository code/test gaps are closed. Leave any production deployment, promotion, credential verification, or live infrastructure decision for a separate human-gated verification step.\nOutcome: `tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: tests/test_client_contract.py\nAcceptance: `tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "prompt": "Goal: Expand M-Osugi1230/jquants-research-studio with higher-value investment data without exhausting provider limits. Preserve all working production behavior. First add useful fields that can be derived from existing Supabase/raw/archive data with zero external calls, prioritizing valuation, profitability, growth, financial health, liquidity/volume/volatility, and event-derived signals. Only then add bounded incremental ingestion for genuinely missing data, preferring bulk/date-scoped or no-key/public sources over per-security calls. Never implement unbounded all-security per-symbol fetching. Reuse caches, cursors, queues, deduplication, and point-in-time semantics. All provider paths must fail closed when allowance is unknown, honor configured rate limits and Retry-After, defer safely, and avoid duplicate retries. Preserve EDINET DB's 100 requests/day design, live /usage check, at least 5 requests reserve, max 2 provider calls/company, newest-first retry queue, and existing scheduled ceilings. Preserve the existing J-Quants persistent rate limiter and configured requests-per-minute ceiling; do not raise it. Do not bypass quotas, use extra accounts, expose credentials, upgrade paid plans, or make destructive production changes. Add deterministic tests for no-limit-bypass, idempotent/resumable ingestion, and zero-call derived-data paths. Use the minimum bounded task DAG and complete one safe end-to-end data-expansion vertical slice before broadening.\nOutcome: - Implement derived valuation, profitability, growth, financial health, liquidity, and event metrics from local raw/archive data without making external calls.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: engine/features/fundamental_pit.py\nAcceptance: - Implement derived valuation, profitability, growth, financial health, liquidity, and event metrics from local raw/archive data without making external calls.; Repository CI remains green\nDo not modify files outside the allowed paths.",
         "starting_branch": "main",
-        "task_id": "jqprod004-001",
+        "task_id": "jqexpand002-001",
         "timeout_seconds": 1800,
-        "title": "`tests/test_client_contract.py` - Add environment monkeypatching for J-Quants API key in client contract parameter mapping tests to ensure deterministic execution in uncredentialed CI environments."
+        "title": "Create data expansion engine for derived metrics and rate-limited ingestion in `engine/features/fundamental_pit.py`."
+      }
+    },
+    {
+      "decision_id": null,
+      "depends_on": [
+        "jqexpand002-001"
+      ],
+      "status": "PENDING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Expand M-Osugi1230/jquants-research-studio with higher-value investment data without exhausting provider limits. Preserve all working production behavior. First add useful fields that can be derived from existing Supabase/raw/archive data with zero external calls, prioritizing valuation, profitability, growth, financial health, liquidity/volume/volatility, and event-derived signals. Only then add bounded incremental ingestion for genuinely missing data, preferring bulk/date-scoped or no-key/public sources over per-security calls. Never implement unbounded all-security per-symbol fetching. Reuse caches, cursors, queues, deduplication, and point-in-time semantics. All provider paths must fail closed when allowance is unknown, honor configured rate limits and Retry-After, defer safely, and avoid duplicate retries. Preserve EDINET DB's 100 requests/day design, live /usage check, at least 5 requests reserve, max 2 provider calls/company, newest-first retry queue, and existing scheduled ceilings. Preserve the existing J-Quants persistent rate limiter and configured requests-per-minute ceiling; do not raise it. Do not bypass quotas, use extra accounts, expose credentials, upgrade paid plans, or make destructive production changes. Add deterministic tests for no-limit-bypass, idempotent/resumable ingestion, and zero-call derived-data paths. Use the minimum bounded task DAG and complete one safe end-to-end data-expansion vertical slice before broadening.\nOutcome: - Verify deterministic calculations, point-in-time correctness, and zero external network calls.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: tests/test_fundamental_pit.py\nAcceptance: - Verify deterministic calculations, point-in-time correctness, and zero external network calls.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "jqexpand002-002",
+        "timeout_seconds": 1800,
+        "title": "Add tests for zero-call derived metrics in `tests/test_fundamental_pit.py`."
+      }
+    },
+    {
+      "decision_id": null,
+      "depends_on": [
+        "jqexpand002-002"
+      ],
+      "status": "PENDING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Expand M-Osugi1230/jquants-research-studio with higher-value investment data without exhausting provider limits. Preserve all working production behavior. First add useful fields that can be derived from existing Supabase/raw/archive data with zero external calls, prioritizing valuation, profitability, growth, financial health, liquidity/volume/volatility, and event-derived signals. Only then add bounded incremental ingestion for genuinely missing data, preferring bulk/date-scoped or no-key/public sources over per-security calls. Never implement unbounded all-security per-symbol fetching. Reuse caches, cursors, queues, deduplication, and point-in-time semantics. All provider paths must fail closed when allowance is unknown, honor configured rate limits and Retry-After, defer safely, and avoid duplicate retries. Preserve EDINET DB's 100 requests/day design, live /usage check, at least 5 requests reserve, max 2 provider calls/company, newest-first retry queue, and existing scheduled ceilings. Preserve the existing J-Quants persistent rate limiter and configured requests-per-minute ceiling; do not raise it. Do not bypass quotas, use extra accounts, expose credentials, upgrade paid plans, or make destructive production changes. Add deterministic tests for no-limit-bypass, idempotent/resumable ingestion, and zero-call derived-data paths. Use the minimum bounded task DAG and complete one safe end-to-end data-expansion vertical slice before broadening.\nOutcome: - Ensure J-Quants persistent rate limiter and EDINET DB limits fail closed when allowances are unknown and obey configured retry boundaries.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: providers/jquants/rate_limiter.py\nAcceptance: - Ensure J-Quants persistent rate limiter and EDINET DB limits fail closed when allowances are unknown and obey configured retry boundaries.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "jqexpand002-003",
+        "timeout_seconds": 1800,
+        "title": "Implement rate-limited, fail-closed rate limiter and client safeguards in `providers/jquants/rate_limiter.py`."
+      }
+    },
+    {
+      "decision_id": null,
+      "depends_on": [
+        "jqexpand002-003"
+      ],
+      "status": "PENDING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Expand M-Osugi1230/jquants-research-studio with higher-value investment data without exhausting provider limits. Preserve all working production behavior. First add useful fields that can be derived from existing Supabase/raw/archive data with zero external calls, prioritizing valuation, profitability, growth, financial health, liquidity/volume/volatility, and event-derived signals. Only then add bounded incremental ingestion for genuinely missing data, preferring bulk/date-scoped or no-key/public sources over per-security calls. Never implement unbounded all-security per-symbol fetching. Reuse caches, cursors, queues, deduplication, and point-in-time semantics. All provider paths must fail closed when allowance is unknown, honor configured rate limits and Retry-After, defer safely, and avoid duplicate retries. Preserve EDINET DB's 100 requests/day design, live /usage check, at least 5 requests reserve, max 2 provider calls/company, newest-first retry queue, and existing scheduled ceilings. Preserve the existing J-Quants persistent rate limiter and configured requests-per-minute ceiling; do not raise it. Do not bypass quotas, use extra accounts, expose credentials, upgrade paid plans, or make destructive production changes. Add deterministic tests for no-limit-bypass, idempotent/resumable ingestion, and zero-call derived-data paths. Use the minimum bounded task DAG and complete one safe end-to-end data-expansion vertical slice before broadening.\nOutcome: - Test fail-closed behavior, Retry-After handling, reserve retention, and no-limit-bypass logic.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: tests/test_client_contract.py\nAcceptance: - Test fail-closed behavior, Retry-After handling, reserve retention, and no-limit-bypass logic.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "jqexpand002-004",
+        "timeout_seconds": 1800,
+        "title": "Add tests for rate limiting and ingestion safeguards in `tests/test_client_contract.py`."
       }
     }
   ]
