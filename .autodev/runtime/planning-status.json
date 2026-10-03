@@ -1,10 +1,13 @@
 {
   "attempt": 1,
-  "detail": "planner path must name a concrete file, not a trusted root: vercel.json",
-  "reason": "planner-retryable-failure",
-  "request_fingerprint": "284937191471f2478e18586ed940889b5ac214f3dfc620b82bd63e0854134199",
-  "request_id": "jquants-prod-grad-request-002",
+  "human_reasons": [
+    "jules-step-002 matched human-only action marker: production deploy"
+  ],
+  "proposal_fingerprint": "12a2c20f8de9f88657523dae98b379e5da951b1e5b9a63339d92a2424143202a",
+  "reason": "planner-proposal-requires-human",
+  "request_fingerprint": "f2a45198f31700e6f90da2789d64b7657f7be8578b96ff4c50e1119188f7abb0",
+  "request_id": "jquants-prod-grad-request-003",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-10-03T10:12:07.750730+00:00"
+  "state": "HUMAN_WAIT",
+  "updated_at": "2026-10-03T10:18:49.682399+00:00"
 }
