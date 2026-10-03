@@ -5,7 +5,7 @@
   "registry_fingerprint": "aad8ccc2202a2ea893dc079a93ab1149f93a69e084d8c14991bdb9474ee84f64",
   "schema_version": 1,
   "source_sha": "c20336311877ee6168505398f4818e217ac1da0b",
-  "status": "DISPATCHED",
+  "status": "FAILED",
   "target_repository": "M-Osugi1230/jichi-insight",
   "task_id": "jip15morioka003-001",
   "verification_id": "rv-c20336311877ee6168505398f4818e217ac1da0b"
