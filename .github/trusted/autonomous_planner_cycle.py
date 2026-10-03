@@ -184,6 +184,7 @@ def _collect_repository_intelligence(
             request.target_repository,
             tree_sha=source_sha,
             max_entries=5000,
+            include_prefixes=request.repository_intelligence_prefixes,
         )
     except GitHubError as exc:
         if (
