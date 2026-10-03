@@ -1,0 +1,95 @@
+{
+  "accepted_plan_fingerprint": "81a423a8791aee5a530996881f50cadc2c82f18738b4de2f86a017006506dbef",
+  "campaign_id": "jichi-phase15-morioka-pilot-campaign-003",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "reason": "no-trusted-memory-evidence-for-target",
+    "schema_version": 1,
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "e7df19f1e2ee8c7885baea70e398d04870aedd4b55de690609a883f0bd5f5981",
+  "proposal": {
+    "goal": "Populate the existing non-public Morioka (032018) Phase 15 review-candidate staging in M-Osugi1230/jichi-insight. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, the canonical Phase 15 queue, data/indexed/morioka-city/source_inventory.json, and completed Phase 15 municipality packages as read-only context. Do not create any file: every task new_paths must be []. Write only data/candidates/morioka-city/review_candidate.json and tests/test_phase15_review_candidate_staging.py. Use official primary sources only and retain stable evidence locations, plan/version/period/fiscal/availability boundaries, source precision, and explicit deferred depth. Set package_state=prepared only when the candidate package is complete enough for human checking. Candidate plan decisions must remain needs_review or not_assessable; human_review.status must remain pending; publication.eligible must remain false; the Phase 15 queue must remain review_in_progress. Never infer unpublished facts, reuse historical actuals as current actuals without official linkage, collapse fiscal/document states or year semantics, promote drafts, create policy-achievement scores, infer causality, or create unverified rankings/political evaluations. Add deterministic assertions in the existing staging test. Success is a green bounded PR containing a complete non-public candidate, followed by HUMAN_WAIT for explicit human primary-source review. Do not promote reviewed_complete or broaden beyond Morioka.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "- Populate `data/candidates/morioka-city/review_candidate.json` with a complete candidate package while maintaining `package_state=\"prepared\"`, `needs_review` or `not_assessable` record decisions, `human_review.status=\"pending\"`, and `publication.eligible=false`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/morioka-city/review_candidate.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "- Populate `data/candidates/morioka-city/review_candidate.json` with a complete candidate package while maintaining `package_state=\"prepared\"`, `needs_review` or `not_assessable` record decisions, `human_review.status=\"pending\"`, and `publication.eligible=false`.",
+        "title": "Populate Morioka Phase 15 review-candidate staging data."
+      },
+      {
+        "acceptance": [
+          "- Update `tests/test_phase15_review_candidate_staging.py` to assert package state and structure for Morioka Phase 15 staging data.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "- Update `tests/test_phase15_review_candidate_staging.py` to assert package state and structure for Morioka Phase 15 staging data.",
+        "title": "Add deterministic assertions to Phase 15 candidate staging test."
+      }
+    ]
+  },
+  "proposal_fingerprint": "739e6c45bacb7016bf0d7563934193bef0baade5fe5c3b905bbaa8139b592afa",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 4,
+  "provider_plan_steps_sha256": "3810b0dc1bb148fa4d084f943a039dc788d684bc95ada756a73d39561b6677d2",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "295f962088f08dae47309d9849e06c1abb270450dedd1175339bce158a773fcf",
+  "repository_context_fingerprint": "a5ee4a691fdbaf98e6e180360483431fe78b69b024c1b38d08379272ece8f9c5",
+  "repository_impact_analysis_fingerprint": "7e53e511c2ec8a1c467e50a37db6b06129dfe8b350736f201da1fd3b4ea5468e",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "3d9077c4b57565900212313d9516bc70457471c9c651f5370d2d08ddaf97555e",
+  "repository_source_sha": "368a65a4c8f6034e150b83847923ffee7d774723",
+  "request": {
+    "allowed_path_prefixes": [
+      "data/candidates",
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jichi-phase15-morioka-pilot-campaign-003",
+    "execution_phase": "autonomous-development",
+    "goal": "Populate the existing non-public Morioka (032018) Phase 15 review-candidate staging in M-Osugi1230/jichi-insight. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, the canonical Phase 15 queue, data/indexed/morioka-city/source_inventory.json, and completed Phase 15 municipality packages as read-only context. Do not create any file: every task new_paths must be []. Write only data/candidates/morioka-city/review_candidate.json and tests/test_phase15_review_candidate_staging.py. Use official primary sources only and retain stable evidence locations, plan/version/period/fiscal/availability boundaries, source precision, and explicit deferred depth. Set package_state=prepared only when the candidate package is complete enough for human checking. Candidate plan decisions must remain needs_review or not_assessable; human_review.status must remain pending; publication.eligible must remain false; the Phase 15 queue must remain review_in_progress. Never infer unpublished facts, reuse historical actuals as current actuals without official linkage, collapse fiscal/document states or year semantics, promote drafts, create policy-achievement scores, infer causality, or create unverified rankings/political evaluations. Add deterministic assertions in the existing staging test. Success is a green bounded PR containing a complete non-public candidate, followed by HUMAN_WAIT for explicit human primary-source review. Do not promote reviewed_complete or broaden beyond Morioka.",
+    "id_prefix": "jip15morioka003",
+    "max_tasks": 2,
+    "request_id": "jichi-phase15-morioka-pilot-request-003",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "request_fingerprint": "cd5e33a6a63f562a472fff4ba1078a004d325aec9924cd2cfa05dcee89a54b42",
+  "schema_version": 1,
+  "task_ids": [
+    "jip15morioka003-001",
+    "jip15morioka003-002"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 37155811078
+}
