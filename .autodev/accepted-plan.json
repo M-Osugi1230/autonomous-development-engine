@@ -1,134 +1,134 @@
 {
-  "fingerprint": "4fb1cce259026f0c1389bf87a9c9fe1589dafe573573bf47ea65c181eac562c6",
-  "plan": {
-    "goal": "Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields.",
-    "human_boundaries": [
-      "destructive or irreversible operation",
-      "credential or secret access",
-      "externally consequential side effect"
-    ],
+    "fingerprint": "4fb1cce259026f0c1389bf87a9c9fe1589dafe573573bf47ea65c181eac562c6",
+    "plan": {
+        "goal": "Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields.",
+        "human_boundaries": [
+            "destructive or irreversible operation",
+            "credential or secret access",
+            "externally consequential side effect"
+        ],
+        "schema_version": 1,
+        "tasks": [
+            {
+                "acceptance": [
+                    "Update `engine/features/fundamental_pit.py` to support extended earnings history and forecast snapshot retention.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "engine/features/fundamental_pit.py"
+                ],
+                "depends_on": [],
+                "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/features/fundamental_pit.py` to support extended earnings history and forecast snapshot retention. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+                "task_id": "jqdepth001-001",
+                "title": "Update `engine/features/fundamental_pit.py` to support extended earnings history and forecast snapshot retention."
+            },
+            {
+                "acceptance": [
+                    "Update `engine/marketdata/quarterly.py` to preserve multi-year quarterly disclosures and PIT metadata.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "engine/marketdata/quarterly.py"
+                ],
+                "depends_on": [
+                    "jqdepth001-001"
+                ],
+                "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/marketdata/quarterly.py` to preserve multi-year quarterly disclosures and PIT metadata. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+                "task_id": "jqdepth001-002",
+                "title": "Update `engine/marketdata/quarterly.py` to preserve multi-year quarterly disclosures and PIT metadata."
+            },
+            {
+                "acceptance": [
+                    "Update `engine/features/security_daily.py` to compute 1/5/20/60-trading-day forward returns and event features.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "engine/features/security_daily.py"
+                ],
+                "depends_on": [
+                    "jqdepth001-002"
+                ],
+                "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/features/security_daily.py` to compute 1/5/20/60-trading-day forward returns and event features. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+                "task_id": "jqdepth001-003",
+                "title": "Update `engine/features/security_daily.py` to compute 1/5/20/60-trading-day forward returns and event features."
+            },
+            {
+                "acceptance": [
+                    "Update `engine/marketdata/prices.py` to support benchmark-relative excess return computations.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "engine/marketdata/prices.py"
+                ],
+                "depends_on": [
+                    "jqdepth001-003"
+                ],
+                "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/marketdata/prices.py` to support benchmark-relative excess return computations. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+                "task_id": "jqdepth001-004",
+                "title": "Update `engine/marketdata/prices.py` to support benchmark-relative excess return computations."
+            },
+            {
+                "acceptance": [
+                    "Update `engine/marketdata/benefit_parser.py` to extract annual monetary value and investable capital thresholds.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "engine/marketdata/benefit_parser.py"
+                ],
+                "depends_on": [
+                    "jqdepth001-004"
+                ],
+                "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/marketdata/benefit_parser.py` to extract annual monetary value and investable capital thresholds. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+                "task_id": "jqdepth001-005",
+                "title": "Update `engine/marketdata/benefit_parser.py` to extract annual monetary value and investable capital thresholds."
+            },
+            {
+                "acceptance": [
+                    "Update `engine/marketdata/dividend_yield.py` to calculate combined dividend and benefit total yields.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "engine/marketdata/dividend_yield.py"
+                ],
+                "depends_on": [
+                    "jqdepth001-005"
+                ],
+                "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/marketdata/dividend_yield.py` to calculate combined dividend and benefit total yields. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+                "task_id": "jqdepth001-006",
+                "title": "Update `engine/marketdata/dividend_yield.py` to calculate combined dividend and benefit total yields."
+            },
+            {
+                "acceptance": [
+                    "Update `tests/test_fundamental_pit.py` to test forecast snapshot retention and point-in-time correctness.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "tests/test_fundamental_pit.py"
+                ],
+                "depends_on": [
+                    "jqdepth001-006"
+                ],
+                "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `tests/test_fundamental_pit.py` to test forecast snapshot retention and point-in-time correctness. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+                "task_id": "jqdepth001-007",
+                "title": "Update `tests/test_fundamental_pit.py` to test forecast snapshot retention and point-in-time correctness."
+            },
+            {
+                "acceptance": [
+                    "Update `tests/test_security_features.py` to test 1/5/20/60-trading-day forward return metrics.",
+                    "Repository CI remains green"
+                ],
+                "allowed_paths": [
+                    "tests/test_security_features.py"
+                ],
+                "depends_on": [
+                    "jqdepth001-007"
+                ],
+                "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `tests/test_security_features.py` to test 1/5/20/60-trading-day forward return metrics. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+                "task_id": "jqdepth001-008",
+                "title": "Update `tests/test_security_features.py` to test 1/5/20/60-trading-day forward return metrics."
+            }
+        ]
+    },
     "schema_version": 1,
-    "tasks": [
-      {
-        "acceptance": [
-          "Update `engine/features/fundamental_pit.py` to support extended earnings history and forecast snapshot retention.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "engine/features/fundamental_pit.py"
-        ],
-        "depends_on": [],
-        "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/features/fundamental_pit.py` to support extended earnings history and forecast snapshot retention. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jqdepth001-001",
-        "title": "Update `engine/features/fundamental_pit.py` to support extended earnings history and forecast snapshot retention."
-      },
-      {
-        "acceptance": [
-          "Update `engine/marketdata/quarterly.py` to preserve multi-year quarterly disclosures and PIT metadata.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "engine/marketdata/quarterly.py"
-        ],
-        "depends_on": [
-          "jqdepth001-001"
-        ],
-        "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/marketdata/quarterly.py` to preserve multi-year quarterly disclosures and PIT metadata. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jqdepth001-002",
-        "title": "Update `engine/marketdata/quarterly.py` to preserve multi-year quarterly disclosures and PIT metadata."
-      },
-      {
-        "acceptance": [
-          "Update `engine/features/security_daily.py` to compute 1/5/20/60-trading-day forward returns and event features.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "engine/features/security_daily.py"
-        ],
-        "depends_on": [
-          "jqdepth001-002"
-        ],
-        "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/features/security_daily.py` to compute 1/5/20/60-trading-day forward returns and event features. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jqdepth001-003",
-        "title": "Update `engine/features/security_daily.py` to compute 1/5/20/60-trading-day forward returns and event features."
-      },
-      {
-        "acceptance": [
-          "Update `engine/marketdata/prices.py` to support benchmark-relative excess return computations.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "engine/marketdata/prices.py"
-        ],
-        "depends_on": [
-          "jqdepth001-003"
-        ],
-        "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/marketdata/prices.py` to support benchmark-relative excess return computations. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jqdepth001-004",
-        "title": "Update `engine/marketdata/prices.py` to support benchmark-relative excess return computations."
-      },
-      {
-        "acceptance": [
-          "Update `engine/marketdata/benefit_parser.py` to extract annual monetary value and investable capital thresholds.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "engine/marketdata/benefit_parser.py"
-        ],
-        "depends_on": [
-          "jqdepth001-004"
-        ],
-        "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/marketdata/benefit_parser.py` to extract annual monetary value and investable capital thresholds. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jqdepth001-005",
-        "title": "Update `engine/marketdata/benefit_parser.py` to extract annual monetary value and investable capital thresholds."
-      },
-      {
-        "acceptance": [
-          "Update `engine/marketdata/dividend_yield.py` to calculate combined dividend and benefit total yields.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "engine/marketdata/dividend_yield.py"
-        ],
-        "depends_on": [
-          "jqdepth001-005"
-        ],
-        "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `engine/marketdata/dividend_yield.py` to calculate combined dividend and benefit total yields. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jqdepth001-006",
-        "title": "Update `engine/marketdata/dividend_yield.py` to calculate combined dividend and benefit total yields."
-      },
-      {
-        "acceptance": [
-          "Update `tests/test_fundamental_pit.py` to test forecast snapshot retention and point-in-time correctness.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "tests/test_fundamental_pit.py"
-        ],
-        "depends_on": [
-          "jqdepth001-006"
-        ],
-        "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `tests/test_fundamental_pit.py` to test forecast snapshot retention and point-in-time correctness. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jqdepth001-007",
-        "title": "Update `tests/test_fundamental_pit.py` to test forecast snapshot retention and point-in-time correctness."
-      },
-      {
-        "acceptance": [
-          "Update `tests/test_security_features.py` to test 1/5/20/60-trading-day forward return metrics.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "tests/test_security_features.py"
-        ],
-        "depends_on": [
-          "jqdepth001-007"
-        ],
-        "prompt": "Goal: Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields. Outcome: Update `tests/test_security_features.py` to test 1/5/20/60-trading-day forward return metrics. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jqdepth001-008",
-        "title": "Update `tests/test_security_features.py` to test 1/5/20/60-trading-day forward return metrics."
-      }
-    ]
-  },
-  "schema_version": 1,
-  "status": "ACCEPTED"
+    "status": "ACCEPTED"
 }
