@@ -1,10 +1,10 @@
 {
-  "attempt": 3,
-  "detail": "external target repository is not readable; configure ADE_TARGET_GITHUB_TOKEN for private repository access",
-  "reason": "planner-failure-budget-exhausted",
-  "request_fingerprint": "9cb34885ce1e38cef89dd9c054a467c272f7ca69c976949a0908957bdd397a80",
-  "request_id": "jquants-prod-grad-request-001",
+  "attempt": 1,
+  "detail": "planner path must name a concrete file, not a trusted root: vercel.json",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "284937191471f2478e18586ed940889b5ac214f3dfc620b82bd63e0854134199",
+  "request_id": "jquants-prod-grad-request-002",
   "schema_version": 1,
-  "state": "HUMAN_WAIT",
-  "updated_at": "2026-10-03T01:56:36.284670+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-03T10:12:07.750730+00:00"
 }
