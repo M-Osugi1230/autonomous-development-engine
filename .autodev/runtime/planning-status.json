@@ -1,10 +1,10 @@
 {
   "attempt": 1,
-  "detail": "repository tree exceeds trusted entry budget",
-  "reason": "planner-retryable-failure",
+  "detail": "HTTP 400: Precondition check failed.",
+  "reason": "planner-provider-capacity",
   "request_fingerprint": "35e285fa2982abde66a7ee0d41d91aa1448a87cf437851ee4d5d4cd944da5430",
   "request_id": "chukei-universe-research-request-001",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-10-03T22:15:47.020964+00:00"
+  "state": "PAUSED_QUOTA",
+  "updated_at": "2026-10-03T23:33:22.852843+00:00"
 }
