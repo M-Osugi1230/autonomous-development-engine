@@ -2,8 +2,8 @@
   "environment": "repository",
   "max_attempts": 2,
   "required_probe_ids": [
-    "offline-cli-smoke",
-    "production-import-smoke"
+    "repository-bytecode-smoke",
+    "repository-entrypoint-smoke"
   ],
   "schema_version": 1,
   "source_sha": "be8192299d8247880690806bb8a0c2d21843070d",
