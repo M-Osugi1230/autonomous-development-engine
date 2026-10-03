@@ -1,20 +1,19 @@
 {
   "schema_version": 1,
-  "request_id": "jquants-prod-grad-request-002",
-  "campaign_id": "jquants-prod-grad-campaign-002",
-  "id_prefix": "jqprod002",
+  "request_id": "jquants-prod-grad-request-003",
+  "campaign_id": "jquants-prod-grad-campaign-003",
+  "id_prefix": "jqprod003",
   "goal": "Bring M-Osugi1230/jquants-research-studio to full Production Graduation. Treat docs/production-graduation.md as the authoritative completion definition. Inspect the current repository first and identify only unmet graduation criteria; preserve already-complete subsystems and the existing cloud-native Supabase plus Vercel architecture. Do not reintroduce Mac or self-hosted production dependencies. Implement the minimum bounded task DAG needed to close real gaps, with deterministic tests and CI. Verify the current Research archive and historical access, quarterly earnings and forecast data paths, Yield, Charts, Advanced, Compare Workspace, market-cycle behavior, error recovery, and production-facing health contracts described by the runbook. After each change, require target CI and trusted merge. Require exact-source repository runtime verification after merges. Do not claim production completion from CI alone: preserve or strengthen source-bound Vercel deployment and Supabase operational-health evidence where the target repository already provides it. If a required external credential, provider connection, destructive production action, or explicit promotion approval cannot be safely performed autonomously, enter HUMAN_WAIT and record the exact human action required rather than weakening the checks. Stop only when docs/production-graduation.md is satisfied or a genuinely human-only boundary is reached.",
   "target_repository": "M-Osugi1230/jquants-research-studio",
   "base_branch": "main",
   "allowed_path_prefixes": [
     "apps",
+    "engine",
     "providers",
     "scripts",
     "supabase",
     "tests",
-    "docs",
-    "app.py",
-    "vercel.json"
+    "docs"
   ],
   "execution_phase": "autonomous-development",
   "min_tasks": 1,
