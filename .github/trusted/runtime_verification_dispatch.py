@@ -599,7 +599,7 @@ def main() -> int:
         workspace = prepare_repository_runtime_workspace(contract)
         dependency_fingerprint = workspace.dependency_fingerprint
         try:
-            registry = build_runtime_probe_registry(workspace)
+            registry = build_runtime_probe_registry(\n                workspace,\n                target_repository=contract.target_repository,\n            )
             dispatch_transition = record_runtime_verification_dispatch(
                 contract=contract,
                 registry=registry,
