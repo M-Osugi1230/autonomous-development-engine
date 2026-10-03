@@ -40,6 +40,7 @@ V1_5_FINALIZER_TASK_ID = "v15mem2-001"
 V1_6_BACKLOG_PHASE = "v1.6-autonomous-backlog"
 V1_7_MULTI_AGENT_PHASE = "v1.7-multi-agent"
 V1_9_CONTINUOUS_IMPROVEMENT_PHASE = "v1.9-continuous-improvement"
+AUTONOMOUS_DEVELOPMENT_PHASE = "autonomous-development"
 
 
 def _runtime_provenance_required(task_id: str, phase: str | None) -> bool:
@@ -280,6 +281,71 @@ def _active_phase(gh: GitHubClient) -> str | None:
     return phase if isinstance(phase, str) and phase else None
 
 
+def _reconcile_autonomous_development_success(
+    gh: GitHubClient,
+    *,
+    receipt: RuntimeVerificationReceipt,
+) -> str:
+    if receipt.status != "VERIFIED":
+        return "NOT_APPLICABLE"
+
+    state, _ = gh.get_json_file(".autodev/state.json")
+    metadata = state.get("metadata")
+    metadata = metadata if isinstance(metadata, dict) else {}
+    if metadata.get("phase") != AUTONOMOUS_DEVELOPMENT_PHASE:
+        return "NOT_APPLICABLE"
+
+    campaign, _ = gh.get_json_file(".autodev/campaign.json")
+    task_ids = campaign.get("task_ids")
+    completed = campaign.get("completed_task_ids")
+    if not isinstance(task_ids, list) or receipt.task_id not in task_ids:
+        raise ValueError("verified task is absent from autonomous campaign")
+    if not isinstance(completed, list) or receipt.task_id not in completed:
+        raise ValueError("verified task is not completed in autonomous campaign")
+    if set(task_ids) != set(completed):
+        return "WAITING_FOR_CAMPAIGN"
+
+    current_task_id = state.get("current_task_id")
+    if current_task_id not in {None, receipt.task_id}:
+        return "WAITING_FOR_CURRENT_TASK"
+
+    next_campaign = dict(campaign)
+    next_campaign["status"] = "COMPLETED"
+
+    next_state = dict(state)
+    next_metadata = dict(metadata)
+    for key in (
+        "recovery_action",
+        "recovery_failure",
+        "runtime_verification_failure_fingerprint",
+    ):
+        next_metadata.pop(key, None)
+    next_metadata.update(
+        {
+            "runtime_verification_id": receipt.verification_id,
+            "runtime_verification_source_sha": receipt.source_sha,
+            "next_required_human_action": None,
+            "next_system_action": None,
+            "queue_exhausted": True,
+        }
+    )
+    next_state["status"] = "READY"
+    next_state["current_task_id"] = None
+    next_state["metadata"] = next_metadata
+
+    gh.upsert_json_file(
+        ".autodev/campaign.json",
+        next_campaign,
+        message=f"campaign: verified {receipt.task_id}",
+    )
+    gh.upsert_json_file(
+        ".autodev/state.json",
+        next_state,
+        message=f"state: runtime verified {receipt.task_id}",
+    )
+    return "COMPLETED"
+
+
 def _dispatch_v1_6_backlog_finalizer(
     gh: GitHubClient,
     *,
@@ -467,6 +533,12 @@ def main() -> int:
                         graduation_finalizer = "WAITING_FOR_PROVENANCE"
                     elif phase == V1_6_BACKLOG_PHASE:
                         backlog_finalizer = "WAITING_FOR_PROVENANCE"
+            autonomous_reconciliation = (
+                _reconcile_autonomous_development_success(
+                    gh,
+                    receipt=receipt,
+                )
+            )
             result = {
                 "schema_version": 1,
                 "state": "VERIFIED",
@@ -483,6 +555,7 @@ def main() -> int:
                 "v1_5_graduation_finalizer": graduation_finalizer,
                 "v1_6_backlog_finalizer": backlog_finalizer,
                 "v1_7_multi_agent_finalizer": multi_agent_finalizer,
+                "autonomous_development_reconciliation": autonomous_reconciliation,
             }
             _write(result)
             print(json.dumps(result, sort_keys=True))
@@ -577,6 +650,7 @@ def main() -> int:
         graduation_finalizer = "NOT_APPLICABLE"
         backlog_finalizer = "NOT_APPLICABLE"
         multi_agent_finalizer = "NOT_APPLICABLE"
+        autonomous_reconciliation = "NOT_APPLICABLE"
         if final_receipt.status == "VERIFIED":
             memory_feedback = _persist_verified_feedback_safely(
                 gh,
@@ -593,6 +667,12 @@ def main() -> int:
                 memory_feedback=memory_feedback,
             )
             phase = _active_phase(gh)
+            autonomous_reconciliation = (
+                _reconcile_autonomous_development_success(
+                    gh,
+                    receipt=final_receipt,
+                )
+            )
             needs_provenance = _runtime_provenance_required(
                 final_receipt.task_id,
                 phase,
@@ -664,6 +744,7 @@ def main() -> int:
             "v1_5_graduation_finalizer": graduation_finalizer,
             "v1_6_backlog_finalizer": backlog_finalizer,
             "v1_7_multi_agent_finalizer": multi_agent_finalizer,
+            "autonomous_development_reconciliation": autonomous_reconciliation,
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
