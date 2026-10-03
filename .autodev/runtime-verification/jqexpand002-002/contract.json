@@ -1,0 +1,13 @@
+{
+  "environment": "repository",
+  "max_attempts": 2,
+  "required_probe_ids": [
+    "repository-bytecode-smoke",
+    "repository-entrypoint-smoke"
+  ],
+  "schema_version": 1,
+  "source_sha": "48e04453eed22191c2063c41984237ccb6cb3bc3",
+  "target_repository": "M-Osugi1230/jquants-research-studio",
+  "timeout_seconds": 300,
+  "verification_id": "rv-48e04453eed22191c2063c41984237ccb6cb3bc3"
+}
