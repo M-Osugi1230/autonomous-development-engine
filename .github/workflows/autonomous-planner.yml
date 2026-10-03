@@ -43,6 +43,7 @@ jobs:
           PYTHONPATH: src
           ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
           ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.ref_name || 'default' }}
+          ADE_REPOSITORY_INTELLIGENCE_PREFIXES: operations/plan-detection,operations/research-priority,operations/source-research,scripts,docs
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
