@@ -125,12 +125,30 @@ class GitHubClient:
         *,
         tree_sha: str,
         max_entries: int = 5000,
+        include_prefixes: tuple[str, ...] = (),
     ) -> list[str]:
         repository = self._validate_repository_name(repository)
         if not isinstance(tree_sha, str) or _SHA40.fullmatch(tree_sha) is None:
             raise ValueError("tree_sha must be a lowercase 40-char SHA")
         if type(max_entries) is not int or max_entries < 1 or max_entries > 20000:
             raise ValueError("max_entries must be between 1 and 20000")
+        normalized_prefixes: list[str] = []
+        if not isinstance(include_prefixes, tuple):
+            raise ValueError("include_prefixes must be a tuple")
+        if len(include_prefixes) > 12:
+            raise ValueError("include_prefixes exceeds trusted prefix budget")
+        for prefix in include_prefixes:
+            if not isinstance(prefix, str) or not prefix.strip():
+                raise ValueError("include_prefixes must contain non-empty strings")
+            value = prefix.strip().rstrip("/")
+            if (
+                not value
+                or value.startswith("/")
+                or ".." in value.split("/")
+                or "\\" in value
+            ):
+                raise ValueError(f"unsafe include prefix: {prefix}")
+            normalized_prefixes.append(value)
 
         payload = self._request(
             "GET",
@@ -151,6 +169,11 @@ class GitHubClient:
             path = entry.get("path")
             if not isinstance(path, str) or not path:
                 raise GitHubError("repository tree contains an invalid blob path")
+            if normalized_prefixes and not any(
+                path == prefix or path.startswith(prefix + "/")
+                for prefix in normalized_prefixes
+            ):
+                continue
             paths.append(path)
             if len(paths) > max_entries:
                 raise GitHubError("repository tree exceeds trusted entry budget")
