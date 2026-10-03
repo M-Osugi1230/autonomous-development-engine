@@ -17,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ade-remote-pr-monitor
+  group: ade-remote-pr-monitor-${{ github.event.client_payload.project_key || 'default' }}
   cancel-in-progress: false
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout trusted controller from main
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.client_payload.control_ref || 'main' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -38,6 +38,8 @@ jobs:
       - name: Observe remote PR and advance Campaign
         env:
           PYTHONPATH: src
+          ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || 'main' }}
+          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || 'default' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
         run: python .github/trusted/remote_pr_monitor.py
