@@ -133,6 +133,17 @@ class GitHubClient:
         if type(max_entries) is not int or max_entries < 1 or max_entries > 20000:
             raise ValueError("max_entries must be between 1 and 20000")
         normalized_prefixes: list[str] = []
+        if not include_prefixes:
+            raw_prefixes = os.environ.get(
+                "ADE_REPOSITORY_INTELLIGENCE_PREFIXES",
+                "",
+            ).strip()
+            if raw_prefixes:
+                include_prefixes = tuple(
+                    item.strip()
+                    for item in raw_prefixes.split(",")
+                    if item.strip()
+                )
         if not isinstance(include_prefixes, tuple):
             raise ValueError("include_prefixes must be a tuple")
         if len(include_prefixes) > 12:
