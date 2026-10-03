@@ -6,12 +6,15 @@ on:
       - main
     paths:
       - ".autodev/runtime-verification-retry.json"
+  repository_dispatch:
+    types:
+      - ade_runtime_verification_retry
 
 permissions:
   contents: write
 
 concurrency:
-  group: ade-runtime-verification-retry
+  group: ade-runtime-verification-retry-${{ github.event.client_payload.project_key || 'default' }}
   cancel-in-progress: false
 
 jobs:
@@ -22,7 +25,7 @@ jobs:
       - name: Checkout trusted controller from main
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.client_payload.control_ref || 'main' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,6 +35,8 @@ jobs:
       - name: Re-arm exact-source Runtime Verification
         env:
           PYTHONPATH: src:.github/trusted
+          ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || 'main' }}
+          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || 'default' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
         run: python .github/trusted/runtime_verification_retry.py
