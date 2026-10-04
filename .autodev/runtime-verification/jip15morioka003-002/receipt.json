@@ -1,0 +1,12 @@
+{
+  "contract_fingerprint": "f52a344235a4393e250a862695ae209a2cf46735580837fc4e1c4ff3c3cf5073",
+  "dispatch_count": 0,
+  "policy_fingerprint": "ff4c57ea6e8a5a691d887d73066b4a07b4994abfe7357a9ce1ea3bb14ef40de2",
+  "registry_fingerprint": "1a74c411e83a800ebc258690e7543e5b1106de202567aa64aa6acbbd4e7b1f38",
+  "schema_version": 1,
+  "source_sha": "592942af423fd94008576668b932a40cd7a03075",
+  "status": "ARMED",
+  "target_repository": "M-Osugi1230/jichi-insight",
+  "task_id": "jip15morioka003-002",
+  "verification_id": "rv-592942af423fd94008576668b932a40cd7a03075"
+}
