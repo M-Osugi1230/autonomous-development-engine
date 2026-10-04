@@ -104,7 +104,8 @@
     },
     "milestone": "v1.9-graduated",
     "next_required_human_action": null,
-    "next_system_action": "zero-touch-start",
+    "next_system_action": "resume-after-provider-quota",
+    "pause_reason": "global-quota-scheduler",
     "phase": "autonomous-development",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -132,12 +133,15 @@
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
     "queue_exhausted": false,
+    "quota_admission_reason": "global-limit-exhausted",
+    "quota_remaining": 0,
     "repository_intelligence_content_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
     "repository_intelligence_context_fingerprint": "6448412961453398956db292071610fdc93fd015fbf80c624e72c7cd106b1ebb",
     "repository_intelligence_impact_fingerprint": "17d636855e69476cc6006a3cae11dce5a76d62c65fc7c042f75ddbca5bacc13f",
     "repository_intelligence_relationship_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
     "repository_intelligence_snapshot_fingerprint": "bc9de81641a7379ab677e867a153ac9ab360938f44b6680abb87ee37349bc9d7",
     "repository_intelligence_source_sha": "7804d4e0f4e19bb22fd6074d10f7066d357344fa",
+    "resume_after": "2026-10-04T18:51:12.482927+00:00",
     "scheduler": "dag",
     "superseded_v1_4_proofs": [
       {
@@ -303,6 +307,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "READY",
-  "updated_at": "2026-10-04T16:11:55.054097+00:00"
+  "status": "PAUSED_QUOTA",
+  "updated_at": "2026-10-04T16:12:26.047747+00:00"
 }
