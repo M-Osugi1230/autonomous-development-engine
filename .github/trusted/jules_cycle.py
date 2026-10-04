@@ -24,6 +24,7 @@ from jules_client import (
     JulesQuota,
     JulesUnauthorized,
 )
+from quota_scheduler_runtime import assess_jules_admission, tagged_title
 
 TASK_PATH = Path(".autodev/cycle-task.json")
 RESULT_PATH = Path(".autodev/runtime/jules-session.json")
@@ -294,6 +295,54 @@ def _quota_pause(
     return 20
 
 
+
+def _scheduler_pause(
+    gh: GitHubClient,
+    *,
+    task_id: str,
+    decision,
+) -> int:
+    resume_after = decision.resume_after
+    if resume_after is None:
+        resume_after = (datetime.now(UTC) + QUOTA_RETRY_DELAY).isoformat()
+    error = f"quota scheduler: {decision.reason}"
+    payload = _checkpoint(
+        task_id,
+        "PAUSED_QUOTA",
+        session_id=None,
+        last_failure_kind="PROVIDER_QUOTA",
+        last_error=error,
+        resume_after=resume_after,
+    )
+    _persist_checkpoint(gh, payload)
+    _set_project_status(
+        gh,
+        task_id=task_id,
+        status="PAUSED_QUOTA",
+        metadata_updates={
+            "pause_reason": "global-quota-scheduler",
+            "resume_after": resume_after,
+            "next_system_action": "resume-after-provider-quota",
+            "next_required_human_action": None,
+            "quota_admission_reason": decision.reason,
+            "quota_remaining": decision.remaining,
+        },
+    )
+    _write_result(
+        {
+            **payload,
+            "state": "PAUSED_QUOTA",
+            "quota_admission": decision.to_dict(),
+        }
+    )
+    print(
+        f"Global quota scheduler deferred {task_id}: {decision.reason}; "
+        f"resume after {resume_after}",
+        file=sys.stderr,
+    )
+    return 20
+
+
 def _handle_precondition(
     client: JulesClient,
     gh: GitHubClient,
@@ -514,6 +563,18 @@ def run_new_cycle(
     target_repository: str,
 ) -> int:
     task_id = str(task["task_id"])
+    admission = assess_jules_admission(
+        client=client,
+        gh=gh,
+        purpose="implementation",
+    )
+    if not admission.allowed:
+        return _scheduler_pause(
+            gh,
+            task_id=task_id,
+            decision=admission,
+        )
+
     source = client.find_github_source(owner, repo)
     if source is None:
         raise RuntimeError(f"{owner}/{repo} is not visible in Jules sources")
@@ -525,7 +586,7 @@ def run_new_cycle(
         prompt=str(task["prompt"]),
         source=source_name,
         starting_branch=str(task.get("starting_branch", "main")),
-        title=str(task["title"]),
+        title=tagged_title(str(task["title"]), purpose="implementation"),
         auto_create_pr=bool(task.get("auto_create_pr", True)),
     )
     session_id = _session_id(session)

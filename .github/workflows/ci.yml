@@ -198,6 +198,11 @@ jobs:
           PYTHONPATH: src
         run: python scripts/multi_provider_probe.py
 
+      - name: Quota-aware global scheduler proof
+        env:
+          PYTHONPATH: src
+        run: python scripts/quota_scheduler_probe.py
+
       - name: Multi-Agent foundation proof
         env:
           PYTHONPATH: src
