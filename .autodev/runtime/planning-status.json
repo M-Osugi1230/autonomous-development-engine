@@ -1,10 +1,10 @@
 {
-  "attempt": 0,
-  "detail": "HTTP 400: Precondition check failed.",
-  "reason": "planner-provider-capacity",
+  "attempt": 1,
+  "detail": "task jules-step-001 path does not exist in repository snapshot and is not declared new: operations/plan-detection/candidates/ade-batch-002/candidates-v1.json",
+  "reason": "planner-retryable-failure",
   "request_fingerprint": "b1f37993636292adae71e4a6ee6c4e89e93a258239467c98619a68e7dd26078e",
   "request_id": "chukei-plan-detection-scale-request-003",
   "schema_version": 1,
-  "state": "PAUSED_QUOTA",
-  "updated_at": "2026-10-04T09:52:25.309954+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-04T10:14:53.703114+00:00"
 }
