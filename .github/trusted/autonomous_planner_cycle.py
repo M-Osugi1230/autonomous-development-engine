@@ -538,22 +538,6 @@ def main() -> int:
     owner, repo = request.target_repository.split("/", 1)
 
     try:
-        client = JulesClient()
-        source = client.find_github_source(owner, repo)
-        if source is None:
-            payload = _status(
-                request,
-                state="HUMAN_WAIT",
-                attempt=attempt,
-                reason="target-repository-not-visible-to-jules",
-            )
-            _persist_status(gh, payload)
-            print(json.dumps(payload, sort_keys=True))
-            return 0
-        source_name = source.get("name")
-        if not isinstance(source_name, str) or not source_name.strip():
-            raise JulesPlannerError("Jules target source has no resource name")
-
         (
             snapshot,
             content_summary,
@@ -579,6 +563,22 @@ def main() -> int:
                 deterministic_proposal
             )
         else:
+            client = JulesClient()
+            source = client.find_github_source(owner, repo)
+            if source is None:
+                payload = _status(
+                    request,
+                    state="HUMAN_WAIT",
+                    attempt=attempt,
+                    reason="target-repository-not-visible-to-jules",
+                )
+                _persist_status(gh, payload)
+                print(json.dumps(payload, sort_keys=True))
+                return 0
+            source_name = source.get("name")
+            if not isinstance(source_name, str) or not source_name.strip():
+                raise JulesPlannerError("Jules target source has no resource name")
+
             admission = assess_jules_admission(
                 client=client,
                 gh=gh,
