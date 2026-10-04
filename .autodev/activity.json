@@ -251,6 +251,13 @@
       "occurred_at": "2026-10-04T22:11:04.820219+00:00",
       "summary": "Merged Jules PR #114",
       "task_id": "jqdepth001-004"
+    },
+    {
+      "event_id": "pr-merged-116-66a36685c1ce",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-10-04T22:29:38.585926+00:00",
+      "summary": "Merged Jules PR #116",
+      "task_id": "jqdepth001-006"
     }
   ],
   "schema_version": 1
