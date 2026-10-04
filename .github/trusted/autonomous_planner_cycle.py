@@ -40,6 +40,7 @@ from ade.repository_intelligence import (
 )
 from github_client import GitHubClient, GitHubError
 from jules_client import JulesClient, JulesError, JulesPrecondition, JulesQuota, JulesUnauthorized
+from quota_scheduler_runtime import assess_jules_admission, tagged_title
 
 REQUEST_PATH = Path(".autodev/planning-goal.json")
 STATE_PATH = Path(".autodev/state.json")
@@ -530,6 +531,28 @@ def main() -> int:
 
     try:
         client = JulesClient()
+        admission = assess_jules_admission(
+            client=client,
+            gh=gh,
+            purpose="planner",
+        )
+        if not admission.allowed:
+            payload = _status(
+                request,
+                state="PAUSED_QUOTA",
+                attempt=previous_attempt,
+                reason="planner-provider-capacity",
+                extra={
+                    "detail": f"quota-scheduler: {admission.reason}",
+                    "resume_after": admission.resume_after,
+                    "quota_admission": admission.to_dict(),
+                },
+            )
+            _persist_status(gh, payload)
+            _arm_capacity_retry(gh, request)
+            print(json.dumps(payload, sort_keys=True))
+            return 0
+
         source = client.find_github_source(owner, repo)
         if source is None:
             payload = _status(
@@ -566,7 +589,10 @@ def main() -> int:
             JulesPlannerConfig(
                 source_name=source_name,
                 starting_branch=request.base_branch,
-                title=f"ADE planner: {request.request_id}",
+                title=tagged_title(
+                    f"ADE planner: {request.request_id}",
+                    purpose="planner",
+                ),
                 allowed_path_prefixes=request.allowed_path_prefixes,
                 required_human_boundaries=request.planner_policy().required_human_boundaries,
             ),
