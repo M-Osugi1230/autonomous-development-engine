@@ -1,0 +1,25 @@
+{
+  "evidence": {
+    "deployment_id": null,
+    "environment": "repository",
+    "kind": "repository",
+    "observed_at": "2026-10-04T22:45:43.974736+00:00",
+    "provenance_id": "trusted-merge-sha-v1",
+    "schema_version": 1,
+    "source_sha": "da4579cccefe38fbfaec4565bed830d1bcf9298a",
+    "target_id": "repository-runtime",
+    "target_repository": "M-Osugi1230/jquants-research-studio"
+  },
+  "evidence_fingerprint": "6bd8d6c2a0f9440278ed90f440a65a82fba31bee4a1d4abee1c7789f6d3295eb",
+  "registry_fingerprint": "1c3875b5ccc42f5bd084db60fc0582bffcc4acb5aae6de995bad0a2ba0c48d9e",
+  "schema_version": 1,
+  "spec": {
+    "deployment_required": false,
+    "environment": "repository",
+    "kind": "repository",
+    "max_age_seconds": 300,
+    "max_future_skew_seconds": 60,
+    "schema_version": 1,
+    "target_id": "repository-runtime"
+  }
+}
