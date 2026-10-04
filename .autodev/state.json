@@ -79,11 +79,12 @@
     "jqdepth001-004",
     "jqdepth001-005",
     "jqdepth001-006",
-    "jqdepth001-007"
+    "jqdepth001-007",
+    "jqdepth001-008"
   ],
-  "current_task_id": "jqdepth001-008",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 79,
+  "iteration": 80,
   "metadata": {
     "accepted_plan_fingerprint": "4fb1cce259026f0c1389bf87a9c9fe1589dafe573573bf47ea65c181eac562c6",
     "campaign_id": "jquants-data-depth-campaign-001",
@@ -143,7 +144,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "repository_intelligence_content_fingerprint": "f6e9dfc827ef455f6d61388e06448b9452b753c119096250c09e0bd32008756f",
     "repository_intelligence_context_fingerprint": "94176b70867a65f526654f95570ae77fdf9b10fbdbe044165e25d2cebeffdaab",
     "repository_intelligence_impact_fingerprint": "079756aeaffc7f0beb8ca9a31f045e36da6888f67987723b33d32985c8c5c8c4",
@@ -317,6 +318,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-04T22:38:29.616266+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-04T22:45:36.836535+00:00"
 }
