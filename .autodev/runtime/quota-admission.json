@@ -1,0 +1,21 @@
+{
+  "active_project_keys": [
+    "ade-chu-kei",
+    "ade-jichi-insight",
+    "ade-jquants"
+  ],
+  "allowed": false,
+  "daily_limit": 15,
+  "observed_at": "2026-10-04T16:12:24.847649+00:00",
+  "project_allocation": 4,
+  "project_key": "ade-jichi-insight",
+  "project_used": 0,
+  "purpose": "implementation",
+  "reason": "global-limit-exhausted",
+  "remaining": 0,
+  "resume_after": "2026-10-04T18:51:12.482927+00:00",
+  "schema_version": 1,
+  "selected_project_keys": [],
+  "total_used": 15,
+  "unknown_session_count": 15
+}
