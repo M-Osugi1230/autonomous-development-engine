@@ -60,7 +60,10 @@ class JulesProvider:
             message = self._extract_error_message(raw) or f"HTTP {exc.code}"
             if exc.code in (401, 403):
                 raise ProviderUnauthorizedError(message) from exc
-            if exc.code == 429:
+            if exc.code == 429 or (
+                exc.code == 400
+                and message.strip().casefold() == "precondition check failed."
+            ):
                 raise ProviderQuotaError(message) from exc
             raise ProviderError(message) from exc
         except URLError as exc:
