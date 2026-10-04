@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jichi-phase15-morioka-pilot-campaign-003",
+  "campaign_id": "jichi-phase15-akita-candidate-campaign-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-03T23:47:11.098719+00:00",
-  "plan_fingerprint": "81a423a8791aee5a530996881f50cadc2c82f18738b4de2f86a017006506dbef",
+  "dispatched_at": "2026-10-04T16:12:11.971770+00:00",
+  "plan_fingerprint": "0c551775baf25d8f0df4467120d97dcb90dd7151fc6df42099105346e9745f37",
   "run_attempt": "1",
-  "run_id": "37162864457",
+  "run_id": "37215887966",
   "schema_version": 1,
-  "source": "push",
-  "source_sha": "497490d48234bc486f6809dcfa0924ca9070a7f3",
+  "source": "repository_dispatch",
+  "source_sha": "ca69d52566b0b709a40fcf7a3db168af518f1bb8",
   "status": "DISPATCHED",
-  "task_id": "jip15morioka003-002"
+  "task_id": "jip15akita001-001"
 }
