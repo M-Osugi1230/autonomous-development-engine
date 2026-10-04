@@ -1,0 +1,12 @@
+{
+  "contract_fingerprint": "258ad4a3a62e3f5d7c91767d8794045e97b9c08d244e38f4d932009b3d5ef00c",
+  "dispatch_count": 0,
+  "policy_fingerprint": "699dfd9d473acf3ad384d0eaf0bae8893b22554247486304b07d185d41094422",
+  "registry_fingerprint": "aad8ccc2202a2ea893dc079a93ab1149f93a69e084d8c14991bdb9474ee84f64",
+  "schema_version": 1,
+  "source_sha": "793b3bf0e18a0eb4b9df3f0bb203db37284c80c9",
+  "status": "ARMED",
+  "target_repository": "M-Osugi1230/jquants-research-studio",
+  "task_id": "jqdepth001-007",
+  "verification_id": "rv-793b3bf0e18a0eb4b9df3f0bb203db37284c80c9"
+}
