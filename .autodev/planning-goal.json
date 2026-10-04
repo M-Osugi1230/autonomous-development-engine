@@ -1,16 +1,24 @@
 {
   "schema_version": 1,
-  "request_id": "chukei-universe-research-request-001",
-  "campaign_id": "chukei-universe-research-campaign-001",
-  "id_prefix": "ckuniv001",
-  "goal": "Advance Chu-kei's Universe-first company coverage by executing one bounded, non-public Plan Detection research batch without conflicting with open PR #241. Treat the files changed by PR #241, especially operations/plan-detection/registry-v1.json, operations/plan-detection/research-queue-v1.json, operations/plan-detection/verified-overrides-v1.json, operations/plan-detection/primary-reviewed-overrides-v1.json, operations/research-priority/current-v1.json, operations/source-research/**, operations/universe/current-universe-v1.json, package.json, reports/**, and existing site/data summaries as read-only. Use the current research-priority and plan-detection queues only as selection inputs. Select the smallest useful batch of high-priority not_checked companies and research only official or first-party primary sources. Create new non-public candidate evidence under operations/plan-detection/candidates/ade-batch-001/ and, if needed, a narrowly scoped validator under scripts/. Record company identity, source URL, source/document identity, observed plan/version/period/fiscal semantics, checked time, and explicit review-needed state. Never infer no_formal_plan from missing evidence, never promote candidates into current/verified/reviewed status, never change public frontend data, Deep Verification, human-review decisions, production promotion, rankings, or political/evaluative claims. Run deterministic candidate validation and the existing npm run quality:v43 gate before PR. Success is a green bounded PR that produces reusable official-source candidate evidence for later trusted promotion while leaving all published Plan Detection state unchanged.",
+  "request_id": "chukei-plan-detection-scale-request-002",
+  "campaign_id": "chukei-plan-detection-scale-campaign-002",
+  "id_prefix": "ckpd002",
+  "goal": "Scale Chu-kei's Universe-first Plan Detection coverage through multiple bounded non-public candidate batches, prioritizing company-count coverage over deep-detail completeness. PR #246 / ade-batch-001 is already merged; treat all existing candidate batches, registry/queue/override files, research-priority outputs, public frontend data, quality-rebase reviews, patches, source-research records, reports, package/workflow configuration, and publication state as read-only. Use operations/research-priority/current-v1.json and the Plan Detection registry/queue as selection inputs. Select distinct highest-priority companies that are still not_checked and are not already present in any existing candidate batch; explicitly exclude 130A, 135A, and 137A because they are in ade-batch-001. Work in small batches of about 3 companies per task, creating only new batch evidence under operations/plan-detection/candidates/ with unique batch IDs beginning at ade-batch-002. Research only official or first-party primary sources. Preserve source/document identity, publication date, plan/version/period/fiscal semantics, checked time, currentness boundaries, evidence provenance, and explicit review-needed state. Never infer no_formal_plan from missing evidence; never convert annual forecasts, long-term visions, growth strategies, or policy statements into a formal medium-term plan without explicit evidence. All candidates must remain non-public, human-review pending, automatic promotion disabled, publication ineligible, and final registry mutation forbidden. Do not change current/verified/reviewed status, Deep Verification, human-review decisions, production promotion, rankings, or evaluative claims. For every task run the existing node scripts/validate_plan_detection_candidates_v1.mjs validator and npm run quality:v43 before PR. Continue across distinct batches within this campaign while safe high-priority not_checked candidates remain. Success is a sequence of green bounded PRs that expands reusable primary-source Plan Detection evidence without changing published Plan Detection state.",
   "target_repository": "M-Osugi1230/chu-kei",
   "base_branch": "main",
   "allowed_path_prefixes": [
-    "operations/plan-detection/candidates",
-    "scripts"
+    "operations/plan-detection/candidates"
+  ],
+  "repository_intelligence_prefixes": [
+    "operations/plan-detection",
+    "operations/research-priority",
+    "operations/quality-rebase/phase2/reviews",
+    "operations/patches",
+    "operations/source-research",
+    "scripts",
+    "docs"
   ],
   "execution_phase": "autonomous-development",
-  "min_tasks": 1,
-  "max_tasks": 3
+  "min_tasks": 2,
+  "max_tasks": 6
 }
