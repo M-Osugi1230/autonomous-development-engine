@@ -1,10 +1,15 @@
 {
-  "attempt": 0,
-  "detail": "HTTP 400: Precondition check failed.",
-  "reason": "planner-provider-capacity",
+  "accepted_plan_fingerprint": "0c551775baf25d8f0df4467120d97dcb90dd7151fc6df42099105346e9745f37",
+  "attempt": 1,
+  "campaign_id": "jichi-phase15-akita-candidate-campaign-001",
+  "development_memory_context_fingerprint": "b11516a8a473de98d16033003c76eb6e6597b9c7c14385af186cf5095fb96173",
+  "development_memory_record_count": 1,
+  "first_task_id": "jip15akita001-001",
+  "proposal_fingerprint": "6abe6047c0f76478ae37df954893d04ca68dded43a5da79505acaf6e1d6e807f",
+  "reason": "trusted-plan-accepted",
   "request_fingerprint": "62545c5cb909ed264effb04b84a4f61fe7ade2083ca60f5094ff295b899eb55f",
   "request_id": "jichi-phase15-akita-candidate-request-001",
   "schema_version": 1,
-  "state": "PAUSED_QUOTA",
-  "updated_at": "2026-10-04T16:01:43.882689+00:00"
+  "state": "ACCEPTED",
+  "updated_at": "2026-10-04T16:12:03.046715+00:00"
 }
