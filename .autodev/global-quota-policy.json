@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "daily_limit": 15,
+  "rolling_window_hours": 24,
+  "grace_minutes": 2,
+  "projects": [
+    {
+      "project_key": "ade-jquants",
+      "allocation": 6,
+      "priority": 40
+    },
+    {
+      "project_key": "ade-chu-kei",
+      "allocation": 5,
+      "priority": 35
+    },
+    {
+      "project_key": "ade-jichi-insight",
+      "allocation": 4,
+      "priority": 25
+    }
+  ]
+}
