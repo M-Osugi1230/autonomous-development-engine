@@ -1,0 +1,13 @@
+{
+  "environment": "repository",
+  "max_attempts": 2,
+  "required_probe_ids": [
+    "repository-bytecode-smoke",
+    "repository-entrypoint-smoke"
+  ],
+  "schema_version": 1,
+  "source_sha": "8c109d857a7744905f80a274337a8917815e67f6",
+  "target_repository": "M-Osugi1230/chu-kei",
+  "timeout_seconds": 300,
+  "verification_id": "rv-8c109d857a7744905f80a274337a8917815e67f6"
+}
