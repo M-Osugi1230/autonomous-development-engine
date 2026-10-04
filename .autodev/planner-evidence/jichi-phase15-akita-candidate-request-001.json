@@ -1,0 +1,107 @@
+{
+  "accepted_plan_fingerprint": "0c551775baf25d8f0df4467120d97dcb90dd7151fc6df42099105346e9745f37",
+  "campaign_id": "jichi-phase15-akita-candidate-campaign-001",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "b11516a8a473de98d16033003c76eb6e6597b9c7c14385af186cf5095fb96173",
+    "current_source_sha": "592942af423fd94008576668b932a40cd7a03075",
+    "execution_authority": false,
+    "extracted_record_count": 3,
+    "memory_fingerprints": [
+      "47466f87c8ab76c058eb99582d8abee734862818c58e3a9c922dc6a2a04550ee"
+    ],
+    "memory_ids": [
+      "mem-0bc9d223467ed112b66ec6db"
+    ],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jichi-insight",
+    "resolution_fingerprint": "3ac16226465fee96ed601195964c7a9e1c0923e105e45736cba41d1c1f5e43d7",
+    "retrieval_fingerprint": "3bc691fa99426ec6a90dfc0f4caba529cb3968495992a9999557133f6e689fe7",
+    "retrieved_record_count": 1,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "24b0335689dddc493db95b22c4cb715b001b9b454db390aba09149135a3b4e0c",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": true
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "LOCAL_DETERMINISTIC",
+  "policy_fingerprint": "e7df19f1e2ee8c7885baea70e398d04870aedd4b55de690609a883f0bd5f5981",
+  "proposal": {
+    "goal": "Advance Jichi Insight Phase 15 to the next canonical municipality candidate, Akita City (052019), after the successful Morioka ADE pilot. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, data/catalog/phase15_core_capital_review_queue.json, data/indexed/akita-city/source_inventory.json, the Phase 15 candidate schema, and completed reviewed packages as read-only context. Do not modify the canonical Phase 15 queue or any reviewed/public data. Create a complete non-public Akita review candidate at data/candidates/akita-city/review_candidate.json and deterministic Akita candidate regression coverage under tests/. Because these files do not yet exist, the planner MUST declare each exact new file path in task.new_paths as well as allowed_paths. Use official primary sources only; preserve source URLs, stable evidence locators, plan/version/period/fiscal/availability boundaries, source precision, and deferred depth. Candidate decisions must remain needs_review or not_assessable, human_review.status must remain pending, publication.eligible must remain false, and no reviewed_complete promotion is allowed. Never infer unpublished facts, reuse historical actuals as current without official linkage, collapse fiscal/document/year states, promote drafts, create policy-achievement scores, infer causality, or create unverified comparisons/rankings. Run repository validation and relevant regression tests before PR. Success is a green bounded PR containing a complete Akita non-public candidate while Morioka remains awaiting human review and the canonical queue remains unchanged.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Candidate remains non-public with human review pending and publication ineligible.",
+          "Official-source evidence, period/version/fiscal boundaries, and deferred depth remain explicit.",
+          "Relevant repository validation and regression tests remain green."
+        ],
+        "allowed_paths": [
+          "data/candidates/akita-city/review_candidate.json",
+          "tests/test_phase15_akita_review_candidate_staging.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "deterministic-step-001",
+        "new_paths": [
+          "data/candidates/akita-city/review_candidate.json",
+          "tests/test_phase15_akita_review_candidate_staging.py"
+        ],
+        "outcome": "Create or complete the municipality's non-public Phase 15 review candidate and deterministic candidate regression coverage while preserving the repository's human-review boundary.",
+        "title": "Stage akita-city Phase 15 review candidate"
+      }
+    ]
+  },
+  "proposal_fingerprint": "6abe6047c0f76478ae37df954893d04ca68dded43a5da79505acaf6e1d6e807f",
+  "provider": "deterministic",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 0,
+  "provider_plan_steps_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "provider_proposal_mode": "deterministic-recipe",
+  "repository_content_summary_fingerprint": "295f962088f08dae47309d9849e06c1abb270450dedd1175339bce158a773fcf",
+  "repository_context_fingerprint": "1f41a111fab52ef2ead004937132a03ff90de84a4d2f9db9414704e84ec13cb1",
+  "repository_impact_analysis_fingerprint": "26c252e1e1cf552d2952244341d7fa444f32055944f9e51a19e0114c8d1871af",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "199ed38a3d40d63ba9b52eb010e57088f6451d3949051262a2b2267f48084f3b",
+  "repository_source_sha": "592942af423fd94008576668b932a40cd7a03075",
+  "request": {
+    "allowed_path_prefixes": [
+      "data/candidates",
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jichi-phase15-akita-candidate-campaign-001",
+    "execution_phase": "autonomous-development",
+    "goal": "Advance Jichi Insight Phase 15 to the next canonical municipality candidate, Akita City (052019), after the successful Morioka ADE pilot. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, data/catalog/phase15_core_capital_review_queue.json, data/indexed/akita-city/source_inventory.json, the Phase 15 candidate schema, and completed reviewed packages as read-only context. Do not modify the canonical Phase 15 queue or any reviewed/public data. Create a complete non-public Akita review candidate at data/candidates/akita-city/review_candidate.json and deterministic Akita candidate regression coverage under tests/. Because these files do not yet exist, the planner MUST declare each exact new file path in task.new_paths as well as allowed_paths. Use official primary sources only; preserve source URLs, stable evidence locators, plan/version/period/fiscal/availability boundaries, source precision, and deferred depth. Candidate decisions must remain needs_review or not_assessable, human_review.status must remain pending, publication.eligible must remain false, and no reviewed_complete promotion is allowed. Never infer unpublished facts, reuse historical actuals as current without official linkage, collapse fiscal/document/year states, promote drafts, create policy-achievement scores, infer causality, or create unverified comparisons/rankings. Run repository validation and relevant regression tests before PR. Success is a green bounded PR containing a complete Akita non-public candidate while Morioka remains awaiting human review and the canonical queue remains unchanged.",
+    "id_prefix": "jip15akita001",
+    "max_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "docs",
+      "data/catalog",
+      "data/indexed/akita-city",
+      "data/candidates",
+      "data/reviewed",
+      "schemas",
+      "tests"
+    ],
+    "request_id": "jichi-phase15-akita-candidate-request-001",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "request_fingerprint": "62545c5cb909ed264effb04b84a4f61fe7ade2083ca60f5094ff295b899eb55f",
+  "schema_version": 1,
+  "task_ids": [
+    "jip15akita001-001"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 37215862493
+}
