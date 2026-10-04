@@ -5,7 +5,7 @@
   "registry_fingerprint": "aad8ccc2202a2ea893dc079a93ab1149f93a69e084d8c14991bdb9474ee84f64",
   "schema_version": 1,
   "source_sha": "da4579cccefe38fbfaec4565bed830d1bcf9298a",
-  "status": "DISPATCHED",
+  "status": "VERIFIED",
   "target_repository": "M-Osugi1230/jquants-research-studio",
   "task_id": "jqdepth001-008",
   "verification_id": "rv-da4579cccefe38fbfaec4565bed830d1bcf9298a"
