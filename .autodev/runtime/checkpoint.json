@@ -1,0 +1,10 @@
+{
+  "attempt": 0,
+  "last_error": "quota scheduler: global-limit-exhausted",
+  "last_failure_kind": "PROVIDER_QUOTA",
+  "provider_session_id": null,
+  "replan_count": 0,
+  "resume_after": "2026-10-04T18:51:12.482927+00:00",
+  "state": "PAUSED_QUOTA",
+  "task_id": "ckpd004-001"
+}
