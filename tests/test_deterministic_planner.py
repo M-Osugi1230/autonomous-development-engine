@@ -110,6 +110,55 @@ class DeterministicPlannerRecipeTests(unittest.TestCase):
         assert result.accepted_plan is not None
         self.assertEqual(len(result.accepted_plan.plan.tasks), 2)
 
+    def test_jquants_recipe_coalesces_eight_file_slices_into_three_tasks(self) -> None:
+        request = PlanningGoalRequest(
+            request_id="jq-test",
+            campaign_id="jq-campaign",
+            id_prefix="jq",
+            goal=(
+                "Deepen quarterly earnings and company forecasts, forward returns, "
+                "and shareholder benefits with stronger point-in-time history."
+            ),
+            target_repository="M-Osugi1230/jquants-research-studio",
+            base_branch="main",
+            allowed_path_prefixes=("engine", "tests"),
+            min_tasks=1,
+            max_tasks=8,
+        )
+        existing = frozenset(
+            {
+                "engine/features/fundamental_pit.py",
+                "engine/marketdata/quarterly.py",
+                "tests/test_fundamental_pit.py",
+                "engine/features/security_daily.py",
+                "engine/marketdata/prices.py",
+                "tests/test_security_features.py",
+                "engine/marketdata/benefit_parser.py",
+                "engine/marketdata/dividend_yield.py",
+            }
+        )
+        proposal = build_deterministic_proposal(
+            request,
+            existing_paths=existing,
+        )
+        self.assertIsNotNone(proposal)
+        assert proposal is not None
+        self.assertEqual(len(proposal["tasks"]), 3)
+        self.assertEqual(len(proposal["tasks"][0]["allowed_paths"]), 3)
+        self.assertEqual(len(proposal["tasks"][1]["allowed_paths"]), 3)
+        self.assertEqual(len(proposal["tasks"][2]["allowed_paths"]), 2)
+        self.assertEqual(proposal["tasks"][0]["new_paths"], [])
+        result = plan_high_level_goal(
+            DeterministicPlanningProvider(proposal),
+            high_level_goal=request.goal,
+            policy=request.planner_policy(),
+            id_prefix=request.id_prefix,
+            existing_paths=existing,
+        )
+        self.assertIsNotNone(result.accepted_plan)
+        assert result.accepted_plan is not None
+        self.assertEqual(len(result.accepted_plan.plan.tasks), 3)
+
     def test_unknown_repository_falls_back_to_external_planner(self) -> None:
         request = PlanningGoalRequest(
             request_id="unknown-test",
