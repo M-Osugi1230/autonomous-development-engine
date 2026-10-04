@@ -2,9 +2,9 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "11931957380660044368",
+  "provider_session_id": "10358769085900627573",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "jqdepth001-003"
+  "state": "RUNNING",
+  "task_id": "jqdepth001-004"
 }
