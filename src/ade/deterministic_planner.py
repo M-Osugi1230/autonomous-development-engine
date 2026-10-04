@@ -182,6 +182,102 @@ def _chu_kei_recipe(
     }
 
 
+def _jquants_recipe(
+    request: PlanningGoalRequest,
+    *,
+    existing_paths: frozenset[str],
+) -> dict[str, Any] | None:
+    if request.target_repository != "M-Osugi1230/jquants-research-studio":
+        return None
+    goal = request.goal.casefold()
+    required_markers = (
+        "quarterly earnings",
+        "forward returns",
+        "shareholder benefits",
+    )
+    if not all(marker in goal for marker in required_markers):
+        return None
+    if not (request.min_tasks <= 3 <= request.max_tasks):
+        return None
+
+    groups = (
+        (
+            "Deepen earnings and forecast point-in-time history",
+            (
+                "engine/features/fundamental_pit.py",
+                "engine/marketdata/quarterly.py",
+                "tests/test_fundamental_pit.py",
+            ),
+            (
+                "Extend earnings history and retain forecast revisions as point-in-time snapshots.",
+                "Preserve multi-year quarterly disclosures, provenance, and stale/missing-state semantics.",
+                "Fundamental point-in-time regression coverage remains green.",
+            ),
+        ),
+        (
+            "Build forward-return and benchmark-relative event outcomes",
+            (
+                "engine/features/security_daily.py",
+                "engine/marketdata/prices.py",
+                "tests/test_security_features.py",
+            ),
+            (
+                "Compute 1/5/20/60-trading-day forward-return and event features from stored price data.",
+                "Preserve benchmark-relative return semantics without unbounded provider fetching.",
+                "Security feature regression coverage remains green.",
+            ),
+        ),
+        (
+            "Normalize shareholder-benefit and total-yield inputs",
+            (
+                "engine/marketdata/benefit_parser.py",
+                "engine/marketdata/dividend_yield.py",
+            ),
+            (
+                "Normalize annual benefit value and investable-capital thresholds only to decision-useful depth.",
+                "Calculate combined dividend and benefit yield while preserving missing/stale states.",
+                "Repository CI remains green.",
+            ),
+        ),
+    )
+
+    tasks: list[dict[str, Any]] = []
+    previous: str | None = None
+    for index, (title, paths, acceptance) in enumerate(groups, 1):
+        if not all(_within(path, request.allowed_path_prefixes) for path in paths):
+            return None
+        key = f"deterministic-step-{index:03d}"
+        tasks.append(
+            {
+                "key": key,
+                "title": title,
+                "outcome": (
+                    "Implement the bounded J-Quants data-depth slice across its "
+                    "closely related implementation and regression files while "
+                    "preserving quota, resumability, provenance, and point-in-time semantics."
+                ),
+                "depends_on": [previous] if previous is not None else [],
+                "allowed_paths": list(paths),
+                "acceptance": list(acceptance),
+                "new_paths": [
+                    path for path in paths if path not in existing_paths
+                ],
+                "human_only": False,
+                "human_reason": None,
+            }
+        )
+        previous = key
+
+    return {
+        "schema_version": 1,
+        "goal": request.goal,
+        "tasks": tasks,
+        "human_boundaries": list(
+            request.planner_policy().required_human_boundaries
+        ),
+    }
+
+
 def build_deterministic_proposal(
     request: PlanningGoalRequest,
     *,
@@ -190,7 +286,7 @@ def build_deterministic_proposal(
     if not isinstance(request, PlanningGoalRequest):
         raise ValueError("request must be a PlanningGoalRequest")
     normalized = frozenset(existing_paths)
-    for recipe in (_jichi_recipe, _chu_kei_recipe):
+    for recipe in (_jichi_recipe, _chu_kei_recipe, _jquants_recipe):
         proposal = recipe(request, existing_paths=normalized)
         if proposal is not None:
             return proposal
