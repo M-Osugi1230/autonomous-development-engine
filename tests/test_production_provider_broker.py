@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import unittest
+from datetime import UTC, datetime, timedelta
 
 from ade.production_provider_broker import (
     BrokerAvailability,
     COPILOT_PROVIDER_ID,
     JULES_PROVIDER_ID,
+    broker_resume_action,
     checkpoint_provider_id,
     copilot_fallback_enabled,
     provider_descriptors,
@@ -95,6 +97,37 @@ class ProductionProviderBrokerTests(unittest.TestCase):
             ),
             COPILOT_PROVIDER_ID,
         )
+
+    def test_paused_without_session_can_reroute_immediately_when_fallback_available(self) -> None:
+        now = datetime(2026, 10, 5, 0, 0, tzinfo=UTC)
+        action, session_id, provider_id = broker_resume_action(
+            {
+                "state": "PAUSED_QUOTA",
+                "provider_session_id": None,
+                "resume_after": (now + timedelta(hours=2)).isoformat(),
+            },
+            now=now,
+            fallback_available=True,
+        )
+        self.assertEqual(action, "START_NEW")
+        self.assertIsNone(session_id)
+        self.assertIsNone(provider_id)
+
+    def test_paused_existing_session_remains_sticky_until_due(self) -> None:
+        now = datetime(2026, 10, 5, 0, 0, tzinfo=UTC)
+        action, session_id, provider_id = broker_resume_action(
+            {
+                "state": "PAUSED_QUOTA",
+                "provider_session_id": "task-1",
+                "provider_id": COPILOT_PROVIDER_ID,
+                "resume_after": (now + timedelta(hours=1)).isoformat(),
+            },
+            now=now,
+            fallback_available=True,
+        )
+        self.assertEqual(action, "WAIT")
+        self.assertEqual(session_id, "task-1")
+        self.assertEqual(provider_id, COPILOT_PROVIDER_ID)
 
     def test_copilot_requires_token_and_explicit_cost_opt_in(self) -> None:
         self.assertFalse(
