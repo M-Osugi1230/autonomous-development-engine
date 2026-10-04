@@ -5,7 +5,7 @@
   "registry_fingerprint": "1a74c411e83a800ebc258690e7543e5b1106de202567aa64aa6acbbd4e7b1f38",
   "schema_version": 1,
   "source_sha": "73c2c001f98cc4dea056eb3145bde3e2da80b466",
-  "status": "DISPATCHED",
+  "status": "VERIFIED",
   "target_repository": "M-Osugi1230/jichi-insight",
   "task_id": "jip15akita001-001",
   "verification_id": "rv-73c2c001f98cc4dea056eb3145bde3e2da80b466"
