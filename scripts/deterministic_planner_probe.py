@@ -43,10 +43,44 @@ def run_probe() -> dict[str, object]:
         raise AssertionError("deterministic proposal did not produce AcceptedPlan")
     if len(result.accepted_plan.plan.tasks) != 1:
         raise AssertionError("Jichi recipe did not coalesce work into one task")
+    jq_request = PlanningGoalRequest(
+        request_id="deterministic-jq-probe",
+        campaign_id="deterministic-jq-probe-campaign",
+        id_prefix="jqprobe",
+        goal=(
+            "Deepen quarterly earnings and company forecasts, forward returns, "
+            "and shareholder benefits with stronger point-in-time history."
+        ),
+        target_repository="M-Osugi1230/jquants-research-studio",
+        base_branch="main",
+        allowed_path_prefixes=("engine", "tests"),
+        min_tasks=1,
+        max_tasks=8,
+    )
+    jq_paths = frozenset(
+        {
+            "engine/features/fundamental_pit.py",
+            "engine/marketdata/quarterly.py",
+            "tests/test_fundamental_pit.py",
+            "engine/features/security_daily.py",
+            "engine/marketdata/prices.py",
+            "tests/test_security_features.py",
+            "engine/marketdata/benefit_parser.py",
+            "engine/marketdata/dividend_yield.py",
+        }
+    )
+    jq_proposal = build_deterministic_proposal(
+        jq_request,
+        existing_paths=jq_paths,
+    )
+    if jq_proposal is None or len(jq_proposal["tasks"]) != 3:
+        raise AssertionError("J-Quants recipe did not coalesce to three tasks")
+
     return {
         "ok": True,
         "provider": "deterministic",
-        "task_count": len(result.accepted_plan.plan.tasks),
+        "jichi_task_count": len(result.accepted_plan.plan.tasks),
+        "jquants_task_count": len(jq_proposal["tasks"]),
         "jules_planner_tasks_consumed": 0,
     }
 
