@@ -25,6 +25,7 @@ concurrency:
 
 jobs:
   plan:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -53,6 +54,48 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ade-autonomous-planner-result
+          path: .autodev/runtime/autonomous-planner-result.json
+          if-no-files-found: error
+          retention-days: 30
+
+  scheduled-project-plan:
+    if: github.event_name == 'schedule'
+    strategy:
+      fail-fast: false
+      matrix:
+        control_ref:
+          - main
+          - ade-jichi-insight
+          - ade-jquants
+          - ade-chu-kei
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout project controller
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.control_ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Plan project goal through trusted boundary
+        env:
+          PYTHONPATH: src
+          ADE_CONTROL_REF: ${{ matrix.control_ref }}
+          ADE_PROJECT_KEY: ${{ matrix.control_ref }}
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
+        run: python .github/trusted/autonomous_planner_cycle.py
+
+      - name: Upload project planner decision evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-autonomous-planner-result-${{ matrix.control_ref }}
           path: .autodev/runtime/autonomous-planner-result.json
           if-no-files-found: error
           retention-days: 30
