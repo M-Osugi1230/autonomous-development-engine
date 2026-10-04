@@ -1,10 +1,15 @@
 {
-  "attempt": 0,
-  "detail": "HTTP 400: Precondition check failed.",
-  "reason": "planner-provider-capacity",
+  "accepted_plan_fingerprint": "2efc10ed78cc8d05ee181cf630c7f7c2bc2e2e85e6f321ac83105cb43fbe0526",
+  "attempt": 1,
+  "campaign_id": "chukei-plan-detection-scale-campaign-004",
+  "development_memory_context_fingerprint": null,
+  "development_memory_record_count": 0,
+  "first_task_id": "ckpd004-001",
+  "proposal_fingerprint": "d99df608c62aaf8c1728d1c0299fae31a7d0e1a97f2af1473aa46065cf7c7df4",
+  "reason": "trusted-plan-accepted",
   "request_fingerprint": "53b9b052a267ce9e6cc5e8cf1735f44d6fa45560bdf29e5ce933f9a7af51e4e1",
   "request_id": "chukei-plan-detection-scale-request-004",
   "schema_version": 1,
-  "state": "PAUSED_QUOTA",
-  "updated_at": "2026-10-04T16:01:33.454697+00:00"
+  "state": "ACCEPTED",
+  "updated_at": "2026-10-04T16:11:58.217098+00:00"
 }
