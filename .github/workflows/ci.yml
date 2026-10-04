@@ -203,6 +203,11 @@ jobs:
           PYTHONPATH: src
         run: python scripts/quota_scheduler_probe.py
 
+      - name: Deterministic planner recipe proof
+        env:
+          PYTHONPATH: src
+        run: python scripts/deterministic_planner_probe.py
+
       - name: Multi-Agent foundation proof
         env:
           PYTHONPATH: src
