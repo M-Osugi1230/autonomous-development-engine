@@ -1,0 +1,40 @@
+{
+  "attempts_by_probe": [
+    {
+      "attempts": 1,
+      "probe_id": "jichi-data-contract-smoke"
+    },
+    {
+      "attempts": 1,
+      "probe_id": "jichi-next-contract-smoke"
+    }
+  ],
+  "report": {
+    "contract_fingerprint": "635de24ca57da3b60d40ea2a6005d61ebefb5f14d8c365e60efff62dc4f5e1a9",
+    "disposition": "VERIFIED",
+    "missing_probe_ids": [],
+    "results": [
+      {
+        "attempt": 1,
+        "detail_code": "jichi-data-validation-pass",
+        "probe_id": "jichi-data-contract-smoke",
+        "schema_version": 1,
+        "source_sha": "73c2c001f98cc4dea056eb3145bde3e2da80b466",
+        "status": "PASS"
+      },
+      {
+        "attempt": 1,
+        "detail_code": "jichi-next-contract-pass",
+        "probe_id": "jichi-next-contract-smoke",
+        "schema_version": 1,
+        "source_sha": "73c2c001f98cc4dea056eb3145bde3e2da80b466",
+        "status": "PASS"
+      }
+    ],
+    "schema_version": 1,
+    "source_sha": "73c2c001f98cc4dea056eb3145bde3e2da80b466",
+    "verification_id": "rv-73c2c001f98cc4dea056eb3145bde3e2da80b466"
+  },
+  "report_fingerprint": "753f8911ee5ffa584aae5890af76e424fff6b386b39e277872e603bf177d23cb",
+  "schema_version": 1
+}
