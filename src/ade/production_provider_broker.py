@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import Any
 
 from .provider_registry import ProviderRegistry
@@ -130,3 +131,60 @@ def copilot_fallback_enabled(
     if not isinstance(explicit_enable, str):
         return False
     return explicit_enable.strip().casefold() in {"1", "true", "yes", "on"}
+
+
+def _parse_resume_after(value: object) -> datetime | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("resume_after must be a non-empty ISO-8601 string")
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("resume_after must be timezone-aware")
+    return parsed.astimezone(UTC)
+
+
+def broker_resume_action(
+    checkpoint: dict[str, Any],
+    *,
+    now: datetime,
+    fallback_available: bool,
+) -> tuple[str, str | None, str | None]:
+    if not isinstance(checkpoint, dict):
+        raise ValueError("checkpoint must be a JSON object")
+    if not isinstance(now, datetime) or now.tzinfo is None or now.utcoffset() is None:
+        raise ValueError("now must be timezone-aware")
+
+    state = checkpoint.get("state")
+    if not isinstance(state, str):
+        raise ValueError("checkpoint state must be a string")
+    session_id = checkpoint.get("provider_session_id")
+    if session_id is not None and (
+        not isinstance(session_id, str) or not session_id.strip()
+    ):
+        raise ValueError("provider_session_id must be a non-empty string or null")
+    provider_id = checkpoint_provider_id(checkpoint)
+
+    if state in {"COMPLETED", "FAILED", "HUMAN_WAIT", "REPLAN"}:
+        return "NOOP", session_id, provider_id
+
+    if state == "RUNNING":
+        if not session_id:
+            raise ValueError("RUNNING checkpoint requires provider_session_id")
+        return "MONITOR", session_id, provider_id
+
+    if state == "PAUSED_QUOTA":
+        due = _parse_resume_after(checkpoint.get("resume_after"))
+        if session_id:
+            if due is None or now.astimezone(UTC) < due:
+                return "WAIT", session_id, provider_id
+            return "MONITOR", session_id, provider_id
+
+        # No provider session exists yet, so safe rerouting remains possible.
+        if fallback_available:
+            return "START_NEW", None, None
+        if due is None or now.astimezone(UTC) < due:
+            return "WAIT", None, None
+        return "START_NEW", None, None
+
+    raise ValueError(f"unsupported checkpoint state: {state}")
