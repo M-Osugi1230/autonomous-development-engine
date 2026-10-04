@@ -22,6 +22,10 @@ from ade.development_memory_planning import (
     build_planning_memory_bundle_from_store,
 )
 from ade.development_memory_store import DevelopmentMemoryStore
+from ade.deterministic_planner import (
+    DeterministicPlanningProvider,
+    build_deterministic_proposal,
+)
 from ade.jules_planner import JulesPlannerConfig, JulesPlannerError, JulesPlanningProvider
 from ade.models import ProjectState
 from ade.planning_activation import PlanningGoalRequest, build_planning_activation
@@ -302,7 +306,7 @@ def _persist_activation(
     request: PlanningGoalRequest,
     result,
     bundle,
-    provider: JulesPlanningProvider,
+    provider: object,
     snapshot: RepositorySnapshot,
     content_summary: RepositoryContentSummary,
     relationship_graph: RepositoryRelationshipGraph,
@@ -326,20 +330,24 @@ def _persist_activation(
         max_depth=3,
         max_results=100,
     )
+    provider_name = str(getattr(provider, "provider_name", "jules"))
+    provider_plan_steps = tuple(getattr(provider, "last_plan_steps", ()))
     evidence = {
         "schema_version": 1,
         "request": request.to_dict(),
         "request_fingerprint": bundle.request_fingerprint,
-        "provider": "jules",
-        "provider_plan_step_count": len(provider.last_plan_steps),
-        "provider_plan_steps_sha256": _steps_hash(provider.last_plan_steps),
+        "provider": provider_name,
+        "provider_plan_step_count": len(provider_plan_steps),
+        "provider_plan_steps_sha256": _steps_hash(provider_plan_steps),
         "proposal": proposal,
         "proposal_fingerprint": bundle.proposal_fingerprint,
         "policy_fingerprint": bundle.policy_fingerprint,
         "accepted_plan_fingerprint": bundle.accepted_plan.fingerprint,
         "campaign_id": bundle.campaign.campaign_id,
         "task_ids": list(bundle.campaign.task_ids),
-        "planning_session_terminal_state": provider.last_observed_state,
+        "planning_session_terminal_state": getattr(
+            provider, "last_observed_state", None
+        ),
         "provider_proposal_mode": getattr(provider, "last_proposal_mode", None),
         "provider_execution_boundary_crossed": bool(
             getattr(provider, "last_execution_boundary_crossed", False)
@@ -531,28 +539,6 @@ def main() -> int:
 
     try:
         client = JulesClient()
-        admission = assess_jules_admission(
-            client=client,
-            gh=gh,
-            purpose="planner",
-        )
-        if not admission.allowed:
-            payload = _status(
-                request,
-                state="PAUSED_QUOTA",
-                attempt=previous_attempt,
-                reason="planner-provider-capacity",
-                extra={
-                    "detail": f"quota-scheduler: {admission.reason}",
-                    "resume_after": admission.resume_after,
-                    "quota_admission": admission.to_dict(),
-                },
-            )
-            _persist_status(gh, payload)
-            _arm_capacity_retry(gh, request)
-            print(json.dumps(payload, sort_keys=True))
-            return 0
-
         source = client.find_github_source(owner, repo)
         if source is None:
             payload = _status(
@@ -584,19 +570,51 @@ def main() -> int:
             previous_state=previous_state,
         )
 
-        provider = JulesPlanningProvider(
-            client,
-            JulesPlannerConfig(
-                source_name=source_name,
-                starting_branch=request.base_branch,
-                title=tagged_title(
-                    f"ADE planner: {request.request_id}",
-                    purpose="planner",
-                ),
-                allowed_path_prefixes=request.allowed_path_prefixes,
-                required_human_boundaries=request.planner_policy().required_human_boundaries,
-            ),
+        deterministic_proposal = build_deterministic_proposal(
+            request,
+            existing_paths=frozenset(snapshot.paths),
         )
+        if deterministic_proposal is not None:
+            provider = DeterministicPlanningProvider(
+                deterministic_proposal
+            )
+        else:
+            admission = assess_jules_admission(
+                client=client,
+                gh=gh,
+                purpose="planner",
+            )
+            if not admission.allowed:
+                payload = _status(
+                    request,
+                    state="PAUSED_QUOTA",
+                    attempt=previous_attempt,
+                    reason="planner-provider-capacity",
+                    extra={
+                        "detail": f"quota-scheduler: {admission.reason}",
+                        "resume_after": admission.resume_after,
+                        "quota_admission": admission.to_dict(),
+                    },
+                )
+                _persist_status(gh, payload)
+                _arm_capacity_retry(gh, request)
+                print(json.dumps(payload, sort_keys=True))
+                return 0
+
+            provider = JulesPlanningProvider(
+                client,
+                JulesPlannerConfig(
+                    source_name=source_name,
+                    starting_branch=request.base_branch,
+                    title=tagged_title(
+                        f"ADE planner: {request.request_id}",
+                        purpose="planner",
+                    ),
+                    allowed_path_prefixes=request.allowed_path_prefixes,
+                    required_human_boundaries=request.planner_policy().required_human_boundaries,
+                ),
+            )
+
         result = plan_high_level_goal(
             provider,
             high_level_goal=request.goal,
@@ -628,7 +646,7 @@ def main() -> int:
                 {
                     "schema_version": 1,
                     "request": request.to_dict(),
-                    "provider": "jules",
+                    "provider": str(getattr(provider, "provider_name", "jules")),
                     "proposal": proposal,
                     "proposal_fingerprint": result.validated.proposal_fingerprint,
                     "policy_fingerprint": result.validated.policy_fingerprint,
