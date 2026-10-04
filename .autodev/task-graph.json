@@ -116,7 +116,7 @@
       "depends_on": [
         "jqdepth001-007"
       ],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
