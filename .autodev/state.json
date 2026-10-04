@@ -74,11 +74,12 @@
     "jqexpand002-003",
     "jqexpand002-004",
     "jip15morioka003-001",
-    "jip15morioka003-002"
+    "jip15morioka003-002",
+    "jip15akita001-001"
   ],
-  "current_task_id": "jip15akita001-001",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 74,
+  "iteration": 75,
   "metadata": {
     "accepted_plan_fingerprint": "0c551775baf25d8f0df4467120d97dcb90dd7151fc6df42099105346e9745f37",
     "campaign_id": "jichi-phase15-akita-candidate-campaign-001",
@@ -138,7 +139,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "quota_admission_reason": "global-limit-exhausted",
     "quota_remaining": 0,
     "repository_intelligence_content_fingerprint": "295f962088f08dae47309d9849e06c1abb270450dedd1175339bce158a773fcf",
@@ -314,6 +315,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-04T21:54:29.328938+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-04T22:05:15.057577+00:00"
 }
