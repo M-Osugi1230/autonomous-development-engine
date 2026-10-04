@@ -1,0 +1,8 @@
+{
+  "acquired_at": "2026-10-04T16:12:17.993934+00:00",
+  "attempt": 1,
+  "expires_at": "2026-10-04T17:02:17.993934+00:00",
+  "owner_id": "github-actions:37215891348:1",
+  "schema_version": 1,
+  "task_id": "ckpd004-001"
+}
