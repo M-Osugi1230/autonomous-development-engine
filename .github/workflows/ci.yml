@@ -198,6 +198,11 @@ jobs:
           PYTHONPATH: src
         run: python scripts/multi_provider_probe.py
 
+      - name: Production provider broker proof
+        env:
+          PYTHONPATH: src
+        run: python scripts/production_provider_broker_probe.py
+
       - name: Quota-aware global scheduler proof
         env:
           PYTHONPATH: src
