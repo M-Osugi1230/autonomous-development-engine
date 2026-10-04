@@ -77,6 +77,28 @@ class JulesProviderTests(unittest.TestCase):
             with self.assertRaisesRegex(ProviderUnauthorizedError, "bad key"):
                 provider.list_sources()
 
+    def test_precondition_capacity_is_mapped_to_quota(self) -> None:
+        body = io.BytesIO(
+            json.dumps(
+                {"error": {"message": "Precondition check failed."}}
+            ).encode("utf-8")
+        )
+        error = HTTPError(
+            "url",
+            400,
+            "Bad Request",
+            hdrs=None,
+            fp=body,
+        )
+        provider = JulesProvider(api_key="test-key")
+
+        with patch("ade.providers.jules.urlopen", side_effect=error):
+            with self.assertRaisesRegex(
+                ProviderQuotaError,
+                "Precondition check failed",
+            ):
+                provider.list_sources()
+
     def test_quota_is_mapped(self) -> None:
         body = io.BytesIO(
             json.dumps({"error": {"message": "quota exceeded"}}).encode("utf-8")
