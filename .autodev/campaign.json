@@ -5,7 +5,8 @@
     "jqdepth001-002",
     "jqdepth001-003",
     "jqdepth001-004",
-    "jqdepth001-005"
+    "jqdepth001-005",
+    "jqdepth001-006"
   ],
   "goal": "Deepen the decision-useful J-Quants Research Studio dataset without broadly increasing data categories. Prioritize the existing core domains: quarterly earnings and company forecasts, daily price/volume history and post-earnings reactions, dividends/shareholder benefits/total yield, and the forward-return outcomes needed to validate investment hypotheses. Improve coverage, point-in-time correctness, granularity, source provenance, stale/missing-state handling, and historical depth before adding new categories. Prefer extending the time span and filling gaps for existing facts over adding more metrics. Build longer earnings history where safely available, retain forecast revisions as historical snapshots, extend price/volume history for event studies, and calculate 1/5/20/60-trading-day forward returns plus benchmark-relative returns from stored data. Complete shareholder-benefit normalization only to the level needed for investable capital, annual value, benefit yield and total yield. Do not add news sentiment, broad IR text analysis, detailed shareholder tracking, activist monitoring, many technical indicators, or other peripheral categories unless later evidence shows they materially improve tested investment decisions. Use existing stored data first; external APIs only for missing core facts, incrementally and within existing quota controls. Never raise provider limits or use unbounded per-security fetching. Preserve EDINET/J-Quants quota safeguards, idempotency, resumability, and point-in-time semantics. Success means fewer missing/stale core facts, longer usable history, and stronger ability to test whether earnings/valuation/yield signals produced excess returns—not simply a larger count of fields.",
   "schema_version": 1,
