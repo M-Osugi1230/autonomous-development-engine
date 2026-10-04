@@ -1,0 +1,25 @@
+{
+  "evidence": {
+    "deployment_id": null,
+    "environment": "repository",
+    "kind": "repository",
+    "observed_at": "2026-10-04T22:05:22.583525+00:00",
+    "provenance_id": "trusted-merge-sha-v1",
+    "schema_version": 1,
+    "source_sha": "73c2c001f98cc4dea056eb3145bde3e2da80b466",
+    "target_id": "repository-runtime",
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "evidence_fingerprint": "7f6a465bc1fa26c5903bd97c587ef2cec373f54e4fc7fd81fa8a6692f42e448d",
+  "registry_fingerprint": "ccbac202a9f18470b3e9c96bf41872d756ff588fdebc8ccb34e8d74e85783f93",
+  "schema_version": 1,
+  "spec": {
+    "deployment_required": false,
+    "environment": "repository",
+    "kind": "repository",
+    "max_age_seconds": 300,
+    "max_future_skew_seconds": 60,
+    "schema_version": 1,
+    "target_id": "repository-runtime"
+  }
+}
