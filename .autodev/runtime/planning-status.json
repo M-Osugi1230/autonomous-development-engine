@@ -1,10 +1,10 @@
 {
   "attempt": 1,
-  "detail": "HTTP 400: Precondition check failed.",
-  "reason": "planner-provider-capacity",
-  "request_fingerprint": "35e285fa2982abde66a7ee0d41d91aa1448a87cf437851ee4d5d4cd944da5430",
-  "request_id": "chukei-universe-research-request-001",
+  "detail": "high-level goal exceeds trusted text budget",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "e1a3fef6bbeb7b0dcf0020492e646cb1553eb538b59eb0eb77961634a5cb3ec5",
+  "request_id": "chukei-plan-detection-scale-request-002",
   "schema_version": 1,
-  "state": "PAUSED_QUOTA",
-  "updated_at": "2026-10-04T08:03:01.984097+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-04T08:03:35.318652+00:00"
 }
