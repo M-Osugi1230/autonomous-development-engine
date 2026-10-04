@@ -1,0 +1,13 @@
+{
+  "environment": "repository",
+  "max_attempts": 2,
+  "required_probe_ids": [
+    "jichi-data-contract-smoke",
+    "jichi-next-contract-smoke"
+  ],
+  "schema_version": 1,
+  "source_sha": "73c2c001f98cc4dea056eb3145bde3e2da80b466",
+  "target_repository": "M-Osugi1230/jichi-insight",
+  "timeout_seconds": 300,
+  "verification_id": "rv-73c2c001f98cc4dea056eb3145bde3e2da80b466"
+}
