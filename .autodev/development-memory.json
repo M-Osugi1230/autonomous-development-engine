@@ -1,6 +1,6 @@
 {
   "ledger": {
-    "record_count": 13,
+    "record_count": 14,
     "records": [
       {
         "campaign_id": null,
@@ -22,6 +22,31 @@
           "runtime_verification"
         ],
         "task_id": "jip15morioka003-001"
+      },
+      {
+        "campaign_id": null,
+        "evidence_fingerprints": [
+          "b80e48b436252d703b1532cec26e7ac7f7ea7ff0c0be5b98caafc895c1403854",
+          "f33a8403bd5a16366b23e9f64cdffca53b4c1babdd17367e13fd2c3ccc281e5d",
+          "f52a344235a4393e250a862695ae209a2cf46735580837fc4e1c4ff3c3cf5073"
+        ],
+        "evidence_paths": [
+          ".autodev/runtime-verification/jip15morioka003-002/contract.json",
+          ".autodev/runtime-verification/jip15morioka003-002/receipt.json",
+          ".autodev/runtime-verification/jip15morioka003-002/report.json"
+        ],
+        "kind": "VERIFIED_OUTCOME",
+        "memory_id": "mem-0bc9d223467ed112b66ec6db",
+        "repository": "M-Osugi1230/jichi-insight",
+        "schema_version": 1,
+        "source_sha": "592942af423fd94008576668b932a40cd7a03075",
+        "statement": "Trusted runtime verification completed with every required probe passing against the exact source SHA.",
+        "tags": [
+          "feedback",
+          "runtime",
+          "verified"
+        ],
+        "task_id": "jip15morioka003-002"
       },
       {
         "campaign_id": null,
@@ -322,6 +347,6 @@
     ],
     "schema_version": 1
   },
-  "ledger_fingerprint": "cae4553555ccd3144aa02df25d43d0cb62e10034ba0674bd2ba0e362babaded7",
+  "ledger_fingerprint": "0a695ee137d9fefcb2c20a32ac1d357222d24237fa7e5a1af585ebea63dc3139",
   "schema_version": 1
 }
