@@ -1,6 +1,6 @@
 {
   "ledger": {
-    "record_count": 18,
+    "record_count": 19,
     "records": [
       {
         "campaign_id": null,
@@ -247,6 +247,31 @@
       {
         "campaign_id": null,
         "evidence_fingerprints": [
+          "204c54b2d8b171dcce9e912c144a4a86014c35ddc3e3824655b04e8d03ac591f",
+          "258ad4a3a62e3f5d7c91767d8794045e97b9c08d244e38f4d932009b3d5ef00c",
+          "fab1483c775faa250357ce2f7750c12b852cdfd0f927f45ac5874ba0daaa9423"
+        ],
+        "evidence_paths": [
+          ".autodev/runtime-verification/jqdepth001-007/contract.json",
+          ".autodev/runtime-verification/jqdepth001-007/receipt.json",
+          ".autodev/runtime-verification/jqdepth001-007/report.json"
+        ],
+        "kind": "VERIFIED_OUTCOME",
+        "memory_id": "mem-a02a2b0e95ad88b1938fabfe",
+        "repository": "M-Osugi1230/jquants-research-studio",
+        "schema_version": 1,
+        "source_sha": "793b3bf0e18a0eb4b9df3f0bb203db37284c80c9",
+        "statement": "Trusted runtime verification completed with every required probe passing against the exact source SHA.",
+        "tags": [
+          "feedback",
+          "runtime",
+          "verified"
+        ],
+        "task_id": "jqdepth001-007"
+      },
+      {
+        "campaign_id": null,
+        "evidence_fingerprints": [
           "0636cdc38b6d80c1f2000ffc72bda68b36bc83107992290eb27d17f8933ee72f",
           "2806756753c7fed541765b78507cb30ce98fb0e1fe45490501b46911ee39f328",
           "a87818f406055f6423e325cc8db549049bdf23824f4991734fb1c2de968a7830"
@@ -447,6 +472,6 @@
     ],
     "schema_version": 1
   },
-  "ledger_fingerprint": "7f8fa5e034c286c2b0d3471c931b883880f4dfa7168fbebba313ceaa2af509cf",
+  "ledger_fingerprint": "ff6765824842b106771395a902d08f770d2313e9b1101fbbbd3beb9d34d24c21",
   "schema_version": 1
 }
