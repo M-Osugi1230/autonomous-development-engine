@@ -15,6 +15,9 @@ def load_watchdog():
         / "trusted"
         / "runtime_verification_watchdog.py"
     )
+    trusted_dir = str(path.parent)
+    if trusted_dir not in sys.path:
+        sys.path.insert(0, trusted_dir)
     spec = importlib.util.spec_from_file_location(
         "runtime_verification_watchdog_test_module",
         path,
