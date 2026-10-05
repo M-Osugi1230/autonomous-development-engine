@@ -1,0 +1,12 @@
+{
+  "environment": "repository",
+  "max_attempts": 2,
+  "required_probe_ids": [
+    "chu-plan-detection-candidate-contract"
+  ],
+  "schema_version": 1,
+  "source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
+  "target_repository": "M-Osugi1230/chu-kei",
+  "timeout_seconds": 120,
+  "verification_id": "rv-8eaf165959649d9f5ba4621549e96ccd070788a3"
+}
