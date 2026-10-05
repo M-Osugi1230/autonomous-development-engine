@@ -1,7 +1,32 @@
 {
   "ledger": {
-    "record_count": 12,
+    "record_count": 13,
     "records": [
+      {
+        "campaign_id": null,
+        "evidence_fingerprints": [
+          "aaf0a588c5611330377149fb62c92da002341867a8bd934d8cfb03c39de776e6",
+          "e06d98fd402069b0e1728a0608705a4a0866d2f340b27235d369be2d8439636b",
+          "ffa6249bc2647f7bab98c4615d85a37d29d044ec2e1b72416d07e525c9f8f4ae"
+        ],
+        "evidence_paths": [
+          ".autodev/runtime-verification/ckpd004-001/contract.json",
+          ".autodev/runtime-verification/ckpd004-001/receipt.json",
+          ".autodev/runtime-verification/ckpd004-001/report.json"
+        ],
+        "kind": "VERIFIED_OUTCOME",
+        "memory_id": "mem-834950e8bd37695a2c003ade",
+        "repository": "M-Osugi1230/chu-kei",
+        "schema_version": 1,
+        "source_sha": "8c109d857a7744905f80a274337a8917815e67f6",
+        "statement": "Trusted runtime verification completed with every required probe passing against the exact source SHA.",
+        "tags": [
+          "feedback",
+          "runtime",
+          "verified"
+        ],
+        "task_id": "ckpd004-001"
+      },
       {
         "campaign_id": null,
         "evidence_fingerprints": [
@@ -297,6 +322,6 @@
     ],
     "schema_version": 1
   },
-  "ledger_fingerprint": "7fe2f63f49f2061a01ac66561765a8450e8b5bc85d64a9330c015565f8912756",
+  "ledger_fingerprint": "19c3039106e2678dacbee741a6e9f4b5f3958386b58e82dfe80c7072cfaf08b1",
   "schema_version": 1
 }
