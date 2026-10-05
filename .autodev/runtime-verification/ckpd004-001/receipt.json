@@ -5,7 +5,7 @@
   "registry_fingerprint": "abfc01326c795db84c7b8c136988e9a80f333c6d24940f8819ebfc3cd76a9f1a",
   "schema_version": 1,
   "source_sha": "8c109d857a7744905f80a274337a8917815e67f6",
-  "status": "DISPATCHED",
+  "status": "VERIFIED",
   "target_repository": "M-Osugi1230/chu-kei",
   "task_id": "ckpd004-001",
   "verification_id": "rv-8c109d857a7744905f80a274337a8917815e67f6"
