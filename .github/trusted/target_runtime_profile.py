@@ -228,7 +228,7 @@ def build_runtime_probe_registry(
             [
                 RuntimeProbeRegistration(
                     probe_id="chu-plan-detection-candidate-contract",
-                    implementation_id="chu-plan-detection-candidate-contract-v1",
+                    implementation_id="chu-plan-detection-candidate-contract-v2",
                     runner=runner,
                 )
             ]
