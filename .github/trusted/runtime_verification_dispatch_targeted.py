@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Any
 
+from ade_pr_gate import advance_queue
 from github_client import GitHubClient
 import runtime_verification_dispatch as base_dispatch
 from sparse_runtime_workspace import prepare_sparse_repository_runtime_workspace
@@ -16,6 +16,7 @@ from target_runtime_profile import (
 
 
 _BASE_PREPARE_WORKSPACE = base_dispatch.prepare_repository_runtime_workspace
+_BASE_RECONCILE = base_dispatch._reconcile_autonomous_development_success
 
 
 def _event_task_id() -> str:
@@ -62,9 +63,71 @@ def prepare_target_runtime_workspace(contract):
     )
 
 
+def _clear_recovered_runtime_metadata(gh: GitHubClient, task_id: str) -> None:
+    state, state_sha = gh.get_json_file(".autodev/state.json")
+    metadata = state.get("metadata")
+    if not isinstance(metadata, dict):
+        return
+    if metadata.get("runtime_verification_id") is None:
+        return
+    next_metadata = dict(metadata)
+    changed = False
+    for key in (
+        "recovery_action",
+        "recovery_failure",
+        "runtime_verification_failure_fingerprint",
+    ):
+        if key in next_metadata:
+            next_metadata.pop(key, None)
+            changed = True
+    if next_metadata.get("next_required_human_action") is not None:
+        next_metadata["next_required_human_action"] = None
+        changed = True
+    if not changed:
+        return
+    next_state = dict(state)
+    next_state["metadata"] = next_metadata
+    gh.put_json_file(
+        ".autodev/state.json",
+        next_state,
+        sha=state_sha,
+        message=f"state: clear recovered runtime wait {task_id}",
+    )
+
+
+def reconcile_verified_task(gh: GitHubClient, *, receipt):
+    if receipt.status == "VERIFIED":
+        campaign, _ = gh.get_json_file(".autodev/campaign.json")
+        task_ids = campaign.get("task_ids")
+        completed = campaign.get("completed_task_ids")
+        if (
+            isinstance(task_ids, list)
+            and receipt.task_id in task_ids
+            and isinstance(completed, list)
+            and receipt.task_id not in completed
+        ):
+            # The normal remote-monitor path advances the queue immediately
+            # after merge. If that monitor crashed after arming Runtime
+            # Verification, recover the lost queue transition exactly once,
+            # but only after Runtime Verification has now succeeded.
+            advance_queue(
+                gh,
+                completed_task_id=receipt.task_id,
+            )
+            _clear_recovered_runtime_metadata(
+                gh,
+                receipt.task_id,
+            )
+    return _BASE_RECONCILE(
+        gh,
+        receipt=receipt,
+    )
+
+
 def main() -> int:
     base_dispatch.build_runtime_probe_registry = build_runtime_probe_registry
     base_dispatch.prepare_repository_runtime_workspace = prepare_target_runtime_workspace
+    base_dispatch._reconcile_autonomous_development_success = reconcile_verified_task
     return base_dispatch.main()
 
 
