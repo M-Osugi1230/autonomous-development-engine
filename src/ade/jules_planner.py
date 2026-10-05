@@ -18,6 +18,15 @@ _REQUIRED_HUMAN_BOUNDARIES = (
     "externally consequential side effect",
 )
 _PATH_TOKEN = re.compile(r"`([^`]+)`|((?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+)")
+_NEW_PATH_MARKERS = (
+    "create new",
+    "create a new",
+    "create the new",
+    "new file",
+    "new migration",
+    "introduce new",
+    "introduce a new",
+)
 
 
 class JulesPlannerClient(Protocol):
@@ -43,6 +52,7 @@ class JulesPlannerClient(Protocol):
         page_size: int = 100,
     ) -> list[dict[str, Any]]:
         ...
+
 
 @dataclass(frozen=True, slots=True)
 class JulesPlannerConfig:
@@ -208,12 +218,48 @@ def _step_paths(
     return tuple(paths)
 
 
+def _repository_grounding_from_prompt(
+    prompt: str,
+) -> tuple[frozenset[str] | None, bool]:
+    marker = "RepositoryStructureJSON="
+    start = prompt.find(marker)
+    if start < 0:
+        return None, False
+    start += len(marker)
+    try:
+        payload, _ = json.JSONDecoder().raw_decode(prompt[start:])
+    except json.JSONDecodeError:
+        return None, False
+    if not isinstance(payload, dict):
+        return None, False
+    raw_files = payload.get("known_files_within_trusted_roots")
+    if not isinstance(raw_files, list):
+        return None, False
+
+    paths: set[str] = set()
+    for raw in raw_files:
+        if not isinstance(raw, str) or not raw or raw.startswith("/") or "\\" in raw:
+            return None, False
+        parsed = PurePosixPath(raw)
+        if ".." in parsed.parts or str(parsed) != raw:
+            return None, False
+        paths.add(raw)
+    return frozenset(paths), payload.get("known_files_truncated") is False
+
+
+def _step_declares_creation(step: dict[str, str]) -> bool:
+    text = f"{step.get('title', '')} {step.get('description', '')}".casefold()
+    return any(marker in text for marker in _NEW_PATH_MARKERS)
+
+
 def derive_proposal_from_plan_steps(
     *,
     goal: str,
     steps: tuple[dict[str, str], ...],
     allowed_path_prefixes: tuple[str, ...],
     required_human_boundaries: tuple[str, ...] = _REQUIRED_HUMAN_BOUNDARIES,
+    known_existing_paths: frozenset[str] | None = None,
+    repository_paths_complete: bool = False,
 ) -> dict[str, Any] | None:
     if not isinstance(goal, str) or not goal.strip():
         raise ValueError("goal must be non-empty")
@@ -240,6 +286,12 @@ def derive_proposal_from_plan_steps(
             outcome,
             "Repository CI remains green",
         ]
+        new_paths: list[str] = []
+        if known_existing_paths is not None:
+            if repository_paths_complete:
+                new_paths = [path for path in paths if path not in known_existing_paths]
+            elif _step_declares_creation(step):
+                new_paths = [path for path in paths if path not in known_existing_paths]
         tasks.append(
             {
                 "key": key,
@@ -248,7 +300,7 @@ def derive_proposal_from_plan_steps(
                 "depends_on": dependencies,
                 "allowed_paths": list(paths),
                 "acceptance": acceptance,
-                "new_paths": [],
+                "new_paths": new_paths,
                 "human_only": False,
                 "human_reason": None,
             }
@@ -371,11 +423,14 @@ class JulesPlanningProvider:
             return immediate
 
         if self._config.allowed_path_prefixes:
+            known_paths, paths_complete = _repository_grounding_from_prompt(prompt)
             derived = derive_proposal_from_plan_steps(
                 goal=_goal_from_planner_prompt(prompt),
                 steps=self.last_plan_steps,
                 allowed_path_prefixes=self._config.allowed_path_prefixes,
                 required_human_boundaries=self._config.required_human_boundaries,
+                known_existing_paths=known_paths,
+                repository_paths_complete=paths_complete,
             )
             if derived is not None:
                 self.last_proposal_mode = "derived-plan-steps"
