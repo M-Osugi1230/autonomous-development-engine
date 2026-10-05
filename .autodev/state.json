@@ -68,11 +68,12 @@
     "abgproof-777c97294d-001",
     "v17ma1-001",
     "v19proof-63f46f6d8c-001",
-    "ckpd004-001"
+    "ckpd004-001",
+    "ckpd004-002"
   ],
-  "current_task_id": "ckpd004-002",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 68,
+  "iteration": 69,
   "metadata": {
     "accepted_plan_fingerprint": "2efc10ed78cc8d05ee181cf630c7f7c2bc2e2e85e6f321ac83105cb43fbe0526",
     "campaign_id": "chukei-plan-detection-scale-campaign-004",
@@ -132,7 +133,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "quota_admission_reason": "global-limit-exhausted",
     "quota_remaining": 0,
     "repository_intelligence_content_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
@@ -308,6 +309,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-05T11:22:43.809425+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-05T12:47:26.774508+00:00"
 }
