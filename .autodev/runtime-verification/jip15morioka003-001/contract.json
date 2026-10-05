@@ -2,8 +2,8 @@
   "environment": "repository",
   "max_attempts": 2,
   "required_probe_ids": [
-    "repository-bytecode-smoke",
-    "repository-entrypoint-smoke"
+    "jichi-data-contract-smoke",
+    "jichi-next-contract-smoke"
   ],
   "schema_version": 1,
   "source_sha": "c20336311877ee6168505398f4818e217ac1da0b",
