@@ -1,0 +1,12 @@
+{
+  "contract_fingerprint": "c5852341b7bb72b2c7f44fcf2ef13010c9520a545dc167f01cb567cb4328ad79",
+  "dispatch_count": 0,
+  "policy_fingerprint": "a62919273a6acec942e8149ea3e687b2e7e265224dde73eadb0781bc84a39e17",
+  "registry_fingerprint": "abfc01326c795db84c7b8c136988e9a80f333c6d24940f8819ebfc3cd76a9f1a",
+  "schema_version": 1,
+  "source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
+  "status": "ARMED",
+  "target_repository": "M-Osugi1230/chu-kei",
+  "task_id": "ckpd004-002",
+  "verification_id": "rv-8eaf165959649d9f5ba4621549e96ccd070788a3"
+}
