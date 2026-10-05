@@ -1,0 +1,25 @@
+{
+  "evidence": {
+    "deployment_id": null,
+    "environment": "repository",
+    "kind": "repository",
+    "observed_at": "2026-10-05T12:47:34.700373+00:00",
+    "provenance_id": "trusted-merge-sha-v1",
+    "schema_version": 1,
+    "source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
+    "target_id": "repository-runtime",
+    "target_repository": "M-Osugi1230/chu-kei"
+  },
+  "evidence_fingerprint": "e7aaf1720674328708537614c8e0c57823002be00776a91e62de78b72d23b7b2",
+  "registry_fingerprint": "9308847681f8a541da7c01119bf456990a27f08737e952e96fa0fe8de36bbecd",
+  "schema_version": 1,
+  "spec": {
+    "deployment_required": false,
+    "environment": "repository",
+    "kind": "repository",
+    "max_age_seconds": 300,
+    "max_future_skew_seconds": 60,
+    "schema_version": 1,
+    "target_id": "repository-runtime"
+  }
+}
