@@ -3,14 +3,14 @@
     "deployment_id": null,
     "environment": "repository",
     "kind": "repository",
-    "observed_at": "2026-10-05T11:13:47.071041+00:00",
+    "observed_at": "2026-10-05T11:22:10.345881+00:00",
     "provenance_id": "trusted-merge-sha-v1",
     "schema_version": 1,
     "source_sha": "8c109d857a7744905f80a274337a8917815e67f6",
     "target_id": "repository-runtime",
     "target_repository": "M-Osugi1230/chu-kei"
   },
-  "evidence_fingerprint": "502641dc3798a290fcfecf4cdbf05d962ca78a7973545a047508a049109b2451",
+  "evidence_fingerprint": "2974f180cc2374f594ba33752adb6e935650e7af9d6af936b32ca68d701fab36",
   "registry_fingerprint": "9308847681f8a541da7c01119bf456990a27f08737e952e96fa0fe8de36bbecd",
   "schema_version": 1,
   "spec": {
