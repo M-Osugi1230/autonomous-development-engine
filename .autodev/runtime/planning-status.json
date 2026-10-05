@@ -1,10 +1,10 @@
 {
   "attempt": 1,
-  "detail": "task jules-step-001 path does not exist in repository snapshot and is not declared new: supabase/migrations/20261003000000_ex_post_outcomes_and_yield_publication.sql",
+  "detail": "task jules-step-001 path does not exist in repository snapshot and is not declared new: supabase/migrations/20261003000000_jq_market_outcomes_and_yield.sql",
   "reason": "planner-retryable-failure",
-  "request_fingerprint": "60f98adaeca89c81af85356dd6b769ccfde54b46649d5af8263a7fa4237895c1",
-  "request_id": "jquants-production-supabase-materialization-request-003",
+  "request_fingerprint": "255281b1a8be45ec05ce900e509065394ac51ba0c478efe9a18f7e89aeb79656",
+  "request_id": "jquants-production-supabase-materialization-request-004",
   "schema_version": 1,
   "state": "REPLAN",
-  "updated_at": "2026-10-05T22:57:28.568277+00:00"
+  "updated_at": "2026-10-05T23:01:41.481467+00:00"
 }
