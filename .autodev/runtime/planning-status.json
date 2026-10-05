@@ -1,15 +1,10 @@
 {
-  "accepted_plan_fingerprint": "227964ac09e26da37403681477f7b9b2d1f777f6601d7c570644af3a64ae5299",
   "attempt": 1,
-  "campaign_id": "jquants-production-materialization-001",
-  "development_memory_context_fingerprint": "487605353c72b8d9cd42af86e5a862bad5bd153dc7137d1a6d2fe622e0608256",
-  "development_memory_record_count": 1,
-  "first_task_id": "jqmat001-001",
-  "proposal_fingerprint": "7dd5945cba9fbd715ed279d902e50f1849b1e4add39d5fa77e50f4055295f47a",
-  "reason": "trusted-plan-accepted",
-  "request_fingerprint": "daf6beb050b6c5f22e32da60b6c7f4affe80d800549ba815006c50c2c0bedb5b",
-  "request_id": "jquants-production-materialization-request-002",
+  "detail": "high-level goal exceeds trusted text budget",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "46870755380f9cc21ff6293667ea35bf06def50460d338598a5783575caf7b32",
+  "request_id": "jquants-production-supabase-materialization-request-001",
   "schema_version": 1,
-  "state": "ACCEPTED",
-  "updated_at": "2026-10-05T22:44:55.114649+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-05T22:47:49.663155+00:00"
 }
