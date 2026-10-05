@@ -1,7 +1,7 @@
 {
   "action": "HUMAN_WAIT",
   "failure": "RUNTIME_VERIFICATION",
-  "fingerprint": "881fe5569dcae162f3e7602c967fcf4866345bed0fc5e4d0ae3ffbb3e45112db",
+  "fingerprint": "d83e31f8cf9a9fafc017b159d1d628689c5931e6138188cebe2979e3ed54b964",
   "progress": {
     "rebases": 0,
     "repairs": 0,
@@ -10,5 +10,5 @@
     "retries": 0
   },
   "schema_version": 1,
-  "task_id": "jip15morioka003-001"
+  "task_id": "ckpd004-001"
 }
