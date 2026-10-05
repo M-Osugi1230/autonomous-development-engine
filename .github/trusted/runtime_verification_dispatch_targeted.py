@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from typing import Any
 
 from ade_pr_gate import advance_queue
 from github_client import GitHubClient
@@ -19,16 +20,47 @@ _BASE_PREPARE_WORKSPACE = base_dispatch.prepare_repository_runtime_workspace
 _BASE_RECONCILE = base_dispatch._reconcile_autonomous_development_success
 
 
-def _event_task_id() -> str:
+def _event_client_payload() -> dict[str, Any]:
     event_path = os.environ.get("GITHUB_EVENT_PATH")
     if not event_path:
         raise ValueError("GITHUB_EVENT_PATH is required")
     payload = json.loads(Path(event_path).read_text(encoding="utf-8"))
-    client_payload = payload.get("client_payload") if isinstance(payload, dict) else None
-    task_id = client_payload.get("task_id") if isinstance(client_payload, dict) else None
+    if not isinstance(payload, dict):
+        raise ValueError("runtime dispatch event must be an object")
+    client_payload = payload.get("client_payload")
+    if not isinstance(client_payload, dict):
+        raise ValueError("runtime dispatch client_payload is required")
+    return client_payload
+
+
+def _event_task_id() -> str:
+    payload = _event_client_payload()
+    task_id = payload.get("task_id")
     if not isinstance(task_id, str) or not task_id.strip():
         raise ValueError("runtime dispatch task_id is required")
     return task_id
+
+
+def _event_target_repository() -> str:
+    payload = _event_client_payload()
+    target_repository = payload.get("target_repository")
+    if not isinstance(target_repository, str) or not target_repository.strip():
+        raise ValueError("runtime dispatch target_repository is required")
+    return target_repository
+
+
+def build_target_runtime_probe_registry(
+    workspace=None,
+    *,
+    target_repository: str | None = None,
+):
+    resolved_repository = target_repository
+    if not isinstance(resolved_repository, str) or not resolved_repository.strip():
+        resolved_repository = _event_target_repository()
+    return build_runtime_probe_registry(
+        workspace,
+        target_repository=resolved_repository,
+    )
 
 
 def _task_allowed_paths(gh: GitHubClient, task_id: str) -> tuple[str, ...]:
@@ -125,7 +157,7 @@ def reconcile_verified_task(gh: GitHubClient, *, receipt):
 
 
 def main() -> int:
-    base_dispatch.build_runtime_probe_registry = build_runtime_probe_registry
+    base_dispatch.build_runtime_probe_registry = build_target_runtime_probe_registry
     base_dispatch.prepare_repository_runtime_workspace = prepare_target_runtime_workspace
     base_dispatch._reconcile_autonomous_development_success = reconcile_verified_task
     return base_dispatch.main()
