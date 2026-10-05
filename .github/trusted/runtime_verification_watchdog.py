@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import json
 import os
 from datetime import UTC, datetime
@@ -59,6 +60,22 @@ def _read_optional_json(
         if "GitHub HTTP 404:" in str(exc):
             return None
         raise
+
+
+def _build_probe_registry(target_repository: str):
+    """Build the branch-native registry without changing its fingerprint.
+
+    Older control branches expose build_runtime_probe_registry(workspace=None)
+    while newer trusted code also accepts target_repository as a keyword-only
+    selector. Inspect the callable instead of catching TypeError so errors raised
+    inside registry construction are never hidden by a compatibility fallback.
+    """
+    parameters = inspect.signature(build_runtime_probe_registry).parameters
+    if "target_repository" in parameters:
+        return build_runtime_probe_registry(
+            target_repository=target_repository,
+        )
+    return build_runtime_probe_registry()
 
 
 def watchdog_disposition(
@@ -149,9 +166,7 @@ def run_watchdog(
     if contract.fingerprint() != receipt.contract_fingerprint:
         raise ValueError("runtime contract fingerprint does not match receipt")
 
-    registry = build_runtime_probe_registry(
-        target_repository=receipt.target_repository,
-    )
+    registry = _build_probe_registry(receipt.target_repository)
     event = {
         "task_id": receipt.task_id,
         "verification_id": receipt.verification_id,
