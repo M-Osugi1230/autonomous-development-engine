@@ -4,6 +4,7 @@ import importlib.util
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from ade.runtime_verification_trigger import RuntimeVerificationReceipt
 
@@ -79,6 +80,41 @@ class RuntimeVerificationWatchdogTests(unittest.TestCase):
         )
         self.assertEqual(action, "NOOP")
         self.assertEqual(reason, "runtime-receipt-not-current")
+
+    def test_probe_registry_uses_target_repository_when_supported(self) -> None:
+        sentinel = object()
+
+        def modern_registry(workspace=None, *, target_repository=None):
+            self.assertIsNone(workspace)
+            self.assertEqual(target_repository, "M-Osugi1230/jichi-insight")
+            return sentinel
+
+        with patch.object(
+            self.module,
+            "build_runtime_probe_registry",
+            modern_registry,
+        ):
+            result = self.module._build_probe_registry(
+                "M-Osugi1230/jichi-insight"
+            )
+        self.assertIs(result, sentinel)
+
+    def test_probe_registry_supports_legacy_control_branch_signature(self) -> None:
+        sentinel = object()
+
+        def legacy_registry(workspace=None):
+            self.assertIsNone(workspace)
+            return sentinel
+
+        with patch.object(
+            self.module,
+            "build_runtime_probe_registry",
+            legacy_registry,
+        ):
+            result = self.module._build_probe_registry(
+                "M-Osugi1230/chu-kei"
+            )
+        self.assertIs(result, sentinel)
 
 
 if __name__ == "__main__":
