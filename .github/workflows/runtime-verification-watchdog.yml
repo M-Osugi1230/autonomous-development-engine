@@ -1,0 +1,100 @@
+name: ADE Runtime Verification Watchdog
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - ade_runtime_verification_watch
+  push:
+    branches:
+      - main
+      - ade-jichi-insight
+      - ade-jquants
+      - ade-chu-kei
+    paths:
+      - ".github/workflows/runtime-verification-watchdog.yml"
+      - ".github/trusted/runtime_verification_watchdog.py"
+  schedule:
+    - cron: "11,26,41,56 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ade-runtime-verification-watchdog-${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || github.ref_name || 'default' }}
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout project controller
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Recover armed Runtime Verification dispatch
+        env:
+          PYTHONPATH: src:.github/trusted
+          ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
+          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || github.ref_name || 'default' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
+        run: python .github/trusted/runtime_verification_watchdog.py
+
+      - name: Upload watchdog evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-runtime-verification-watchdog-result
+          path: .autodev/runtime/runtime-verification-watchdog-result.json
+          if-no-files-found: error
+          retention-days: 30
+
+  scheduled-project-watch:
+    if: github.event_name == 'schedule'
+    strategy:
+      fail-fast: false
+      matrix:
+        control_ref:
+          - main
+          - ade-jichi-insight
+          - ade-jquants
+          - ade-chu-kei
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout project controller
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.control_ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Recover armed Runtime Verification dispatch
+        env:
+          PYTHONPATH: src:.github/trusted
+          ADE_CONTROL_REF: ${{ matrix.control_ref }}
+          ADE_PROJECT_KEY: ${{ matrix.control_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
+        run: python .github/trusted/runtime_verification_watchdog.py
+
+      - name: Upload project watchdog evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-runtime-verification-watchdog-result-${{ matrix.control_ref }}
+          path: .autodev/runtime/runtime-verification-watchdog-result.json
+          if-no-files-found: error
+          retention-days: 30
