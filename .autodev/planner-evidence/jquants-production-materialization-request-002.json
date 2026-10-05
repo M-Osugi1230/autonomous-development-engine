@@ -1,0 +1,230 @@
+{
+  "accepted_plan_fingerprint": "227964ac09e26da37403681477f7b9b2d1f777f6601d7c570644af3a64ae5299",
+  "campaign_id": "jquants-production-materialization-001",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "487605353c72b8d9cd42af86e5a862bad5bd153dc7137d1a6d2fe622e0608256",
+    "current_source_sha": "da4579cccefe38fbfaec4565bed830d1bcf9298a",
+    "execution_authority": false,
+    "extracted_record_count": 14,
+    "memory_fingerprints": [
+      "5f5ff05545630678d9823e57ec3a525e287aa1ca6e5d4519147b8de0d8014240"
+    ],
+    "memory_ids": [
+      "mem-23ac800c5b1fe9a8034d529c"
+    ],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jquants-research-studio",
+    "resolution_fingerprint": "1890a39c16e71276c166eb05417cdba6be8ceb5222264ecce1e16ddbc68dbc16",
+    "retrieval_fingerprint": "0dc60b648ecd29e520176a3cd79cfe3dc22bd6f05fe53ccb13f6bb3a8698bcac",
+    "retrieved_record_count": 1,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "7d2630b872b8693665a457e67b1629247c2ce1920e80f0c3819497556ee94359",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": true
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "537175b8060cd5ad6c4c471aadd6dbf541ecbb5b72642b06454a2e4d79f8aa5c",
+  "proposal": {
+    "goal": "Complete Production Feature Materialization for J-Quants Research Studio without adding broad new data categories. Materialize the already-implemented 1/5/20/60 trading-day forward returns and benchmark-relative excess returns from stored jq_market_price_daily data into a production research outcome model. Keep ex-post outcomes structurally separate from point-in-time features so they cannot be used as information available at the observation date. Use adjusted-price semantics, deterministic session alignment, null values when future sessions are insufficient, and zero new external calls for this calculation. Make schema and materialization idempotent, incremental, resumable, provenance-aware, and suitable for backfill plus ongoing refresh. Connect existing shareholder-benefit normalization and total-yield logic to the production jq_market_yield publication/backfill path so investable capital, annual benefit value, benefit yield, and dividend-plus-benefit total yield are populated only where source evidence supports them; preserve unknown states and do not invent values. Expose these results through existing Research Workspace/API/metric/search/compare surfaces where useful, clearly labeling forward/excess returns as historical outcomes. Add coverage, null, staleness, benchmark-alignment, and PIT-leakage tests/audits. Preserve current EDINET/J-Quants quota limits, request reserves, fail-closed behavior, atomic publication, idempotency, security lifecycle semantics, and CI. Do not introduce news sentiment, broad IR text analysis, activist/shareholder monitoring, large technical-indicator sets, or unbounded per-security fetching. Success means stored production data can be backfilled and incrementally refreshed for outcomes and total yield, the workspace can safely consume it, and tests prove no look-ahead leakage while enabling direct validation of whether earnings/valuation/yield signals were followed by future excess returns.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Modify `engine/features/security_daily.py` to materialize 1/5/20/60 trading-day forward returns and benchmark-relative excess returns with adjusted-price semantics and session alignment.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/features/security_daily.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Modify `engine/features/security_daily.py` to materialize 1/5/20/60 trading-day forward returns and benchmark-relative excess returns with adjusted-price semantics and session alignment.",
+        "title": "Modify `engine/features/security_daily.py` to materialize 1/5/20/60 trading-day forward returns and benchmark-relative excess returns with adjusted-price semantics and session alignment."
+      },
+      {
+        "acceptance": [
+          "Modify `engine/features/store.py` to support schema storage, provenance tracking, and incremental persistence for outcome models.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/features/store.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "Modify `engine/features/store.py` to support schema storage, provenance tracking, and incremental persistence for outcome models.",
+        "title": "Modify `engine/features/store.py` to support schema storage, provenance tracking, and incremental persistence for outcome models."
+      },
+      {
+        "acceptance": [
+          "Modify `scripts/build_security_features.py` to add idempotent, resumable backfill and ongoing refresh commands for materialized outcomes.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/build_security_features.py"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [],
+        "outcome": "Modify `scripts/build_security_features.py` to add idempotent, resumable backfill and ongoing refresh commands for materialized outcomes.",
+        "title": "Modify `scripts/build_security_features.py` to add idempotent, resumable backfill and ongoing refresh commands for materialized outcomes."
+      },
+      {
+        "acceptance": [
+          "Modify `engine/marketdata/yields.py` to connect shareholder-benefit normalization to the `jq_market_yield` publication and backfill path.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/marketdata/yields.py"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "Modify `engine/marketdata/yields.py` to connect shareholder-benefit normalization to the `jq_market_yield` publication and backfill path.",
+        "title": "Modify `engine/marketdata/yields.py` to connect shareholder-benefit normalization to the `jq_market_yield` publication and backfill path."
+      },
+      {
+        "acceptance": [
+          "Modify `engine/company/metric_catalog.py` to register forward/excess returns and total yield metrics clearly labeled as historical ex-post outcomes.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/company/metric_catalog.py"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [],
+        "outcome": "Modify `engine/company/metric_catalog.py` to register forward/excess returns and total yield metrics clearly labeled as historical ex-post outcomes.",
+        "title": "Modify `engine/company/metric_catalog.py` to register forward/excess returns and total yield metrics clearly labeled as historical ex-post outcomes."
+      },
+      {
+        "acceptance": [
+          "Modify `apps/api/company.py` to expose materialized forward returns, excess returns, and total yield in company search and compare endpoints.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "apps/api/company.py"
+        ],
+        "depends_on": [
+          "jules-step-005"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-006",
+        "new_paths": [],
+        "outcome": "Modify `apps/api/company.py` to expose materialized forward returns, excess returns, and total yield in company search and compare endpoints.",
+        "title": "Modify `apps/api/company.py` to expose materialized forward returns, excess returns, and total yield in company search and compare endpoints."
+      },
+      {
+        "acceptance": [
+          "Modify `tests/test_security_features.py` to add point-in-time leakage, coverage, staleness, and benchmark-alignment tests for forward outcome features.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_security_features.py"
+        ],
+        "depends_on": [
+          "jules-step-006"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-007",
+        "new_paths": [],
+        "outcome": "Modify `tests/test_security_features.py` to add point-in-time leakage, coverage, staleness, and benchmark-alignment tests for forward outcome features.",
+        "title": "Modify `tests/test_security_features.py` to add point-in-time leakage, coverage, staleness, and benchmark-alignment tests for forward outcome features."
+      },
+      {
+        "acceptance": [
+          "Modify `tests/test_workspace_yield_v2.py` to verify dividend-plus-benefit total yield calculations and evidence-backed preservation of unknown states.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_workspace_yield_v2.py"
+        ],
+        "depends_on": [
+          "jules-step-007"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-008",
+        "new_paths": [],
+        "outcome": "Modify `tests/test_workspace_yield_v2.py` to verify dividend-plus-benefit total yield calculations and evidence-backed preservation of unknown states.",
+        "title": "Modify `tests/test_workspace_yield_v2.py` to verify dividend-plus-benefit total yield calculations and evidence-backed preservation of unknown states."
+      }
+    ]
+  },
+  "proposal_fingerprint": "7dd5945cba9fbd715ed279d902e50f1849b1e4add39d5fa77e50f4055295f47a",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 8,
+  "provider_plan_steps_sha256": "d60bade2d28f3b2e9dd0b215d94984e403a92d421d4d112b0a91cf1e73d7fa0a",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "f6e9dfc827ef455f6d61388e06448b9452b753c119096250c09e0bd32008756f",
+  "repository_context_fingerprint": "c9f731e3f9011a7b38c6ef82b2d80240e42cbd6f2c4cf81b852a236fc92c30a6",
+  "repository_impact_analysis_fingerprint": "17b4b708629c3ee452e03519154dbcbb332c1fabea97996e3c592c1fe039d7e0",
+  "repository_relationship_graph_fingerprint": "f653bbd683ec97c83cd020afab8241fb93305ac6446f6d46313e0fa4691cb730",
+  "repository_snapshot_fingerprint": "8faa83033599a0e3127ec210f25459c155dd03744b1cc2f91706da33fb1db692",
+  "repository_source_sha": "da4579cccefe38fbfaec4565bed830d1bcf9298a",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "engine",
+      "providers",
+      "scripts",
+      "supabase",
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jquants-production-materialization-001",
+    "execution_phase": "autonomous-development",
+    "goal": "Complete Production Feature Materialization for J-Quants Research Studio without adding broad new data categories. Materialize the already-implemented 1/5/20/60 trading-day forward returns and benchmark-relative excess returns from stored jq_market_price_daily data into a production research outcome model. Keep ex-post outcomes structurally separate from point-in-time features so they cannot be used as information available at the observation date. Use adjusted-price semantics, deterministic session alignment, null values when future sessions are insufficient, and zero new external calls for this calculation. Make schema and materialization idempotent, incremental, resumable, provenance-aware, and suitable for backfill plus ongoing refresh. Connect existing shareholder-benefit normalization and total-yield logic to the production jq_market_yield publication/backfill path so investable capital, annual benefit value, benefit yield, and dividend-plus-benefit total yield are populated only where source evidence supports them; preserve unknown states and do not invent values. Expose these results through existing Research Workspace/API/metric/search/compare surfaces where useful, clearly labeling forward/excess returns as historical outcomes. Add coverage, null, staleness, benchmark-alignment, and PIT-leakage tests/audits. Preserve current EDINET/J-Quants quota limits, request reserves, fail-closed behavior, atomic publication, idempotency, security lifecycle semantics, and CI. Do not introduce news sentiment, broad IR text analysis, activist/shareholder monitoring, large technical-indicator sets, or unbounded per-security fetching. Success means stored production data can be backfilled and incrementally refreshed for outcomes and total yield, the workspace can safely consume it, and tests prove no look-ahead leakage while enabling direct validation of whether earnings/valuation/yield signals were followed by future excess returns.",
+    "id_prefix": "jqmat001",
+    "min_tasks": 4,
+    "request_id": "jquants-production-materialization-request-002",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jquants-research-studio"
+  },
+  "request_fingerprint": "daf6beb050b6c5f22e32da60b6c7f4affe80d800549ba815006c50c2c0bedb5b",
+  "schema_version": 1,
+  "task_ids": [
+    "jqmat001-001",
+    "jqmat001-002",
+    "jqmat001-003",
+    "jqmat001-004",
+    "jqmat001-005",
+    "jqmat001-006",
+    "jqmat001-007",
+    "jqmat001-008"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 37384108224
+}
