@@ -2,9 +2,9 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "12408796282519611236",
+  "provider_session_id": "10215175075860183442",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "ckpd004-001"
+  "state": "RUNNING",
+  "task_id": "ckpd004-002"
 }
