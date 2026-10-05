@@ -34,7 +34,7 @@ jobs:
           ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || 'default' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
-        run: python .github/trusted/runtime_verification_dispatch.py
+        run: python .github/trusted/runtime_verification_dispatch_targeted.py
 
       - name: Upload runtime verification dispatch evidence
         if: always()
