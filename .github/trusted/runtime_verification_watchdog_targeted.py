@@ -6,6 +6,7 @@ import os
 from github_client import GitHubClient
 import runtime_verification_watchdog as base_watchdog
 from runtime_verification_profile_migration import (
+    _write as write_migration_evidence,
     migrate_runtime_profile_if_needed,
 )
 from target_runtime_profile import build_runtime_probe_registry
@@ -20,6 +21,7 @@ def main() -> int:
             "",
         ),
     )
+    write_migration_evidence(migration)
     print(
         "Runtime profile migration: "
         + json.dumps(migration, sort_keys=True)
