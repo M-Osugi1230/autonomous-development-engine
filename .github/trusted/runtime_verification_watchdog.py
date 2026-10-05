@@ -167,6 +167,9 @@ def run_watchdog(
         raise ValueError("runtime contract fingerprint does not match receipt")
 
     registry = _build_probe_registry(receipt.target_repository)
+    # Keep this base payload at eight properties or fewer. Legacy control
+    # branches append both control_ref and project_key, and repository_dispatch
+    # accepts at most ten top-level client_payload properties.
     event = {
         "task_id": receipt.task_id,
         "verification_id": receipt.verification_id,
@@ -176,7 +179,6 @@ def run_watchdog(
         "pull_request_number": remote.pull_request_number,
         "pull_request_head_sha": head_sha,
         "trusted_merge_sha": merge_sha,
-        "source": "runtime-verification-watchdog",
     }
     gh.dispatch("ade_runtime_verification", event)
 
