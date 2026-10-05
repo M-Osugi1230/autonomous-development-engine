@@ -1,10 +1,10 @@
 {
   "attempt": 1,
-  "detail": "high-level goal exceeds trusted text budget",
+  "detail": "concurrent JSON file mutation detected during upsert",
   "reason": "planner-retryable-failure",
-  "request_fingerprint": "46870755380f9cc21ff6293667ea35bf06def50460d338598a5783575caf7b32",
-  "request_id": "jquants-production-supabase-materialization-request-001",
+  "request_fingerprint": "527a6fe02d0f062847e2620083e261b6add7ef603f89ba05c984a4dc2e1b8c24",
+  "request_id": "jquants-production-supabase-materialization-request-002",
   "schema_version": 1,
   "state": "REPLAN",
-  "updated_at": "2026-10-05T22:47:49.663155+00:00"
+  "updated_at": "2026-10-05T22:49:35.971555+00:00"
 }
