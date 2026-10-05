@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jquants-data-depth-campaign-001",
+  "campaign_id": "jquants-production-materialization-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-03T23:25:43.948738+00:00",
-  "plan_fingerprint": "4fb1cce259026f0c1389bf87a9c9fe1589dafe573573bf47ea65c181eac562c6",
+  "dispatched_at": "2026-10-05T22:45:06.070135+00:00",
+  "plan_fingerprint": "227964ac09e26da37403681477f7b9b2d1f777f6601d7c570644af3a64ae5299",
   "run_attempt": "1",
-  "run_id": "37161736437",
+  "run_id": "37384430982",
   "schema_version": 1,
-  "source": "push",
-  "source_sha": "58177e3c94559d1619d0f0771558b93f3e7b5b59",
+  "source": "repository_dispatch",
+  "source_sha": "2250d79e9011928f57ba14a81574c7ab4892627b",
   "status": "DISPATCHED",
-  "task_id": "jqdepth001-001"
+  "task_id": "jqmat001-001"
 }
