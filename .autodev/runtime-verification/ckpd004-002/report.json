@@ -1,0 +1,28 @@
+{
+  "attempts_by_probe": [
+    {
+      "attempts": 1,
+      "probe_id": "chu-plan-detection-candidate-contract"
+    }
+  ],
+  "report": {
+    "contract_fingerprint": "c5852341b7bb72b2c7f44fcf2ef13010c9520a545dc167f01cb567cb4328ad79",
+    "disposition": "VERIFIED",
+    "missing_probe_ids": [],
+    "results": [
+      {
+        "attempt": 1,
+        "detail_code": "chu-plan-detection-candidate-contract-pass",
+        "probe_id": "chu-plan-detection-candidate-contract",
+        "schema_version": 1,
+        "source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
+        "status": "PASS"
+      }
+    ],
+    "schema_version": 1,
+    "source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
+    "verification_id": "rv-8eaf165959649d9f5ba4621549e96ccd070788a3"
+  },
+  "report_fingerprint": "ba4785d05b51955280f29b8632d6fa44740728271de801cb2d4a7314cc556f92",
+  "schema_version": 1
+}
