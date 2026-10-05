@@ -4,8 +4,13 @@ on:
   push:
     branches:
       - main
+      - ade-jichi-insight
+      - ade-jquants
+      - ade-chu-kei
     paths:
       - ".autodev/runtime/remote-execution.json"
+      - ".github/trusted/remote_pr_monitor_targeted.py"
+      - ".github/trusted/target_runtime_profile.py"
   repository_dispatch:
     types:
       - ade_remote_pr_monitor
@@ -22,13 +27,14 @@ concurrency:
 
 jobs:
   monitor:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout trusted controller from main
+      - name: Checkout project controller
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.control_ref || 'main' }}
+          ref: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -37,18 +43,59 @@ jobs:
 
       - name: Observe remote PR and advance Campaign
         env:
-          PYTHONPATH: src
-          ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || 'main' }}
-          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || 'default' }}
+          PYTHONPATH: src:.github/trusted
+          ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
+          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || github.ref_name || 'default' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
-        run: python .github/trusted/remote_pr_monitor.py
+        run: python .github/trusted/remote_pr_monitor_targeted.py
 
       - name: Upload remote monitor evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ade-remote-pr-monitor-result
+          path: .autodev/runtime/remote-monitor-result.json
+          if-no-files-found: error
+          retention-days: 30
+
+  scheduled-project-monitor:
+    if: github.event_name == 'schedule'
+    strategy:
+      fail-fast: false
+      matrix:
+        control_ref:
+          - main
+          - ade-jichi-insight
+          - ade-jquants
+          - ade-chu-kei
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout project controller
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.control_ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Observe project remote PR and advance Campaign
+        env:
+          PYTHONPATH: src:.github/trusted
+          ADE_CONTROL_REF: ${{ matrix.control_ref }}
+          ADE_PROJECT_KEY: ${{ matrix.control_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
+        run: python .github/trusted/remote_pr_monitor_targeted.py
+
+      - name: Upload project remote monitor evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-remote-pr-monitor-result-${{ matrix.control_ref }}
           path: .autodev/runtime/remote-monitor-result.json
           if-no-files-found: error
           retention-days: 30
