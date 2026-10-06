@@ -168,7 +168,7 @@ class MissionControlObservabilityTests(unittest.TestCase):
         lowered = html.lower()
 
         self.assertIn("Latest output", html)
-        self.assertIn("Activity", html)
+        self.assertIn("Recent activity", html)
         self.assertIn("Completed task 2", html)
         self.assertIn(
             'href="https://github.com/M-Osugi1230/autonomous-development-engine/pull/34"',
