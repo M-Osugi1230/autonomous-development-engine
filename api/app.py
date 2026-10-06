@@ -1,0 +1,174 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any, Callable, Iterable
+
+from api.control import (
+    MAX_BODY_BYTES,
+    _authorized,
+    _configured_key,
+    _dispatch,
+    _github_token,
+    _validate_request,
+)
+from api.status import build_status
+
+
+ROOT = Path(__file__).resolve().parents[1]
+INDEX_PATH = ROOT / "index.html"
+
+
+def _response(
+    start_response: Callable[[str, list[tuple[str, str]]], Any],
+    status: str,
+    body: bytes,
+    *,
+    content_type: str,
+) -> Iterable[bytes]:
+    headers = [
+        ("Content-Type", content_type),
+        ("Content-Length", str(len(body))),
+        ("Cache-Control", "no-store"),
+        ("X-Content-Type-Options", "nosniff"),
+        ("X-Frame-Options", "DENY"),
+        ("Referrer-Policy", "no-referrer"),
+        ("Permissions-Policy", "camera=(), microphone=(), geolocation=()"),
+    ]
+    start_response(status, headers)
+    return [body]
+
+
+def _json_response(
+    start_response: Callable[[str, list[tuple[str, str]]], Any],
+    status: str,
+    payload: dict[str, Any],
+) -> Iterable[bytes]:
+    body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return _response(
+        start_response,
+        status,
+        body,
+        content_type="application/json; charset=utf-8",
+    )
+
+
+def _headers_from_environ(environ: dict[str, Any]) -> dict[str, str]:
+    headers: dict[str, str] = {}
+    for key, value in environ.items():
+        if not key.startswith("HTTP_") or not isinstance(value, str):
+            continue
+        normalized = key[5:].replace("_", "-").title()
+        headers[normalized] = value
+    return headers
+
+
+def _read_json_body(environ: dict[str, Any]) -> Any:
+    raw_length = environ.get("CONTENT_LENGTH", "0")
+    try:
+        length = int(raw_length or "0")
+    except (TypeError, ValueError) as exc:
+        raise ValueError("invalid content length") from exc
+    if length <= 0 or length > MAX_BODY_BYTES:
+        raise ValueError("invalid body size")
+    stream = environ.get("wsgi.input")
+    if stream is None or not hasattr(stream, "read"):
+        raise ValueError("missing request body")
+    raw = stream.read(length)
+    if not isinstance(raw, (bytes, bytearray)):
+        raise ValueError("invalid request body")
+    try:
+        return json.loads(bytes(raw).decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("request body must be valid UTF-8 JSON") from exc
+
+
+def application(
+    environ: dict[str, Any],
+    start_response: Callable[[str, list[tuple[str, str]]], Any],
+) -> Iterable[bytes]:
+    method = str(environ.get("REQUEST_METHOD", "GET")).upper()
+    path = str(environ.get("PATH_INFO", "/"))
+
+    if method == "GET" and path in {"/", "/index.html"}:
+        try:
+            body = INDEX_PATH.read_bytes()
+        except OSError:
+            return _json_response(
+                start_response,
+                "500 Internal Server Error",
+                {"error": "dashboard_unavailable"},
+            )
+        return _response(
+            start_response,
+            "200 OK",
+            body,
+            content_type="text/html; charset=utf-8",
+        )
+
+    if method == "GET" and path == "/api/status":
+        try:
+            payload = build_status()
+        except Exception as exc:
+            message = str(exc).splitlines()[0].strip() or type(exc).__name__
+            return _json_response(
+                start_response,
+                "502 Bad Gateway",
+                {"error": "status_unavailable", "message": message[:240]},
+            )
+        return _json_response(start_response, "200 OK", payload)
+
+    if method == "GET" and path == "/api/control":
+        return _json_response(
+            start_response,
+            "200 OK",
+            {
+                "schema_version": 1,
+                "configured": bool(_configured_key() and _github_token()),
+                "projects": ["all", "chu-kei", "jichi", "jquants"],
+                "commands": ["refresh", "replan", "resolve_decision", "resume", "submit_goal"],
+            },
+        )
+
+    if method == "POST" and path == "/api/control":
+        if not _configured_key() or not _github_token():
+            return _json_response(
+                start_response,
+                "503 Service Unavailable",
+                {
+                    "error": "setup_required",
+                    "message": "Control Plane credentials are not configured.",
+                },
+            )
+        if not _authorized(_headers_from_environ(environ)):
+            return _json_response(start_response, "401 Unauthorized", {"error": "unauthorized"})
+        try:
+            request_payload = _read_json_body(environ)
+            project, command, command_payload = _validate_request(request_payload)
+            _dispatch(project, command, command_payload)
+        except ValueError as exc:
+            message = str(exc).splitlines()[0].strip() or type(exc).__name__
+            return _json_response(
+                start_response,
+                "400 Bad Request",
+                {"error": "invalid_request", "message": message[:240]},
+            )
+        except RuntimeError as exc:
+            message = str(exc).splitlines()[0].strip() or type(exc).__name__
+            return _json_response(
+                start_response,
+                "502 Bad Gateway",
+                {"error": "dispatch_failed", "message": message[:240]},
+            )
+        return _json_response(
+            start_response,
+            "202 Accepted",
+            {
+                "accepted": True,
+                "project": project,
+                "command": command,
+                "message": "Command accepted by the trusted Control Plane.",
+            },
+        )
+
+    return _json_response(start_response, "404 Not Found", {"error": "not_found"})
