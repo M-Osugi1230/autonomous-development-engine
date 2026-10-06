@@ -4,14 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
-from api.control import (
-    MAX_BODY_BYTES,
-    _authorized,
-    _configured_key,
-    _dispatch,
-    _github_token,
-    _validate_request,
-)
+from api.control import MAX_BODY_BYTES, _dispatch, _github_token, _validate_request
 from api.status import build_status
 
 
@@ -51,16 +44,6 @@ def _json_response(
         body,
         content_type="application/json; charset=utf-8",
     )
-
-
-def _headers_from_environ(environ: dict[str, Any]) -> dict[str, str]:
-    headers: dict[str, str] = {}
-    for key, value in environ.items():
-        if not key.startswith("HTTP_") or not isinstance(value, str):
-            continue
-        normalized = key[5:].replace("_", "-").title()
-        headers[normalized] = value
-    return headers
 
 
 def _read_json_body(environ: dict[str, Any]) -> Any:
@@ -124,24 +107,22 @@ def application(
             "200 OK",
             {
                 "schema_version": 1,
-                "configured": bool(_configured_key() and _github_token()),
+                "configured": bool(_github_token()),
                 "projects": ["all", "chu-kei", "jichi", "jquants"],
                 "commands": ["refresh", "replan", "resolve_decision", "resume", "submit_goal"],
             },
         )
 
     if method == "POST" and path == "/api/control":
-        if not _configured_key() or not _github_token():
+        if not _github_token():
             return _json_response(
                 start_response,
                 "503 Service Unavailable",
                 {
                     "error": "setup_required",
-                    "message": "Control Plane credentials are not configured.",
+                    "message": "Control Plane server credential is not configured.",
                 },
             )
-        if not _authorized(_headers_from_environ(environ)):
-            return _json_response(start_response, "401 Unauthorized", {"error": "unauthorized"})
         try:
             request_payload = _read_json_body(environ)
             project, command, command_payload = _validate_request(request_payload)
