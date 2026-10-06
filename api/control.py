@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hmac
 import json
 import os
 import urllib.error
@@ -18,24 +17,8 @@ COMMANDS = frozenset({"refresh", "resume", "replan", "submit_goal", "resolve_dec
 MAX_BODY_BYTES = 20_000
 
 
-def _configured_key() -> str:
-    return os.environ.get("ADE_CONTROL_KEY", "").strip()
-
-
 def _github_token() -> str:
     return os.environ.get("ADE_GITHUB_TOKEN", "").strip()
-
-
-def _authorized(headers: Any) -> bool:
-    expected = _configured_key()
-    if not expected:
-        return False
-    supplied = headers.get("X-ADE-Control-Key", "").strip()
-    if not supplied:
-        authorization = headers.get("Authorization", "").strip()
-        if authorization.lower().startswith("bearer "):
-            supplied = authorization[7:].strip()
-    return bool(supplied) and hmac.compare_digest(supplied, expected)
 
 
 def _validate_request(payload: Any) -> tuple[str, str, dict[str, Any]]:
@@ -124,7 +107,7 @@ class handler(BaseHTTPRequestHandler):
             200,
             {
                 "schema_version": 1,
-                "configured": bool(_configured_key() and _github_token()),
+                "configured": bool(_github_token()),
                 "projects": sorted(PROJECTS),
                 "commands": sorted(COMMANDS),
             },
@@ -134,11 +117,14 @@ class handler(BaseHTTPRequestHandler):
         if self.path.split("?", 1)[0] != "/api/control":
             self._json(404, {"error": "not_found"})
             return
-        if not _configured_key() or not _github_token():
-            self._json(503, {"error": "setup_required", "message": "Control Plane credentials are not configured."})
-            return
-        if not _authorized(self.headers):
-            self._json(401, {"error": "unauthorized"})
+        if not _github_token():
+            self._json(
+                503,
+                {
+                    "error": "setup_required",
+                    "message": "Control Plane server credential is not configured.",
+                },
+            )
             return
 
         raw_length = self.headers.get("Content-Length", "0")
