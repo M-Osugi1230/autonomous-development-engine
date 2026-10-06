@@ -17,7 +17,7 @@ from typing import Any
 from ade.checkpoint import SECRET_PATTERNS
 from ade.decision_store import DecisionStore
 from ade.decisions import DecisionResponse, DecisionStatus
-from ade.planning_activation import PlanningGoal
+from ade.planning_activation import PlanningGoalRequest
 
 
 @dataclass(frozen=True, slots=True)
@@ -71,7 +71,7 @@ PROJECTS: dict[str, ProjectPolicy] = {
 
 ALLOWED_COMMANDS = frozenset({"refresh", "resume", "replan", "submit_goal", "resolve_decision"})
 MAX_PAYLOAD_BYTES = 16_384
-MAX_GOAL_CHARS = 8_000
+MAX_GOAL_CHARS = 4_000
 
 
 def _require_nonempty(value: Any, field: str, *, max_chars: int = 512) -> str:
@@ -256,7 +256,7 @@ def _build_goal(policy: ProjectPolicy, payload: dict[str, Any]) -> dict[str, Any
         "min_tasks": policy.min_tasks,
         "max_tasks": policy.max_tasks,
     }
-    PlanningGoal.from_dict(result)
+    PlanningGoalRequest.from_dict(result)
     return result
 
 
