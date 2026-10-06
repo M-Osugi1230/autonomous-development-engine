@@ -1,213 +1,55 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <title>ADE Control Center</title>
-  <style>
-    :root{--bg:#0b1020;--panel:#121a2e;--panel2:#18223b;--line:#2a3858;--text:#eef4ff;--muted:#9baac5;--good:#58d68d;--warn:#f4c95d;--bad:#ff7b8a;--accent:#79a7ff;--accent2:#9d86ff;--shadow:0 18px 50px rgba(0,0,0,.28)}
-    *{box-sizing:border-box}
-    body{margin:0;background:radial-gradient(circle at 10% 0,#17213a 0,transparent 34%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
-    .shell{max-width:1240px;margin:0 auto;padding:24px 18px 70px}
-    .top{display:flex;gap:18px;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
-    .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}
-    .top h1{margin:5px 0 6px;font-size:clamp(30px,6vw,52px);line-height:1}
-    .sub{color:var(--muted);max-width:740px;line-height:1.65}
-    .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .button{appearance:none;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:11px;font-weight:700;cursor:pointer;transition:.18s;min-height:42px}
-    .button:hover{border-color:var(--accent);transform:translateY(-1px)}
-    .button.primary{background:linear-gradient(135deg,#477ce8,#7158db);border-color:transparent}
-    .button.ready{border-color:#2d6c48;background:#123323;color:#b8f2ce}
-    .button:disabled{opacity:.42;cursor:not-allowed;transform:none}
-    .statusbar{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0 22px}
-    .metric{background:rgba(18,26,46,.9);border:1px solid var(--line);border-radius:14px;padding:14px 15px}
-    .metric span{display:block;color:var(--muted);font-size:12px}
-    .metric strong{display:block;margin-top:5px;font-size:21px}
-    .metric strong.good{color:#b8f2ce}.metric strong.warn{color:#ffe3a2}
-    .section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 12px}
-    .section-title h2{margin:0;font-size:20px}.section-title p{margin:0;color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .card{background:linear-gradient(180deg,rgba(24,34,59,.96),rgba(15,23,41,.98));border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:var(--shadow);min-width:0}
-    .card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.card h3{margin:0;font-size:20px}.ref{color:var(--muted);font-size:11px;margin-top:4px}
-    .pill{font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}.pill.RUNNING{color:#bcd2ff;border-color:#35558f;background:#172b50}.pill.COMPLETED{color:#b8f2ce;border-color:#2d6c48;background:#123323}.pill.HUMAN_WAIT{color:#ffe3a2;border-color:#7b6333;background:#342a12}.pill.FAILED{color:#ffc1c7;border-color:#7b3d48;background:#35171d}.pill.UNKNOWN{color:#c8d0df}
-    .progress{height:8px;background:#090e19;border:1px solid #202c46;border-radius:999px;overflow:hidden;margin:16px 0 7px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}.progress-row{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
-    .detail{display:grid;gap:10px;margin-top:15px}.detail-row{display:grid;grid-template-columns:112px minmax(0,1fr);gap:8px;font-size:13px;line-height:1.45}.detail-row span:first-child{color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}
-    .human{margin-top:14px;border:1px solid #6f5930;background:#2e2615;border-radius:12px;padding:11px}.human.good{border-color:#285a42;background:#102a20}.human b{display:block;font-size:12px;margin-bottom:4px}.human p{margin:0;font-size:13px;line-height:1.45}
-    .card-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}.card-actions .button{font-size:12px;padding:8px 10px;min-height:36px}
-    .decisions{display:grid;gap:10px;margin-top:12px}.decision{border:1px solid #6a5730;background:#282113;border-radius:14px;padding:13px}.decision h4{font-size:13px;margin:0 0 5px}.decision p{margin:0 0 10px;font-size:13px;line-height:1.5}.decision .choices{display:flex;gap:7px;flex-wrap:wrap}
-    .goal-panel{display:grid;grid-template-columns:220px 1fr auto;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}.input,.select,.textarea{width:100%;border:1px solid var(--line);background:#0c1323;color:var(--text);border-radius:10px;padding:10px 12px;font:inherit}.textarea{min-height:96px;resize:vertical;line-height:1.5}
-    .auth{display:none;margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px}.auth.open{display:grid;grid-template-columns:1fr auto auto;gap:9px}.auth-help{grid-column:1/-1;color:var(--muted);font-size:12px;line-height:1.55}
-    .notice{margin:14px 0 0;padding:11px 13px;border-radius:11px;background:#15213a;border:1px solid #31476e;color:#c8d8f4;font-size:13px;line-height:1.55}.notice.warn{background:#2b2413;border-color:#6d5b2d;color:#f6df9e}.notice.good{background:#102a20;border-color:#285a42;color:#b8f2ce}.notice.error{background:#35171d;border-color:#7b3d48;color:#ffc1c7}.notice[hidden]{display:none}
-    .toast{position:fixed;right:18px;bottom:18px;max-width:420px;background:#111a2c;border:1px solid var(--line);border-radius:13px;padding:12px 14px;box-shadow:var(--shadow);display:none;z-index:30}.toast.show{display:block}.toast.error{border-color:#7b3d48}
-    .small{font-size:12px;color:var(--muted)}.empty{color:var(--muted);font-size:13px}.goal-summary{margin-top:12px;color:var(--muted);font-size:12px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.footer{margin-top:32px;color:var(--muted);font-size:12px;line-height:1.7;border-top:1px solid var(--line);padding-top:16px}
-    @media(max-width:1000px){.statusbar{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}.goal-panel{grid-template-columns:1fr}.top{flex-direction:column}.top-actions{justify-content:flex-start}.detail-row{grid-template-columns:105px 1fr}}
-    @media(max-width:520px){.shell{padding:18px 12px 60px}.statusbar{grid-template-columns:1fr 1fr;gap:8px}.metric{padding:12px}.metric strong{font-size:18px}.auth.open{grid-template-columns:1fr}.button{width:auto}.top-actions{width:100%}.top-actions .button{flex:1}.card{padding:14px}.toast{left:12px;right:12px;bottom:12px}.statusbar .metric:last-child{grid-column:1/-1}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>ADE Control Center</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2e;--panel2:#18223b;--line:#2a3858;--text:#eef4ff;--muted:#9baac5;--good:#58d68d;--warn:#f4c95d;--bad:#ff7b8a;--accent:#79a7ff;--accent2:#9d86ff;--shadow:0 18px 50px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(circle at 10% 0,#17213a 0,transparent 34%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;-webkit-text-size-adjust:100%}
+.shell{max-width:1240px;margin:0 auto;padding:24px 18px calc(70px + env(safe-area-inset-bottom))}.top{display:flex;gap:18px;justify-content:space-between;align-items:flex-start;margin-bottom:24px}.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}.top h1{margin:5px 0 6px;font-size:clamp(30px,6vw,52px);line-height:1}.sub{color:var(--muted);max-width:740px;line-height:1.65}.top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.button{appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:11px;font:inherit;font-weight:700;cursor:pointer;transition:.18s;min-height:42px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.button:hover,.button:focus-visible{border-color:var(--accent)}.button.primary{background:linear-gradient(135deg,#477ce8,#7158db);border-color:transparent}.button.ready{border-color:#2d6c48;background:#123323;color:#b8f2ce}.button:disabled{opacity:.42;cursor:not-allowed;transform:none}
+.statusbar{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0 22px}.metric{background:rgba(18,26,46,.9);border:1px solid var(--line);border-radius:14px;padding:14px 15px}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;margin-top:5px;font-size:21px}.good{color:#b8f2ce}.warn-text{color:#ffe3a2}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 12px}.section-title h2{margin:0;font-size:20px}.section-title p{margin:0;color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:linear-gradient(180deg,rgba(24,34,59,.96),rgba(15,23,41,.98));border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:var(--shadow);min-width:0}.card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.card h3{margin:0;font-size:20px}.ref{color:var(--muted);font-size:11px;margin-top:4px}.pill{font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}.pill.RUNNING{color:#bcd2ff;border-color:#35558f;background:#172b50}.pill.COMPLETED{color:#b8f2ce;border-color:#2d6c48;background:#123323}.pill.HUMAN_WAIT{color:#ffe3a2;border-color:#7b6333;background:#342a12}.pill.FAILED{color:#ffc1c7;border-color:#7b3d48;background:#35171d}.pill.UNKNOWN{color:#c8d0df}.progress{height:8px;background:#090e19;border:1px solid #202c46;border-radius:999px;overflow:hidden;margin:16px 0 7px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}.progress-row{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.detail{display:grid;gap:10px;margin-top:15px}.detail-row{display:grid;grid-template-columns:112px minmax(0,1fr);gap:8px;font-size:13px;line-height:1.45}.detail-row span:first-child{color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}.human{margin-top:14px;border:1px solid #6f5930;background:#2e2615;border-radius:12px;padding:11px}.human.goodbox{border-color:#285a42;background:#102a20}.human b{display:block;font-size:12px;margin-bottom:4px}.human p{margin:0;font-size:13px;line-height:1.45}.goal-summary{margin-top:12px;color:var(--muted);font-size:12px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}.card-actions .button{font-size:12px;padding:8px 10px;min-height:40px}.action-result{margin-top:10px;padding:10px 11px;border-radius:10px;font-size:12px;line-height:1.5;border:1px solid #31476e;background:#15213a;color:#c8d8f4}.action-result.good{border-color:#285a42;background:#102a20;color:#b8f2ce}.action-result.warn{border-color:#6d5b2d;background:#2b2413;color:#f6df9e}.action-result.error{border-color:#7b3d48;background:#35171d;color:#ffc1c7}
+.decisions{display:grid;gap:10px;margin-top:12px}.decision{border:1px solid #6a5730;background:#282113;border-radius:14px;padding:13px}.decision h4{font-size:13px;margin:0 0 5px}.decision p{margin:0 0 10px;font-size:13px;line-height:1.5}.decision .choices{display:flex;gap:7px;flex-wrap:wrap}.goal-panel{display:grid;grid-template-columns:220px 1fr auto;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}.input,.select,.textarea{width:100%;border:1px solid var(--line);background:#0c1323;color:var(--text);border-radius:10px;padding:10px 12px;font:inherit}.textarea{min-height:96px;resize:vertical;line-height:1.5}.auth{display:none;margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px}.auth.open{display:grid;grid-template-columns:1fr auto auto;gap:9px}.auth-help{grid-column:1/-1;color:var(--muted);font-size:12px;line-height:1.55}.notice{margin:14px 0 0;padding:11px 13px;border-radius:11px;background:#15213a;border:1px solid #31476e;color:#c8d8f4;font-size:13px;line-height:1.55}.notice.warn{background:#2b2413;border-color:#6d5b2d;color:#f6df9e}.notice.good{background:#102a20;border-color:#285a42;color:#b8f2ce}.notice.error{background:#35171d;border-color:#7b3d48;color:#ffc1c7}.small{font-size:12px;color:var(--muted)}.empty{color:var(--muted);font-size:13px}.footer{margin-top:32px;color:var(--muted);font-size:12px;line-height:1.7;border-top:1px solid var(--line);padding-top:16px}
+@media(max-width:1000px){.statusbar{grid-template-columns:repeat(3,1fr)}}@media(max-width:900px){.grid{grid-template-columns:1fr}.goal-panel{grid-template-columns:1fr}.top{flex-direction:column}.top-actions{justify-content:flex-start}.detail-row{grid-template-columns:105px 1fr}}@media(max-width:520px){.shell{padding:18px 12px calc(70px + env(safe-area-inset-bottom))}.statusbar{grid-template-columns:1fr 1fr;gap:8px}.metric{padding:12px}.metric strong{font-size:18px}.auth.open{grid-template-columns:1fr}.top-actions{width:100%}.top-actions .button{flex:1}.card{padding:14px}.statusbar .metric:last-child{grid-column:1/-1}.card-actions .button{min-height:46px;padding:10px 14px;font-size:14px}}
+</style>
 </head>
 <body>
-  <main class="shell">
-    <header class="top">
-      <div>
-        <div class="eyebrow">Autonomous Development Engine</div>
-        <h1>Control Center</h1>
-        <div class="sub">起動・進捗確認・Human Action・Goal投入を、この画面に集約します。状態確認はread-only、操作だけTrusted Control Planeを通ります。</div>
-      </div>
-      <div class="top-actions">
-        <button class="button" id="authButton">Control Key: 未設定</button>
-        <button class="button primary" id="refreshButton">最新状態を取得</button>
-      </div>
-    </header>
-
-    <div class="auth" id="authPanel">
-      <input class="input" id="controlKey" type="password" autocomplete="off" placeholder="VercelのADE_CONTROL_KEYと同じ値">
-      <button class="button primary" id="saveKey">この端末に設定</button>
-      <button class="button" id="clearKey">解除</button>
-      <div class="auth-help">Control Keyそのものは画面に表示しません。このブラウザのsessionStorageだけに保持し、タブのセッション終了後は再入力が必要になる場合があります。</div>
-    </div>
-
-    <div class="notice" id="setupNotice">状態を読み込んでいます。</div>
-    <div class="notice" id="operationNotice" hidden></div>
-
-    <section class="statusbar">
-      <div class="metric"><span>Projects</span><strong id="metricProjects">—</strong></div>
-      <div class="metric"><span>Running</span><strong id="metricRunning">—</strong></div>
-      <div class="metric"><span>Human Action</span><strong id="metricHuman">—</strong></div>
-      <div class="metric"><span>Control Plane</span><strong id="metricControl">—</strong></div>
-      <div class="metric"><span>Browser Key</span><strong id="metricBrowserKey">—</strong></div>
-    </section>
-
-    <div class="section-title"><div><h2>Projects</h2><p>自動更新：60秒</p></div><div class="small" id="lastUpdated">—</div></div>
-    <section class="grid" id="projectGrid"></section>
-
-    <div class="section-title"><div><h2>Human Action</h2><p>必要な判断だけをここへ集約</p></div></div>
-    <section class="decisions" id="decisionList"><div class="empty">読み込み中...</div></section>
-
-    <div class="section-title"><div><h2>New Goal</h2><p>Trusted Scopeを自動付与してPlannerへ投入</p></div></div>
-    <section class="goal-panel">
-      <select class="select" id="goalProject">
-        <option value="jquants">J-Quants</option>
-        <option value="chu-kei">Chu-kei Insight</option>
-        <option value="jichi">Jichi Insight</option>
-      </select>
-      <textarea class="textarea" id="goalText" placeholder="達成したいゴールを入力してください。実行スコープ・task数・対象repositoryはControl Plane側で制限されます。"></textarea>
-      <button class="button primary" id="submitGoal">Goalを投入</button>
-    </section>
-
-    <footer class="footer">Control Plane READYはVercel側の資格情報が設定済みという意味です。実操作には、この端末のBrowser Keyも「設定済み」である必要があります。GitHubトークンはブラウザへ配布しません。</footer>
-  </main>
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const state={data:null,busy:false,actionBusy:false};
-    const $=id=>document.getElementById(id);
-    const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
-    const key=()=>sessionStorage.getItem("adeControlKey")||"";
-    const browserKeyReady=()=>Boolean(key());
-    const controlsReady=()=>Boolean(state.data?.controls_ready);
-    const canControl=()=>controlsReady()&&browserKeyReady()&&!state.actionBusy;
-    const commandLabel=name=>({resume:"再開 / 起動",replan:"再計画",submit_goal:"Goal投入",resolve_decision:"Decision回答"}[name]||name);
-    const projectLabel=project=>state.data?.projects?.find(p=>p.key===project)?.label||project;
-
-    function toast(message,error=false){const node=$("toast");node.textContent=message;node.className="toast show"+(error?" error":"");setTimeout(()=>node.className="toast",4200)}
-    function setOperation(message,type="good"){
-      const node=$("operationNotice");node.hidden=false;node.className="notice "+type;
-      node.textContent=message;
-    }
-    function progress(p){if(!p.total_count)return 0;return Math.max(0,Math.min(100,Math.round(p.completed_count/p.total_count*100)))}
-    function humanText(p){if(p.open_decisions?.length)return `${p.open_decisions.length}件の判断が必要`;if(p.next_human_action)return p.next_human_action;return "操作不要"}
-    function controlDisabledAttr(){return canControl()?"":" disabled"}
-    function controlTitle(){if(!controlsReady())return "Control Planeの設定が必要です";if(!browserKeyReady())return "先にControl Keyをこの端末に設定してください";if(state.actionBusy)return "操作を送信中です";return ""}
-
-    function updateControlUi(){
-      const hasKey=browserKeyReady();
-      const serverReady=controlsReady();
-      const authButton=$("authButton");
-      authButton.textContent=hasKey?"Control Key: 設定済み":"Control Key: 未設定";
-      authButton.classList.toggle("ready",hasKey);
-      $("metricBrowserKey").textContent=hasKey?"SET":"NOT SET";
-      $("metricBrowserKey").className=hasKey?"good":"warn";
-      $("metricControl").textContent=serverReady?"READY":"SETUP";
-      $("metricControl").className=serverReady?"good":"warn";
-      const notice=$("setupNotice");
-      if(!serverReady){
-        notice.className="notice warn";
-        notice.textContent="サーバー側のControl Planeが未設定です。VercelのADE_GITHUB_TOKENとADE_CONTROL_KEYを確認してください。状態確認だけは利用できます。";
-      }else if(!hasKey){
-        notice.className="notice warn";
-        notice.textContent="サーバー側はREADYです。ただし、この端末のControl Keyが未設定です。右上の「Control Key: 未設定」から同じキーを入力すると操作ボタンが有効になります。";
-      }else{
-        notice.className="notice good";
-        notice.textContent="操作準備完了です。Control Planeとこの端末のControl Keyの両方が設定済みです。起動・再計画・承認・Goal投入を実行できます。";
-      }
-      $("submitGoal").disabled=!canControl();
-      $("submitGoal").title=controlTitle();
-    }
-
-    function render(){
-      const data=state.data;if(!data)return;
-      const projects=data.projects||[];
-      $("metricProjects").textContent=projects.length;
-      $("metricRunning").textContent=projects.filter(p=>p.lifecycle==="RUNNING").length;
-      $("metricHuman").textContent=projects.reduce((n,p)=>n+(p.open_decisions?.length||0),0);
-      updateControlUi();
-      const disabled=controlDisabledAttr();const title=esc(controlTitle());
-      $("projectGrid").innerHTML=projects.map(p=>{
-        const pct=progress(p);const human=p.open_decisions?.length||p.next_human_action;
-        return `<article class="card"><div class="card-head"><div><h3>${esc(p.label)}</h3><div class="ref">${esc(p.control_ref)}</div></div><span class="pill ${esc(p.lifecycle)}">${esc(p.lifecycle)}</span></div><div class="progress"><i style="width:${pct}%"></i></div><div class="progress-row"><span>${p.completed_count}/${p.total_count||"?"} tasks</span><span>${p.total_count?pct+"%":"—"}</span></div><div class="detail"><div class="detail-row"><span>Current Task</span><b class="mono">${esc(p.current_task_id||"—")}</b></div><div class="detail-row"><span>System Action</span><span>${esc(p.next_system_action||"—")}</span></div><div class="detail-row"><span>Campaign</span><span class="mono">${esc(p.campaign_id||"—")}</span></div><div class="detail-row"><span>Failures</span><span>${esc(p.failed_count)}</span></div></div><div class="human ${human?"":"good"}"><b>Human Action</b><p>${esc(humanText(p))}</p></div>${p.goal?`<div class="goal-summary">${esc(p.goal)}</div>`:""}<div class="card-actions"><button class="button" title="${title}" onclick="command('${esc(p.key)}','resume',{})"${disabled}>再開 / 起動</button><button class="button" title="${title}" onclick="command('${esc(p.key)}','replan',{})"${disabled}>再計画</button></div></article>`;
-      }).join("");
-      const decisions=[];projects.forEach(p=>(p.open_decisions||[]).forEach(d=>decisions.push({...d,project:p.key,label:p.label})));
-      $("decisionList").innerHTML=decisions.length?decisions.map(d=>`<article class="decision"><h4>${esc(d.label)} · ${esc(d.priority||"Human decision")}</h4><p>${esc(d.question)}</p><div class="choices">${d.options.map(o=>`<button class="button" title="${title}" onclick='resolveDecision(${JSON.stringify(d.project)},${JSON.stringify(d.decision_id)},${JSON.stringify(o)})'${disabled}>${esc(o)}</button>`).join("")}</div></article>`).join(""):`<div class="human good"><b>Human Action</b><p>現在、回答が必要なDecisionはありません。</p></div>`;
-      $("lastUpdated").textContent="更新: "+new Date().toLocaleString("ja-JP");
-    }
-
-    async function loadStatus(showToast=false){
-      if(state.busy)return;state.busy=true;$("refreshButton").disabled=true;
-      try{const r=await fetch("/api/status",{cache:"no-store"});const data=await r.json();if(!r.ok)throw new Error(data.message||data.error||"status error");state.data=data;render();if(showToast)toast("最新状態を取得しました");}
-      catch(e){toast("状態取得に失敗: "+e.message,true);setOperation("状態取得に失敗しました: "+e.message,"error");}
-      finally{state.busy=false;$("refreshButton").disabled=false;}
-    }
-
-    async function command(project,commandName,payload){
-      if(!controlsReady()){
-        setOperation("操作できません。Control Planeが未設定です。Vercel側の設定を確認してください。","error");toast("Control Planeが未設定です",true);return;
-      }
-      if(!browserKeyReady()){
-        $("authPanel").classList.add("open");$("controlKey").focus();$("authPanel").scrollIntoView({behavior:"smooth",block:"center"});
-        setOperation("操作前にControl Keyをこの端末へ設定してください。","warn");toast("先にControl Keyを設定してください",true);return;
-      }
-      state.actionBusy=true;render();
-      const label=commandLabel(commandName);const target=projectLabel(project);
-      setOperation(`${target} の「${label}」を送信しています…`,"warn");
-      try{
-        const r=await fetch("/api/control",{method:"POST",headers:{"Content-Type":"application/json","X-ADE-Control-Key":key()},body:JSON.stringify({project,command:commandName,payload})});
-        const data=await r.json();if(!r.ok)throw new Error(data.message||data.error||"command failed");
-        const time=new Date().toLocaleTimeString("ja-JP");
-        setOperation(`${time} — ${target} の「${label}」をControl Planeが受け付けました。GitHub Actionsへ送信済みです。`,"good");
-        toast(`${label} を受け付けました`);setTimeout(()=>loadStatus(false),3500);
-      }catch(e){
-        const unauthorized=String(e.message).includes("unauthorized");
-        if(unauthorized){sessionStorage.removeItem("adeControlKey");$("authPanel").classList.add("open");}
-        setOperation(`操作に失敗しました: ${e.message}${unauthorized?"。Control Keyを再設定してください。":""}`,"error");
-        toast("操作に失敗: "+e.message,true);
-      }finally{state.actionBusy=false;render();}
-    }
-
-    window.command=command;
-    window.resolveDecision=(project,decisionId,option)=>{if(confirm(`「${option}」で回答しますか？`))command(project,"resolve_decision",{decision_id:decisionId,option})};
-    $("refreshButton").addEventListener("click",()=>loadStatus(true));
-    $("authButton").addEventListener("click",()=>{const panel=$("authPanel");panel.classList.toggle("open");if(panel.classList.contains("open"))setTimeout(()=>$("controlKey").focus(),0)});
-    $("saveKey").addEventListener("click",()=>{
-      const value=$("controlKey").value.trim();
-      if(!value){setOperation("Control Keyを入力してください。","warn");toast("Control Keyを入力してください",true);return;}
-      sessionStorage.setItem("adeControlKey",value);$("controlKey").value="";$("authPanel").classList.remove("open");
-      updateControlUi();render();setOperation("この端末のControl Keyを設定しました。操作ボタンが有効になりました。","good");toast("Control Keyを設定しました");
-    });
-    $("clearKey").addEventListener("click",()=>{sessionStorage.removeItem("adeControlKey");$("controlKey").value="";updateControlUi();render();setOperation("この端末のControl Keyを解除しました。","warn");toast("Control Keyを解除しました")});
-    $("submitGoal").addEventListener("click",()=>{const project=$("goalProject").value;const goal=$("goalText").value.trim();if(goal.length<20){toast("Goalは20文字以上で入力してください",true);return}if(!confirm("新しいGoalをTrusted Plannerへ投入します。現在のprojectが実行中の場合は安全側で拒否されます。続行しますか？"))return;command(project,"submit_goal",{goal});});
-
-    updateControlUi();loadStatus(false);setInterval(()=>loadStatus(false),60000);
-  </script>
+<main class="shell">
+<header class="top"><div><div class="eyebrow">Autonomous Development Engine</div><h1>Control Center</h1><div class="sub">起動・進捗確認・Human Action・Goal投入を、この画面に集約します。状態確認はread-only、操作だけTrusted Control Planeを通ります。</div></div><div class="top-actions"><button type="button" class="button" id="authButton">Control Key: 未設定</button><button type="button" class="button primary" id="refreshButton">最新状態を取得</button></div></header>
+<div class="auth" id="authPanel"><input class="input" id="controlKey" type="password" autocomplete="off" placeholder="VercelのADE_CONTROL_KEYと同じ値"><button type="button" class="button primary" id="saveKey">この端末に設定</button><button type="button" class="button" id="clearKey">解除</button><div class="auth-help">Control Keyそのものは画面に表示しません。このブラウザのsessionStorageだけに保持し、タブのセッション終了後は再入力が必要になる場合があります。</div></div>
+<div class="notice" id="setupNotice">状態を読み込んでいます。</div>
+<section class="statusbar"><div class="metric"><span>Projects</span><strong id="metricProjects">—</strong></div><div class="metric"><span>Running</span><strong id="metricRunning">—</strong></div><div class="metric"><span>Human Action</span><strong id="metricHuman">—</strong></div><div class="metric"><span>Control Plane</span><strong id="metricControl">—</strong></div><div class="metric"><span>Browser Key</span><strong id="metricBrowserKey">—</strong></div></section>
+<div class="section-title"><div><h2>Projects</h2><p>自動更新：60秒</p></div><div class="small" id="lastUpdated">—</div></div><section class="grid" id="projectGrid"></section>
+<div class="section-title"><div><h2>Human Action</h2><p>必要な判断だけをここへ集約</p></div></div><section class="decisions" id="decisionList"><div class="empty">読み込み中...</div></section>
+<div class="section-title"><div><h2>New Goal</h2><p>Trusted Scopeを自動付与してPlannerへ投入</p></div></div><section class="goal-panel"><select class="select" id="goalProject"><option value="jquants">J-Quants</option><option value="chu-kei">Chu-kei Insight</option><option value="jichi">Jichi Insight</option></select><textarea class="textarea" id="goalText" placeholder="達成したいゴールを入力してください。実行スコープ・task数・対象repositoryはControl Plane側で制限されます。"></textarea><button type="button" class="button primary" id="submitGoal">Goalを投入</button></section>
+<footer class="footer">Control Plane READYはVercel側の資格情報が設定済みという意味です。実操作には、この端末のBrowser Keyも「設定済み」である必要があります。GitHubトークンはブラウザへ配布しません。</footer>
+</main>
+<script>
+const state={data:null,busy:false,actionBusy:false,actions:{}};
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+const key=()=>sessionStorage.getItem("adeControlKey")||"";
+const browserKeyReady=()=>Boolean(key());
+const controlsReady=()=>Boolean(state.data&&state.data.controls_ready);
+const canControl=()=>controlsReady()&&browserKeyReady()&&!state.actionBusy;
+const commandLabel=n=>({resume:"再開 / 起動",replan:"再計画",submit_goal:"Goal投入",resolve_decision:"Decision回答"}[n]||n);
+const projectLabel=k=>{const p=(state.data&&state.data.projects||[]).find(x=>x.key===k);return p?p.label:k};
+function progress(p){return p.total_count?Math.max(0,Math.min(100,Math.round(p.completed_count/p.total_count*100))):0}
+function humanText(p){if(p.open_decisions&&p.open_decisions.length)return `${p.open_decisions.length}件の判断が必要`;return p.next_human_action||"操作不要"}
+function setAction(project,text,type="warn"){state.actions[project]={text,type};render()}
+function controlTitle(){if(!controlsReady())return "Control Planeの設定が必要です";if(!browserKeyReady())return "先にControl Keyをこの端末に設定してください";if(state.actionBusy)return "操作を送信中です";return ""}
+function updateControlUi(){const hasKey=browserKeyReady(),serverReady=controlsReady(),a=$("authButton");a.textContent=hasKey?"Control Key: 設定済み":"Control Key: 未設定";a.classList.toggle("ready",hasKey);$("metricBrowserKey").textContent=hasKey?"SET":"NOT SET";$("metricBrowserKey").className=hasKey?"good":"warn-text";$("metricControl").textContent=serverReady?"READY":"SETUP";$("metricControl").className=serverReady?"good":"warn-text";const n=$("setupNotice");if(!serverReady){n.className="notice warn";n.textContent="サーバー側のControl Planeが未設定です。状態確認だけ利用できます。"}else if(!hasKey){n.className="notice warn";n.textContent="サーバー側はREADYです。この端末のControl Keyを設定すると操作ボタンが有効になります。"}else{n.className="notice good";n.textContent="操作準備完了です。Control Planeとこの端末のControl Keyの両方が設定済みです。起動・再計画・承認・Goal投入を実行できます。"}$("submitGoal").disabled=!canControl()}
+function render(){if(!state.data)return;const projects=state.data.projects||[];$("metricProjects").textContent=projects.length;$("metricRunning").textContent=projects.filter(p=>p.lifecycle==="RUNNING").length;$("metricHuman").textContent=projects.reduce((n,p)=>n+((p.open_decisions||[]).length),0);updateControlUi();const disabled=canControl()?"":" disabled",title=esc(controlTitle());$("projectGrid").innerHTML=projects.map(p=>{const pct=progress(p),human=(p.open_decisions||[]).length||p.next_human_action,a=state.actions[p.key];return `<article class="card"><div class="card-head"><div><h3>${esc(p.label)}</h3><div class="ref">${esc(p.control_ref)}</div></div><span class="pill ${esc(p.lifecycle)}">${esc(p.lifecycle)}</span></div><div class="progress"><i style="width:${pct}%"></i></div><div class="progress-row"><span>${p.completed_count}/${p.total_count||"?"} tasks</span><span>${p.total_count?pct+"%":"—"}</span></div><div class="detail"><div class="detail-row"><span>Current Task</span><b class="mono">${esc(p.current_task_id||"—")}</b></div><div class="detail-row"><span>System Action</span><span>${esc(p.next_system_action||"—")}</span></div><div class="detail-row"><span>Campaign</span><span class="mono">${esc(p.campaign_id||"—")}</span></div><div class="detail-row"><span>Failures</span><span>${esc(p.failed_count)}</span></div></div><div class="human ${human?"":"goodbox"}"><b>Human Action</b><p>${esc(humanText(p))}</p></div>${p.goal?`<div class="goal-summary">${esc(p.goal)}</div>`:""}<div class="card-actions"><button type="button" class="button project-command" data-project="${esc(p.key)}" data-command="resume" title="${title}"${disabled}>再開 / 起動</button><button type="button" class="button project-command" data-project="${esc(p.key)}" data-command="replan" title="${title}"${disabled}>再計画</button></div>${a?`<div class="action-result ${esc(a.type)}" role="status" aria-live="polite">${esc(a.text)}</div>`:""}</article>`}).join("");const decisions=[];projects.forEach(p=>(p.open_decisions||[]).forEach(d=>decisions.push({...d,project:p.key,label:p.label})));$("decisionList").innerHTML=decisions.length?decisions.map(d=>`<article class="decision"><h4>${esc(d.label)} · ${esc(d.priority||"Human decision")}</h4><p>${esc(d.question)}</p><div class="choices">${d.options.map(o=>`<button type="button" class="button decision-command" data-project="${esc(d.project)}" data-decision="${esc(d.decision_id)}" data-option="${esc(o)}"${disabled}>${esc(o)}</button>`).join("")}</div></article>`).join(""):`<div class="human goodbox"><b>Human Action</b><p>現在、回答が必要なDecisionはありません。</p></div>`;$("lastUpdated").textContent="更新: "+new Date().toLocaleString("ja-JP")}
+async function loadStatus(){if(state.busy)return;state.busy=true;$("refreshButton").disabled=true;try{const r=await fetch("/api/status",{cache:"no-store"}),data=await r.json();if(!r.ok)throw new Error(data.message||data.error||"status error");state.data=data;render()}catch(e){alert("状態取得に失敗: "+e.message)}finally{state.busy=false;$("refreshButton").disabled=false}}
+async function command(project,name,payload){if(!controlsReady()){setAction(project,"Control Planeが未設定です。","error");return}if(!browserKeyReady()){$("authPanel").classList.add("open");$("controlKey").focus();setAction(project,"先にControl Keyを設定してください。","warn");window.scrollTo({top:0,behavior:"smooth"});return}const label=commandLabel(name),target=projectLabel(project);state.actionBusy=true;state.actions[project]={text:`タップを受け付けました。${target} の「${label}」を送信しています…`,type:"warn"};render();try{const r=await fetch("/api/control",{method:"POST",headers:{"Content-Type":"application/json","X-ADE-Control-Key":key()},body:JSON.stringify({project,command:name,payload})});let data={};try{data=await r.json()}catch(_e){}if(!r.ok)throw new Error(data.message||data.error||`HTTP ${r.status}`);state.actions[project]={text:`${new Date().toLocaleTimeString("ja-JP")} — ${label} を受け付けました。GitHub Actionsへ送信済みです。`,type:"good"};setTimeout(loadStatus,3500)}catch(e){const unauthorized=String(e.message).toLowerCase().includes("unauthorized");if(unauthorized)sessionStorage.removeItem("adeControlKey");state.actions[project]={text:`操作に失敗しました: ${e.message}${unauthorized?"。Control Keyを再設定してください。":""}`,type:"error"}}finally{state.actionBusy=false;render()}}
+$("projectGrid").addEventListener("click",e=>{const b=e.target.closest("button.project-command");if(!b||b.disabled)return;e.preventDefault();command(b.dataset.project,b.dataset.command,{})});
+$("decisionList").addEventListener("click",e=>{const b=e.target.closest("button.decision-command");if(!b||b.disabled)return;e.preventDefault();if(confirm(`「${b.dataset.option}」で回答しますか？`))command(b.dataset.project,"resolve_decision",{decision_id:b.dataset.decision,option:b.dataset.option})});
+$("refreshButton").addEventListener("click",loadStatus);$("authButton").addEventListener("click",()=>{const p=$("authPanel");p.classList.toggle("open");if(p.classList.contains("open"))setTimeout(()=>$("controlKey").focus(),0)});$("saveKey").addEventListener("click",()=>{const v=$("controlKey").value.trim();if(!v){alert("Control Keyを入力してください");return}sessionStorage.setItem("adeControlKey",v);$("controlKey").value="";$("authPanel").classList.remove("open");render()});$("clearKey").addEventListener("click",()=>{sessionStorage.removeItem("adeControlKey");$("controlKey").value="";render()});$("submitGoal").addEventListener("click",()=>{const project=$("goalProject").value,goal=$("goalText").value.trim();if(goal.length<20){alert("Goalは20文字以上で入力してください");return}if(confirm("新しいGoalをTrusted Plannerへ投入します。続行しますか？"))command(project,"submit_goal",{goal})});
+updateControlUi();loadStatus();setInterval(loadStatus,60000);
+</script>
 </body>
 </html>
