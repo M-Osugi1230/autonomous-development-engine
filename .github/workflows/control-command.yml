@@ -1,0 +1,61 @@
+name: ADE Control Command
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: Trusted ADE project key
+        required: true
+        type: choice
+        options:
+          - all
+          - jquants
+          - chu-kei
+          - jichi
+      command:
+        description: Trusted Control Center command
+        required: true
+        type: choice
+        options:
+          - refresh
+          - resume
+          - replan
+          - submit_goal
+          - resolve_decision
+      payload:
+        description: Command-specific bounded JSON payload
+        required: false
+        default: "{}"
+        type: string
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: ade-control-command-${{ inputs.project }}
+  cancel-in-progress: false
+
+jobs:
+  control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout trusted controller
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Execute trusted command
+        env:
+          PYTHONPATH: src
+          ADE_CONTROL_PROJECT: ${{ inputs.project }}
+          ADE_CONTROL_COMMAND: ${{ inputs.command }}
+          ADE_CONTROL_PAYLOAD: ${{ inputs.payload }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/control_command.py
