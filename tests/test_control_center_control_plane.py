@@ -98,18 +98,11 @@ class ControlApiTests(unittest.TestCase):
                 {"project": "jquants", "command": "resume", "payload": {}, "token": "x"}
             )
 
-    def test_authorization_uses_server_side_control_key(self) -> None:
-        class Headers(dict):
-            def get(self, key, default=None):
-                return super().get(key, default)
-
-        with patch.dict(os.environ, {"ADE_CONTROL_KEY": "expected-value"}, clear=False):
-            self.assertTrue(
-                control_api._authorized(Headers({"X-ADE-Control-Key": "expected-value"}))
-            )
-            self.assertFalse(
-                control_api._authorized(Headers({"X-ADE-Control-Key": "wrong-value"}))
-            )
+    def test_control_api_uses_only_server_side_github_credential(self) -> None:
+        with patch.dict(os.environ, {"ADE_GITHUB_TOKEN": "server-only-token"}, clear=False):
+            self.assertEqual(control_api._github_token(), "server-only-token")
+        self.assertFalse(hasattr(control_api, "_authorized"))
+        self.assertFalse(hasattr(control_api, "_configured_key"))
 
 
 class StatusApiTests(unittest.TestCase):
