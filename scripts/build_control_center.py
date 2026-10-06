@@ -53,27 +53,41 @@ def _parse_project_spec(value: str) -> tuple[str, Path]:
     return label, Path(root)
 
 
+def _validate_projects(
+    projects: Sequence[tuple[str, str | Path]],
+) -> tuple[tuple[str, Path], ...]:
+    if not projects:
+        raise ValueError("at least one project is required")
+
+    normalized: list[tuple[str, Path]] = []
+    seen_labels: set[str] = set()
+    for label, root in projects:
+        if not isinstance(label, str):
+            raise TypeError("project label must be a string")
+        normalized_label = label.strip()
+        if not normalized_label:
+            raise ValueError("project label must be non-empty")
+        if any(character in normalized_label for character in "\r\n\t"):
+            raise ValueError("project label must not contain control whitespace")
+        if normalized_label in seen_labels:
+            raise ValueError(f"duplicate project label: {normalized_label}")
+        seen_labels.add(normalized_label)
+        normalized.append((normalized_label, Path(root)))
+    return tuple(normalized)
+
+
 def build_artifacts(
     *,
     projects: Sequence[tuple[str, str | Path]],
     output_dir: str | Path = DEFAULT_OUTPUT_DIR,
 ) -> tuple[Path, Path]:
-    if not projects:
-        raise ValueError("at least one project is required")
+    validated_projects = _validate_projects(projects)
 
     summaries: list[ControlCenterProjectSummary] = []
-    seen_labels: set[str] = set()
-    for label, root in projects:
-        normalized_label = label.strip()
-        if not normalized_label:
-            raise ValueError("project label must be non-empty")
-        if normalized_label in seen_labels:
-            raise ValueError(f"duplicate project label: {normalized_label}")
-        seen_labels.add(normalized_label)
-
-        snapshot = build_mission_control_snapshot(Path(root))
+    for label, root in validated_projects:
+        snapshot = build_mission_control_snapshot(root)
         summary = ControlCenterProjectSummary.from_mission_control(snapshot)
-        summaries.append(replace(summary, project_id=normalized_label))
+        summaries.append(replace(summary, project_id=label))
 
     portfolio = ControlCenterPortfolioSnapshot(projects=tuple(summaries))
     destination = Path(output_dir)
