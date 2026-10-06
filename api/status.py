@@ -175,7 +175,7 @@ def build_status() -> dict[str, Any]:
             )
     return {
         "schema_version": 1,
-        "controls_ready": bool(os.environ.get("ADE_GITHUB_TOKEN") and os.environ.get("ADE_CONTROL_KEY")),
+        "controls_ready": bool(os.environ.get("ADE_GITHUB_TOKEN")),
         "projects": projects,
         "errors": errors,
     }

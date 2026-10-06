@@ -5,17 +5,19 @@ ROOT = Path(__file__).resolve().parents[1]
 HTML = (ROOT / "index.html").read_text(encoding="utf-8")
 
 
-def test_control_center_distinguishes_server_and_browser_key_state() -> None:
+def test_control_center_has_no_manual_control_key_ui() -> None:
     assert 'id="metricControl"' in HTML
-    assert 'id="metricBrowserKey"' in HTML
-    assert "Control Key: 未設定" in HTML
-    assert "Control Key: 設定済み" in HTML
-    assert "サーバー側はREADYです。" in HTML
-    assert "操作準備完了です。" in HTML
+    assert 'id="metricBrowserKey"' not in HTML
+    assert "Control Key: 未設定" not in HTML
+    assert "Control Key: 設定済み" not in HTML
+    assert 'type="password"' not in HTML
+    assert "sessionStorage" not in HTML
+    assert "X-ADE-Control-Key" not in HTML
+    assert "Control Keyの入力は不要です。" in HTML
 
 
-def test_mutations_are_disabled_until_both_controls_are_ready() -> None:
-    assert "const canControl=()=>controlsReady()&&browserKeyReady()&&!state.actionBusy;" in HTML
+def test_mutations_require_only_ready_control_plane() -> None:
+    assert "const canControl=()=>controlsReady()&&!state.actionBusy;" in HTML
     assert '$("submitGoal").disabled=!canControl()' in HTML
     assert "const disabled=canControl()?\"\":\" disabled\"" in HTML
 
@@ -36,7 +38,6 @@ def test_project_action_feedback_is_persistent_and_local_to_card() -> None:
     assert 'aria-live="polite"' in HTML
 
 
-def test_control_key_stays_masked_and_session_scoped() -> None:
-    assert 'type="password"' in HTML
-    assert "sessionStorage" in HTML
-    assert "GitHubトークンはブラウザへ配布しません。" in HTML
+def test_browser_never_receives_github_token() -> None:
+    assert "GitHubトークンはサーバー側だけに保持され、ブラウザには配布しません。" in HTML
+    assert "ADE_GITHUB_TOKEN" not in HTML
