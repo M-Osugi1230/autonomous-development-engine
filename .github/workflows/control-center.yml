@@ -1,0 +1,99 @@
+name: ADE Control Center
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - ade_control_center_refresh
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  pull_request:
+    paths:
+      - "src/ade/control_center.py"
+      - "src/ade/control_center_html.py"
+      - "scripts/build_control_center.py"
+      - ".github/workflows/control-center.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "src/ade/control_center.py"
+      - "src/ade/control_center_html.py"
+      - "scripts/build_control_center.py"
+      - ".github/workflows/control-center.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ade-control-center
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Control Center code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Fetch ADE project control branches
+        run: |
+          git fetch --no-tags origin \
+            +refs/heads/ade-jquants:refs/remotes/origin/ade-jquants \
+            +refs/heads/ade-chu-kei:refs/remotes/origin/ade-chu-kei \
+            +refs/heads/ade-jichi-insight:refs/remotes/origin/ade-jichi-insight
+
+      - name: Materialize read-only project state
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/ade-jquants" origin/ade-jquants
+          git worktree add --detach "$RUNNER_TEMP/ade-chu-kei" origin/ade-chu-kei
+          git worktree add --detach "$RUNNER_TEMP/ade-jichi-insight" origin/ade-jichi-insight
+
+      - name: Build multi-project Control Center
+        env:
+          PYTHONPATH: src
+        run: |
+          python scripts/build_control_center.py \
+            --project "J-Quants=$RUNNER_TEMP/ade-jquants" \
+            --project "Chu-kei Insight=$RUNNER_TEMP/ade-chu-kei" \
+            --project "Jichi Insight=$RUNNER_TEMP/ade-jichi-insight"
+
+      - name: Validate bounded portfolio snapshot
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path("dist/control-center/snapshot.json").read_text(encoding="utf-8"))
+          assert payload["schema_version"] == 1
+          assert payload["project_count"] == 3
+          assert len(payload["projects"]) == 3
+          forbidden = {
+              "provider_session_id",
+              "traceback",
+              "credentials",
+              "secret",
+              "token",
+              "activity",
+              "telemetry",
+          }
+          serialized = json.dumps(payload, ensure_ascii=False).lower()
+          for marker in forbidden:
+              assert marker not in serialized, marker
+          PY
+
+      - name: Upload Control Center artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-control-center
+          path: dist/control-center
+          if-no-files-found: error
+          retention-days: 7
