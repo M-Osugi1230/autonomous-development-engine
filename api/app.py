@@ -17,6 +17,18 @@ from api.status import build_status
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX_PATH = ROOT / "index.html"
+GUIDE_PATH = ROOT / "guide.html"
+_DASHBOARD_ACTIONS_MARKER = (
+    '<div class="top-actions"><button type="button" class="button primary" '
+    'id="refreshButton">最新状態を取得</button></div>'
+)
+_DASHBOARD_ACTIONS_WITH_GUIDE = (
+    '<div class="top-actions">'
+    '<a class="button" href="/guide" '
+    'style="text-decoration:none;display:inline-flex;align-items:center">使い方</a>'
+    '<button type="button" class="button primary" '
+    'id="refreshButton">最新状態を取得</button></div>'
+)
 
 
 def _response(
@@ -53,6 +65,17 @@ def _json_response(
     )
 
 
+def _dashboard_body() -> bytes:
+    html = INDEX_PATH.read_text(encoding="utf-8")
+    if _DASHBOARD_ACTIONS_MARKER not in html:
+        raise RuntimeError("dashboard action marker is missing")
+    return html.replace(
+        _DASHBOARD_ACTIONS_MARKER,
+        _DASHBOARD_ACTIONS_WITH_GUIDE,
+        1,
+    ).encode("utf-8")
+
+
 def _read_json_body(environ: dict[str, Any]) -> Any:
     raw_length = environ.get("CONTENT_LENGTH", "0")
     try:
@@ -82,12 +105,28 @@ def application(
 
     if method == "GET" and path in {"/", "/index.html"}:
         try:
-            body = INDEX_PATH.read_bytes()
-        except OSError:
+            body = _dashboard_body()
+        except (OSError, RuntimeError):
             return _json_response(
                 start_response,
                 "500 Internal Server Error",
                 {"error": "dashboard_unavailable"},
+            )
+        return _response(
+            start_response,
+            "200 OK",
+            body,
+            content_type="text/html; charset=utf-8",
+        )
+
+    if method == "GET" and path in {"/guide", "/guide.html"}:
+        try:
+            body = GUIDE_PATH.read_bytes()
+        except OSError:
+            return _json_response(
+                start_response,
+                "500 Internal Server Error",
+                {"error": "guide_unavailable"},
             )
         return _response(
             start_response,
