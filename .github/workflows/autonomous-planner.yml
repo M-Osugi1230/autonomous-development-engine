@@ -21,18 +21,30 @@ permissions:
   contents: write
 
 concurrency:
-  group: ade-autonomous-planner-${{ github.event.client_payload.project_key || github.ref_name || 'default' }}
+  group: ade-autonomous-planner-${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || github.ref_name || 'default' }}
   cancel-in-progress: false
 
 jobs:
   plan:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Checkout trusted controller from main
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
+          ref: main
+          fetch-depth: 1
+
+      - name: Load project state from control branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONTROL_REF="${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}"
+          if [ "$CONTROL_REF" != "main" ]; then
+            git fetch --depth=1 origin "$CONTROL_REF"
+            git checkout FETCH_HEAD -- .autodev
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -43,18 +55,68 @@ jobs:
         env:
           PYTHONPATH: src
           ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
-          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.ref_name || 'default' }}
-          ADE_REPOSITORY_INTELLIGENCE_PREFIXES: operations/plan-detection,operations/research-priority,operations/source-research,scripts,docs
+          ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || github.ref_name || 'default' }}
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
-        run: python .github/trusted/completion_planner_cycle.py
+        run: python .github/trusted/completion_planner_entrypoint.py
 
       - name: Upload planner decision evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ade-autonomous-planner-result
+          path: .autodev/runtime/autonomous-planner-result.json
+          if-no-files-found: error
+          retention-days: 30
+
+  scheduled-project-plan:
+    if: github.event_name == 'schedule'
+    strategy:
+      fail-fast: false
+      matrix:
+        control_ref:
+          - main
+          - ade-jichi-insight
+          - ade-jquants
+          - ade-chu-kei
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Load project state from control branch
+        if: matrix.control_ref != 'main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "${{ matrix.control_ref }}"
+          git checkout FETCH_HEAD -- .autodev
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Plan project goal through trusted boundary
+        env:
+          PYTHONPATH: src
+          ADE_CONTROL_REF: ${{ matrix.control_ref }}
+          ADE_PROJECT_KEY: ${{ matrix.control_ref }}
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
+        run: python .github/trusted/completion_planner_entrypoint.py
+
+      - name: Upload project planner decision evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-autonomous-planner-result-${{ matrix.control_ref }}
           path: .autodev/runtime/autonomous-planner-result.json
           if-no-files-found: error
           retention-days: 30
