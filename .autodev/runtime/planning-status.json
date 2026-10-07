@@ -1,15 +1,10 @@
 {
-  "accepted_plan_fingerprint": "2efc10ed78cc8d05ee181cf630c7f7c2bc2e2e85e6f321ac83105cb43fbe0526",
   "attempt": 1,
-  "campaign_id": "chukei-plan-detection-scale-campaign-004",
-  "development_memory_context_fingerprint": null,
-  "development_memory_record_count": 0,
-  "first_task_id": "ckpd004-001",
-  "proposal_fingerprint": "d99df608c62aaf8c1728d1c0299fae31a7d0e1a97f2af1473aa46065cf7c7df4",
-  "reason": "trusted-plan-accepted",
-  "request_fingerprint": "53b9b052a267ce9e6cc5e8cf1735f44d6fa45560bdf29e5ce933f9a7af51e4e1",
-  "request_id": "chukei-plan-detection-scale-request-004",
+  "detail": "repository tree exceeds trusted entry budget",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "18e8259575cc6f1ebaa53057168d26256e302eb6259e2002599c09aa32872e94",
+  "request_id": "chukei-production-graduation-request-001",
   "schema_version": 1,
-  "state": "ACCEPTED",
-  "updated_at": "2026-10-04T16:11:58.217098+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-07T12:36:16.233763+00:00"
 }
