@@ -41,6 +41,16 @@ def test_dashboard_surfaces_stale_projects_without_mutating_them() -> None:
     assert "状態更新が止まっています。" in HTML
 
 
+def test_project_cards_can_collapse_to_project_name_only() -> None:
+    assert '<details class="card project-card ${cardClass}"' in HTML
+    assert '<summary class="project-summary"><span class="project-name">${esc(p.label)}</span></summary>' in HTML
+    assert 'class="card-content"' in HTML
+    assert "COLLAPSE_STORAGE_KEY" in HTML
+    assert "collapsedProjects()" in HTML
+    assert "bindProjectToggles()" in HTML
+    assert "プロジェクト名をタップすると開閉できます。" in HTML
+
+
 def test_secondary_technical_information_is_collapsed() -> None:
     assert '<details class="more"><summary>詳細を見る</summary>' in HTML
     assert "Current Task:" in HTML
