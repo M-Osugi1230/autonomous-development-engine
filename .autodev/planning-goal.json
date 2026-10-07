@@ -1,26 +1,30 @@
 {
   "schema_version": 1,
-  "request_id": "jichi-phase15-akita-candidate-request-001",
-  "campaign_id": "jichi-phase15-akita-candidate-campaign-001",
-  "id_prefix": "jip15akita001",
-  "goal": "Advance Jichi Insight Phase 15 to the next canonical municipality candidate, Akita City (052019), after the successful Morioka ADE pilot. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, data/catalog/phase15_core_capital_review_queue.json, data/indexed/akita-city/source_inventory.json, the Phase 15 candidate schema, and completed reviewed packages as read-only context. Do not modify the canonical Phase 15 queue or any reviewed/public data. Create a complete non-public Akita review candidate at data/candidates/akita-city/review_candidate.json and deterministic Akita candidate regression coverage under tests/. Because these files do not yet exist, the planner MUST declare each exact new file path in task.new_paths as well as allowed_paths. Use official primary sources only; preserve source URLs, stable evidence locators, plan/version/period/fiscal/availability boundaries, source precision, and deferred depth. Candidate decisions must remain needs_review or not_assessable, human_review.status must remain pending, publication.eligible must remain false, and no reviewed_complete promotion is allowed. Never infer unpublished facts, reuse historical actuals as current without official linkage, collapse fiscal/document/year states, promote drafts, create policy-achievement scores, infer causality, or create unverified comparisons/rankings. Run repository validation and relevant regression tests before PR. Success is a green bounded PR containing a complete Akita non-public candidate while Morioka remains awaiting human review and the canonical queue remains unchanged.",
+  "request_id": "jichi-production-graduation-request-001",
+  "campaign_id": "jichi-production-graduation-campaign-001",
+  "id_prefix": "jifinish001",
+  "goal": "Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
   "target_repository": "M-Osugi1230/jichi-insight",
   "base_branch": "main",
   "allowed_path_prefixes": [
-    "data/candidates",
-    "tests"
+    "apps",
+    "data",
+    "pipelines",
+    "scripts",
+    "tests",
+    "schemas",
+    "docs"
   ],
   "repository_intelligence_prefixes": [
-    "docs",
-    "data/catalog",
-    "data/indexed/akita-city",
-    "data/candidates",
-    "data/reviewed",
+    "apps",
+    "data",
+    "pipelines",
+    "scripts",
+    "tests",
     "schemas",
-    "tests"
+    "docs"
   ],
-  "execution_phase": "autonomous-development",
-  "min_tasks": 1,
-  "max_tasks": 2
+  "execution_phase": "completion-runner",
+  "min_tasks": 2,
+  "max_tasks": 8
 }
-
