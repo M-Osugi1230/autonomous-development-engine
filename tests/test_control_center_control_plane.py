@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import os
 import sys
@@ -28,6 +29,7 @@ control_command = _load_module(
 )
 control_api = _load_module("ade_control_api_test", ROOT / "api" / "control.py")
 status_api = _load_module("ade_status_api_test", ROOT / "api" / "status.py")
+control_app = _load_module("ade_control_app_test", ROOT / "api" / "app.py")
 
 
 class TrustedControlCommandTests(unittest.TestCase):
@@ -153,6 +155,47 @@ class ControlApiTests(unittest.TestCase):
                 "all",
                 {"goal": "Previewing all projects must never expand mutation authority."},
             )
+
+    def test_wsgi_entrypoint_exposes_and_serves_preview_without_dispatch(self) -> None:
+        statuses: list[str] = []
+
+        def start_response(status: str, _headers: list[tuple[str, str]]) -> None:
+            statuses.append(status)
+
+        with patch.object(control_app, "_github_token", return_value="server-only-token"):
+            get_body = b"".join(
+                control_app.application(
+                    {"REQUEST_METHOD": "GET", "PATH_INFO": "/api/control"},
+                    start_response,
+                )
+            )
+        get_payload = json.loads(get_body.decode("utf-8"))
+        self.assertEqual(statuses[-1], "200 OK")
+        self.assertIn("preview_goal", get_payload["commands"])
+
+        request_payload = {
+            "project": "jquants",
+            "command": "preview_goal",
+            "payload": {
+                "goal": "Add a bounded comparison feature and complete its regression tests before release."
+            },
+        }
+        raw = json.dumps(request_payload).encode("utf-8")
+        environ = {
+            "REQUEST_METHOD": "POST",
+            "PATH_INFO": "/api/control",
+            "CONTENT_LENGTH": str(len(raw)),
+            "wsgi.input": io.BytesIO(raw),
+        }
+        with (
+            patch.object(control_app, "_github_token", return_value="server-only-token"),
+            patch.object(control_app, "_dispatch") as dispatch,
+        ):
+            post_body = b"".join(control_app.application(environ, start_response))
+        post_payload = json.loads(post_body.decode("utf-8"))
+        self.assertEqual(statuses[-1], "200 OK")
+        self.assertTrue(post_payload["preview"])
+        dispatch.assert_not_called()
 
 
 class StatusApiTests(unittest.TestCase):
