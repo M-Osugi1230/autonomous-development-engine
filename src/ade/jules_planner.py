@@ -27,6 +27,13 @@ _NEW_PATH_MARKERS = (
     "introduce new",
     "introduce a new",
 )
+_NEW_PATH_ACTION = re.compile(
+    r"\b(?:create|add|introduce)\s+"
+    r"(?:(?:a|the)\s+)?(?:new\s+)?"
+    r"(?:[a-z0-9_.-]+\s+)?"
+    r"(?:file|module|migration|script|test|fixture|schema)\b",
+    re.IGNORECASE,
+)
 
 
 class JulesPlannerClient(Protocol):
@@ -249,7 +256,10 @@ def _repository_grounding_from_prompt(
 
 def _step_declares_creation(step: dict[str, str]) -> bool:
     text = f"{step.get('title', '')} {step.get('description', '')}".casefold()
-    return any(marker in text for marker in _NEW_PATH_MARKERS)
+    return (
+        any(marker in text for marker in _NEW_PATH_MARKERS)
+        or _NEW_PATH_ACTION.search(text) is not None
+    )
 
 
 def derive_proposal_from_plan_steps(
