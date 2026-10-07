@@ -1,10 +1,10 @@
 {
-  "attempt": 1,
-  "detail": "HTTP 400: Precondition check failed.",
-  "reason": "planner-provider-capacity",
+  "attempt": 2,
+  "detail": "task jules-step-002 path does not exist in repository snapshot and is not declared new: tests/e2e/structured-count-batch-12.spec.mjs",
+  "reason": "planner-retryable-failure",
   "request_fingerprint": "69e07382157894574b192ba1750649caff44ca612cf5178dfee39d9ceccd9d40",
   "request_id": "chukei-production-graduation-request-001",
   "schema_version": 1,
-  "state": "PAUSED_QUOTA",
-  "updated_at": "2026-10-07T12:44:44.106363+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-07T13:07:15.363782+00:00"
 }
