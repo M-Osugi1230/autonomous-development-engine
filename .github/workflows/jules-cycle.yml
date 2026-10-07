@@ -1,4 +1,4 @@
-name: ADE Jules Cycle
+name: ADE Provider Cycle
 
 on:
   workflow_dispatch:
@@ -28,21 +28,23 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Start and monitor Jules coding session
+      - name: Route and monitor coding provider session
         env:
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          COPILOT_AGENT_TOKEN: ${{ secrets.COPILOT_AGENT_TOKEN }}
+          ADE_ENABLE_COPILOT_FALLBACK: ${{ vars.ADE_ENABLE_COPILOT_FALLBACK }}
           ADE_CONTROL_REF: ${{ github.event.client_payload.control_ref || 'main' }}
           ADE_PROJECT_KEY: ${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || 'default' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_GITHUB_OWNER: M-Osugi1230
           ADE_GITHUB_REPO: autonomous-development-engine
           ADE_JULES_DAILY_TASK_LIMIT: "15"
-        run: python .github/trusted/jules_cycle.py
+        run: python .github/trusted/provider_cycle.py
 
       - name: Upload cycle result
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ade-jules-cycle-result
+          name: ade-provider-cycle-result
           path: .autodev/runtime/jules-session.json
           if-no-files-found: warn
