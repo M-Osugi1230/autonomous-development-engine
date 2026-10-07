@@ -4,7 +4,14 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
-from api.control import MAX_BODY_BYTES, _dispatch, _github_token, _validate_request
+from api.control import (
+    COMMANDS,
+    MAX_BODY_BYTES,
+    _dispatch,
+    _github_token,
+    _goal_preview,
+    _validate_request,
+)
 from api.status import build_status
 
 
@@ -109,7 +116,7 @@ def application(
                 "schema_version": 1,
                 "configured": bool(_github_token()),
                 "projects": ["all", "chu-kei", "jichi", "jquants"],
-                "commands": ["refresh", "replan", "resolve_decision", "resume", "submit_goal"],
+                "commands": sorted(COMMANDS),
             },
         )
 
@@ -126,6 +133,12 @@ def application(
         try:
             request_payload = _read_json_body(environ)
             project, command, command_payload = _validate_request(request_payload)
+            if command == "preview_goal":
+                return _json_response(
+                    start_response,
+                    "200 OK",
+                    _goal_preview(project, command_payload),
+                )
             _dispatch(project, command, command_payload)
         except ValueError as exc:
             message = str(exc).splitlines()[0].strip() or type(exc).__name__
