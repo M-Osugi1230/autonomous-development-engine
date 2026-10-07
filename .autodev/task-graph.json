@@ -4,31 +4,111 @@
     {
       "decision_id": null,
       "depends_on": [],
-      "status": "COMPLETED",
+      "status": "RUNNING",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
-        "prompt": "Goal: Expand Chu-kei Universe-first Plan Detection with 2-6 bounded tasks, prioritizing company-count coverage over deep-detail completeness. PR #246 / ade-batch-001 is merged. For each task select about 3 highest-priority not_checked companies from the current research-priority and Plan Detection registry/queue, excluding every code already present under operations/plan-detection/candidates and specifically 130A, 135A, 137A. Each task must create exactly one new unique batch JSON under operations/plan-detection/candidates/, beginning with ade-batch-002. Because each batch path does not yet exist, the planner MUST declare the exact new batch JSON path in that task's new_paths as well as allowed_paths; never reference a non-existent batch path only as allowed_paths. Use official or first-party primary sources only and preserve company/source/document identity, publication date, plan/version/period/fiscal semantics, currentness boundaries, and provenance. Never infer no_formal_plan from missing evidence or convert forecasts, visions, growth strategies, or policy statements into a formal medium-term plan without explicit evidence. Keep every candidate needs_review/pending, automatic promotion disabled, publication ineligible, and final registry mutation forbidden. Do not change registry/queue/overrides, public frontend data, human-review or Deep Verification decisions, production promotion, rankings, or evaluative claims. Run the existing Plan Detection candidate validator and npm run quality:v43 before every PR. Success is green bounded PRs expanding reusable L1 evidence while published Plan Detection state remains unchanged.\nOutcome: Create one bounded non-public Plan Detection candidate batch from official or first-party primary sources, selecting distinct high-priority not_checked companies and preserving all review, publication, and promotion boundaries.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: operations/plan-detection/candidates/ade-batch-002/candidates-v1.json\nAcceptance: The new batch passes the existing Plan Detection candidate validator.; npm run quality:v43 remains green.; Published Plan Detection state remains unchanged and every candidate remains pending human review.\nDo not modify files outside the allowed paths.",
+        "prompt": "Goal: Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.\nOutcome: - Enhance candidate batch validation logic to preserve human review flags and handle edge cases safely.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: scripts/validate_plan_detection_candidates_v1.mjs\nAcceptance: - Enhance candidate batch validation logic to preserve human review flags and handle edge cases safely.; Repository CI remains green\nDo not modify files outside the allowed paths.",
         "starting_branch": "main",
-        "task_id": "ckpd004-001",
+        "task_id": "ckfinish001-001",
         "timeout_seconds": 1800,
-        "title": "Stage Plan Detection candidate batch ade-batch-002"
+        "title": "`scripts/validate_plan_detection_candidates_v1.mjs`"
       }
     },
     {
       "decision_id": null,
       "depends_on": [
-        "ckpd004-001"
+        "ckfinish001-001"
       ],
-      "status": "COMPLETED",
+      "status": "PENDING",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
-        "prompt": "Goal: Expand Chu-kei Universe-first Plan Detection with 2-6 bounded tasks, prioritizing company-count coverage over deep-detail completeness. PR #246 / ade-batch-001 is merged. For each task select about 3 highest-priority not_checked companies from the current research-priority and Plan Detection registry/queue, excluding every code already present under operations/plan-detection/candidates and specifically 130A, 135A, 137A. Each task must create exactly one new unique batch JSON under operations/plan-detection/candidates/, beginning with ade-batch-002. Because each batch path does not yet exist, the planner MUST declare the exact new batch JSON path in that task's new_paths as well as allowed_paths; never reference a non-existent batch path only as allowed_paths. Use official or first-party primary sources only and preserve company/source/document identity, publication date, plan/version/period/fiscal semantics, currentness boundaries, and provenance. Never infer no_formal_plan from missing evidence or convert forecasts, visions, growth strategies, or policy statements into a formal medium-term plan without explicit evidence. Keep every candidate needs_review/pending, automatic promotion disabled, publication ineligible, and final registry mutation forbidden. Do not change registry/queue/overrides, public frontend data, human-review or Deep Verification decisions, production promotion, rankings, or evaluative claims. Run the existing Plan Detection candidate validator and npm run quality:v43 before every PR. Success is green bounded PRs expanding reusable L1 evidence while published Plan Detection state remains unchanged.\nOutcome: Create one bounded non-public Plan Detection candidate batch from official or first-party primary sources, selecting distinct high-priority not_checked companies and preserving all review, publication, and promotion boundaries.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: operations/plan-detection/candidates/ade-batch-003/candidates-v1.json\nAcceptance: The new batch passes the existing Plan Detection candidate validator.; npm run quality:v43 remains green.; Published Plan Detection state remains unchanged and every candidate remains pending human review.\nDo not modify files outside the allowed paths.",
+        "prompt": "Goal: Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.\nOutcome: - Update registry construction logic to safely reduce unresolved plan detection statuses using official evidence.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: scripts/build_plan_detection_registry_v1.mjs\nAcceptance: - Update registry construction logic to safely reduce unresolved plan detection statuses using official evidence.; Repository CI remains green\nDo not modify files outside the allowed paths.",
         "starting_branch": "main",
-        "task_id": "ckpd004-002",
+        "task_id": "ckfinish001-002",
         "timeout_seconds": 1800,
-        "title": "Stage Plan Detection candidate batch ade-batch-003"
+        "title": "`scripts/build_plan_detection_registry_v1.mjs`"
+      }
+    },
+    {
+      "decision_id": null,
+      "depends_on": [
+        "ckfinish001-002"
+      ],
+      "status": "PENDING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.\nOutcome: - Create unit tests covering plan detection candidate validation and registry build logic.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: tests/test_plan_detection_validation_v1.js\nAcceptance: - Create unit tests covering plan detection candidate validation and registry build logic.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "ckfinish001-003",
+        "timeout_seconds": 1800,
+        "title": "`tests/test_plan_detection_validation_v1.js`"
+      }
+    },
+    {
+      "decision_id": null,
+      "depends_on": [
+        "ckfinish001-003"
+      ],
+      "status": "PENDING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.\nOutcome: - Refine bundle normalization to align site dataset with canonical company records.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: scripts/normalize_bundle_contract_v1.mjs\nAcceptance: - Refine bundle normalization to align site dataset with canonical company records.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "ckfinish001-004",
+        "timeout_seconds": 1800,
+        "title": "`scripts/normalize_bundle_contract_v1.mjs`"
+      }
+    },
+    {
+      "decision_id": null,
+      "depends_on": [
+        "ckfinish001-004"
+      ],
+      "status": "PENDING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.\nOutcome: - Update live site synchronization checks to ensure public site data consistency.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: scripts/validate_live_site_sync_v1.mjs\nAcceptance: - Update live site synchronization checks to ensure public site data consistency.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "ckfinish001-005",
+        "timeout_seconds": 1800,
+        "title": "`scripts/validate_live_site_sync_v1.mjs`"
+      }
+    },
+    {
+      "decision_id": null,
+      "depends_on": [
+        "ckfinish001-005"
+      ],
+      "status": "PENDING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.\nOutcome: - Harden quality pipeline runner to handle resumable execution and quality debt budget validations.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: scripts/run_quality_pipeline_v43.mjs\nAcceptance: - Harden quality pipeline runner to handle resumable execution and quality debt budget validations.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "ckfinish001-006",
+        "timeout_seconds": 1800,
+        "title": "`scripts/run_quality_pipeline_v43.mjs`"
+      }
+    },
+    {
+      "decision_id": null,
+      "depends_on": [
+        "ckfinish001-006"
+      ],
+      "status": "PENDING",
+      "task": {
+        "auto_create_pr": true,
+        "poll_interval_seconds": 15,
+        "prompt": "Goal: Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.\nOutcome: - Update master quality gate validator to ensure full compliance across all quality metrics.\nScope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.\nAllowed paths: scripts/validate_quality_v43.mjs\nAcceptance: - Update master quality gate validator to ensure full compliance across all quality metrics.; Repository CI remains green\nDo not modify files outside the allowed paths.",
+        "starting_branch": "main",
+        "task_id": "ckfinish001-007",
+        "timeout_seconds": 1800,
+        "title": "`scripts/validate_quality_v43.mjs`"
       }
     }
   ]
