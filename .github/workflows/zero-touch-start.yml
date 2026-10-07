@@ -31,7 +31,18 @@ jobs:
       - name: Checkout trusted controller from main
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
+          ref: main
+          fetch-depth: 1
+
+      - name: Load project state from control branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONTROL_REF="${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}"
+          if [ "$CONTROL_REF" != "main" ]; then
+            git fetch --depth=1 origin "$CONTROL_REF"
+            git checkout FETCH_HEAD -- .autodev
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
