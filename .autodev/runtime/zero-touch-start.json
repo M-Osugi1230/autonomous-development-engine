@@ -1,9 +1,9 @@
 {
   "campaign_id": "chukei-production-graduation-campaign-001",
-  "dispatch_count": 1,
-  "dispatched_at": "2026-10-07T15:01:57.784174+00:00",
+  "dispatch_count": 2,
+  "dispatched_at": "2026-10-07T22:47:06.500122+00:00",
   "plan_fingerprint": "e3cd420d12258242d507ed459ac26472f30528b3f9c8b16a10e69910870d3f55",
-  "run_attempt": "1",
+  "run_attempt": "2",
   "run_id": "37641637548",
   "schema_version": 1,
   "source": "repository_dispatch",
