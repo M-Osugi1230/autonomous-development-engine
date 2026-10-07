@@ -16,14 +16,14 @@
     "docs"
   ],
   "repository_intelligence_prefixes": [
-    "operations",
+    "operations/plan-detection",
+    "operations/research-priority",
+    "operations/quality-rebase/phase2/reviews",
+    "operations/patches",
+    "operations/source-research",
     "scripts",
-    "site",
-    "tests",
-    "schemas",
-    "reports",
-    "releases",
-    "docs"
+    "docs",
+    "site"
   ],
   "graduation_criteria": [
     "The intended company universe is represented in the canonical coverage model and remaining unknown/not-checked states are minimized or explicitly justified; company-count coverage is prioritized over unnecessary deep-detail enrichment.",
