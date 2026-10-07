@@ -5,6 +5,7 @@ import os
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler
 from typing import Any
 
@@ -17,6 +18,8 @@ PROJECTS = (
     ("jichi", "Jichi Insight", "ade-jichi-insight"),
 )
 MAX_REMOTE_BYTES = 512_000
+STALE_AFTER_SECONDS = 6 * 60 * 60
+ACTIVE_WORKFLOW_STATES = {"queued", "in_progress", "waiting", "requested", "pending"}
 
 
 def _raw_json(ref: str, path: str, *, optional: bool = False) -> dict[str, Any]:
@@ -40,6 +43,122 @@ def _raw_json(ref: str, path: str, *, optional: bool = False) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise RuntimeError(f"status source {path} must be a JSON object")
     return payload
+
+
+def _github_api_json(path: str, params: dict[str, str] | None = None) -> Any:
+    query = urllib.parse.urlencode(params or {})
+    url = f"https://api.github.com{path}"
+    if query:
+        url += f"?{query}"
+    headers = {
+        "User-Agent": "ade-control-center-status",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    token = os.environ.get("ADE_GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+
+    def fetch(request_headers: dict[str, str]) -> bytes:
+        request = urllib.request.Request(url, headers=request_headers)
+        with urllib.request.urlopen(request, timeout=8) as response:
+            return response.read(MAX_REMOTE_BYTES + 1)
+
+    try:
+        data = fetch(headers)
+    except urllib.error.HTTPError as exc:
+        if token and exc.code in {401, 403}:
+            public_headers = {key: value for key, value in headers.items() if key != "Authorization"}
+            try:
+                data = fetch(public_headers)
+            except urllib.error.HTTPError as public_exc:
+                raise RuntimeError(f"GitHub API returned HTTP {public_exc.code}") from public_exc
+        else:
+            raise RuntimeError(f"GitHub API returned HTTP {exc.code}") from exc
+
+    if len(data) > MAX_REMOTE_BYTES:
+        raise RuntimeError("GitHub API response exceeded the size limit")
+    try:
+        return json.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError("GitHub API returned invalid JSON") from exc
+
+
+def _latest_state_change(ref: str) -> str | None:
+    payload = _github_api_json(
+        f"/repos/{OWNER}/{REPOSITORY}/commits",
+        {"sha": ref, "path": ".autodev/state.json", "per_page": "1"},
+    )
+    if not isinstance(payload, list) or not payload or not isinstance(payload[0], dict):
+        return None
+    commit = payload[0].get("commit")
+    if not isinstance(commit, dict):
+        return None
+    for actor_key in ("committer", "author"):
+        actor = commit.get(actor_key)
+        if isinstance(actor, dict) and isinstance(actor.get("date"), str):
+            return actor["date"]
+    return None
+
+
+def _workflow_snapshot(run_id: int | None) -> dict[str, Any]:
+    if run_id is None:
+        return {}
+    payload = _github_api_json(f"/repos/{OWNER}/{REPOSITORY}/actions/runs/{run_id}")
+    if not isinstance(payload, dict):
+        return {}
+    return {
+        "run_id": run_id,
+        "name": payload.get("name") if isinstance(payload.get("name"), str) else None,
+        "status": payload.get("status") if isinstance(payload.get("status"), str) else None,
+        "conclusion": payload.get("conclusion") if isinstance(payload.get("conclusion"), str) else None,
+        "updated_at": payload.get("updated_at") if isinstance(payload.get("updated_at"), str) else None,
+    }
+
+
+def _parse_timestamp(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _activity_state(
+    lifecycle: str,
+    *,
+    last_state_change_at: str | None,
+    workflow_status: str | None,
+    next_system_action: str | None,
+) -> str:
+    if lifecycle == "COMPLETED":
+        return "COMPLETED"
+    if lifecycle == "FAILED":
+        return "STOPPED"
+    if lifecycle == "HUMAN_WAIT":
+        return "BLOCKED"
+    if lifecycle == "READY":
+        return "IDLE"
+    if lifecycle != "RUNNING":
+        return "UNKNOWN"
+
+    if workflow_status in ACTIVE_WORKFLOW_STATES:
+        return "ACTIVE"
+
+    changed_at = _parse_timestamp(last_state_change_at)
+    age_seconds = None
+    if changed_at is not None:
+        age_seconds = max(0.0, (datetime.now(timezone.utc) - changed_at).total_seconds())
+
+    if age_seconds is not None and age_seconds > STALE_AFTER_SECONDS:
+        return "STALE"
+    if next_system_action == "monitor-provider-session":
+        return "MONITORING"
+    return "ACTIVE"
 
 
 def _open_decisions(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -126,11 +245,36 @@ def _project_snapshot(key: str, label: str, ref: str) -> dict[str, Any]:
     if not isinstance(goal, str):
         goal = None
 
+    last_state_change_at = None
+    try:
+        last_state_change_at = _latest_state_change(ref)
+    except Exception:
+        pass
+
+    implementation_run_id = metadata.get("implementation_workflow_run_id")
+    if not isinstance(implementation_run_id, int):
+        implementation_run_id = None
+    workflow: dict[str, Any] = {}
+    try:
+        workflow = _workflow_snapshot(implementation_run_id)
+    except Exception:
+        workflow = {}
+
+    activity = _activity_state(
+        lifecycle,
+        last_state_change_at=last_state_change_at,
+        workflow_status=workflow.get("status") if isinstance(workflow.get("status"), str) else None,
+        next_system_action=next_system,
+    )
+
     return {
         "key": key,
         "label": label,
         "control_ref": ref,
         "lifecycle": lifecycle,
+        "activity": activity,
+        "last_state_change_at": last_state_change_at,
+        "implementation_run": workflow,
         "campaign_id": campaign.get("campaign_id") if isinstance(campaign.get("campaign_id"), str) else None,
         "campaign_status": campaign.get("status") if isinstance(campaign.get("status"), str) else None,
         "goal": goal[:2000] if goal else None,
@@ -160,6 +304,9 @@ def build_status() -> dict[str, Any]:
                     "label": label,
                     "control_ref": ref,
                     "lifecycle": "UNKNOWN",
+                    "activity": "UNKNOWN",
+                    "last_state_change_at": None,
+                    "implementation_run": {},
                     "campaign_id": None,
                     "campaign_status": None,
                     "goal": None,
