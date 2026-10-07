@@ -1,7 +1,7 @@
 {
-  "fingerprint": "0c551775baf25d8f0df4467120d97dcb90dd7151fc6df42099105346e9745f37",
+  "fingerprint": "d5ff2773f7fe33fc3190c81987394721fe374567abc6e1389ebe208097bf9a14",
   "plan": {
-    "goal": "Advance Jichi Insight Phase 15 to the next canonical municipality candidate, Akita City (052019), after the successful Morioka ADE pilot. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, data/catalog/phase15_core_capital_review_queue.json, data/indexed/akita-city/source_inventory.json, the Phase 15 candidate schema, and completed reviewed packages as read-only context. Do not modify the canonical Phase 15 queue or any reviewed/public data. Create a complete non-public Akita review candidate at data/candidates/akita-city/review_candidate.json and deterministic Akita candidate regression coverage under tests/. Because these files do not yet exist, the planner MUST declare each exact new file path in task.new_paths as well as allowed_paths. Use official primary sources only; preserve source URLs, stable evidence locators, plan/version/period/fiscal/availability boundaries, source precision, and deferred depth. Candidate decisions must remain needs_review or not_assessable, human_review.status must remain pending, publication.eligible must remain false, and no reviewed_complete promotion is allowed. Never infer unpublished facts, reuse historical actuals as current without official linkage, collapse fiscal/document/year states, promote drafts, create policy-achievement scores, infer causality, or create unverified comparisons/rankings. Run repository validation and relevant regression tests before PR. Success is a green bounded PR containing a complete Akita non-public candidate while Morioka remains awaiting human review and the canonical queue remains unchanged.",
+    "goal": "Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
     "human_boundaries": [
       "destructive or irreversible operation",
       "credential or secret access",
@@ -11,18 +11,91 @@
     "tasks": [
       {
         "acceptance": [
-          "Candidate remains non-public with human review pending and publication ineligible.",
-          "Official-source evidence, period/version/fiscal boundaries, and deferred depth remain explicit.",
-          "Relevant repository validation and regression tests remain green."
+          "Update Morioka City review candidate staging record in `data/candidates/morioka-city/review_candidate.json`.",
+          "Repository CI remains green"
         ],
         "allowed_paths": [
-          "data/candidates/akita-city/review_candidate.json",
-          "tests/test_phase15_akita_review_candidate_staging.py"
+          "data/candidates/morioka-city/review_candidate.json"
         ],
         "depends_on": [],
-        "prompt": "Goal: Advance Jichi Insight Phase 15 to the next canonical municipality candidate, Akita City (052019), after the successful Morioka ADE pilot. Read docs/ADE_AUTONOMOUS_RESEARCH_GOAL.md, data/catalog/phase15_core_capital_review_queue.json, data/indexed/akita-city/source_inventory.json, the Phase 15 candidate schema, and completed reviewed packages as read-only context. Do not modify the canonical Phase 15 queue or any reviewed/public data. Create a complete non-public Akita review candidate at data/candidates/akita-city/review_candidate.json and deterministic Akita candidate regression coverage under tests/. Because these files do not yet exist, the planner MUST declare each exact new file path in task.new_paths as well as allowed_paths. Use official primary sources only; preserve source URLs, stable evidence locators, plan/version/period/fiscal/availability boundaries, source precision, and deferred depth. Candidate decisions must remain needs_review or not_assessable, human_review.status must remain pending, publication.eligible must remain false, and no reviewed_complete promotion is allowed. Never infer unpublished facts, reuse historical actuals as current without official linkage, collapse fiscal/document/year states, promote drafts, create policy-achievement scores, infer causality, or create unverified comparisons/rankings. Run repository validation and relevant regression tests before PR. Success is a green bounded PR containing a complete Akita non-public candidate while Morioka remains awaiting human review and the canonical queue remains unchanged. Outcome: Create or complete the municipality's non-public Phase 15 review candidate and deterministic candidate regression coverage while preserving the repository's human-review boundary. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jip15akita001-001",
-        "title": "Stage akita-city Phase 15 review candidate"
+        "prompt": "Goal: Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json. Outcome: Update Morioka City review candidate staging record in `data/candidates/morioka-city/review_candidate.json`. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "jifinish001-001",
+        "title": "Update Morioka City review candidate staging record in `data/candidates/morioka-city/review_candidate.json`."
+      },
+      {
+        "acceptance": [
+          "Update Akita City review candidate staging record in `data/candidates/akita-city/review_candidate.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/akita-city/review_candidate.json"
+        ],
+        "depends_on": [
+          "jifinish001-001"
+        ],
+        "prompt": "Goal: Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json. Outcome: Update Akita City review candidate staging record in `data/candidates/akita-city/review_candidate.json`. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "jifinish001-002",
+        "title": "Update Akita City review candidate staging record in `data/candidates/akita-city/review_candidate.json`."
+      },
+      {
+        "acceptance": [
+          "Update staging validation assertions for Morioka candidate in `tests/test_phase15_review_candidate_staging.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jifinish001-002"
+        ],
+        "prompt": "Goal: Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json. Outcome: Update staging validation assertions for Morioka candidate in `tests/test_phase15_review_candidate_staging.py`. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "jifinish001-003",
+        "title": "Update staging validation assertions for Morioka candidate in `tests/test_phase15_review_candidate_staging.py`."
+      },
+      {
+        "acceptance": [
+          "Update staging validation assertions for Akita candidate in `tests/test_phase15_akita_review_candidate_staging.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_akita_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jifinish001-003"
+        ],
+        "prompt": "Goal: Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json. Outcome: Update staging validation assertions for Akita candidate in `tests/test_phase15_akita_review_candidate_staging.py`. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "jifinish001-004",
+        "title": "Update staging validation assertions for Akita candidate in `tests/test_phase15_akita_review_candidate_staging.py`."
+      },
+      {
+        "acceptance": [
+          "Update core capital review queue tracking in `data/catalog/phase15_core_capital_review_queue.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/catalog/phase15_core_capital_review_queue.json"
+        ],
+        "depends_on": [
+          "jifinish001-004"
+        ],
+        "prompt": "Goal: Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json. Outcome: Update core capital review queue tracking in `data/catalog/phase15_core_capital_review_queue.json`. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "jifinish001-005",
+        "title": "Update core capital review queue tracking in `data/catalog/phase15_core_capital_review_queue.json`."
+      },
+      {
+        "acceptance": [
+          "Update Phase 15 core capital review status documentation in `docs/PHASE15_CORE_CAPITAL_REVIEW.md`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "docs/PHASE15_CORE_CAPITAL_REVIEW.md"
+        ],
+        "depends_on": [
+          "jifinish001-005"
+        ],
+        "prompt": "Goal: Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json. Outcome: Update Phase 15 core capital review status documentation in `docs/PHASE15_CORE_CAPITAL_REVIEW.md`. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "jifinish001-006",
+        "title": "Update Phase 15 core capital review status documentation in `docs/PHASE15_CORE_CAPITAL_REVIEW.md`."
       }
     ]
   },
