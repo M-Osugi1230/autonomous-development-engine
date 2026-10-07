@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "project_key": "jquants-research-studio",
+  "request_prefix": "jqfinish",
+  "goal": "Bring J-Quants Research Studio to production graduation. Prefer completing, integrating, validating, and operating the existing research capabilities over adding unrelated data categories. Continue through live Supabase materialization, Research Workspace/API integration, bounded historical backfill and refresh, operational hardening, and final runtime verification.",
+  "target_repository": "M-Osugi1230/jquants-research-studio",
+  "base_branch": "main",
+  "allowed_path_prefixes": [
+    "apps",
+    "engine",
+    "providers",
+    "scripts",
+    "supabase",
+    "tests",
+    "docs"
+  ],
+  "repository_intelligence_prefixes": [
+    "apps",
+    "engine",
+    "providers",
+    "scripts",
+    "supabase",
+    "tests",
+    "docs"
+  ],
+  "graduation_criteria": [
+    "Priority research outputs are materialized in live Supabase production models, including structurally separate 1/5/20/60 trading-day forward and benchmark-relative excess outcomes and evidence-backed shareholder-benefit/total-yield fields.",
+    "Research Workspace/API/search/compare surfaces consume the production models safely, with provenance and clear labeling that ex-post outcomes are not point-in-time features.",
+    "Backfill and ongoing refresh are bounded, incremental, idempotent, resumable, indexed, provenance-aware, and preserve J-Quants/EDINET quota reserves and fail-closed behavior.",
+    "Coverage, null-tail, benchmark alignment, staleness, idempotency, and point-in-time leakage audits are green and repository CI is green.",
+    "A final live runtime verification of the production read path is green with no unresolved implementation blocker; any true credential or externally consequential human-only boundary is surfaced explicitly rather than bypassed."
+  ],
+  "completion_marker_path": "docs/ADE_COMPLETION.json",
+  "min_tasks": 2,
+  "max_tasks": 8
+}
