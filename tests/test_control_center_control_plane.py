@@ -104,6 +104,56 @@ class ControlApiTests(unittest.TestCase):
         self.assertFalse(hasattr(control_api, "_authorized"))
         self.assertFalse(hasattr(control_api, "_configured_key"))
 
+    def test_goal_preview_is_read_only_and_mirrors_trusted_policy(self) -> None:
+        self.assertIn("preview_goal", control_api.COMMANDS)
+        for key, trusted in control_command.PROJECTS.items():
+            preview_policy = control_api.PREVIEW_POLICIES[key]
+            self.assertEqual(preview_policy["target_repository"], trusted.target_repository)
+            self.assertEqual(
+                tuple(preview_policy["allowed_path_prefixes"]),
+                trusted.allowed_path_prefixes,
+            )
+            self.assertEqual(
+                tuple(preview_policy["repository_intelligence_prefixes"]),
+                trusted.repository_intelligence_prefixes,
+            )
+            self.assertEqual(preview_policy["min_tasks"], trusted.min_tasks)
+            self.assertEqual(preview_policy["max_tasks"], trusted.max_tasks)
+
+        preview = control_api._goal_preview(
+            "jquants",
+            {"goal": "Add a bounded comparison feature and complete its regression tests before release."},
+        )
+        self.assertTrue(preview["preview"])
+        self.assertEqual(preview["project"], "jquants")
+        self.assertEqual(preview["interpretation"]["execution_mode"], "autonomous-development")
+        self.assertEqual(preview["interpretation"]["task_range"], {"min": 2, "max": 8})
+        self.assertEqual(
+            preview["trusted_scope"]["write"],
+            ["apps", "engine", "providers", "scripts", "supabase", "tests"],
+        )
+        self.assertIn("まだGitHub ActionsやPlannerは起動していません", preview["notice"])
+        self.assertNotIn("token", json.dumps(preview).lower())
+        self.assertNotIn("request_id", preview)
+        self.assertNotIn("campaign_id", preview)
+
+    def test_goal_preview_rejects_scope_injection_and_short_goals(self) -> None:
+        with self.assertRaisesRegex(ValueError, "unsupported fields"):
+            control_api._goal_preview(
+                "jichi",
+                {
+                    "goal": "Prepare a bounded municipality candidate and test it carefully.",
+                    "allowed_path_prefixes": ["data/reviewed"],
+                },
+            )
+        with self.assertRaisesRegex(ValueError, "at least"):
+            control_api._goal_preview("jichi", {"goal": "short"})
+        with self.assertRaisesRegex(ValueError, "trusted project"):
+            control_api._goal_preview(
+                "all",
+                {"goal": "Previewing all projects must never expand mutation authority."},
+            )
+
 
 class StatusApiTests(unittest.TestCase):
     def test_open_decisions_expose_only_operator_fields(self) -> None:
