@@ -22,6 +22,7 @@ _LEGACY_THOUGHT_PIPELINE_REPOSITORIES = frozenset(
     {"M-Osugi1230/one-minute-thought-experiments"}
 )
 _JICHI_INSIGHT_REPOSITORY = "M-Osugi1230/jichi-insight"
+_JQUANTS_REPOSITORY = "M-Osugi1230/jquants-research-studio"
 _MODULE_NAME = re.compile(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$")
 _ATTR_PATH = re.compile(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$")
 
@@ -329,6 +330,136 @@ def _repository_entrypoint_runner(
     return run
 
 
+_JQUANTS_API_IMPORT_SMOKE = r"""
+import sys
+from pathlib import Path
+
+root = Path.cwd()
+sys.path.insert(0, str(root))
+sys.path.insert(0, str(root / "src"))
+
+try:
+    from fastapi import FastAPI
+    from app import app
+except Exception:
+    raise SystemExit(1)
+
+if not isinstance(app, FastAPI):
+    raise SystemExit(1)
+
+paths = {getattr(route, "path", None) for route in app.routes}
+required = {
+    "/health",
+    "/health/deep",
+    "/research/v2/context",
+    "/research/v2/data-status",
+}
+if not required.issubset(paths):
+    raise SystemExit(1)
+
+raise SystemExit(0)
+"""
+
+
+def _jquants_api_import_runner(
+    workspace: PreparedRuntimeWorkspace,
+):
+    def run(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+        if not (workspace.root / "app.py").is_file():
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jquants-api-entrypoint-missing",
+            )
+        if not (workspace.root / "apps" / "api" / "main.py").is_file():
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jquants-api-main-missing",
+            )
+        try:
+            completed = subprocess.run(
+                [
+                    str(workspace.python_executable),
+                    "-I",
+                    "-c",
+                    _JQUANTS_API_IMPORT_SMOKE,
+                ],
+                cwd=workspace.root,
+                env=_probe_environment(workspace),
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=_command_timeout(invocation),
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="jquants-api-import-timeout",
+            )
+        except OSError:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="jquants-api-import-exec-error",
+            )
+        return RuntimeProbeObservation(
+            RuntimeProbeStatus.PASS
+            if completed.returncode == 0
+            else RuntimeProbeStatus.FAIL,
+            detail_code=(
+                "jquants-api-import-pass"
+                if completed.returncode == 0
+                else "jquants-api-import-nonzero"
+            ),
+        )
+
+    return run
+
+
+def _jquants_vercel_contract_runner(
+    workspace: PreparedRuntimeWorkspace,
+):
+    def run(invocation: RuntimeProbeInvocation) -> RuntimeProbeObservation:
+        validator = workspace.root / "scripts" / "validate_vercel_build_contract.py"
+        if not validator.is_file():
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.FAIL,
+                detail_code="jquants-vercel-contract-missing",
+            )
+        try:
+            completed = subprocess.run(
+                [str(workspace.python_executable), str(validator)],
+                cwd=workspace.root,
+                env=_probe_environment(workspace),
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=_command_timeout(invocation),
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="jquants-vercel-contract-timeout",
+            )
+        except OSError:
+            return RuntimeProbeObservation(
+                RuntimeProbeStatus.ERROR,
+                detail_code="jquants-vercel-contract-exec-error",
+            )
+        return RuntimeProbeObservation(
+            RuntimeProbeStatus.PASS
+            if completed.returncode == 0
+            else RuntimeProbeStatus.FAIL,
+            detail_code=(
+                "jquants-vercel-contract-pass"
+                if completed.returncode == 0
+                else "jquants-vercel-contract-nonzero"
+            ),
+        )
+
+    return run
+
+
 def _jichi_data_contract_runner(
     workspace: PreparedRuntimeWorkspace,
 ):
@@ -457,6 +588,31 @@ def build_runtime_probe_registry(
     *,
     target_repository: str | None = None,
 ) -> TrustedRuntimeProbeRegistry:
+    if target_repository == _JQUANTS_REPOSITORY:
+        api_runner = (
+            _jquants_api_import_runner(workspace)
+            if workspace is not None
+            else _workspace_not_configured
+        )
+        vercel_runner = (
+            _jquants_vercel_contract_runner(workspace)
+            if workspace is not None
+            else _workspace_not_configured
+        )
+        return TrustedRuntimeProbeRegistry(
+            [
+                RuntimeProbeRegistration(
+                    probe_id="jquants-api-import-smoke",
+                    implementation_id="jquants-api-import-smoke-v1",
+                    runner=api_runner,
+                ),
+                RuntimeProbeRegistration(
+                    probe_id="jquants-vercel-contract-smoke",
+                    implementation_id="jquants-vercel-contract-smoke-v1",
+                    runner=vercel_runner,
+                ),
+            ]
+        )
     if target_repository == _JICHI_INSIGHT_REPOSITORY:
         data_runner = (
             _jichi_data_contract_runner(workspace)
@@ -535,6 +691,11 @@ def build_runtime_verification_policy(
         required_probe_ids = (
             "offline-cli-smoke",
             "production-import-smoke",
+        )
+    elif target_repository == _JQUANTS_REPOSITORY:
+        required_probe_ids = (
+            "jquants-api-import-smoke",
+            "jquants-vercel-contract-smoke",
         )
     elif target_repository == _JICHI_INSIGHT_REPOSITORY:
         required_probe_ids = (
