@@ -1,0 +1,198 @@
+{
+  "accepted_plan_fingerprint": "d5ff2773f7fe33fc3190c81987394721fe374567abc6e1389ebe208097bf9a14",
+  "campaign_id": "jichi-production-graduation-campaign-001",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+    "current_source_sha": "ae7d11e8fac4b8477876b936c8fd5d22c12cc996",
+    "execution_authority": false,
+    "extracted_record_count": 4,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jichi-insight",
+    "resolution_fingerprint": "c503396f70761167f09a1459b8bd3f4d5a040b8e5469bd892b4caa55b15e757d",
+    "retrieval_fingerprint": "69127c1f1693252aa3a3eca5d5d4fcc0d5d0e556af5cafd4d68c5c7b6eb4416a",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "47f875e6bb37b01927fdde34ab3df66f1bd29ba1cd76722387280f692747b265",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "f509786944658940b8dd88916d8283b5206c6947e66027e5d5db584556b7f458",
+  "proposal": {
+    "goal": "Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Update Morioka City review candidate staging record in `data/candidates/morioka-city/review_candidate.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/morioka-city/review_candidate.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Update Morioka City review candidate staging record in `data/candidates/morioka-city/review_candidate.json`.",
+        "title": "Update Morioka City review candidate staging record in `data/candidates/morioka-city/review_candidate.json`."
+      },
+      {
+        "acceptance": [
+          "Update Akita City review candidate staging record in `data/candidates/akita-city/review_candidate.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/akita-city/review_candidate.json"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "Update Akita City review candidate staging record in `data/candidates/akita-city/review_candidate.json`.",
+        "title": "Update Akita City review candidate staging record in `data/candidates/akita-city/review_candidate.json`."
+      },
+      {
+        "acceptance": [
+          "Update staging validation assertions for Morioka candidate in `tests/test_phase15_review_candidate_staging.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [],
+        "outcome": "Update staging validation assertions for Morioka candidate in `tests/test_phase15_review_candidate_staging.py`.",
+        "title": "Update staging validation assertions for Morioka candidate in `tests/test_phase15_review_candidate_staging.py`."
+      },
+      {
+        "acceptance": [
+          "Update staging validation assertions for Akita candidate in `tests/test_phase15_akita_review_candidate_staging.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_akita_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "Update staging validation assertions for Akita candidate in `tests/test_phase15_akita_review_candidate_staging.py`.",
+        "title": "Update staging validation assertions for Akita candidate in `tests/test_phase15_akita_review_candidate_staging.py`."
+      },
+      {
+        "acceptance": [
+          "Update core capital review queue tracking in `data/catalog/phase15_core_capital_review_queue.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/catalog/phase15_core_capital_review_queue.json"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [],
+        "outcome": "Update core capital review queue tracking in `data/catalog/phase15_core_capital_review_queue.json`.",
+        "title": "Update core capital review queue tracking in `data/catalog/phase15_core_capital_review_queue.json`."
+      },
+      {
+        "acceptance": [
+          "Update Phase 15 core capital review status documentation in `docs/PHASE15_CORE_CAPITAL_REVIEW.md`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "docs/PHASE15_CORE_CAPITAL_REVIEW.md"
+        ],
+        "depends_on": [
+          "jules-step-005"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-006",
+        "new_paths": [],
+        "outcome": "Update Phase 15 core capital review status documentation in `docs/PHASE15_CORE_CAPITAL_REVIEW.md`.",
+        "title": "Update Phase 15 core capital review status documentation in `docs/PHASE15_CORE_CAPITAL_REVIEW.md`."
+      }
+    ]
+  },
+  "proposal_fingerprint": "318f1139e664a7b13b64a42f9b79368e8440bf71e466bbc65a690e30871b0da6",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 6,
+  "provider_plan_steps_sha256": "9e2b74bbaef8bd4aff997eb8aedce31a5e573c8d61eff730ae1d3b2895bcb0f3",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "70414e52a0c82700ece62273e7415cb2d161d9f0e9164df0a02f88e3214b044a",
+  "repository_context_fingerprint": "92ba48eac6e50413d391d39610230a682433c7ebda68a1e4b7dc7d59d734ed00",
+  "repository_impact_analysis_fingerprint": "3222320fe6d3a2b6e5150a1b57c63a5b4d5a135b470329cd46cd5056745dce42",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "b33c1c09c37048625568fba62c3f6a319c260e54b6a444193fda5295d61e520d",
+  "repository_source_sha": "ae7d11e8fac4b8477876b936c8fd5d22c12cc996",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "data",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jichi-production-graduation-campaign-001",
+    "execution_phase": "completion-runner",
+    "goal": "Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
+    "id_prefix": "jifinish001",
+    "min_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "apps",
+      "data",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "request_id": "jichi-production-graduation-request-001",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "request_fingerprint": "612ff2a50a3f8b96eb082ced55193c9fd12605f52e2abeb7a8d54a802744e8ed",
+  "schema_version": 1,
+  "task_ids": [
+    "jifinish001-001",
+    "jifinish001-002",
+    "jifinish001-003",
+    "jifinish001-004",
+    "jifinish001-005",
+    "jifinish001-006"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 37622193328
+}
