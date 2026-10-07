@@ -1,10 +1,10 @@
 {
   "attempt": 1,
-  "detail": "repository tree exceeds trusted entry budget",
+  "detail": "task jules-step-002 path does not exist in repository snapshot and is not declared new: tests/test_plan_detection_validation.py",
   "reason": "planner-retryable-failure",
-  "request_fingerprint": "18e8259575cc6f1ebaa53057168d26256e302eb6259e2002599c09aa32872e94",
+  "request_fingerprint": "69e07382157894574b192ba1750649caff44ca612cf5178dfee39d9ceccd9d40",
   "request_id": "chukei-production-graduation-request-001",
   "schema_version": 1,
   "state": "REPLAN",
-  "updated_at": "2026-10-07T12:36:16.233763+00:00"
+  "updated_at": "2026-10-07T12:44:21.143286+00:00"
 }
