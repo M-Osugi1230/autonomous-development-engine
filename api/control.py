@@ -13,8 +13,69 @@ OWNER = "M-Osugi1230"
 REPOSITORY = "autonomous-development-engine"
 WORKFLOW = "control-command.yml"
 PROJECTS = frozenset({"all", "jquants", "chu-kei", "jichi"})
-COMMANDS = frozenset({"refresh", "resume", "replan", "submit_goal", "resolve_decision"})
+COMMANDS = frozenset(
+    {"refresh", "resume", "replan", "submit_goal", "resolve_decision", "preview_goal"}
+)
 MAX_BODY_BYTES = 20_000
+MAX_GOAL_CHARS = 4_000
+MIN_PREVIEW_GOAL_CHARS = 20
+
+# Read-only presentation metadata. The trusted GitHub controller remains authoritative.
+# Tests pin these values to .github/trusted/control_command.py so a scope change cannot
+# silently drift away from what the dashboard previews.
+PREVIEW_POLICIES: dict[str, dict[str, Any]] = {
+    "jquants": {
+        "label": "J-Quants",
+        "target_repository": "M-Osugi1230/jquants-research-studio",
+        "allowed_path_prefixes": ["apps", "engine", "providers", "scripts", "supabase", "tests"],
+        "repository_intelligence_prefixes": [
+            "apps",
+            "engine",
+            "providers",
+            "scripts",
+            "supabase",
+            "tests",
+            "docs",
+        ],
+        "min_tasks": 2,
+        "max_tasks": 8,
+        "boundary": "既存のデータ取得上限・安全制約・Human Decision境界を維持したまま、機能・分析・DB・API・UI・テストを横断できます。",
+    },
+    "chu-kei": {
+        "label": "Chu-kei Insight",
+        "target_repository": "M-Osugi1230/chu-kei",
+        "allowed_path_prefixes": ["operations/plan-detection/candidates"],
+        "repository_intelligence_prefixes": [
+            "operations/plan-detection",
+            "operations/research-priority",
+            "operations/quality-rebase/phase2/reviews",
+            "operations/patches",
+            "operations/source-research",
+            "scripts",
+            "docs",
+        ],
+        "min_tasks": 1,
+        "max_tasks": 6,
+        "boundary": "中期経営計画の候補データ領域だけを書き換えます。公開データやレビュー済みデータへの自動昇格は行いません。",
+    },
+    "jichi": {
+        "label": "Jichi Insight",
+        "target_repository": "M-Osugi1230/jichi-insight",
+        "allowed_path_prefixes": ["data/candidates", "tests"],
+        "repository_intelligence_prefixes": [
+            "docs",
+            "data/catalog",
+            "data/indexed",
+            "data/candidates",
+            "data/reviewed",
+            "schemas",
+            "tests",
+        ],
+        "min_tasks": 1,
+        "max_tasks": 4,
+        "boundary": "非公開候補データと検証テストだけを書き換えます。reviewed/public領域への自動昇格は行いません。",
+    },
+}
 
 
 def _github_token() -> str:
@@ -42,6 +103,65 @@ def _validate_request(payload: Any) -> tuple[str, str, dict[str, Any]]:
     if len(serialized.encode("utf-8")) > 16_384:
         raise ValueError("command payload is too large")
     return project, command, command_payload
+
+
+def _goal_preview(project: str, payload: dict[str, Any]) -> dict[str, Any]:
+    unknown = set(payload) - {"goal"}
+    if unknown:
+        raise ValueError(f"preview_goal contains unsupported fields: {sorted(unknown)}")
+    goal = payload.get("goal")
+    if not isinstance(goal, str):
+        raise ValueError("goal must be a string")
+    goal = goal.strip()
+    if len(goal) < MIN_PREVIEW_GOAL_CHARS:
+        raise ValueError(f"goal must be at least {MIN_PREVIEW_GOAL_CHARS} characters")
+    if len(goal) > MAX_GOAL_CHARS:
+        raise ValueError(f"goal must be at most {MAX_GOAL_CHARS} characters")
+    if any(character in goal for character in "\x00\r"):
+        raise ValueError("goal contains invalid control characters")
+
+    policy = PREVIEW_POLICIES.get(project)
+    if policy is None:
+        raise ValueError("preview_goal requires a trusted project")
+
+    min_tasks = int(policy["min_tasks"])
+    max_tasks = int(policy["max_tasks"])
+    return {
+        "schema_version": 1,
+        "preview": True,
+        "project": project,
+        "label": policy["label"],
+        "goal": goal,
+        "interpretation": {
+            "intent": goal,
+            "target_repository": policy["target_repository"],
+            "execution_mode": "autonomous-development",
+            "task_range": {"min": min_tasks, "max": max_tasks},
+        },
+        "trusted_scope": {
+            "write": list(policy["allowed_path_prefixes"]),
+            "read_for_understanding": list(policy["repository_intelligence_prefixes"]),
+        },
+        "execution_flow": [
+            "Repository understanding",
+            "Bounded plan / Task DAG",
+            "Implementation",
+            "Tests and validation",
+            "Pull request / CI",
+            "Runtime verification where applicable",
+            "Next task selection until the Goal is complete",
+        ],
+        "success_gates": [
+            "GoalをTrusted Scope内の変更だけで達成する",
+            f"Plannerが{min_tasks}〜{max_tasks}個のbounded taskへ分解する",
+            "実装後のテスト・検証を通過する",
+            "既存のHuman Decision・release・security境界を維持する",
+            "完了条件を満たすまで次タスクを自動選択する",
+        ],
+        "safety_boundary": policy["boundary"],
+        "start_gate": "現在のCampaignがidleであること。開始時にTrusted Controllerが再検証します。",
+        "notice": "これは実行前プレビューです。まだGitHub ActionsやPlannerは起動していません。",
+    }
 
 
 def _dispatch(project: str, command: str, payload: dict[str, Any]) -> None:
@@ -140,6 +260,9 @@ class handler(BaseHTTPRequestHandler):
         try:
             body = json.loads(raw.decode("utf-8"))
             project, command, command_payload = _validate_request(body)
+            if command == "preview_goal":
+                self._json(200, _goal_preview(project, command_payload))
+                return
             _dispatch(project, command, command_payload)
         except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
             message = str(exc).splitlines()[0].strip() or type(exc).__name__
