@@ -4,306 +4,44 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<title>ADE Control Center</title>
+<title>ADE Progress</title>
 <style>
-:root{--bg:#0b1020;--panel:#121a2e;--panel2:#18223b;--line:#2a3858;--text:#eef4ff;--muted:#9baac5;--good:#58d68d;--warn:#f4c95d;--bad:#ff7b8a;--accent:#79a7ff;--accent2:#9d86ff;--shadow:0 14px 36px rgba(0,0,0,.22)}
-*{box-sizing:border-box}
-html{background:var(--bg)}
-body{margin:0;background:radial-gradient(circle at 10% 0,#17213a 0,transparent 32%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;-webkit-text-size-adjust:100%}
-.shell{max-width:1080px;margin:0 auto;padding:22px 16px calc(56px + env(safe-area-inset-bottom))}
-.top{display:flex;gap:16px;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
-.eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:800}
-.top h1{margin:5px 0 0;font-size:clamp(28px,6vw,44px);line-height:1}
-.top-actions{display:flex;gap:8px;flex-wrap:wrap}
-.button{appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;min-height:40px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.button:hover,.button:focus-visible{border-color:var(--accent)}
-.button.primary{background:linear-gradient(135deg,#477ce8,#7158db);border-color:transparent}
-.button.secondary{background:#14213a;border-color:#35558f}
-.button:disabled{opacity:.42;cursor:not-allowed}
-.overview{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:12px 0 20px;color:var(--muted);font-size:13px}
-.overview strong{color:var(--text)}
-.notice{padding:10px 12px;border-radius:10px;border:1px solid #6d5b2d;background:#2b2413;color:#f6df9e;font-size:13px;line-height:1.5;margin:10px 0 18px}
-.notice[hidden]{display:none}
-.section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:22px 0 10px}
-.section-title h2{margin:0;font-size:18px}
-.small{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.card{background:linear-gradient(180deg,rgba(24,34,59,.96),rgba(15,23,41,.98));border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow);min-width:0}
-.card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.card h3{margin:0;font-size:19px}
-.pill{font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
-.pill.RUNNING{color:#bcd2ff;border-color:#35558f;background:#172b50}
-.pill.COMPLETED{color:#b8f2ce;border-color:#2d6c48;background:#123323}
-.pill.HUMAN_WAIT{color:#ffe3a2;border-color:#7b6333;background:#342a12}
-.pill.FAILED{color:#ffc1c7;border-color:#7b3d48;background:#35171d}
-.pill.UNKNOWN{color:#c8d0df}
-.progress-row{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px;margin:10px 0 12px}
-.progress{height:5px;background:#090e19;border-radius:999px;overflow:hidden;margin-top:6px}
-.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}
-.focus{display:grid;gap:9px}
-.focus-item{border-top:1px solid #2a3858;padding-top:9px}
-.focus-item:first-child{border-top:0;padding-top:0}
-.focus-label{display:block;color:var(--muted);font-size:10px;font-weight:800;margin-bottom:3px}
-.focus-value{font-size:13px;line-height:1.55}
-.focus-value strong{font-size:14px}
-.operator-ok{color:#b8f2ce}
-.operator-warn{color:#ffe3a2}
-.more{margin-top:12px;border-top:1px solid #263452;padding-top:9px}
-.more summary{cursor:pointer;color:var(--muted);font-size:12px;font-weight:700;touch-action:manipulation}
-.more-body{display:grid;gap:9px;padding-top:10px}
-.detail{font-size:12px;line-height:1.55;color:#dce7fb}
-.detail b{color:var(--muted);font-weight:700}
-.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}
-.card-actions{display:flex;gap:8px;flex-wrap:wrap}
-.card-actions .button{font-size:12px;padding:8px 10px}
-.action-result{padding:9px 10px;border-radius:9px;font-size:12px;line-height:1.5;border:1px solid #31476e;background:#15213a;color:#c8d8f4}
-.action-result.good{border-color:#285a42;background:#102a20;color:#b8f2ce}
-.action-result.warn{border-color:#6d5b2d;background:#2b2413;color:#f6df9e}
-.action-result.error{border-color:#7b3d48;background:#35171d;color:#ffc1c7}
-.human-section{margin-top:22px}
-.human-section[hidden]{display:none}
-.decisions{display:grid;gap:10px}
-.decision{border:1px solid #6a5730;background:#282113;border-radius:13px;padding:13px}
-.decision h4{font-size:13px;margin:0 0 5px}
-.decision p{margin:0 0 10px;font-size:13px;line-height:1.5}
-.decision .choices{display:flex;gap:7px;flex-wrap:wrap}
-.new-goal{margin-top:24px;border:1px solid var(--line);border-radius:14px;background:rgba(18,26,46,.82)}
-.new-goal>summary{cursor:pointer;padding:14px 15px;font-weight:800;touch-action:manipulation}
-.goal-wrap{border-top:1px solid var(--line);padding:14px}
-.goal-note{color:var(--muted);font-size:12px;line-height:1.55;margin:0 0 10px}
-.goal-panel{display:grid;grid-template-columns:190px 1fr;gap:9px}
-.select,.textarea{width:100%;border:1px solid var(--line);background:#0c1323;color:var(--text);border-radius:10px;padding:10px 11px;font:inherit}
-.textarea{min-height:100px;resize:vertical;line-height:1.5}
-.goal-status{grid-column:1/-1;color:var(--muted);font-size:12px}
-.goal-actions{display:flex;gap:8px;grid-column:1/-1;justify-content:flex-end;flex-wrap:wrap}
-.goal-preview{margin-top:12px;border:1px solid #405b8d;background:#111c33;border-radius:12px;padding:12px}
-.goal-preview[hidden]{display:none}
-.preview-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.preview-head h3{margin:0;font-size:15px}
-.preview-badge{font-size:10px;font-weight:800;color:#bcd2ff;border:1px solid #42639d;border-radius:999px;padding:4px 7px}
-.preview-intent{margin:10px 0;white-space:pre-wrap;font-size:13px;line-height:1.55}
-.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.preview-box{border-top:1px solid #2e4165;padding-top:8px}
-.preview-box b{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}
-.preview-box span,.preview-box div{font-size:12px;line-height:1.5}
-.preview-list{margin:5px 0 0;padding-left:18px;font-size:12px;line-height:1.6}
-.preview-warning{margin-top:9px;border:1px solid #6d5b2d;background:#2b2413;color:#f6df9e;border-radius:9px;padding:9px;font-size:12px;line-height:1.5}
-.preview-ready{margin-top:9px;border:1px solid #285a42;background:#102a20;color:#b8f2ce;border-radius:9px;padding:9px;font-size:12px;line-height:1.5}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.goal-panel{grid-template-columns:1fr}.goal-status,.goal-actions{grid-column:auto}.top{flex-direction:column}.top-actions{width:100%}.top-actions .button{flex:1}}
-@media(max-width:620px){.preview-grid{grid-template-columns:1fr}.shell{padding:18px 12px calc(50px + env(safe-area-inset-bottom))}.overview{align-items:flex-start;flex-direction:column}.card{padding:14px}.goal-actions{flex-direction:column}.goal-actions .button{width:100%;min-height:46px}}
+:root{--bg:#0b1020;--panel:#121a2e;--line:#2a3858;--text:#eef4ff;--muted:#9baac5;--good:#58d68d;--warn:#f4c95d;--bad:#ff7b8a;--accent:#79a7ff;--shadow:0 14px 36px rgba(0,0,0,.22)}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(circle at 10% 0,#17213a 0,transparent 32%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;-webkit-text-size-adjust:100%}
+.shell{max-width:1080px;margin:0 auto;padding:22px 16px calc(56px + env(safe-area-inset-bottom))}.top{display:flex;gap:16px;justify-content:space-between;align-items:flex-start;margin-bottom:10px}.eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:800}.top h1{margin:5px 0 5px;font-size:clamp(28px,6vw,44px);line-height:1}.sub{font-size:13px;color:var(--muted);line-height:1.5}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.button{appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:#18223b;color:var(--text);padding:9px 12px;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;min-height:40px;touch-action:manipulation}.button:hover,.button:focus-visible{border-color:var(--accent)}.button.primary{background:#1b2d52;border-color:#35558f}.button:disabled{opacity:.5;cursor:not-allowed}
+.overview{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:14px 0 20px;color:var(--muted);font-size:13px}.overview strong{color:var(--text);font-size:14px}.notice{padding:10px 12px;border-radius:10px;border:1px solid #6d5b2d;background:#2b2413;color:#f6df9e;font-size:13px;line-height:1.5;margin:10px 0 18px}.notice[hidden]{display:none}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:linear-gradient(180deg,rgba(24,34,59,.96),rgba(15,23,41,.98));border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow);min-width:0}.card.alert{border-color:#725a2d}.card.failed{border-color:#7b3d48}.card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.card h2{margin:0;font-size:19px}.pill{font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}.pill.ACTIVE{color:#bcd2ff;border-color:#35558f;background:#172b50}.pill.MONITORING{color:#d5c8ff;border-color:#5c4f86;background:#241d40}.pill.COMPLETED{color:#b8f2ce;border-color:#2d6c48;background:#123323}.pill.STALE,.pill.BLOCKED{color:#ffe3a2;border-color:#7b6333;background:#342a12}.pill.STOPPED{color:#ffc1c7;border-color:#7b3d48;background:#35171d}.pill.IDLE,.pill.UNKNOWN{color:#c8d0df}.progress-head{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px;margin:13px 0 6px}.progress{height:6px;background:#090e19;border-radius:999px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#79a7ff,#9d86ff);width:0}.body{display:grid;gap:11px;margin-top:15px}.item{border-top:1px solid #2a3858;padding-top:10px}.item:first-child{border-top:0;padding-top:0}.label{display:block;color:var(--muted);font-size:10px;font-weight:800;margin-bottom:4px}.value{font-size:13px;line-height:1.55}.value strong{font-size:14px}.time{color:var(--muted)}.warning{margin-top:12px;border:1px solid #6d5b2d;background:#2b2413;color:#f6df9e;border-radius:9px;padding:9px 10px;font-size:12px;line-height:1.5}.error{margin-top:12px;border:1px solid #7b3d48;background:#35171d;color:#ffc1c7;border-radius:9px;padding:9px 10px;font-size:12px;line-height:1.5}.more{margin-top:12px;border-top:1px solid #263452;padding-top:9px}.more summary{cursor:pointer;color:var(--muted);font-size:12px;font-weight:700;touch-action:manipulation}.details{display:grid;gap:7px;padding-top:10px;font-size:12px;line-height:1.5}.details b{color:var(--muted);font-weight:700}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}.footer{margin-top:22px;color:var(--muted);font-size:11px;line-height:1.6;text-align:center}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.top{flex-direction:column}.top-actions{width:100%}.top-actions .button{flex:1}}@media(max-width:620px){.shell{padding:18px 12px calc(50px + env(safe-area-inset-bottom))}.overview{align-items:flex-start;flex-direction:column}.card{padding:14px}}
 </style>
 </head>
 <body>
 <main class="shell">
-<header class="top"><div><div class="eyebrow">Autonomous Development Engine</div><h1>Control Center</h1></div><div class="top-actions"><button type="button" class="button primary" id="refreshButton">最新状態を取得</button></div></header>
-
+<header class="top"><div><div class="eyebrow">Autonomous Development Engine</div><h1>ADE Progress</h1><div class="sub">進捗確認専用。指示・再開・新しいGoalはこのチャットから行います。</div></div><div class="top-actions"><button type="button" class="button primary" id="refreshButton">最新状態を取得</button></div></header>
 <div class="overview"><strong id="overviewText">読み込み中...</strong><span id="lastUpdated">—</span></div>
-<div class="notice" id="setupNotice" hidden>Control Planeの設定を確認してください。</div>
-
-<div class="section-title"><h2>Projects</h2></div>
+<div class="notice" id="statusNotice" hidden></div>
 <section class="grid" id="projectGrid"></section>
-
-<section class="human-section" id="humanSection" hidden>
-  <div class="section-title"><h2>Human Action</h2><span class="small">あなたの判断が必要です</span></div>
-  <div class="decisions" id="decisionList"></div>
-</section>
-
-<details class="new-goal" id="goalComposer">
-  <summary>＋ New Goal</summary>
-  <div class="goal-wrap">
-    <p class="goal-note">達成したい結果を書いてください。開始前に変更範囲と成功条件を確認できます。</p>
-    <div class="goal-panel">
-      <select class="select" id="goalProject">
-        <option value="jquants">J-Quants</option>
-        <option value="chu-kei">Chu-kei Insight</option>
-        <option value="jichi">Jichi Insight</option>
-      </select>
-      <textarea class="textarea" id="goalText" maxlength="4000" placeholder="例：既存データを使って業種別PER比較機能を追加し、テストまで完成させる。"></textarea>
-      <div class="goal-status" id="goalStatus">状態を確認しています。</div>
-      <div class="goal-actions">
-        <button type="button" class="button secondary" id="previewGoal">実行前プレビュー</button>
-        <button type="button" class="button primary" id="submitGoal" disabled>このGoalで開始</button>
-      </div>
-    </div>
-    <section class="goal-preview" id="goalPreview" hidden aria-live="polite"></section>
-  </div>
-</details>
+<div class="footer">5分ごとに自動更新します。黄色は停滞・判断待ち、赤は停止・失敗の可能性を示します。</div>
 </main>
 <script>
-const state={data:null,busy:false,actionBusy:false,previewBusy:false,preview:null,previewFingerprint:"",actions:{}};
+const state={data:null,busy:false};
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
-const controlsReady=()=>Boolean(state.data&&state.data.controls_ready);
-const canControl=()=>controlsReady()&&!state.actionBusy;
-const commandLabel=n=>({resume:"再開 / 起動",replan:"再計画",submit_goal:"Goal投入",resolve_decision:"Decision回答"}[n]||n);
-const projectLabel=k=>{const p=(state.data&&state.data.projects||[]).find(x=>x.key===k);return p?p.label:k};
 const CAMPAIGN_SUMMARIES={
   "jquants-production-materialization-001":"J-Quants Research Studioの本番分析基盤を完成させる",
   "chukei-plan-detection-scale-campaign-004":"中期経営計画の一次情報候補を安全に拡大する",
   "jichi-phase15-akita-candidate-campaign-001":"秋田市の非公開レビュー候補データを作成する"
 };
+const ACTIVITY_LABELS={ACTIVE:"稼働中",MONITORING:"監視中",STALE:"停滞の可能性",BLOCKED:"判断待ち",STOPPED:"停止",COMPLETED:"完了",IDLE:"待機",UNKNOWN:"不明"};
 function progress(p){return p.total_count?Math.max(0,Math.min(100,Math.round(p.completed_count/p.total_count*100))):0}
 function firstSentence(text){const s=String(text||"").trim();if(!s)return "Goal未設定";const parts=s.split(/(?<=[。.!?])\s+/);return (parts[0]||s).slice(0,180)}
 function goalHeadline(p){return CAMPAIGN_SUMMARIES[p.campaign_id]||firstSentence(p.goal)}
-function nowText(p){
-  const a=p.next_system_action;
-  if(p.lifecycle==="COMPLETED")return "完了しています。";
-  if(a==="monitor-provider-session")return "実装エージェントの結果を待っています。";
-  if(a==="continue-trusted-execution")return "次の安全な実行ステップを進めています。";
-  if(p.current_task_id)return "現在のタスクを処理しています。";
-  return "次の処理を確認しています。";
-}
-function nextText(p){
-  if(p.lifecycle==="COMPLETED")return "必要ならNew Goalを設定できます。";
-  if((p.open_decisions||[]).length||p.next_human_action)return "Human Actionの対応後に再開します。";
-  if(p.next_system_action==="monitor-provider-session")return "結果確認 → 検証 → 次タスクへ進みます。";
-  return "現在の処理後、ADEが次のタスクを選びます。";
-}
-function operatorText(p){
-  if((p.open_decisions||[]).length)return "判断が必要です。";
-  if(p.next_human_action)return p.next_human_action;
-  if(p.lifecycle==="COMPLETED")return "操作不要。続けたいときだけNew Goalを設定してください。";
-  return "操作不要。ADEに任せてください。";
-}
-function projectIdle(p){return !p||!p.current_task_id}
-function goalFingerprint(){return `${$("goalProject").value}\n${$("goalText").value.trim()}`}
-function invalidatePreview(){state.preview=null;state.previewFingerprint="";$("goalPreview").hidden=true;$("goalPreview").innerHTML="";updateGoalActions()}
-function updateGoalActions(){
-  if(!state.data)return;
-  const key=$("goalProject").value,p=(state.data.projects||[]).find(x=>x.key===key),goal=$("goalText").value.trim(),idle=projectIdle(p),ready=canControl()&&idle&&!state.previewBusy;
-  $("previewGoal").disabled=!ready||goal.length<20;
-  const matching=Boolean(state.preview&&state.previewFingerprint===goalFingerprint());
-  $("submitGoal").disabled=!ready||!matching;
-  $("goalStatus").textContent=idle?"新しいGoalを設定できます。":"現在のGoalが実行中です。完了後に設定できます。";
-}
-function updateOverview(){
-  if(!state.data)return;
-  const projects=state.data.projects||[];
-  const running=projects.filter(p=>p.lifecycle==="RUNNING").length;
-  const human=projects.reduce((n,p)=>n+((p.open_decisions||[]).length)+(p.next_human_action?1:0),0);
-  $("overviewText").textContent=human?`要対応 ${human}件`:`${running}件実行中 ・ 操作不要`;
-  $("setupNotice").hidden=controlsReady();
-  if(!controlsReady())$("setupNotice").textContent="Control Planeの設定を確認してください。状態確認のみ利用できます。";
-}
-function renderPreview(data){
-  const task=data.interpretation.task_range,write=data.trusted_scope.write||[],gates=data.success_gates||[];
-  $("goalPreview").innerHTML=`<div class="preview-head"><h3>実行前プレビュー</h3><span class="preview-badge">まだ開始していません</span></div>
-  <div class="preview-intent"><b>Goal</b><br>${esc(data.interpretation.intent)}</div>
-  <div class="preview-grid">
-    <div class="preview-box"><b>対象Repository</b><span class="mono">${esc(data.interpretation.target_repository)}</span></div>
-    <div class="preview-box"><b>想定タスク</b><span>${esc(task.min)}〜${esc(task.max)}個</span></div>
-    <div class="preview-box"><b>変更できる範囲</b><div class="mono">${write.map(esc).join("<br>")}</div></div>
-    <div class="preview-box"><b>成功条件</b><ul class="preview-list">${gates.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
-  </div>
-  <div class="preview-warning">${esc(data.safety_boundary)}</div>
-  <div class="preview-ready">内容に問題がなければ「このGoalで開始」を押してください。</div>`;
-  $("goalPreview").hidden=false;
-}
-function render(){
-  if(!state.data)return;
-  const projects=state.data.projects||[];
-  updateOverview();
-  const disabled=canControl()?"":" disabled";
-  $("projectGrid").innerHTML=projects.map(p=>{
-    const pct=progress(p),human=(p.open_decisions||[]).length||p.next_human_action,a=state.actions[p.key];
-    return `<article class="card">
-      <div class="card-head"><h3>${esc(p.label)}</h3><span class="pill ${esc(p.lifecycle)}">${esc(p.lifecycle)}</span></div>
-      <div class="progress-row"><span>${p.completed_count}/${p.total_count||"?"} tasks</span><span>${p.total_count?pct+"%":"—"}</span></div>
-      <div class="progress"><i style="width:${pct}%"></i></div>
-      <div class="focus">
-        <div class="focus-item"><span class="focus-label">Goal</span><div class="focus-value"><strong>${esc(goalHeadline(p))}</strong></div></div>
-        <div class="focus-item"><span class="focus-label">現在</span><div class="focus-value">${esc(nowText(p))}</div></div>
-        <div class="focus-item"><span class="focus-label">あなた</span><div class="focus-value ${human?"operator-warn":"operator-ok"}">${esc(operatorText(p))}</div></div>
-      </div>
-      <details class="more"><summary>詳細・操作</summary><div class="more-body">
-        <div class="detail"><b>次:</b> ${esc(nextText(p))}</div>
-        <div class="detail"><b>Task:</b> <span class="mono">${esc(p.current_task_id||"—")}</span></div>
-        <div class="detail"><b>Failures:</b> ${esc(p.failed_count)}</div>
-        <div class="card-actions">
-          <button type="button" class="button project-command" data-project="${esc(p.key)}" data-command="resume"${disabled}>再開 / 起動</button>
-          <button type="button" class="button project-command" data-project="${esc(p.key)}" data-command="replan"${disabled}>再計画</button>
-        </div>
-        ${a?`<div class="action-result ${esc(a.type)}" role="status" aria-live="polite">${esc(a.text)}</div>`:""}
-      </div></details>
-    </article>`;
-  }).join("");
-  const decisions=[];
-  projects.forEach(p=>(p.open_decisions||[]).forEach(d=>decisions.push({...d,project:p.key,label:p.label})));
-  $("humanSection").hidden=decisions.length===0;
-  $("decisionList").innerHTML=decisions.map(d=>`<article class="decision"><h4>${esc(d.label)}</h4><p>${esc(d.question)}</p><div class="choices">${d.options.map(o=>`<button type="button" class="button decision-command" data-project="${esc(d.project)}" data-decision="${esc(d.decision_id)}" data-option="${esc(o)}"${disabled}>${esc(o)}</button>`).join("")}</div></article>`).join("");
-  $("lastUpdated").textContent="更新 "+new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"});
-  updateGoalActions();
-}
-async function loadStatus(){
-  if(state.busy)return;
-  state.busy=true;$("refreshButton").disabled=true;
-  try{
-    const r=await fetch("/api/status",{cache:"no-store"}),data=await r.json();
-    if(!r.ok)throw new Error(data.message||data.error||"status error");
-    state.data=data;render();
-  }catch(e){
-    $("setupNotice").hidden=false;$("setupNotice").textContent="状態取得に失敗しました: "+e.message;
-  }finally{
-    state.busy=false;$("refreshButton").disabled=false;
-  }
-}
-async function command(project,name,payload){
-  if(!controlsReady()){state.actions[project]={text:"Control Planeが未設定です。",type:"error"};render();return}
-  const label=commandLabel(name),target=projectLabel(project);
-  state.actionBusy=true;state.actions[project]={text:`${target} の「${label}」を送信しています…`,type:"warn"};render();
-  try{
-    const r=await fetch("/api/control",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({project,command:name,payload})});
-    let data={};try{data=await r.json()}catch(_e){}
-    if(!r.ok)throw new Error(data.message||data.error||`HTTP ${r.status}`);
-    state.actions[project]={text:`${label} を受け付けました。GitHub Actionsへ送信済みです。`,type:"good"};
-    if(name==="submit_goal")invalidatePreview();
-    setTimeout(loadStatus,3500);
-  }catch(e){
-    state.actions[project]={text:`操作に失敗しました: ${e.message}`,type:"error"};
-  }finally{
-    state.actionBusy=false;render();
-  }
-}
-async function requestGoalPreview(){
-  if(state.previewBusy||!state.data)return;
-  const project=$("goalProject").value,p=(state.data.projects||[]).find(x=>x.key===project),goal=$("goalText").value.trim();
-  if(!projectIdle(p)){alert("このプロジェクトは現在実行中です。完了してから新しいGoalを設定してください。");return}
-  if(goal.length<20){alert("Goalは20文字以上で入力してください");return}
-  state.previewBusy=true;state.preview=null;state.previewFingerprint="";$("goalPreview").hidden=false;$("goalPreview").innerHTML='<div class="small">確認しています...</div>';updateGoalActions();
-  try{
-    const r=await fetch("/api/control",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({project,command:"preview_goal",payload:{goal}})});
-    const data=await r.json();
-    if(!r.ok)throw new Error(data.message||data.error||`HTTP ${r.status}`);
-    state.preview=data;state.previewFingerprint=goalFingerprint();renderPreview(data);
-  }catch(e){
-    state.preview=null;state.previewFingerprint="";$("goalPreview").innerHTML=`<div class="action-result error">プレビューに失敗しました: ${esc(e.message)}</div>`;
-  }finally{
-    state.previewBusy=false;updateGoalActions();
-  }
-}
-$("projectGrid").addEventListener("click",e=>{
-  const b=e.target.closest("button.project-command");
-  if(!b||b.disabled)return;
-  e.preventDefault();command(b.dataset.project,b.dataset.command,{});
-});
-$("decisionList").addEventListener("click",e=>{
-  const b=e.target.closest("button.decision-command");
-  if(!b||b.disabled)return;
-  e.preventDefault();
-  if(confirm(`「${b.dataset.option}」で回答しますか？`))command(b.dataset.project,"resolve_decision",{decision_id:b.dataset.decision,option:b.dataset.option});
-});
-$("goalProject").addEventListener("change",invalidatePreview);
-$("goalText").addEventListener("input",()=>{if(state.previewFingerprint&&state.previewFingerprint!==goalFingerprint())invalidatePreview();else updateGoalActions()});
-$("refreshButton").addEventListener("click",loadStatus);
-$("previewGoal").addEventListener("click",requestGoalPreview);
-$("submitGoal").addEventListener("click",()=>{
-  const project=$("goalProject").value,p=(state.data&&state.data.projects||[]).find(x=>x.key===project),goal=$("goalText").value.trim();
-  if(!projectIdle(p)){alert("このプロジェクトは現在実行中です。完了してから新しいGoalを設定してください。");return}
-  if(!state.preview||state.previewFingerprint!==goalFingerprint()){alert("Goalが変更されています。もう一度実行前プレビューを作成してください。");return}
-  if(confirm("このGoalで自律実行を開始しますか？"))command(project,"submit_goal",{goal});
-});
-loadStatus();
-setInterval(loadStatus,60000);
+function relativeTime(value){if(!value)return "更新時刻を取得できません";const t=new Date(value);if(Number.isNaN(t.getTime()))return "更新時刻を取得できません";const sec=Math.max(0,Math.floor((Date.now()-t.getTime())/1000));if(sec<60)return "たった今";if(sec<3600)return `${Math.floor(sec/60)}分前`;if(sec<86400)return `${Math.floor(sec/3600)}時間前`;return `${Math.floor(sec/86400)}日前`}
+function fullTime(value){if(!value)return "—";const t=new Date(value);return Number.isNaN(t.getTime())?"—":t.toLocaleString("ja-JP")}
+function positionText(p){if(p.activity==="COMPLETED")return "このGoalは完了しています。";if(p.activity==="BLOCKED")return "人間の判断待ちで停止しています。";if(p.activity==="STOPPED")return "失敗を検出して停止しています。";if(p.activity==="STALE")return "実行中の記録ですが、状態更新が止まっています。";if(p.next_system_action==="monitor-provider-session")return "実装エージェントの結果を監視しています。";if(p.next_system_action==="continue-trusted-execution")return "次の実行ステップを進めています。";if(p.current_task_id)return "現在のタスクを処理しています。";return p.activity==="IDLE"?"次のGoalを待っています。":"状態を確認しています。"}
+function taskPosition(p){if(!p.total_count)return "—";if(p.activity==="COMPLETED")return `${p.total_count} / ${p.total_count}`;const n=Math.min(p.total_count,Math.max(1,p.completed_count+1));return `${n} / ${p.total_count}`}
+function renderOverview(projects){const active=projects.filter(p=>["ACTIVE","MONITORING"].includes(p.activity)).length,attention=projects.filter(p=>["STALE","BLOCKED","STOPPED","UNKNOWN"].includes(p.activity)).length,completed=projects.filter(p=>p.activity==="COMPLETED").length;$("overviewText").textContent=`稼働 ${active} ・ 要確認 ${attention} ・ 完了 ${completed}`}
+function render(){if(!state.data)return;const projects=state.data.projects||[];renderOverview(projects);const errors=state.data.errors||[];$("statusNotice").hidden=errors.length===0;if(errors.length)$("statusNotice").textContent="一部プロジェクトの状態取得に失敗しています。";$("projectGrid").innerHTML=projects.map(p=>{const pct=progress(p),activity=p.activity||"UNKNOWN",cardClass=["STALE","BLOCKED"].includes(activity)?"alert":activity==="STOPPED"?"failed":"",run=p.implementation_run||{};return `<article class="card ${cardClass}"><div class="card-head"><h2>${esc(p.label)}</h2><span class="pill ${esc(activity)}">${esc(ACTIVITY_LABELS[activity]||activity)}</span></div><div class="progress-head"><span>Task ${esc(taskPosition(p))}</span><span>${p.total_count?`${pct}%`:`—`}</span></div><div class="progress"><i style="width:${pct}%"></i></div><div class="body"><div class="item"><span class="label">GOAL</span><div class="value"><strong>${esc(goalHeadline(p))}</strong></div></div><div class="item"><span class="label">現在地</span><div class="value">${esc(positionText(p))}</div></div><div class="item"><span class="label">最終変化</span><div class="value time">${esc(relativeTime(p.last_state_change_at))}</div></div></div>${activity==="STALE"?`<div class="warning">6時間以上、ADEの状態更新を確認できていません。チャットで状況確認・再開を指示してください。</div>`:""}${activity==="BLOCKED"?`<div class="warning">人間の判断が必要です。内容はチャットで確認してください。</div>`:""}${activity==="STOPPED"?`<div class="error">失敗を検出しています。チャットで原因確認を指示してください。</div>`:""}<details class="more"><summary>詳細を見る</summary><div class="details"><div><b>完了:</b> ${esc(p.completed_count)} / ${esc(p.total_count||"?")}</div><div><b>Current Task:</b> <span class="mono">${esc(p.current_task_id||"—")}</span></div><div><b>Next:</b> <span class="mono">${esc(p.next_system_action||"—")}</span></div><div><b>Failures:</b> ${esc(p.failed_count)}</div><div><b>State更新:</b> ${esc(fullTime(p.last_state_change_at))}</div><div><b>Workflow:</b> ${esc(run.name||"—")} / ${esc(run.status||"—")}${run.conclusion?` / ${esc(run.conclusion)}`:""}</div></div></details></article>`}).join("");$("lastUpdated").textContent="取得 "+new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"})}
+async function loadStatus(){if(state.busy)return;state.busy=true;$("refreshButton").disabled=true;try{const r=await fetch("/api/status",{cache:"no-store"}),data=await r.json();if(!r.ok)throw new Error(data.message||data.error||"status error");state.data=data;render()}catch(e){$("statusNotice").hidden=false;$("statusNotice").textContent="状態取得に失敗しました: "+e.message}finally{state.busy=false;$("refreshButton").disabled=false}}
+$("refreshButton").addEventListener("click",loadStatus);loadStatus();setInterval(loadStatus,300000);
 </script>
 </body>
 </html>
