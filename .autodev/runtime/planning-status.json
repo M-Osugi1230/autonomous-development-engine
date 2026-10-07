@@ -1,15 +1,15 @@
 {
-  "accepted_plan_fingerprint": "0c551775baf25d8f0df4467120d97dcb90dd7151fc6df42099105346e9745f37",
+  "accepted_plan_fingerprint": "d5ff2773f7fe33fc3190c81987394721fe374567abc6e1389ebe208097bf9a14",
   "attempt": 1,
-  "campaign_id": "jichi-phase15-akita-candidate-campaign-001",
-  "development_memory_context_fingerprint": "b11516a8a473de98d16033003c76eb6e6597b9c7c14385af186cf5095fb96173",
-  "development_memory_record_count": 1,
-  "first_task_id": "jip15akita001-001",
-  "proposal_fingerprint": "6abe6047c0f76478ae37df954893d04ca68dded43a5da79505acaf6e1d6e807f",
+  "campaign_id": "jichi-production-graduation-campaign-001",
+  "development_memory_context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+  "development_memory_record_count": 0,
+  "first_task_id": "jifinish001-001",
+  "proposal_fingerprint": "318f1139e664a7b13b64a42f9b79368e8440bf71e466bbc65a690e30871b0da6",
   "reason": "trusted-plan-accepted",
-  "request_fingerprint": "62545c5cb909ed264effb04b84a4f61fe7ade2083ca60f5094ff295b899eb55f",
-  "request_id": "jichi-phase15-akita-candidate-request-001",
+  "request_fingerprint": "612ff2a50a3f8b96eb082ced55193c9fd12605f52e2abeb7a8d54a802744e8ed",
+  "request_id": "jichi-production-graduation-request-001",
   "schema_version": 1,
   "state": "ACCEPTED",
-  "updated_at": "2026-10-04T16:12:03.046715+00:00"
+  "updated_at": "2026-10-07T12:41:30.517962+00:00"
 }
