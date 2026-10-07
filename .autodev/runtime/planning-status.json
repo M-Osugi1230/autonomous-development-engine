@@ -1,10 +1,10 @@
 {
-  "attempt": 2,
+  "attempt": 3,
   "detail": "cannot activate a new plan while another task is current",
-  "reason": "planner-retryable-failure",
+  "reason": "planner-failure-budget-exhausted",
   "request_fingerprint": "9724ad16eafab9efec25accaeeaaa1b091e53f3a2f4ea09084680f4b497d4989",
   "request_id": "jquants-production-supabase-materialization-request-008",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-10-07T13:04:19.947270+00:00"
+  "state": "HUMAN_WAIT",
+  "updated_at": "2026-10-07T19:08:29.174098+00:00"
 }
