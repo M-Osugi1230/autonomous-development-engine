@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jichi-phase15-akita-candidate-campaign-001",
+  "campaign_id": "jichi-production-graduation-campaign-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-04T16:12:11.971770+00:00",
-  "plan_fingerprint": "0c551775baf25d8f0df4467120d97dcb90dd7151fc6df42099105346e9745f37",
+  "dispatched_at": "2026-10-07T12:41:42.639327+00:00",
+  "plan_fingerprint": "d5ff2773f7fe33fc3190c81987394721fe374567abc6e1389ebe208097bf9a14",
   "run_attempt": "1",
-  "run_id": "37215887966",
+  "run_id": "37622838213",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "ca69d52566b0b709a40fcf7a3db168af518f1bb8",
+  "source_sha": "aaef71992203c51d50d5406eaec6a3769c1d7db9",
   "status": "DISPATCHED",
-  "task_id": "jip15akita001-001"
+  "task_id": "jifinish001-001"
 }
