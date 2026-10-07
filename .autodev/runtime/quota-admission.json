@@ -4,18 +4,18 @@
   ],
   "allowed": true,
   "daily_limit": 15,
-  "observed_at": "2026-10-06T09:24:00.654785+00:00",
+  "observed_at": "2026-10-07T09:46:27.509269+00:00",
   "project_allocation": 6,
   "project_key": "ade-jquants",
-  "project_used": 9,
+  "project_used": 0,
   "purpose": "planner",
-  "reason": "borrowed-unused-allocation",
-  "remaining": 5,
+  "reason": "within-soft-allocation",
+  "remaining": 15,
   "resume_after": null,
   "schema_version": 1,
   "selected_project_keys": [
     "ade-jquants"
   ],
-  "total_used": 10,
+  "total_used": 0,
   "unknown_session_count": 0
 }
