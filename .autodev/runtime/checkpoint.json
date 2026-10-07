@@ -1,7 +1,7 @@
 {
   "attempt": 0,
-  "last_error": null,
-  "last_failure_kind": null,
+  "last_error": "monitor timeout; provider session may still be active",
+  "last_failure_kind": "CYCLE_TIMEOUT",
   "provider_id": "jules",
   "provider_session_id": "4889163550052342262",
   "replan_count": 0,
