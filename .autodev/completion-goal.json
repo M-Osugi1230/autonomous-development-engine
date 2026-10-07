@@ -16,7 +16,7 @@
   ],
   "repository_intelligence_prefixes": [
     "apps",
-    "data",
+    "data/catalog",
     "pipelines",
     "scripts",
     "tests",
