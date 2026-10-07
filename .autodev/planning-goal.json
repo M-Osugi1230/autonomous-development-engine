@@ -17,14 +17,14 @@
     "docs"
   ],
   "repository_intelligence_prefixes": [
-    "operations",
+    "operations/plan-detection",
+    "operations/research-priority",
+    "operations/quality-rebase/phase2/reviews",
+    "operations/patches",
+    "operations/source-research",
     "scripts",
-    "site",
-    "tests",
-    "schemas",
-    "reports",
-    "releases",
-    "docs"
+    "docs",
+    "site"
   ],
   "execution_phase": "completion-runner",
   "min_tasks": 2,
