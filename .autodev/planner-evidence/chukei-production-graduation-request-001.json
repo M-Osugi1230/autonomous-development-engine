@@ -1,0 +1,225 @@
+{
+  "accepted_plan_fingerprint": "e3cd420d12258242d507ed459ac26472f30528b3f9c8b16a10e69910870d3f55",
+  "campaign_id": "chukei-production-graduation-campaign-001",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "b17c0b36063d899d12e7e0e6008b08517ee80a2d37228938ab4fd13c54ece248",
+    "current_source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
+    "execution_authority": false,
+    "extracted_record_count": 2,
+    "memory_fingerprints": [
+      "8040208884f2d09feac0e2f9dcf9a02e933c083e5ca98f948c0429d35d981b9c"
+    ],
+    "memory_ids": [
+      "mem-5f69fe2d930f6413528f9441"
+    ],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/chu-kei",
+    "resolution_fingerprint": "2baecce0eb9db2eec89043f784bfc82b563e79166e5f847e12fc604036f7596d",
+    "retrieval_fingerprint": "8c25d546b5a177da30c539f0d731f42aea6b0ed5cd16e3b8742735a1b656e070",
+    "retrieved_record_count": 1,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "c96a4a4ee9c05ca6f25b52d5640c1e3633dc47a23440c5df77d5cfb834250dd6",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": true
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "0d4f26c3ea4a112f448ace51a6d92933faaa1ff5edad25a5be96e777322b315f",
+  "proposal": {
+    "goal": "Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "- Enhance candidate batch validation logic to preserve human review flags and handle edge cases safely.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/validate_plan_detection_candidates_v1.mjs"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "- Enhance candidate batch validation logic to preserve human review flags and handle edge cases safely.",
+        "title": "`scripts/validate_plan_detection_candidates_v1.mjs`"
+      },
+      {
+        "acceptance": [
+          "- Update registry construction logic to safely reduce unresolved plan detection statuses using official evidence.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/build_plan_detection_registry_v1.mjs"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "- Update registry construction logic to safely reduce unresolved plan detection statuses using official evidence.",
+        "title": "`scripts/build_plan_detection_registry_v1.mjs`"
+      },
+      {
+        "acceptance": [
+          "- Create unit tests covering plan detection candidate validation and registry build logic.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_plan_detection_validation_v1.js"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [
+          "tests/test_plan_detection_validation_v1.js"
+        ],
+        "outcome": "- Create unit tests covering plan detection candidate validation and registry build logic.",
+        "title": "`tests/test_plan_detection_validation_v1.js`"
+      },
+      {
+        "acceptance": [
+          "- Refine bundle normalization to align site dataset with canonical company records.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/normalize_bundle_contract_v1.mjs"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "- Refine bundle normalization to align site dataset with canonical company records.",
+        "title": "`scripts/normalize_bundle_contract_v1.mjs`"
+      },
+      {
+        "acceptance": [
+          "- Update live site synchronization checks to ensure public site data consistency.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/validate_live_site_sync_v1.mjs"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [],
+        "outcome": "- Update live site synchronization checks to ensure public site data consistency.",
+        "title": "`scripts/validate_live_site_sync_v1.mjs`"
+      },
+      {
+        "acceptance": [
+          "- Harden quality pipeline runner to handle resumable execution and quality debt budget validations.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/run_quality_pipeline_v43.mjs"
+        ],
+        "depends_on": [
+          "jules-step-005"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-006",
+        "new_paths": [],
+        "outcome": "- Harden quality pipeline runner to handle resumable execution and quality debt budget validations.",
+        "title": "`scripts/run_quality_pipeline_v43.mjs`"
+      },
+      {
+        "acceptance": [
+          "- Update master quality gate validator to ensure full compliance across all quality metrics.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/validate_quality_v43.mjs"
+        ],
+        "depends_on": [
+          "jules-step-006"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-007",
+        "new_paths": [],
+        "outcome": "- Update master quality gate validator to ensure full compliance across all quality metrics.",
+        "title": "`scripts/validate_quality_v43.mjs`"
+      }
+    ]
+  },
+  "proposal_fingerprint": "fcdb3faaa80d6f9ede6d4902204928b8332013c05b4d7b44a9f2124aa73f55c4",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 7,
+  "provider_plan_steps_sha256": "cbcccfaa29ca5c3f0b076aa210cebcbc5489ad186597721e3a18193e89215b62",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "f044836e1661ff4ee5fe7ca23da39f9f4f0f166195d89952458c9a689356fe96",
+  "repository_context_fingerprint": "485e97d705509979822f86fe490a28fef861cc40611fe5469a1a37335510f286",
+  "repository_impact_analysis_fingerprint": "f1045a00ca8c0630bbd1d5769ab7e9905e67e59674d0578d1ceb580ff40bf0c1",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "3f5a53be890bb6650004dd71a47ed8e22cb4119f9ad15e5bde3c4ade8ae61a80",
+  "repository_source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
+  "request": {
+    "allowed_path_prefixes": [
+      "operations",
+      "scripts",
+      "site",
+      "tests",
+      "schemas",
+      "reports",
+      "releases",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "chukei-production-graduation-campaign-001",
+    "execution_phase": "completion-runner",
+    "goal": "Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
+    "id_prefix": "ckfinish001",
+    "min_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "operations/plan-detection",
+      "operations/research-priority",
+      "operations/quality-rebase/phase2/reviews",
+      "operations/patches",
+      "operations/source-research",
+      "scripts",
+      "docs",
+      "site"
+    ],
+    "request_id": "chukei-production-graduation-request-001",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/chu-kei"
+  },
+  "request_fingerprint": "69e07382157894574b192ba1750649caff44ca612cf5178dfee39d9ceccd9d40",
+  "schema_version": 1,
+  "task_ids": [
+    "ckfinish001-001",
+    "ckfinish001-002",
+    "ckfinish001-003",
+    "ckfinish001-004",
+    "ckfinish001-005",
+    "ckfinish001-006",
+    "ckfinish001-007"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 37640786808
+}
