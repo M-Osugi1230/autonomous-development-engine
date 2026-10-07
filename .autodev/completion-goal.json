@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "project_key": "jichi-insight",
+  "request_prefix": "jifinish",
+  "goal": "Bring Jichi Insight to production graduation as a nationwide municipality insight platform. Continue autonomous, evidence-grounded expansion from the current Phase 15 state through full intended municipality coverage, canonical review/publication readiness, pipeline hardening, public-product alignment, and final runtime verification without collapsing fiscal/document/version distinctions or inventing unsupported policy claims.",
+  "target_repository": "M-Osugi1230/jichi-insight",
+  "base_branch": "main",
+  "allowed_path_prefixes": [
+    "apps",
+    "data",
+    "pipelines",
+    "scripts",
+    "tests",
+    "schemas",
+    "docs"
+  ],
+  "repository_intelligence_prefixes": [
+    "apps",
+    "data",
+    "pipelines",
+    "scripts",
+    "tests",
+    "schemas",
+    "docs"
+  ],
+  "graduation_criteria": [
+    "The intended nationwide municipality universe is represented in the canonical coverage model, with every in-scope municipality either backed by a valid evidence package/state or explicitly tracked as unresolved rather than silently omitted.",
+    "Municipality evidence preserves official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, source precision, provenance, and deferred-depth semantics; unpublished facts, causal claims, unverified comparisons, and score-like judgments are never invented.",
+    "Candidate generation, validation, review staging, canonical promotion, and public-data workflows are deterministic, bounded, resumable, and free of known machine-resolvable blockers while preserving explicit human-only review boundaries where policy requires them.",
+    "The public Jichi Insight product is aligned with the current canonical nationwide dataset and its core browse/search/detail behavior passes repository and production/runtime smoke checks.",
+    "Repository CI, regression suites, data-quality audits, and final runtime verification are green with no unresolved implementation blocker; any true human-only publication/review gate is surfaced explicitly rather than bypassed."
+  ],
+  "completion_marker_path": "docs/ADE_COMPLETION.json",
+  "min_tasks": 2,
+  "max_tasks": 8
+}
