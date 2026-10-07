@@ -1,13 +1,13 @@
 {
-  "campaign_id": "chukei-plan-detection-scale-campaign-004",
+  "campaign_id": "chukei-production-graduation-campaign-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-04T16:12:08.730008+00:00",
-  "plan_fingerprint": "2efc10ed78cc8d05ee181cf630c7f7c2bc2e2e85e6f321ac83105cb43fbe0526",
+  "dispatched_at": "2026-10-07T15:01:57.784174+00:00",
+  "plan_fingerprint": "e3cd420d12258242d507ed459ac26472f30528b3f9c8b16a10e69910870d3f55",
   "run_attempt": "1",
-  "run_id": "37215882694",
+  "run_id": "37641637548",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "ca69d52566b0b709a40fcf7a3db168af518f1bb8",
+  "source_sha": "92f3e2ff1eb7c0014c9ff50777fedd1ac32ebece",
   "status": "DISPATCHED",
-  "task_id": "ckpd004-001"
+  "task_id": "ckfinish001-001"
 }
