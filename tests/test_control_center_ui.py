@@ -38,6 +38,27 @@ def test_project_action_feedback_is_persistent_and_local_to_card() -> None:
     assert 'aria-live="polite"' in HTML
 
 
+def test_running_projects_are_explained_in_operator_language() -> None:
+    assert "現在のゴール" in HTML
+    assert "今やっていること" in HTML
+    assert "次に起きること" in HTML
+    assert "あなたの操作" in HTML
+    assert "実装エージェントの実行結果を監視しています。" in HTML
+    assert "技術詳細を見る" in HTML
+    assert "Raw Goal" in HTML
+
+
+def test_new_goal_explains_scope_examples_and_idle_gate() -> None:
+    assert "New Goalでできること" in HTML
+    assert "変更できる範囲" in HTML
+    assert "最大4,000文字" in HTML
+    assert "PROJECT_META" in HTML
+    assert "example-chip" in HTML
+    assert "実行中のGoalを上書きしない安全設計です。" in HTML
+    assert '$("submitGoal").disabled=!canControl()||!idle' in HTML
+    assert "projectIdle(p)" in HTML
+
+
 def test_browser_never_receives_github_token() -> None:
     assert "GitHubトークンはサーバー側だけに保持され、ブラウザには配布しません。" in HTML
     assert "ADE_GITHUB_TOKEN" not in HTML
