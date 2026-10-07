@@ -31,10 +31,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout project controller
+      - name: Checkout trusted controller from main
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}
+          ref: main
+          fetch-depth: 1
+
+      - name: Load project state from control branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONTROL_REF="${{ github.event.client_payload.control_ref || github.ref_name || 'main' }}"
+          if [ "$CONTROL_REF" != "main" ]; then
+            git fetch --depth=1 origin "$CONTROL_REF"
+            git checkout FETCH_HEAD -- .autodev
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -72,10 +83,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout project controller
+      - name: Checkout trusted controller from main
         uses: actions/checkout@v4
         with:
-          ref: ${{ matrix.control_ref }}
+          ref: main
+          fetch-depth: 1
+
+      - name: Load project state from control branch
+        if: matrix.control_ref != 'main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "${{ matrix.control_ref }}"
+          git checkout FETCH_HEAD -- .autodev
 
       - name: Set up Python
         uses: actions/setup-python@v5
