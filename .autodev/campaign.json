@@ -1,14 +1,16 @@
 {
-  "campaign_id": "chukei-plan-detection-scale-campaign-004",
-  "completed_task_ids": [
-    "ckpd004-001",
-    "ckpd004-002"
-  ],
-  "goal": "Expand Chu-kei Universe-first Plan Detection with 2-6 bounded tasks, prioritizing company-count coverage over deep-detail completeness. PR #246 / ade-batch-001 is merged. For each task select about 3 highest-priority not_checked companies from the current research-priority and Plan Detection registry/queue, excluding every code already present under operations/plan-detection/candidates and specifically 130A, 135A, 137A. Each task must create exactly one new unique batch JSON under operations/plan-detection/candidates/, beginning with ade-batch-002. Because each batch path does not yet exist, the planner MUST declare the exact new batch JSON path in that task's new_paths as well as allowed_paths; never reference a non-existent batch path only as allowed_paths. Use official or first-party primary sources only and preserve company/source/document identity, publication date, plan/version/period/fiscal semantics, currentness boundaries, and provenance. Never infer no_formal_plan from missing evidence or convert forecasts, visions, growth strategies, or policy statements into a formal medium-term plan without explicit evidence. Keep every candidate needs_review/pending, automatic promotion disabled, publication ineligible, and final registry mutation forbidden. Do not change registry/queue/overrides, public frontend data, human-review or Deep Verification decisions, production promotion, rankings, or evaluative claims. Run the existing Plan Detection candidate validator and npm run quality:v43 before every PR. Success is green bounded PRs expanding reusable L1 evidence while published Plan Detection state remains unchanged.",
+  "campaign_id": "chukei-production-graduation-campaign-001",
+  "completed_task_ids": [],
+  "goal": "Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
   "schema_version": 1,
-  "status": "COMPLETED",
+  "status": "RUNNING",
   "task_ids": [
-    "ckpd004-001",
-    "ckpd004-002"
+    "ckfinish001-001",
+    "ckfinish001-002",
+    "ckfinish001-003",
+    "ckfinish001-004",
+    "ckfinish001-005",
+    "ckfinish001-006",
+    "ckfinish001-007"
   ]
 }
