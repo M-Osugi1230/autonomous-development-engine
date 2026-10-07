@@ -9,6 +9,7 @@ on:
       - ade-chu-kei
     paths:
       - ".autodev/planning-goal.json"
+      - ".autodev/completion-goal.json"
   repository_dispatch:
     types:
       - ade_planner_retry
@@ -47,7 +48,7 @@ jobs:
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADE_TARGET_GITHUB_TOKEN: ${{ secrets.ADE_TARGET_GITHUB_TOKEN }}
-        run: python .github/trusted/autonomous_planner_cycle.py
+        run: python .github/trusted/completion_planner_cycle.py
 
       - name: Upload planner decision evidence
         if: always()
