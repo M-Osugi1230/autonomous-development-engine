@@ -1,11 +1,11 @@
 {
   "attempt": 0,
-  "last_error": "monitor timeout; provider session may still be active",
-  "last_failure_kind": "CYCLE_TIMEOUT",
+  "last_error": null,
+  "last_failure_kind": null,
   "provider_id": "jules",
   "provider_session_id": "4889163550052342262",
   "replan_count": 0,
   "resume_after": null,
-  "state": "RUNNING",
+  "state": "COMPLETED",
   "task_id": "ckfinish001-002"
 }
