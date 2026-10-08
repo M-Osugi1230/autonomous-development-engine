@@ -1,7 +1,8 @@
 {
   "campaign_id": "chukei-production-graduation-campaign-001",
   "completed_task_ids": [
-    "ckfinish001-001"
+    "ckfinish001-001",
+    "ckfinish001-002"
   ],
   "goal": "Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
   "schema_version": 1,
