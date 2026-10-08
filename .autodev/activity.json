@@ -251,6 +251,13 @@
       "occurred_at": "2026-10-08T06:22:05.561039+00:00",
       "summary": "Merged Jules PR #250",
       "task_id": "ckfinish001-002"
+    },
+    {
+      "event_id": "pr-merged-251-b0f5a48f5fcf",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-10-08T19:40:49.948812+00:00",
+      "summary": "Merged Jules PR #251",
+      "task_id": "ckfinish001-003"
     }
   ],
   "schema_version": 1
