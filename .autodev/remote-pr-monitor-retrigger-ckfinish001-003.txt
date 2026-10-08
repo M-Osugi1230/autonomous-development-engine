@@ -1,0 +1,2 @@
+Retrigger ADE Remote PR Monitor after verified merge of Chu-kei PR #251 for task ckfinish001-003.
+No state, evidence, review, publication, promotion, or quality gate is modified by this marker.
