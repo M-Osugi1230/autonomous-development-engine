@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "project_key": "jquants-research-studio",
-  "request_prefix": "jqfinish",
-  "goal": "Bring J-Quants Research Studio to production graduation. Prefer completing, integrating, validating, and operating the existing research capabilities over adding unrelated data categories. Continue through live Supabase materialization, Research Workspace/API integration, bounded historical backfill and refresh, operational hardening, and final runtime verification.",
+  "request_prefix": "jqcore",
+  "goal": "Bring only the three core J-Quants Research Studio workflows to production graduation before adding any optional research features: (1) discover Japanese equities from current production data through search and the existing HOME discovery sections/filters, (2) open a company and reliably inspect current company identity, latest price, latest earnings, quarterly/financial history, valuation and yield information, and (3) compare multiple companies side by side using the same canonical current data sources. Prioritize correctness, freshness, data coverage, navigation, mobile usability, and end-to-end reliability over feature breadth. Unify or reconcile the currently split data paths so discovery, detail, and compare do not silently mix a stale company snapshot with newer market data. Deep health must detect material freshness divergence instead of reporting healthy merely because old data exists. Refresh/materialization must remain bounded, incremental, idempotent, resumable, provenance-aware, and preserve J-Quants/EDINET quota reserves and fail-closed behavior. Do not add or further develop forward-return outcomes, benchmark-relative excess returns, backtests, factor research, signal validation, news sentiment, activist/shareholder monitoring, broad IR text analysis, or large technical-indicator sets. Existing unused outcome code may remain dormant; do not spend time deleting it unless it blocks the core workflows. Batch Vercel production release at a meaningful completion checkpoint rather than deploying every small change.",
   "target_repository": "M-Osugi1230/jquants-research-studio",
   "base_branch": "main",
   "allowed_path_prefixes": [
@@ -24,11 +24,12 @@
     "docs"
   ],
   "graduation_criteria": [
-    "Priority research outputs are materialized in live Supabase production models, including structurally separate 1/5/20/60 trading-day forward and benchmark-relative excess outcomes and evidence-backed shareholder-benefit/total-yield fields.",
-    "Research Workspace/API/search/compare surfaces consume the production models safely, with provenance and clear labeling that ex-post outcomes are not point-in-time features.",
-    "Backfill and ongoing refresh are bounded, incremental, idempotent, resumable, indexed, provenance-aware, and preserve J-Quants/EDINET quota reserves and fail-closed behavior.",
-    "Coverage, null-tail, benchmark alignment, staleness, idempotency, and point-in-time leakage audits are green and repository CI is green.",
-    "A final live runtime verification of the production read path is green with no unresolved implementation blocker; any true credential or externally consequential human-only boundary is surfaced explicitly rather than bypassed."
+    "Discovery works end to end against production data: code/name search and the existing HOME discovery sections return real listed companies, expose source/as-of freshness, and do not depend on a materially stale snapshot when newer canonical data exists.",
+    "Company detail works end to end for representative major, mid-cap, and smaller listed companies: identity, current price, latest available earnings, quarterly/financial history, valuation/yield fields and source dates are coherent; missing values are explicit rather than silently substituted; relevant history is usable for practical research.",
+    "Company compare works end to end for 2-8 securities using the same canonical sources as discovery/detail, with coherent company identity, latest earnings, price, financial/valuation/yield metrics, explicit missing/stale states, and working navigation to company detail on desktop and mobile.",
+    "Production data freshness and coverage are operationally enforced: refresh jobs are bounded and quota-safe; stale-source divergence is visible and causes deep-health/audit failure when beyond the accepted trading-day lag; representative regression/smoke tests prevent discovery, detail, and compare from drifting onto inconsistent data vintages.",
+    "Repository CI is green and a final live production verification proves the three workflows work against the Supabase-backed production read path. No completion credit is awarded for forward-return, excess-return, backtest, or factor-research work.",
+    "A single intentional Vercel production release is made at the completion checkpoint after CI and live-read verification, unless deployment quota or a true external boundary requires deferral."
   ],
   "completion_marker_path": "docs/ADE_COMPLETION.json",
   "min_tasks": 2,
