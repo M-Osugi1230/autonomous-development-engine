@@ -4,7 +4,7 @@
     {
       "decision_id": null,
       "depends_on": [],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
@@ -20,7 +20,7 @@
       "depends_on": [
         "jqcore001-001"
       ],
-      "status": "PENDING",
+      "status": "RUNNING",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
