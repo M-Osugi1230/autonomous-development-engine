@@ -1,9 +1,11 @@
 {
   "campaign_id": "jquants-production-materialization-001",
-  "completed_task_ids": [],
+  "completed_task_ids": [
+    "jqmat001-001"
+  ],
   "goal": "Complete Production Feature Materialization for J-Quants Research Studio without adding broad new data categories. Materialize the already-implemented 1/5/20/60 trading-day forward returns and benchmark-relative excess returns from stored jq_market_price_daily data into a production research outcome model. Keep ex-post outcomes structurally separate from point-in-time features so they cannot be used as information available at the observation date. Use adjusted-price semantics, deterministic session alignment, null values when future sessions are insufficient, and zero new external calls for this calculation. Make schema and materialization idempotent, incremental, resumable, provenance-aware, and suitable for backfill plus ongoing refresh. Connect existing shareholder-benefit normalization and total-yield logic to the production jq_market_yield publication/backfill path so investable capital, annual benefit value, benefit yield, and dividend-plus-benefit total yield are populated only where source evidence supports them; preserve unknown states and do not invent values. Expose these results through existing Research Workspace/API/metric/search/compare surfaces where useful, clearly labeling forward/excess returns as historical outcomes. Add coverage, null, staleness, benchmark-alignment, and PIT-leakage tests/audits. Preserve current EDINET/J-Quants quota limits, request reserves, fail-closed behavior, atomic publication, idempotency, security lifecycle semantics, and CI. Do not introduce news sentiment, broad IR text analysis, activist/shareholder monitoring, large technical-indicator sets, or unbounded per-security fetching. Success means stored production data can be backfilled and incrementally refreshed for outcomes and total yield, the workspace can safely consume it, and tests prove no look-ahead leakage while enabling direct validation of whether earnings/valuation/yield signals were followed by future excess returns.",
   "schema_version": 1,
-  "status": "SUPERSEDED",
+  "status": "RUNNING",
   "task_ids": [
     "jqmat001-001",
     "jqmat001-002",
