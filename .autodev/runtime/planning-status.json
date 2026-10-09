@@ -1,15 +1,32 @@
 {
-  "accepted_plan_fingerprint": "d5ff2773f7fe33fc3190c81987394721fe374567abc6e1389ebe208097bf9a14",
-  "attempt": 1,
-  "campaign_id": "jichi-production-graduation-campaign-001",
-  "development_memory_context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
-  "development_memory_record_count": 0,
-  "first_task_id": "jifinish001-001",
-  "proposal_fingerprint": "318f1139e664a7b13b64a42f9b79368e8440bf71e466bbc65a690e30871b0da6",
-  "reason": "trusted-plan-accepted",
-  "request_fingerprint": "612ff2a50a3f8b96eb082ced55193c9fd12605f52e2abeb7a8d54a802744e8ed",
-  "request_id": "jichi-production-graduation-request-001",
+  "attempt": 0,
+  "detail": "quota-scheduler: project-soft-allocation-protected",
+  "quota_admission": {
+    "active_project_keys": [
+      "ade-chu-kei",
+      "ade-jichi-insight",
+      "ade-jquants"
+    ],
+    "allowed": false,
+    "daily_limit": 15,
+    "project_allocation": 4,
+    "project_key": "ade-jichi-insight",
+    "project_used": 4,
+    "reason": "project-soft-allocation-protected",
+    "remaining": 2,
+    "resume_after": "2026-10-10T21:35:50.907753+00:00",
+    "schema_version": 1,
+    "selected_project_keys": [
+      "ade-chu-kei"
+    ],
+    "total_used": 13,
+    "unknown_session_count": 0
+  },
+  "reason": "planner-provider-capacity",
+  "request_fingerprint": "f79d70d73bdcab560539b0ab67b96fd35cbb84c166b29960923a304e870a7974",
+  "request_id": "jifinish-request-82-75a058fd17",
+  "resume_after": "2026-10-10T21:35:50.907753+00:00",
   "schema_version": 1,
-  "state": "ACCEPTED",
-  "updated_at": "2026-10-07T12:41:30.517962+00:00"
+  "state": "PAUSED_QUOTA",
+  "updated_at": "2026-10-09T23:30:13.396384+00:00"
 }
