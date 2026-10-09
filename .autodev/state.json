@@ -113,8 +113,7 @@
     },
     "milestone": "v1.9-graduated",
     "next_required_human_action": null,
-    "next_system_action": "resume-after-provider-quota",
-    "pause_reason": "provider-capacity",
+    "next_system_action": "monitor-provider-session",
     "phase": "completion-runner",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -150,7 +149,6 @@
     "repository_intelligence_relationship_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
     "repository_intelligence_snapshot_fingerprint": "3f5a53be890bb6650004dd71a47ed8e22cb4119f9ad15e5bde3c4ade8ae61a80",
     "repository_intelligence_source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
-    "resume_after": "2026-10-09T13:14:49.430696+00:00",
     "runtime_verification_id": "rv-8eaf165959649d9f5ba4621549e96ccd070788a3",
     "runtime_verification_source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
     "scheduler": "dag",
@@ -318,6 +316,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "PAUSED_QUOTA",
-  "updated_at": "2026-10-09T03:18:29.527911+00:00"
+  "status": "RUNNING",
+  "updated_at": "2026-10-09T16:40:14.067192+00:00"
 }
