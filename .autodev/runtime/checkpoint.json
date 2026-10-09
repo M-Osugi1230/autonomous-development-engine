@@ -3,9 +3,9 @@
   "last_error": null,
   "last_failure_kind": null,
   "provider_id": "jules",
-  "provider_session_id": "4982162460839780415",
+  "provider_session_id": "16223100897312332922",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "jqcore001-001"
+  "state": "RUNNING",
+  "task_id": "jqcore001-002"
 }
