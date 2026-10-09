@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jquants-production-materialization-001",
+  "campaign_id": "jquants-core-workflows-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-05T22:45:06.070135+00:00",
-  "plan_fingerprint": "227964ac09e26da37403681477f7b9b2d1f777f6601d7c570644af3a64ae5299",
+  "dispatched_at": "2026-10-09T22:14:30.994340+00:00",
+  "plan_fingerprint": "0effc07cc3a00b2ac6f7b4173cc39adcdb460d3c2df89140e8e11904422cdacf",
   "run_attempt": "1",
-  "run_id": "37384430982",
+  "run_id": "37998113014",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "2250d79e9011928f57ba14a81574c7ab4892627b",
+  "source_sha": "cf0b7901f89c564e4fa76a41bcdc7f3dd7a9d3d4",
   "status": "DISPATCHED",
-  "task_id": "jqmat001-001"
+  "task_id": "jqcore001-001"
 }
