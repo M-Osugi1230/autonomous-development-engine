@@ -1,10 +1,10 @@
 {
   "attempt": 0,
-  "last_error": "no eligible provider is currently available",
-  "last_failure_kind": "PROVIDER_QUOTA",
+  "last_error": "project state current_task_id 'jqcore001-003' does not match 'jqcore001-004'",
+  "last_failure_kind": "PROVIDER_ERROR",
   "provider_session_id": null,
   "replan_count": 0,
-  "resume_after": "2026-10-10T21:36:07.103538+00:00",
-  "state": "PAUSED_QUOTA",
+  "resume_after": null,
+  "state": "FAILED",
   "task_id": "jqcore001-004"
 }
