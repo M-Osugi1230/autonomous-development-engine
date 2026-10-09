@@ -6,11 +6,12 @@
     "ckfinish001-003",
     "ckfinish001-004",
     "ckfinish001-005",
-    "ckfinish001-006"
+    "ckfinish001-006",
+    "ckfinish001-007"
   ],
   "goal": "Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
   "schema_version": 1,
-  "status": "RUNNING",
+  "status": "COMPLETED",
   "task_ids": [
     "ckfinish001-001",
     "ckfinish001-002",
