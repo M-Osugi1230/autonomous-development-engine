@@ -3,7 +3,8 @@
   "completed_task_ids": [
     "jifinish001-001",
     "jifinish001-002",
-    "jifinish001-003"
+    "jifinish001-003",
+    "jifinish001-004"
   ],
   "goal": "Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
   "schema_version": 1,
