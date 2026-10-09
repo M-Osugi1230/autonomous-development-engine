@@ -1,0 +1,197 @@
+{
+  "accepted_plan_fingerprint": "0effc07cc3a00b2ac6f7b4173cc39adcdb460d3c2df89140e8e11904422cdacf",
+  "campaign_id": "jquants-core-workflows-001",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "c26ce52b59ad09ae12fa65bcb6f6e78da7c2fec6d2b30c4cf9505787424827c5",
+    "current_source_sha": "c8c095533a3718ffad893b8d2358c21ee0569680",
+    "execution_authority": false,
+    "extracted_record_count": 14,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jquants-research-studio",
+    "resolution_fingerprint": "cbdae69e997e75686d203a0868b512cbe71dadc8131441b870a8aca110c5696f",
+    "retrieval_fingerprint": "3a262c9142c71fd14c1a72cf143141f7dbe2c9833d9912051d4db033fc53a061",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "7d2630b872b8693665a457e67b1629247c2ce1920e80f0c3819497556ee94359",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "64124ded4d7f3b49cca3b0c0e8b65200d1dd261c1eb726b60144bb799b8d0899",
+  "proposal": {
+    "goal": "Bring only the three core J-Quants Research Studio workflows to production graduation before adding optional research features: (1) equity discovery through code/name search and the existing HOME discovery sections using current production data, (2) company detail research with coherent current identity, latest price, latest available earnings, quarterly/financial history, valuation and yield information, and explicit source/as-of dates, and (3) multi-company comparison using the same canonical current data sources as discovery and detail. Fix baseline CI defects that block these workflows. Reconcile the currently split data paths so stale company snapshots cannot silently coexist with newer market data. Enforce production freshness and coverage with deep-health/audit checks, bounded quota-safe incremental refresh, explicit missing/stale states, and representative end-to-end tests for major, mid-cap and smaller listed companies. Prioritize correctness, freshness, coverage, navigation and mobile usability over feature breadth. Do not add or further develop forward-return outcomes, benchmark-relative excess returns, backtests, factor research, signal validation, news sentiment, activist/shareholder monitoring, broad IR text analysis, or large technical-indicator sets. Existing dormant outcome code may remain if it does not block the three core workflows. Batch Vercel production release at a meaningful completion checkpoint rather than deploying every small change. Planner scope note: inspect the target repository before classifying paths; existing files such as tests/test_company_api.py must be treated as modifications rather than declared as new files, and proposed tasks must respect the repository-intelligence evidence about which paths already exist.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Reconcile current market data logic in `engine/marketdata/supabase_current.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/marketdata/supabase_current.py"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Reconcile current market data logic in `engine/marketdata/supabase_current.py`.",
+        "title": "Reconcile current market data logic in `engine/marketdata/supabase_current.py`."
+      },
+      {
+        "acceptance": [
+          "Align company snapshot data integration in `engine/company/snapshot.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/company/snapshot.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "Align company snapshot data integration in `engine/company/snapshot.py`.",
+        "title": "Align company snapshot data integration in `engine/company/snapshot.py`."
+      },
+      {
+        "acceptance": [
+          "Update equity discovery search logic in `engine/company/discovery.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/company/discovery.py"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [],
+        "outcome": "Update equity discovery search logic in `engine/company/discovery.py`.",
+        "title": "Update equity discovery search logic in `engine/company/discovery.py`."
+      },
+      {
+        "acceptance": [
+          "Update company and discovery API handlers in `apps/api/company.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "apps/api/company.py"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "Update company and discovery API handlers in `apps/api/company.py`.",
+        "title": "Update company and discovery API handlers in `apps/api/company.py`."
+      },
+      {
+        "acceptance": [
+          "Implement coherent company access and comparison data methods in `engine/company/access.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/company/access.py"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [],
+        "outcome": "Implement coherent company access and comparison data methods in `engine/company/access.py`.",
+        "title": "Implement coherent company access and comparison data methods in `engine/company/access.py`."
+      },
+      {
+        "acceptance": [
+          "Enforce data freshness and deep health audits in `engine/quality/snapshot_quality.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "engine/quality/snapshot_quality.py"
+        ],
+        "depends_on": [
+          "jules-step-005"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-006",
+        "new_paths": [],
+        "outcome": "Enforce data freshness and deep health audits in `engine/quality/snapshot_quality.py`.",
+        "title": "Enforce data freshness and deep health audits in `engine/quality/snapshot_quality.py`."
+      }
+    ]
+  },
+  "proposal_fingerprint": "785c12200597f891033e04bf19fe9a15d196d7f296282821315d11dc8ceb5df5",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 6,
+  "provider_plan_steps_sha256": "5e756c8177e6a403f04cc226d1256208d2feca7a28ed530e6ba3b77a4eceaa8a",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "f6e9dfc827ef455f6d61388e06448b9452b753c119096250c09e0bd32008756f",
+  "repository_context_fingerprint": "813ec46fa03b7ece186ceae0757d9aa2b0c852a87ea5cd5ca230d62f56469990",
+  "repository_impact_analysis_fingerprint": "77b2f0ec92a56b274ce448dde128b3a29d64fd86133e8a61a5a86de62264304e",
+  "repository_relationship_graph_fingerprint": "f653bbd683ec97c83cd020afab8241fb93305ac6446f6d46313e0fa4691cb730",
+  "repository_snapshot_fingerprint": "e10dff733c362addf90aa4fe5a6e58196f77dacdd8d8ef1eb751564b1469372d",
+  "repository_source_sha": "c8c095533a3718ffad893b8d2358c21ee0569680",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "engine",
+      "providers",
+      "scripts",
+      "supabase",
+      "tests"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jquants-core-workflows-001",
+    "execution_phase": "autonomous-development",
+    "goal": "Bring only the three core J-Quants Research Studio workflows to production graduation before adding optional research features: (1) equity discovery through code/name search and the existing HOME discovery sections using current production data, (2) company detail research with coherent current identity, latest price, latest available earnings, quarterly/financial history, valuation and yield information, and explicit source/as-of dates, and (3) multi-company comparison using the same canonical current data sources as discovery and detail. Fix baseline CI defects that block these workflows. Reconcile the currently split data paths so stale company snapshots cannot silently coexist with newer market data. Enforce production freshness and coverage with deep-health/audit checks, bounded quota-safe incremental refresh, explicit missing/stale states, and representative end-to-end tests for major, mid-cap and smaller listed companies. Prioritize correctness, freshness, coverage, navigation and mobile usability over feature breadth. Do not add or further develop forward-return outcomes, benchmark-relative excess returns, backtests, factor research, signal validation, news sentiment, activist/shareholder monitoring, broad IR text analysis, or large technical-indicator sets. Existing dormant outcome code may remain if it does not block the three core workflows. Batch Vercel production release at a meaningful completion checkpoint rather than deploying every small change. Planner scope note: inspect the target repository before classifying paths; existing files such as tests/test_company_api.py must be treated as modifications rather than declared as new files, and proposed tasks must respect the repository-intelligence evidence about which paths already exist.",
+    "id_prefix": "jqcore001",
+    "min_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "apps",
+      "engine",
+      "providers",
+      "scripts",
+      "supabase",
+      "tests",
+      "docs"
+    ],
+    "request_id": "jquants-core-workflows-request-002",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jquants-research-studio"
+  },
+  "request_fingerprint": "f37314bbd4274eef1c857aa5e6c4746aae9c78876f546abd1a13abb8600f1670",
+  "schema_version": 1,
+  "task_ids": [
+    "jqcore001-001",
+    "jqcore001-002",
+    "jqcore001-003",
+    "jqcore001-004",
+    "jqcore001-005",
+    "jqcore001-006"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 37997844113
+}
