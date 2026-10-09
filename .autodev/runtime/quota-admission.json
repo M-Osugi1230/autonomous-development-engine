@@ -3,21 +3,20 @@
     "ade-chu-kei",
     "ade-jquants"
   ],
-  "allowed": true,
+  "allowed": false,
   "daily_limit": 15,
-  "observed_at": "2026-10-09T22:29:21.722065+00:00",
+  "observed_at": "2026-10-09T22:39:34.734546+00:00",
   "project_allocation": 6,
   "project_key": "ade-jquants",
-  "project_used": 5,
+  "project_used": 6,
   "purpose": "implementation",
-  "reason": "within-soft-allocation",
-  "remaining": 3,
-  "resume_after": null,
+  "reason": "project-soft-allocation-protected",
+  "remaining": 2,
+  "resume_after": "2026-10-10T21:36:07.103538+00:00",
   "schema_version": 1,
   "selected_project_keys": [
-    "ade-chu-kei",
-    "ade-jquants"
+    "ade-chu-kei"
   ],
-  "total_used": 12,
+  "total_used": 13,
   "unknown_session_count": 0
 }
