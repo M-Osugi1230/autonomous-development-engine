@@ -1,0 +1,12 @@
+{
+  "completion_goal_fingerprint": "e624b32f2ac048b484902446a3ce04c4a4a902931f87d73cf9cf183de0f4ec1f",
+  "completion_marker_path": "docs/ADE_COMPLETION.json",
+  "project_key": "chu-kei-insight",
+  "reason": "previous-campaign-exhausted-before-graduation",
+  "schema_version": 1,
+  "state": "CONTINUING",
+  "successor_campaign_id": "ckfinish-campaign-77-c6a4dd31ab",
+  "successor_request_id": "ckfinish-request-77-c6a4dd31ab",
+  "target_head_sha": "d035d1ff4bea29d2d915e3a76a379fa287b9508b",
+  "target_repository": "M-Osugi1230/chu-kei"
+}
