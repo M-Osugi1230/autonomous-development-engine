@@ -6,6 +6,7 @@ from ade.remote_execution import (
     RemoteExecutionReceipt,
     execution_target_from_state,
     parse_pull_request_url,
+    pull_request_is_trusted_noop,
     receipt_binds_pull_request,
 )
 
@@ -59,6 +60,62 @@ class RemoteExecutionTests(unittest.TestCase):
         ):
             with self.assertRaises(ValueError):
                 parse_pull_request_url(invalid)
+
+    def test_trusted_noop_accepts_jules_zero_diff_open_or_closed_pr(self) -> None:
+        base = {
+            "body": (
+                "Verified the existing implementation.\n\n---\n"
+                "*PR created automatically by Jules for task [123](https://jules.google.com/task/123)*"
+            ),
+            "changed_files": 0,
+            "additions": 0,
+            "deletions": 0,
+            "merged_at": None,
+        }
+        for state in ("open", "closed"):
+            payload = dict(base, state=state)
+            self.assertTrue(pull_request_is_trusted_noop(payload))
+
+    def test_trusted_noop_rejects_untrusted_empty_pr(self) -> None:
+        payload = {
+            "body": "No changes needed.",
+            "changed_files": 0,
+            "additions": 0,
+            "deletions": 0,
+            "merged_at": None,
+        }
+        self.assertFalse(pull_request_is_trusted_noop(payload))
+
+    def test_trusted_noop_rejects_any_real_diff(self) -> None:
+        base = {
+            "body": "PR created automatically by Jules for task [123]",
+            "changed_files": 0,
+            "additions": 0,
+            "deletions": 0,
+            "merged_at": None,
+        }
+        for field in ("changed_files", "additions", "deletions"):
+            payload = dict(base)
+            payload[field] = 1
+            self.assertFalse(pull_request_is_trusted_noop(payload))
+
+    def test_trusted_noop_rejects_merged_or_incomplete_pr_payload(self) -> None:
+        base = {
+            "body": "PR created automatically by Jules for task [123]",
+            "changed_files": 0,
+            "additions": 0,
+            "deletions": 0,
+            "merged_at": None,
+        }
+        merged = dict(base, merged_at="2026-10-10T00:00:00Z")
+        self.assertFalse(pull_request_is_trusted_noop(merged))
+
+        missing_counter = dict(base)
+        del missing_counter["changed_files"]
+        self.assertFalse(pull_request_is_trusted_noop(missing_counter))
+
+        bool_counter = dict(base, changed_files=False)
+        self.assertFalse(pull_request_is_trusted_noop(bool_counter))
 
     def test_receipt_binding_detects_idempotent_pr_created_receipt(self) -> None:
         payload = RemoteExecutionReceipt(
