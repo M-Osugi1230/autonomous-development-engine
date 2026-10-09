@@ -1,0 +1,8 @@
+{
+  "acquired_at": "2026-10-09T22:48:41.807187+00:00",
+  "attempt": 1,
+  "expires_at": "2026-10-09T23:38:41.807187+00:00",
+  "owner_id": "github-actions-provider:38000378933:3",
+  "schema_version": 1,
+  "task_id": "jqcore001-004"
+}
