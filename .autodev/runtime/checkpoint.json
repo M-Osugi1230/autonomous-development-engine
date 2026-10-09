@@ -2,9 +2,10 @@
   "attempt": 0,
   "last_error": null,
   "last_failure_kind": null,
-  "provider_session_id": "9269907635786611701",
+  "provider_id": "jules",
+  "provider_session_id": "16331592668043290885",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "jqmat001-001"
+  "state": "RUNNING",
+  "task_id": "jqmat001-002"
 }
