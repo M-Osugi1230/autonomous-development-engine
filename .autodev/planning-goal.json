@@ -1,1 +1,31 @@
-{"schema_version":1,"request_id":"chukei-production-graduation-request-001","campaign_id":"chukei-production-graduation-campaign-001","id_prefix":"ckfinish001","goal":"Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.","target_repository":"M-Osugi1230/chu-kei","base_branch":"main","allowed_path_prefixes":["operations","scripts","site","tests","schemas","reports","releases","docs"],"repository_intelligence_prefixes":["operations/plan-detection","operations/research-priority","operations/quality-rebase/phase2/reviews","operations/patches","operations/source-research","scripts","docs","site"],"execution_phase":"completion-runner","min_tasks":2,"max_tasks":8}
+{
+  "allowed_path_prefixes": [
+    "operations",
+    "scripts",
+    "site",
+    "tests",
+    "schemas",
+    "reports",
+    "releases",
+    "docs"
+  ],
+  "base_branch": "main",
+  "campaign_id": "ckfinish-campaign-77-c6a4dd31ab",
+  "execution_phase": "completion-runner",
+  "goal": "Bring Chu-kei Insight to production graduation as a broad-coverage medium-term-plan discovery product. Company-count coverage across the intended listed-company universe takes priority over deep-detail completeness for a small subset. Continue expanding reliable primary-source coverage, normalizing plan-detection state, aligning canonical data with the public product, and hardening the repeatable ingestion/quality pipeline until the service is operationally complete. Continue autonomously from the current repository state and do not stop at an intermediate milestone while safe executable work remains. Graduation criteria: [1] The intended company universe is represented in the canonical coverage model and remaining unknown/not-checked states are minimized or explicitly justified; company-count coverage is prioritized over unnecessary deep-detail enrichment. [2] Plan Detection uses official or first-party evidence with preserved company/source/document identity, publication date, plan/version/period/fiscal semantics, currentness boundaries, and provenance; missing evidence is never converted into an inferred no-plan conclusion. [3] Canonical repository data and the public Chu-kei product are aligned so production reflects the current broad company universe rather than an obsolete smaller snapshot, with core search/browse/detail behavior functioning against the aligned dataset. [4] Ingestion, candidate generation, validation, quality review, and production-alignment workflows are bounded, resumable, repeatable, and no known deterministic pipeline blocker remains; repository CI and production smoke/runtime checks are green. [5] All machine-resolvable quality gaps required for public reliability are closed. Any genuinely human-only review or externally consequential publication boundary remains explicit and is never silently auto-approved. Keep CI, validation, provenance, quota limits, and existing human-only safety boundaries intact. Only when every graduation criterion is demonstrably satisfied and final repository/runtime checks are green, create or update docs/ADE_COMPLETION.json as JSON with schema_version=1 and status=COMPLETE plus concise evidence fields. If the marker does not yet qualify, choose the highest-value bounded work that moves the project toward graduation. When creating a not-yet-existing file, declare its exact path in new_paths.",
+  "id_prefix": "ckfinish77",
+  "min_tasks": 2,
+  "repository_intelligence_prefixes": [
+    "operations/plan-detection",
+    "operations/research-priority",
+    "operations/quality-rebase/phase2/reviews",
+    "operations/patches",
+    "operations/source-research",
+    "scripts",
+    "docs",
+    "site"
+  ],
+  "request_id": "ckfinish-request-77-c6a4dd31ab",
+  "schema_version": 1,
+  "target_repository": "M-Osugi1230/chu-kei"
+}
