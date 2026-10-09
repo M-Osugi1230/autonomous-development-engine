@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 
 _REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+_JULES_AUTOMATION_MARKER = "PR created automatically by Jules for task ["
 
 
 def validate_repository_name(value: str) -> str:
@@ -62,6 +63,30 @@ def parse_pull_request_url(url: str) -> tuple[str, int]:
     if number < 1:
         raise ValueError("pull request number must be positive")
     return repository, number
+
+
+def pull_request_is_trusted_noop(payload: dict[str, Any] | None) -> bool:
+    """Return True only for a Jules-created pull request with a verified zero diff.
+
+    GitHub's pull request payload exposes aggregate diff counters even when the
+    pull request is closed without merge.  Requiring both the Jules automation
+    marker and all three counters to be zero prevents an arbitrary empty pull
+    request from advancing ADE's trusted task queue.
+    """
+
+    if payload is None or not isinstance(payload, dict):
+        return False
+    body = payload.get("body")
+    if not isinstance(body, str) or _JULES_AUTOMATION_MARKER not in body:
+        return False
+    if payload.get("merged_at") is not None:
+        return False
+
+    for field in ("changed_files", "additions", "deletions"):
+        value = payload.get(field)
+        if not isinstance(value, int) or isinstance(value, bool) or value != 0:
+            return False
+    return True
 
 
 def receipt_binds_pull_request(
