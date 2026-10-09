@@ -1,11 +1,4 @@
 {
-  "schema_version": 1,
-  "request_id": "jichi-production-graduation-request-001",
-  "campaign_id": "jichi-production-graduation-campaign-001",
-  "id_prefix": "jifinish001",
-  "goal": "Advance Jichi Insight from the current Phase 15 municipality-candidate state toward nationwide production graduation. Expand evidence-grounded municipality coverage across the intended national universe, preserve official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred-depth semantics, close machine-resolvable validation/review-staging/pipeline gaps, align canonical data with the public product, and verify core production/runtime behavior. Never invent unpublished facts, causal claims, unverified rankings, or policy-achievement scores, and preserve explicit human-only review/publication boundaries. Do not stop merely because one municipality or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
-  "target_repository": "M-Osugi1230/jichi-insight",
-  "base_branch": "main",
   "allowed_path_prefixes": [
     "apps",
     "data",
@@ -15,16 +8,22 @@
     "schemas",
     "docs"
   ],
+  "base_branch": "main",
+  "campaign_id": "jifinish-campaign-82-75a058fd17",
+  "execution_phase": "completion-runner",
+  "goal": "Bring Jichi Insight to production graduation as a nationwide municipality insight platform. Continue autonomous, evidence-grounded expansion from the current Phase 15 state through full intended municipality coverage, canonical review/publication readiness, pipeline hardening, public-product alignment, and final runtime verification without collapsing fiscal/document/version distinctions or inventing unsupported policy claims. Continue autonomously from the current repository state and do not stop at an intermediate milestone while safe executable work remains. Graduation criteria: [1] The intended nationwide municipality universe is represented in the canonical coverage model, with every in-scope municipality either backed by a valid evidence package/state or explicitly tracked as unresolved rather than silently omitted. [2] Municipality evidence preserves official-source URLs, stable locators, plan/version/period/fiscal/availability boundaries, source precision, provenance, and deferred-depth semantics; unpublished facts, causal claims, unverified comparisons, and score-like judgments are never invented. [3] Candidate generation, validation, review staging, canonical promotion, and public-data workflows are deterministic, bounded, resumable, and free of known machine-resolvable blockers while preserving explicit human-only review boundaries where policy requires them. [4] The public Jichi Insight product is aligned with the current canonical nationwide dataset and its core browse/search/detail behavior passes repository and production/runtime smoke checks. [5] Repository CI, regression suites, data-quality audits, and final runtime verification are green with no unresolved implementation blocker; any true human-only publication/review gate is surfaced explicitly rather than bypassed. Keep CI, validation, provenance, quota limits, and existing human-only safety boundaries intact. Only when every graduation criterion is demonstrably satisfied and final repository/runtime checks are green, create or update docs/ADE_COMPLETION.json as JSON with schema_version=1 and status=COMPLETE plus concise evidence fields. If the marker does not yet qualify, choose the highest-value bounded work that moves the project toward graduation. When creating a not-yet-existing file, declare its exact path in new_paths.",
+  "id_prefix": "jifinish82",
+  "min_tasks": 2,
   "repository_intelligence_prefixes": [
     "apps",
-    "data",
+    "data/catalog",
     "pipelines",
     "scripts",
     "tests",
     "schemas",
     "docs"
   ],
-  "execution_phase": "completion-runner",
-  "min_tasks": 2,
-  "max_tasks": 8
+  "request_id": "jifinish-request-82-75a058fd17",
+  "schema_version": 1,
+  "target_repository": "M-Osugi1230/jichi-insight"
 }
