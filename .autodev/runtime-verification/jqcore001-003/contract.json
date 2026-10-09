@@ -1,0 +1,13 @@
+{
+  "environment": "repository",
+  "max_attempts": 2,
+  "required_probe_ids": [
+    "jquants-api-import-smoke",
+    "jquants-vercel-contract-smoke"
+  ],
+  "schema_version": 1,
+  "source_sha": "ceb0d5aeac5e74bec0087ae548740204d6c434f9",
+  "target_repository": "M-Osugi1230/jquants-research-studio",
+  "timeout_seconds": 300,
+  "verification_id": "rv-ceb0d5aeac5e74bec0087ae548740204d6c434f9"
+}
