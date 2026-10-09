@@ -1,11 +1,10 @@
 {
   "attempt": 0,
-  "last_error": null,
-  "last_failure_kind": null,
-  "provider_id": "jules",
-  "provider_session_id": "11924084219527608075",
+  "last_error": "no eligible provider is currently available",
+  "last_failure_kind": "PROVIDER_QUOTA",
+  "provider_session_id": null,
   "replan_count": 0,
-  "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "jqcore001-003"
+  "resume_after": "2026-10-10T21:36:07.103538+00:00",
+  "state": "PAUSED_QUOTA",
+  "task_id": "jqcore001-004"
 }
