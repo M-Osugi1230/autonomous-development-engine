@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from ade.remote_execution import RemoteExecutionReceipt
+from ade.remote_execution import RemoteExecutionReceipt, pull_request_is_trusted_noop
 from ade.runtime_verification_trigger import (
     RuntimeVerificationReceipt,
     arm_post_merge_runtime_verification,
@@ -79,21 +79,37 @@ def _public_github_json(path: str) -> dict[str, Any]:
     return payload
 
 
-def _persist_merged_receipt(
-    gh: GitHubClient,
+def _terminal_receipt(
     receipt: RemoteExecutionReceipt,
-) -> None:
-    merged = RemoteExecutionReceipt(
+) -> RemoteExecutionReceipt:
+    return RemoteExecutionReceipt(
         task_id=receipt.task_id,
         target_repository=receipt.target_repository,
         pull_request_url=receipt.pull_request_url,
         recorded_at=datetime.now(UTC).isoformat(),
         status="MERGED",
     )
+
+
+def _persist_merged_receipt(
+    gh: GitHubClient,
+    receipt: RemoteExecutionReceipt,
+) -> None:
     gh.upsert_json_file(
         ".autodev/runtime/remote-execution.json",
-        merged.to_dict(),
+        _terminal_receipt(receipt).to_dict(),
         message=f"remote: merged {receipt.task_id}",
+    )
+
+
+def _persist_completed_noop_receipt(
+    gh: GitHubClient,
+    receipt: RemoteExecutionReceipt,
+) -> None:
+    gh.upsert_json_file(
+        ".autodev/runtime/remote-execution.json",
+        _terminal_receipt(receipt).to_dict(),
+        message=f"remote: completed-noop {receipt.task_id}",
     )
 
 
@@ -255,6 +271,25 @@ def main() -> int:
             )
             if isinstance(expected_base, str) and expected_base and base_ref != expected_base:
                 raise RuntimeError("target pull request base branch does not match planner request")
+
+            if pull_request_is_trusted_noop(pr):
+                next_task_id = advance_queue(
+                    gh,
+                    completed_task_id=receipt.task_id,
+                )
+                _persist_completed_noop_receipt(gh, receipt)
+                result = {
+                    "schema_version": 1,
+                    "state": "COMPLETED_NOOP",
+                    "reason": "trusted-jules-zero-diff",
+                    "task_id": receipt.task_id,
+                    "target_repository": receipt.target_repository,
+                    "pull_request_number": pr_number,
+                    "next_task_id": next_task_id,
+                }
+                _write(result)
+                print(json.dumps(result, sort_keys=True))
+                return 0
 
             if pr.get("merged_at"):
                 head = pr.get("head", {})
