@@ -68,7 +68,7 @@
       "depends_on": [
         "jifinish001-004"
       ],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
@@ -84,7 +84,7 @@
       "depends_on": [
         "jifinish001-005"
       ],
-      "status": "PENDING",
+      "status": "RUNNING",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
