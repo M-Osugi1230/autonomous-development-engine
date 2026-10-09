@@ -84,7 +84,7 @@
       "depends_on": [
         "ckfinish001-005"
       ],
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
@@ -100,7 +100,7 @@
       "depends_on": [
         "ckfinish001-006"
       ],
-      "status": "PENDING",
+      "status": "RUNNING",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
