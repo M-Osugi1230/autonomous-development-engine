@@ -13,13 +13,13 @@
     "project_key": "ade-jichi-insight",
     "project_used": 4,
     "reason": "project-soft-allocation-protected",
-    "remaining": 2,
+    "remaining": 3,
     "resume_after": "2026-10-10T21:35:50.907753+00:00",
     "schema_version": 1,
     "selected_project_keys": [
       "ade-chu-kei"
     ],
-    "total_used": 13,
+    "total_used": 12,
     "unknown_session_count": 0
   },
   "reason": "planner-provider-capacity",
@@ -28,5 +28,5 @@
   "resume_after": "2026-10-10T21:35:50.907753+00:00",
   "schema_version": 1,
   "state": "PAUSED_QUOTA",
-  "updated_at": "2026-10-10T02:21:17.130541+00:00"
+  "updated_at": "2026-10-10T02:34:07.573547+00:00"
 }
