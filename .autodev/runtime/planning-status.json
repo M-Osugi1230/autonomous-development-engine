@@ -1,32 +1,10 @@
 {
-  "attempt": 0,
-  "detail": "quota-scheduler: project-soft-allocation-protected",
-  "quota_admission": {
-    "active_project_keys": [
-      "ade-chu-kei",
-      "ade-jichi-insight",
-      "ade-jquants"
-    ],
-    "allowed": false,
-    "daily_limit": 15,
-    "project_allocation": 4,
-    "project_key": "ade-jichi-insight",
-    "project_used": 4,
-    "reason": "project-soft-allocation-protected",
-    "remaining": 3,
-    "resume_after": "2026-10-10T21:35:50.907753+00:00",
-    "schema_version": 1,
-    "selected_project_keys": [
-      "ade-chu-kei"
-    ],
-    "total_used": 12,
-    "unknown_session_count": 0
-  },
-  "reason": "planner-provider-capacity",
+  "attempt": 1,
+  "detail": "high-level goal exceeds trusted text budget",
+  "reason": "planner-retryable-failure",
   "request_fingerprint": "f79d70d73bdcab560539b0ab67b96fd35cbb84c166b29960923a304e870a7974",
   "request_id": "jifinish-request-82-75a058fd17",
-  "resume_after": "2026-10-10T21:35:50.907753+00:00",
   "schema_version": 1,
-  "state": "PAUSED_QUOTA",
-  "updated_at": "2026-10-10T02:34:07.573547+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-10T02:49:54.881356+00:00"
 }
