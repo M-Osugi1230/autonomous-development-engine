@@ -1,10 +1,10 @@
 {
-  "attempt": 2,
+  "attempt": 3,
   "detail": "high-level goal exceeds trusted text budget",
-  "reason": "planner-retryable-failure",
+  "reason": "planner-failure-budget-exhausted",
   "request_fingerprint": "25420ff4cb14ecc2e5a12bd82012844160ecba48917f6ea9d5eb81d3853cfeb0",
   "request_id": "ckfinish-request-77-c6a4dd31ab",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-10-09T23:30:10.225518+00:00"
+  "state": "HUMAN_WAIT",
+  "updated_at": "2026-10-10T02:34:10.918658+00:00"
 }
