@@ -6,18 +6,18 @@
   ],
   "allowed": true,
   "daily_limit": 15,
-  "observed_at": "2026-10-09T23:30:08.924935+00:00",
+  "observed_at": "2026-10-10T02:34:09.683882+00:00",
   "project_allocation": 5,
   "project_key": "ade-chu-kei",
-  "project_used": 3,
+  "project_used": 2,
   "purpose": "planner",
   "reason": "within-soft-allocation",
-  "remaining": 2,
+  "remaining": 3,
   "resume_after": null,
   "schema_version": 1,
   "selected_project_keys": [
     "ade-chu-kei"
   ],
-  "total_used": 13,
+  "total_used": 12,
   "unknown_session_count": 0
 }
