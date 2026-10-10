@@ -1,10 +1,10 @@
 {
-  "attempt": 1,
+  "attempt": 2,
   "detail": "high-level goal exceeds trusted text budget",
   "reason": "planner-retryable-failure",
   "request_fingerprint": "f79d70d73bdcab560539b0ab67b96fd35cbb84c166b29960923a304e870a7974",
   "request_id": "jifinish-request-82-75a058fd17",
   "schema_version": 1,
   "state": "REPLAN",
-  "updated_at": "2026-10-10T02:49:54.881356+00:00"
+  "updated_at": "2026-10-10T08:58:32.131445+00:00"
 }
