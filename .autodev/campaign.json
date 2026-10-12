@@ -1,6 +1,8 @@
 {
   "campaign_id": "ckcov10-campaign-001",
-  "completed_task_ids": [],
+  "completed_task_ids": [
+    "ckcov1001-001"
+  ],
   "goal": "Increase Chu-kei Insight canonical Plan Detection resolved coverage from the current 268 of 3,709 companies to at least 371 resolved companies (10% or higher). Prioritize breadth and high-confidence existing candidates. Use only official or first-party evidence for newly resolved states and preserve company/source/document identity, publication date, plan period or fiscal semantics, currentness, and provenance. Never convert missing, ambiguous, or unreviewed evidence into no_formal_plan or another resolved state merely to raise coverage. Process work in bounded resumable batches, keep canonical and site data aligned, preserve search/browse/detail behavior, and require existing Plan Detection tests, quality gates, source/audit checks, and relevant runtime checks to remain green. Do not add unrelated features. When the canonical summary demonstrates at least 371 resolved companies with these safeguards satisfied, create docs/ADE_COVERAGE_10_COMPLETION.json with schema_version 1, status COMPLETE, final resolved count, coverage, target repository SHA, and concise evidence references. Any human-only publication or external promotion boundary must remain explicit and must not be silently auto-approved.",
   "schema_version": 1,
   "status": "RUNNING",
