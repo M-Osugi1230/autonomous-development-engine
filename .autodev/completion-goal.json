@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project_key": "jichi-insight",
   "request_prefix": "jifinish",
-  "goal": "Bring Jichi Insight to production graduation as a nationwide municipality insight platform. Continue autonomous, evidence-grounded expansion from the current Phase 15 state through full intended municipality coverage, canonical review/publication readiness, pipeline hardening, public-product alignment, and final runtime verification without collapsing fiscal/document/version distinctions or inventing unsupported policy claims.",
+  "goal": "Bring Jichi Insight to production graduation as a nationwide municipality insight platform.  Continue autonomous, evidence-grounded expansion from the current Phase 15 state through full intended municipality coverage, canonical review/publication readiness, pipeline hardening, public-product alignment, and final runtime verification without collapsing fiscal/document/version distinctions or inventing unsupported policy claims.",
   "target_repository": "M-Osugi1230/jichi-insight",
   "base_branch": "main",
   "allowed_path_prefixes": [
