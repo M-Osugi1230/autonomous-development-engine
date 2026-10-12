@@ -1,10 +1,15 @@
 {
-  "attempt": 3,
-  "detail": "high-level goal exceeds trusted text budget",
-  "reason": "planner-failure-budget-exhausted",
-  "request_fingerprint": "25420ff4cb14ecc2e5a12bd82012844160ecba48917f6ea9d5eb81d3853cfeb0",
-  "request_id": "ckfinish-request-77-c6a4dd31ab",
+  "accepted_plan_fingerprint": "f6a9bdf52250a66b037972208cd9a08868f216b0f380f8b0b77d29d1d3f92540",
+  "attempt": 1,
+  "campaign_id": "ckcov10-campaign-001",
+  "development_memory_context_fingerprint": "318ff6273672845cf9c7837b5c89812a033268b4d22f2b77fe26f99d63cb909b",
+  "development_memory_record_count": 0,
+  "first_task_id": "ckcov1001-001",
+  "proposal_fingerprint": "75a88c3968468cbee13cc418b730e7fa66de1a78fdf2ae361167f44374db20b6",
+  "reason": "trusted-plan-accepted",
+  "request_fingerprint": "165a97b3ebefcbb4a6c3ede5cdf97a161e039e030c0d74cfbfa2fae8d0382bcb",
+  "request_id": "ckcov10-request-001",
   "schema_version": 1,
-  "state": "HUMAN_WAIT",
-  "updated_at": "2026-10-10T02:34:10.918658+00:00"
+  "state": "ACCEPTED",
+  "updated_at": "2026-10-12T08:23:35.724756+00:00"
 }
