@@ -1,0 +1,186 @@
+{
+  "accepted_plan_fingerprint": "f6a9bdf52250a66b037972208cd9a08868f216b0f380f8b0b77d29d1d3f92540",
+  "campaign_id": "ckcov10-campaign-001",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "318ff6273672845cf9c7837b5c89812a033268b4d22f2b77fe26f99d63cb909b",
+    "current_source_sha": "d035d1ff4bea29d2d915e3a76a379fa287b9508b",
+    "execution_authority": false,
+    "extracted_record_count": 2,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/chu-kei",
+    "resolution_fingerprint": "f0808a3ec5339eb91f4fd72acb74321cd92a755c1530ca23ca446305b219c285",
+    "retrieval_fingerprint": "12e7cd0b0bc1b2f1728eb1069a33a2f2a34be8e9e242ddead2203a2f112f7dc3",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "c96a4a4ee9c05ca6f25b52d5640c1e3633dc47a23440c5df77d5cfb834250dd6",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "3f7ef25804b9e7a74c6c69310db804fd9389a9e1af68926e21147494796727ea",
+  "proposal": {
+    "goal": "Increase Chu-kei Insight canonical Plan Detection resolved coverage from the current 268 of 3,709 companies to at least 371 resolved companies (10% or higher). Prioritize breadth and high-confidence existing candidates. Use only official or first-party evidence for newly resolved states and preserve company/source/document identity, publication date, plan period or fiscal semantics, currentness, and provenance. Never convert missing, ambiguous, or unreviewed evidence into no_formal_plan or another resolved state merely to raise coverage. Process work in bounded resumable batches, keep canonical and site data aligned, preserve search/browse/detail behavior, and require existing Plan Detection tests, quality gates, source/audit checks, and relevant runtime checks to remain green. Do not add unrelated features. When the canonical summary demonstrates at least 371 resolved companies with these safeguards satisfied, create docs/ADE_COVERAGE_10_COMPLETION.json with schema_version 1, status COMPLETE, final resolved count, coverage, target repository SHA, and concise evidence references. Any human-only publication or external promotion boundary must remain explicit and must not be silently auto-approved.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Update `operations/plan-detection/primary-reviewed-overrides-v1.json` with verified first-party IR plan evidence for candidate companies.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "operations/plan-detection/primary-reviewed-overrides-v1.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Update `operations/plan-detection/primary-reviewed-overrides-v1.json` with verified first-party IR plan evidence for candidate companies.",
+        "title": "Update `operations/plan-detection/primary-reviewed-overrides-v1.json` with verified first-party IR plan evidence for candidate companies."
+      },
+      {
+        "acceptance": [
+          "Rebuild `operations/plan-detection/registry-v1.json` to achieve canonical resolved coverage for at least 371 companies.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "operations/plan-detection/registry-v1.json"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "Rebuild `operations/plan-detection/registry-v1.json` to achieve canonical resolved coverage for at least 371 companies.",
+        "title": "Rebuild `operations/plan-detection/registry-v1.json` to achieve canonical resolved coverage for at least 371 companies."
+      },
+      {
+        "acceptance": [
+          "Update `site/data/plan-detection-summary-v1.json` to align site data with canonical registry metrics.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "site/data/plan-detection-summary-v1.json"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [],
+        "outcome": "Update `site/data/plan-detection-summary-v1.json` to align site data with canonical registry metrics.",
+        "title": "Update `site/data/plan-detection-summary-v1.json` to align site data with canonical registry metrics."
+      },
+      {
+        "acceptance": [
+          "Update regression assertions in `tests/test_plan_detection_validation_v1.js` to ensure test suite passes cleanly.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_plan_detection_validation_v1.js"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [
+          "tests/test_plan_detection_validation_v1.js"
+        ],
+        "outcome": "Update regression assertions in `tests/test_plan_detection_validation_v1.js` to ensure test suite passes cleanly.",
+        "title": "Update regression assertions in `tests/test_plan_detection_validation_v1.js` to ensure test suite passes cleanly."
+      },
+      {
+        "acceptance": [
+          "Create `docs/ADE_COVERAGE_10_COMPLETION.json` recording 10%+ coverage milestone completion.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "docs/ADE_COVERAGE_10_COMPLETION.json"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [
+          "docs/ADE_COVERAGE_10_COMPLETION.json"
+        ],
+        "outcome": "Create `docs/ADE_COVERAGE_10_COMPLETION.json` recording 10%+ coverage milestone completion.",
+        "title": "Create `docs/ADE_COVERAGE_10_COMPLETION.json` recording 10%+ coverage milestone completion."
+      }
+    ]
+  },
+  "proposal_fingerprint": "75a88c3968468cbee13cc418b730e7fa66de1a78fdf2ae361167f44374db20b6",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 5,
+  "provider_plan_steps_sha256": "ca75894a3fe95d0ccd0af10cf1e4116e2c8c72efde49015356923fff07080077",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "f044836e1661ff4ee5fe7ca23da39f9f4f0f166195d89952458c9a689356fe96",
+  "repository_context_fingerprint": "a54972fe616d0160c580f94c20220781ede493a0827a7add642497d1608464fe",
+  "repository_impact_analysis_fingerprint": "4a8cb7d4672e6d97b71598c67467fe3b290117f4fc8bfc55a095d51156277e92",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "54b3d0643498bda2c1753a062b77c9608eb2bfe26403b0417f3bcd90b3265477",
+  "repository_source_sha": "d035d1ff4bea29d2d915e3a76a379fa287b9508b",
+  "request": {
+    "allowed_path_prefixes": [
+      "operations",
+      "scripts",
+      "site",
+      "tests",
+      "schemas",
+      "reports",
+      "releases",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "ckcov10-campaign-001",
+    "execution_phase": "completion-runner",
+    "goal": "Increase Chu-kei Insight canonical Plan Detection resolved coverage from the current 268 of 3,709 companies to at least 371 resolved companies (10% or higher). Prioritize breadth and high-confidence existing candidates. Use only official or first-party evidence for newly resolved states and preserve company/source/document identity, publication date, plan period or fiscal semantics, currentness, and provenance. Never convert missing, ambiguous, or unreviewed evidence into no_formal_plan or another resolved state merely to raise coverage. Process work in bounded resumable batches, keep canonical and site data aligned, preserve search/browse/detail behavior, and require existing Plan Detection tests, quality gates, source/audit checks, and relevant runtime checks to remain green. Do not add unrelated features. When the canonical summary demonstrates at least 371 resolved companies with these safeguards satisfied, create docs/ADE_COVERAGE_10_COMPLETION.json with schema_version 1, status COMPLETE, final resolved count, coverage, target repository SHA, and concise evidence references. Any human-only publication or external promotion boundary must remain explicit and must not be silently auto-approved.",
+    "id_prefix": "ckcov1001",
+    "min_tasks": 3,
+    "repository_intelligence_prefixes": [
+      "operations/plan-detection",
+      "operations/research-priority",
+      "operations/quality-rebase/phase2/reviews",
+      "operations/patches",
+      "operations/source-research",
+      "operations/universe",
+      "scripts",
+      "docs",
+      "site"
+    ],
+    "request_id": "ckcov10-request-001",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/chu-kei"
+  },
+  "request_fingerprint": "165a97b3ebefcbb4a6c3ede5cdf97a161e039e030c0d74cfbfa2fae8d0382bcb",
+  "schema_version": 1,
+  "task_ids": [
+    "ckcov1001-001",
+    "ckcov1001-002",
+    "ckcov1001-003",
+    "ckcov1001-004",
+    "ckcov1001-005"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 38222392916
+}
