@@ -90,6 +90,22 @@ class CompletionPlannerCycleTests(unittest.TestCase):
         self.assertIn("docs/ADE_COMPLETION.json", first.goal)
         self.assertIn("do not stop at an intermediate milestone", first.goal)
         self.assertEqual(first.target_repository, "example/target")
+        self.assertLessEqual(len(first.goal), completion._SUCCESSOR_GOAL_MAX_CHARS)
+
+    def test_successor_goal_compacts_large_graduation_contract_below_planner_budget(self):
+        payload = self.completion_goal()
+        payload["goal"] = "Bring a nationwide evidence platform to production graduation."
+        payload["graduation_criteria"] = [
+            f"criterion {index}: " + ("preserve evidence provenance and fiscal boundaries " * 12)
+            for index in range(1, 6)
+        ]
+        spec = completion._validate_completion_goal(payload)
+        goal = completion._build_successor_goal(spec)
+
+        self.assertLessEqual(len(goal), completion._SUCCESSOR_GOAL_MAX_CHARS)
+        self.assertIn("docs/ADE_COMPLETION.json", goal)
+        self.assertIn("human-only", goal)
+        self.assertIn("production graduation", goal)
 
 
 if __name__ == "__main__":
