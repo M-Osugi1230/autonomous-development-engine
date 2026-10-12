@@ -20,6 +20,7 @@ PLANNING_STATUS_PATH = Path(".autodev/runtime/planning-status.json")
 STATE_PATH = Path(".autodev/state.json")
 RESULT_PATH = Path(".autodev/runtime/autonomous-planner-result.json")
 REMOTE_COMPLETION_STATUS_PATH = ".autodev/runtime/completion-status.json"
+_SUCCESSOR_GOAL_MAX_CHARS = 1900
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -175,6 +176,28 @@ def _eligible_for_successor(
     return metadata.get("queue_exhausted") is True
 
 
+def _build_successor_goal(spec: dict[str, Any]) -> str:
+    marker = spec["completion_marker_path"]
+    criteria = " ".join(
+        f"[{index}] {criterion}"
+        for index, criterion in enumerate(spec["graduation_criteria"], 1)
+    )
+    goal = (
+        f"{spec['goal']} Criteria: {criteria} Continue from current repository state until all criteria are "
+        f"demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. "
+        f"Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent "
+        f"unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks "
+        f"are green, write {marker} with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose "
+        f"the highest-value bounded next work. Declare exact new_paths for new files."
+    )
+    if len(goal) > _SUCCESSOR_GOAL_MAX_CHARS:
+        raise ValueError(
+            "completion contract exceeds trusted successor goal budget; "
+            "shorten the completion goal or criteria without dropping requirements"
+        )
+    return goal
+
+
 def _build_successor_request(
     spec: dict[str, Any],
     state: dict[str, Any],
@@ -191,26 +214,11 @@ def _build_successor_request(
     ).hexdigest()[:10]
     prefix = spec["request_prefix"]
 
-    criteria = " ".join(
-        f"[{index}] {criterion}"
-        for index, criterion in enumerate(spec["graduation_criteria"], 1)
-    )
-    marker = spec["completion_marker_path"]
-    goal = (
-        f"{spec['goal']} Continue autonomously from the current repository state and do not stop "
-        f"at an intermediate milestone while safe executable work remains. Graduation criteria: {criteria} "
-        f"Keep CI, validation, provenance, quota limits, and existing human-only safety boundaries intact. "
-        f"Only when every graduation criterion is demonstrably satisfied and final repository/runtime checks "
-        f"are green, create or update {marker} as JSON with schema_version=1 and status=COMPLETE plus concise "
-        f"evidence fields. If the marker does not yet qualify, choose the highest-value bounded work that moves "
-        f"the project toward graduation. When creating a not-yet-existing file, declare its exact path in new_paths."
-    )
-
     return PlanningGoalRequest(
         request_id=f"{prefix}-request-{generation}-{digest}",
         campaign_id=f"{prefix}-campaign-{generation}-{digest}",
         id_prefix=f"{prefix}{generation}",
-        goal=goal,
+        goal=_build_successor_goal(spec),
         target_repository=spec["target_repository"],
         base_branch=spec["base_branch"],
         allowed_path_prefixes=tuple(spec["allowed_path_prefixes"]),
