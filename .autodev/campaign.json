@@ -1,24 +1,14 @@
 {
-  "campaign_id": "chukei-production-graduation-campaign-001",
-  "completed_task_ids": [
-    "ckfinish001-001",
-    "ckfinish001-002",
-    "ckfinish001-003",
-    "ckfinish001-004",
-    "ckfinish001-005",
-    "ckfinish001-006",
-    "ckfinish001-007"
-  ],
-  "goal": "Advance Chu-kei Insight from the current broad-coverage state toward full production graduation. Prioritize company-count coverage across the intended listed-company universe over deep-detail completeness for a small subset. Use official or first-party evidence, reduce unresolved/not-checked plan-detection coverage without inventing no-plan conclusions, close machine-resolvable quality gaps, align canonical repository data with the public product, and harden bounded resumable ingestion/validation/runtime paths. Preserve provenance, plan/version/period/fiscal/currentness semantics and all existing human-only review boundaries. Do not stop merely because one batch or phase finishes; this campaign should deliver the highest-value bounded work toward the completion contract in .autodev/completion-goal.json.",
+  "campaign_id": "ckcov10-campaign-001",
+  "completed_task_ids": [],
+  "goal": "Increase Chu-kei Insight canonical Plan Detection resolved coverage from the current 268 of 3,709 companies to at least 371 resolved companies (10% or higher). Prioritize breadth and high-confidence existing candidates. Use only official or first-party evidence for newly resolved states and preserve company/source/document identity, publication date, plan period or fiscal semantics, currentness, and provenance. Never convert missing, ambiguous, or unreviewed evidence into no_formal_plan or another resolved state merely to raise coverage. Process work in bounded resumable batches, keep canonical and site data aligned, preserve search/browse/detail behavior, and require existing Plan Detection tests, quality gates, source/audit checks, and relevant runtime checks to remain green. Do not add unrelated features. When the canonical summary demonstrates at least 371 resolved companies with these safeguards satisfied, create docs/ADE_COVERAGE_10_COMPLETION.json with schema_version 1, status COMPLETE, final resolved count, coverage, target repository SHA, and concise evidence references. Any human-only publication or external promotion boundary must remain explicit and must not be silently auto-approved.",
   "schema_version": 1,
-  "status": "COMPLETED",
+  "status": "RUNNING",
   "task_ids": [
-    "ckfinish001-001",
-    "ckfinish001-002",
-    "ckfinish001-003",
-    "ckfinish001-004",
-    "ckfinish001-005",
-    "ckfinish001-006",
-    "ckfinish001-007"
+    "ckcov1001-001",
+    "ckcov1001-002",
+    "ckcov1001-003",
+    "ckcov1001-004",
+    "ckcov1001-005"
   ]
 }
