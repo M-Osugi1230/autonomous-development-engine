@@ -182,31 +182,20 @@ def _build_successor_goal(spec: dict[str, Any]) -> str:
         f"[{index}] {criterion}"
         for index, criterion in enumerate(spec["graduation_criteria"], 1)
     )
-    suffix = (
-        f" Continue from current repository state; do not stop at an intermediate milestone while safe "
-        f"executable work remains. Graduation criteria: {criteria} Preserve CI, provenance, quota limits, "
-        f"and human-only safety boundaries. Only after every criterion and final repository/runtime checks "
-        f"are green, write {marker} with schema_version=1 and status=COMPLETE plus concise evidence. Otherwise "
-        f"choose the highest-value bounded work toward graduation. Declare exact new_paths for new files."
+    goal = (
+        f"{spec['goal']} Criteria: {criteria} Continue from current repository state until all criteria are "
+        f"demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. "
+        f"Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent "
+        f"unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks "
+        f"are green, write {marker} with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose "
+        f"the highest-value bounded next work. Declare exact new_paths for new files."
     )
-    goal = f"{spec['goal']}{suffix}"
-    if len(goal) <= _SUCCESSOR_GOAL_MAX_CHARS:
-        return goal
-
-    compact_criteria = " ".join(
-        f"[{index}] {criterion[:220].rstrip()}"
-        for index, criterion in enumerate(spec["graduation_criteria"], 1)
-    )
-    compact = (
-        f"{spec['goal']} Continue autonomously from current repository state until production graduation; "
-        f"do not stop at an intermediate milestone while safe work remains. Criteria: {compact_criteria} "
-        f"Preserve CI, evidence/provenance boundaries, quotas, and human-only gates. Write {marker} with "
-        f"schema_version=1,status=COMPLETE only after all criteria and final runtime checks are green; otherwise "
-        f"select the highest-value bounded next work. Declare exact new_paths for new files."
-    )
-    if len(compact) > _SUCCESSOR_GOAL_MAX_CHARS:
-        compact = compact[: _SUCCESSOR_GOAL_MAX_CHARS - 1].rstrip() + "…"
-    return compact
+    if len(goal) > _SUCCESSOR_GOAL_MAX_CHARS:
+        raise ValueError(
+            "completion contract exceeds trusted successor goal budget; "
+            "shorten the completion goal or criteria without dropping requirements"
+        )
+    return goal
 
 
 def _build_successor_request(
