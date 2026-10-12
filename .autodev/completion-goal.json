@@ -5,27 +5,8 @@
   "goal": "Expand Chu-kei Insight Plan Detection coverage safely from the current 268 resolved companies out of the 3,709-company listed-company universe (7.2257%) to at least 371 resolved companies (10% or higher). Prioritize company-count breadth over unnecessary deep-detail enrichment. Reuse the existing candidate, source-audit, validation, canonical-data, public-sync, and resumable quality pipeline. Before changing derived override, registry, or site summary files, first create or complete genuine company-level primary-review evidence under the existing quality-rebase/source-research review paths for high-confidence official or first-party candidates. Do not increase coverage by weakening confirmation or full-text-review gates. Work in bounded resumable batches until the target is reached. Do not add unrelated product features unless they are required to remove a deterministic blocker to this coverage objective.",
   "target_repository": "M-Osugi1230/chu-kei",
   "base_branch": "main",
-  "allowed_path_prefixes": [
-    "operations",
-    "scripts",
-    "site",
-    "tests",
-    "schemas",
-    "reports",
-    "releases",
-    "docs"
-  ],
-  "repository_intelligence_prefixes": [
-    "operations/plan-detection",
-    "operations/research-priority",
-    "operations/quality-rebase/phase2/reviews",
-    "operations/patches",
-    "operations/source-research",
-    "operations/universe",
-    "scripts",
-    "docs",
-    "site"
-  ],
+  "allowed_path_prefixes": ["operations","scripts","site","tests","schemas","reports","releases","docs"],
+  "repository_intelligence_prefixes": ["operations/plan-detection","operations/research-priority","operations/quality-rebase/phase2/reviews","operations/patches","operations/source-research","operations/universe","scripts","docs","site"],
   "graduation_criteria": [
     "The canonical Plan Detection summary represents the intended listed-company universe and reports at least 371 resolved companies out of 3,709, corresponding to detectionCoverage of at least 0.10; if the authoritative universe size legitimately changes, the 10% threshold must be recalculated and the change documented rather than hidden.",
     "Every newly resolved Plan Detection state is supported by official or first-party evidence with preserved company, source, document identity, publication date, plan/version/period or fiscal semantics, currentness boundaries, and provenance. Missing, ambiguous, or unreviewed evidence is never converted into no_formal_plan or another resolved state merely to increase coverage.",
