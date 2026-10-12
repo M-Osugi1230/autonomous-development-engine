@@ -114,7 +114,7 @@
     },
     "milestone": "v1.9-graduated",
     "next_required_human_action": null,
-    "next_system_action": "zero-touch-start",
+    "next_system_action": "monitor-provider-session",
     "phase": "completion-runner",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -142,8 +142,6 @@
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
     "queue_exhausted": false,
-    "quota_admission_reason": "project-soft-allocation-protected",
-    "quota_remaining": 10,
     "repository_intelligence_content_fingerprint": "f044836e1661ff4ee5fe7ca23da39f9f4f0f166195d89952458c9a689356fe96",
     "repository_intelligence_context_fingerprint": "a54972fe616d0160c580f94c20220781ede493a0827a7add642497d1608464fe",
     "repository_intelligence_impact_fingerprint": "4a8cb7d4672e6d97b71598c67467fe3b290117f4fc8bfc55a095d51156277e92",
@@ -317,6 +315,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "READY",
-  "updated_at": "2026-10-12T08:23:31.381931+00:00"
+  "status": "RUNNING",
+  "updated_at": "2026-10-12T08:24:12.456229+00:00"
 }
