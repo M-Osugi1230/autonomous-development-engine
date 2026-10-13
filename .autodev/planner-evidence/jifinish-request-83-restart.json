@@ -1,0 +1,164 @@
+{
+  "accepted_plan_fingerprint": "94d5e899761ec28915ed0460e57d75ad32d46ecd88389ea91b178d868bd8ff00",
+  "campaign_id": "jifinish-campaign-83-restart",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+    "current_source_sha": "a3dc3b22b73484973a4942e9d73d495c12452611",
+    "execution_authority": false,
+    "extracted_record_count": 4,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jichi-insight",
+    "resolution_fingerprint": "c12ec2606ab6255056f5b54b6b351c63a817cbbd7db4afab5606815c52df4300",
+    "retrieval_fingerprint": "075ed7eeae764ea29dfb79bbc1c3e13661649e2eaa86b4ac090c94c0c6bdf94a",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "47f875e6bb37b01927fdde34ab3df66f1bd29ba1cd76722387280f692747b265",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "f509786944658940b8dd88916d8283b5206c6947e66027e5d5db584556b7f458",
+  "proposal": {
+    "goal": "Bring Jichi Insight from the current Phase 15 state to production graduation. Continue autonomously while safe executable work remains. Graduation requires: [1] represent the intended nationwide municipality universe in canonical coverage; every in-scope municipality must have valid evidence/state or be explicitly unresolved, never silently omitted; [2] preserve official URLs, stable locators, plan/version/period/fiscal/availability boundaries, source precision, provenance and deferred-depth semantics; never invent unpublished facts, causal claims, unverified comparisons or score-like judgments; [3] make candidate generation, validation, review staging, canonical promotion and public-data workflows deterministic, bounded, resumable and free of machine-resolvable blockers while preserving all required human-only review gates; [4] align the public product with the canonical nationwide dataset and pass core browse/search/detail repository and production smoke checks; [5] make CI, regression, data-quality and final runtime verification green with no unresolved implementation blocker, surfacing rather than bypassing true human-only gates. Preserve CI, provenance, quota and review boundaries. Do not stop at intermediate milestones. Only after all five criteria and final runtime checks are demonstrably green, write docs/ADE_COMPLETION.json with schema_version=1,status=COMPLETE and concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Update `data/candidates/morioka-city/review_candidate.json` with complete official primary source evidence, period boundaries, and pending human review metadata.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/morioka-city/review_candidate.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [
+          "data/candidates/morioka-city/review_candidate.json"
+        ],
+        "outcome": "Update `data/candidates/morioka-city/review_candidate.json` with complete official primary source evidence, period boundaries, and pending human review metadata.",
+        "title": "Update `data/candidates/morioka-city/review_candidate.json` with complete official primary source evidence, period boundaries, and pending human review metadata."
+      },
+      {
+        "acceptance": [
+          "Update `tests/test_phase15_review_candidate_staging.py` to verify schema validation, evidence locator integrity, and non-inference rules for Morioka City.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "Update `tests/test_phase15_review_candidate_staging.py` to verify schema validation, evidence locator integrity, and non-inference rules for Morioka City.",
+        "title": "Update `tests/test_phase15_review_candidate_staging.py` to verify schema validation, evidence locator integrity, and non-inference rules for Morioka City."
+      },
+      {
+        "acceptance": [
+          "Update `data/candidates/akita-city/review_candidate.json` with complete official primary source evidence, period boundaries, and pending human review metadata.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/akita-city/review_candidate.json"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [
+          "data/candidates/akita-city/review_candidate.json"
+        ],
+        "outcome": "Update `data/candidates/akita-city/review_candidate.json` with complete official primary source evidence, period boundaries, and pending human review metadata.",
+        "title": "Update `data/candidates/akita-city/review_candidate.json` with complete official primary source evidence, period boundaries, and pending human review metadata."
+      },
+      {
+        "acceptance": [
+          "Update `tests/test_phase15_akita_review_candidate_staging.py` to verify schema validation, evidence locator integrity, and non-inference rules for Akita City.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_akita_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "Update `tests/test_phase15_akita_review_candidate_staging.py` to verify schema validation, evidence locator integrity, and non-inference rules for Akita City.",
+        "title": "Update `tests/test_phase15_akita_review_candidate_staging.py` to verify schema validation, evidence locator integrity, and non-inference rules for Akita City."
+      }
+    ]
+  },
+  "proposal_fingerprint": "30935a3cf49897347fa07b35841f9ce5c9793764384b2a6063d532d1d86a81e8",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 4,
+  "provider_plan_steps_sha256": "3d547dcad8dd7e79e4d9524b1e0fb28d62f302b9add1b786cf1a1d8dc0c2c56e",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "70414e52a0c82700ece62273e7415cb2d161d9f0e9164df0a02f88e3214b044a",
+  "repository_context_fingerprint": "db13ca9d8d22e22f256834100a0a72c5c2a4735e81ca3f361c5c5043f83e312d",
+  "repository_impact_analysis_fingerprint": "c2c6acc1559139df6e480afdc6fcf2b9dc511441cc188f59ca42e50c9e47bd5b",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "50285fcaa7df2ecd5c8b6027fa90a8e121982381be6a3080297e99fc930e2bd2",
+  "repository_source_sha": "a3dc3b22b73484973a4942e9d73d495c12452611",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "data",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jifinish-campaign-83-restart",
+    "execution_phase": "completion-runner",
+    "goal": "Bring Jichi Insight from the current Phase 15 state to production graduation. Continue autonomously while safe executable work remains. Graduation requires: [1] represent the intended nationwide municipality universe in canonical coverage; every in-scope municipality must have valid evidence/state or be explicitly unresolved, never silently omitted; [2] preserve official URLs, stable locators, plan/version/period/fiscal/availability boundaries, source precision, provenance and deferred-depth semantics; never invent unpublished facts, causal claims, unverified comparisons or score-like judgments; [3] make candidate generation, validation, review staging, canonical promotion and public-data workflows deterministic, bounded, resumable and free of machine-resolvable blockers while preserving all required human-only review gates; [4] align the public product with the canonical nationwide dataset and pass core browse/search/detail repository and production smoke checks; [5] make CI, regression, data-quality and final runtime verification green with no unresolved implementation blocker, surfacing rather than bypassing true human-only gates. Preserve CI, provenance, quota and review boundaries. Do not stop at intermediate milestones. Only after all five criteria and final runtime checks are demonstrably green, write docs/ADE_COMPLETION.json with schema_version=1,status=COMPLETE and concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "id_prefix": "jifinish83",
+    "min_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "apps",
+      "data/catalog",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "request_id": "jifinish-request-83-restart",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "request_fingerprint": "828c9e4fb05c969145638089b348e8a6ab88d137d751e87d4e3bf934608c342a",
+  "schema_version": 1,
+  "task_ids": [
+    "jifinish83-001",
+    "jifinish83-002",
+    "jifinish83-003",
+    "jifinish83-004"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 38343093815
+}
