@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jichi-production-graduation-campaign-001",
+  "campaign_id": "jifinish-campaign-83-restart",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-07T12:41:42.639327+00:00",
-  "plan_fingerprint": "d5ff2773f7fe33fc3190c81987394721fe374567abc6e1389ebe208097bf9a14",
+  "dispatched_at": "2026-10-13T03:48:42.620182+00:00",
+  "plan_fingerprint": "94d5e899761ec28915ed0460e57d75ad32d46ecd88389ea91b178d868bd8ff00",
   "run_attempt": "1",
-  "run_id": "37622838213",
+  "run_id": "38343450162",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "aaef71992203c51d50d5406eaec6a3769c1d7db9",
+  "source_sha": "20995a389f0393b9bcfcbfca83486fe182cdd4ac",
   "status": "DISPATCHED",
-  "task_id": "jifinish001-001"
+  "task_id": "jifinish83-001"
 }
