@@ -81,11 +81,12 @@
     "jifinish001-003",
     "jifinish001-004",
     "jifinish001-005",
-    "jifinish001-006"
+    "jifinish001-006",
+    "jifinish83-001"
   ],
-  "current_task_id": "jifinish83-001",
+  "current_task_id": "jifinish83-002",
   "failed_task_ids": [],
-  "iteration": 81,
+  "iteration": 82,
   "metadata": {
     "accepted_plan_fingerprint": "94d5e899761ec28915ed0460e57d75ad32d46ecd88389ea91b178d868bd8ff00",
     "campaign_id": "jifinish-campaign-83-restart",
@@ -320,6 +321,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-13T03:49:03.443657+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-13T03:57:48.749980+00:00"
 }
