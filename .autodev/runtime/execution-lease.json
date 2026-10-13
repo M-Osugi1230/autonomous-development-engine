@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-10-13T21:31:56.527094+00:00",
-  "attempt": 2,
-  "expires_at": "2026-10-13T22:21:56.527094+00:00",
-  "owner_id": "github-actions-provider-resume:38471301334:1",
+  "acquired_at": "2026-10-13T21:40:55.764295+00:00",
+  "attempt": 1,
+  "expires_at": "2026-10-13T22:30:55.764295+00:00",
+  "owner_id": "github-actions-provider:38472403679:1",
   "schema_version": 1,
-  "task_id": "jifinish83-002"
+  "task_id": "jifinish83-003"
 }
