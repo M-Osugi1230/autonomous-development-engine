@@ -3,11 +3,12 @@
   "completed_task_ids": [
     "jifinish83-001",
     "jifinish83-002",
-    "jifinish83-003"
+    "jifinish83-003",
+    "jifinish83-004"
   ],
   "goal": "Bring Jichi Insight from the current Phase 15 state to production graduation. Continue autonomously while safe executable work remains. Graduation requires: [1] represent the intended nationwide municipality universe in canonical coverage; every in-scope municipality must have valid evidence/state or be explicitly unresolved, never silently omitted; [2] preserve official URLs, stable locators, plan/version/period/fiscal/availability boundaries, source precision, provenance and deferred-depth semantics; never invent unpublished facts, causal claims, unverified comparisons or score-like judgments; [3] make candidate generation, validation, review staging, canonical promotion and public-data workflows deterministic, bounded, resumable and free of machine-resolvable blockers while preserving all required human-only review gates; [4] align the public product with the canonical nationwide dataset and pass core browse/search/detail repository and production smoke checks; [5] make CI, regression, data-quality and final runtime verification green with no unresolved implementation blocker, surfacing rather than bypassing true human-only gates. Preserve CI, provenance, quota and review boundaries. Do not stop at intermediate milestones. Only after all five criteria and final runtime checks are demonstrably green, write docs/ADE_COMPLETION.json with schema_version=1,status=COMPLETE and concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
   "schema_version": 1,
-  "status": "RUNNING",
+  "status": "COMPLETED",
   "task_ids": [
     "jifinish83-001",
     "jifinish83-002",
