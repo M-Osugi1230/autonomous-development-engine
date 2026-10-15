@@ -80,11 +80,12 @@
     "ckcov1001-001",
     "ckcov1001-002",
     "ckcov1001-003",
-    "ckcov1001-004"
+    "ckcov1001-004",
+    "ckcov1001-005"
   ],
-  "current_task_id": "ckcov1001-005",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 80,
+  "iteration": 81,
   "metadata": {
     "accepted_plan_fingerprint": "f6a9bdf52250a66b037972208cd9a08868f216b0f380f8b0b77d29d1d3f92540",
     "campaign_id": "ckcov10-campaign-001",
@@ -145,7 +146,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "repository_intelligence_content_fingerprint": "f044836e1661ff4ee5fe7ca23da39f9f4f0f166195d89952458c9a689356fe96",
     "repository_intelligence_context_fingerprint": "a54972fe616d0160c580f94c20220781ede493a0827a7add642497d1608464fe",
     "repository_intelligence_impact_fingerprint": "4a8cb7d4672e6d97b71598c67467fe3b290117f4fc8bfc55a095d51156277e92",
@@ -319,6 +320,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-15T15:30:01.385056+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-15T15:47:02.648897+00:00"
 }
