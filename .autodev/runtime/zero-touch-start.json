@@ -1,13 +1,13 @@
 {
-  "campaign_id": "ckcov10-campaign-001",
+  "campaign_id": "ckcov25-campaign-82-774c07f2c8",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-12T08:23:47.791048+00:00",
-  "plan_fingerprint": "f6a9bdf52250a66b037972208cd9a08868f216b0f380f8b0b77d29d1d3f92540",
+  "dispatched_at": "2026-10-16T15:39:50.245309+00:00",
+  "plan_fingerprint": "328f371fb60aa675126e8fc3bf0f22f0eab13c94cae118c25ce37805e25d36b8",
   "run_attempt": "1",
-  "run_id": "38223293640",
+  "run_id": "38925737015",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "cf0b7901f89c564e4fa76a41bcdc7f3dd7a9d3d4",
+  "source_sha": "20995a389f0393b9bcfcbfca83486fe182cdd4ac",
   "status": "DISPATCHED",
-  "task_id": "ckcov1001-001"
+  "task_id": "ckcov2582-001"
 }
