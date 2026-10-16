@@ -17,16 +17,17 @@
   ],
   "repository_intelligence_prefixes": [
     "operations/plan-detection",
-    "operations/research-priority",
-    "operations/quality-rebase",
-    "operations/patches",
-    "operations/source-research",
-    "operations/universe",
-    "scripts",
-    "tests",
-    "docs",
-    "site/data",
-    "site/assets"
+    "operations/universe/current-universe-v1.json",
+    "scripts/build_plan_detection_registry_v1.mjs",
+    "scripts/lib/plan_detection_v1.mjs",
+    "scripts/validate_plan_detection_candidates_v1.mjs",
+    "scripts/validate_live_site_sync_v1.mjs",
+    "scripts/run_quality_pipeline_v43.mjs",
+    "tests/test_plan_detection_validation_v1.js",
+    "site/data/plan-detection-summary-v1.json",
+    "site/data/release-status.json",
+    "site/data/frontend/manifest.json",
+    "docs/ADE_COVERAGE_10_COMPLETION.json"
   ],
   "graduation_criteria": [
     "Canonical registry/public summary reach >=25% coverage (>=928/3,709; recalculate ceil(universe*0.25) if the authoritative universe changes).",
