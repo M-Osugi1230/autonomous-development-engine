@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project_key": "jichi-insight",
   "request_prefix": "jifinish",
-  "goal": "Graduate Jichi Insight as a nationwide municipality insight platform. Continue autonomously from Phase 15 through complete canonical coverage, public-product alignment, and final runtime verification; preserve fiscal/document/version distinctions and evidence boundaries.",
+  "goal": "Graduate Jichi Insight as a nationwide municipality insight platform. Continue autonomously from Phase 15 through complete canonical coverage, public-product alignment, and final runtime verification; preserve fiscal/document/version distinctions and evidence boundaries. For missing paths, planner steps must explicitly say 'Create new file <exact-path>' so new_paths is declared.",
   "target_repository": "M-Osugi1230/jichi-insight",
   "base_branch": "main",
   "allowed_path_prefixes": [
