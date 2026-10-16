@@ -1,0 +1,206 @@
+{
+  "accepted_plan_fingerprint": "328f371fb60aa675126e8fc3bf0f22f0eab13c94cae118c25ce37805e25d36b8",
+  "campaign_id": "ckcov25-campaign-82-774c07f2c8",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "318ff6273672845cf9c7837b5c89812a033268b4d22f2b77fe26f99d63cb909b",
+    "current_source_sha": "37676e6f29d9dc8cb87b83feecce59886bf306ec",
+    "execution_authority": false,
+    "extracted_record_count": 2,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/chu-kei",
+    "resolution_fingerprint": "40ca9d978d7e05256bc84fd704e36dbe08126fd8875eaa2aa3e1ca519faad141",
+    "retrieval_fingerprint": "3759dedda241c23ec0762be1c862fac91670d48304ed33cc4756166ce22eedff",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "c96a4a4ee9c05ca6f25b52d5640c1e3633dc47a23440c5df77d5cfb834250dd6",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "3f7ef25804b9e7a74c6c69310db804fd9389a9e1af68926e21147494796727ea",
+  "proposal": {
+    "goal": "Advance Chu-kei Insight Plan Detection from 375/3,709 (10.11%) to at least 928 resolved companies (>=25%). Prioritize company-count breadth. Align public/site data and release metadata with the canonical universe/registry, then expand in bounded resumable batches using reviewed evidence and official/first-party IR sources. Never weaken review gates, infer missing evidence into resolved states, or add unrelated features. Criteria: [1] Canonical registry/public summary reach >=25% coverage (>=928/3,709; recalculate ceil(universe*0.25) if the authoritative universe changes). [2] Each newly resolved company has official/first-party evidence with source identity, dates/period semantics and provenance; ambiguous, stale or unreviewed evidence stays unresolved. [3] Complete review evidence before derived registry/site rebuilds; preserve formal-plan/full-text/no-inference safeguards and regression tests. [4] Frontend manifest, Plan Detection summary and release metadata match canonical data; repository-side sync/smoke checks have no deterministic blocker, and external hosting actions are recorded explicitly. [5] Relevant tests, source/audit checks, quality gates and resumable-pipeline checks are green, and ADE remains resumable beyond 25%. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_COVERAGE_25_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Ingest official first-party IR plan detection overrides into `operations/plan-detection/primary-reviewed-overrides-v1.json` to expand resolved company coverage.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "operations/plan-detection/primary-reviewed-overrides-v1.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Ingest official first-party IR plan detection overrides into `operations/plan-detection/primary-reviewed-overrides-v1.json` to expand resolved company coverage.",
+        "title": "Ingest official first-party IR plan detection overrides into `operations/plan-detection/primary-reviewed-overrides-v1.json` to expand resolved company coverage."
+      },
+      {
+        "acceptance": [
+          "Rebuild the canonical plan detection registry and research queue using `scripts/build_plan_detection_registry_v1.mjs`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/build_plan_detection_registry_v1.mjs"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "Rebuild the canonical plan detection registry and research queue using `scripts/build_plan_detection_registry_v1.mjs`.",
+        "title": "Rebuild the canonical plan detection registry and research queue using `scripts/build_plan_detection_registry_v1.mjs`."
+      },
+      {
+        "acceptance": [
+          "Synchronize the public plan detection summary dataset in `site/data/plan-detection-summary-v1.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "site/data/plan-detection-summary-v1.json"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [],
+        "outcome": "Synchronize the public plan detection summary dataset in `site/data/plan-detection-summary-v1.json`.",
+        "title": "Synchronize the public plan detection summary dataset in `site/data/plan-detection-summary-v1.json`."
+      },
+      {
+        "acceptance": [
+          "Update the frontend dataset manifest in `site/data/frontend/manifest.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "site/data/frontend/manifest.json"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "Update the frontend dataset manifest in `site/data/frontend/manifest.json`.",
+        "title": "Update the frontend dataset manifest in `site/data/frontend/manifest.json`."
+      },
+      {
+        "acceptance": [
+          "Execute the plan detection validation test suite in `tests/test_plan_detection_validation_v1.js`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_plan_detection_validation_v1.js"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [],
+        "outcome": "Execute the plan detection validation test suite in `tests/test_plan_detection_validation_v1.js`.",
+        "title": "Execute the plan detection validation test suite in `tests/test_plan_detection_validation_v1.js`."
+      },
+      {
+        "acceptance": [
+          "Write the completion evidence document in `docs/ADE_COVERAGE_25_COMPLETION.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "docs/ADE_COVERAGE_25_COMPLETION.json"
+        ],
+        "depends_on": [
+          "jules-step-005"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-006",
+        "new_paths": [
+          "docs/ADE_COVERAGE_25_COMPLETION.json"
+        ],
+        "outcome": "Write the completion evidence document in `docs/ADE_COVERAGE_25_COMPLETION.json`.",
+        "title": "Write the completion evidence document in `docs/ADE_COVERAGE_25_COMPLETION.json`."
+      }
+    ]
+  },
+  "proposal_fingerprint": "bfb1bb75f8ad8c358646f2d6325ed14b7fd8d810e7b0d4d6819fcede1b5d02f3",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 6,
+  "provider_plan_steps_sha256": "2d245906b04331835eaaf17e28cfa845878592e5115fc04537934dde2e26e136",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
+  "repository_context_fingerprint": "83a9a6cae926572d696037ac2d9e280ce5a77dd62d2f2d9ee5ac7aaba30ae500",
+  "repository_impact_analysis_fingerprint": "4b5ef780f4171b5e90927b21660afed447c9c58c0e20187bb9c8bc1a6da67794",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "ccccad3d5468838b588a5eeb30fc6c6710bc326c1b91fc2d5eabe017c58dc1c8",
+  "repository_source_sha": "37676e6f29d9dc8cb87b83feecce59886bf306ec",
+  "request": {
+    "allowed_path_prefixes": [
+      "operations",
+      "scripts",
+      "site",
+      "tests",
+      "schemas",
+      "reports",
+      "releases",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "ckcov25-campaign-82-774c07f2c8",
+    "execution_phase": "completion-runner",
+    "goal": "Advance Chu-kei Insight Plan Detection from 375/3,709 (10.11%) to at least 928 resolved companies (>=25%). Prioritize company-count breadth. Align public/site data and release metadata with the canonical universe/registry, then expand in bounded resumable batches using reviewed evidence and official/first-party IR sources. Never weaken review gates, infer missing evidence into resolved states, or add unrelated features. Criteria: [1] Canonical registry/public summary reach >=25% coverage (>=928/3,709; recalculate ceil(universe*0.25) if the authoritative universe changes). [2] Each newly resolved company has official/first-party evidence with source identity, dates/period semantics and provenance; ambiguous, stale or unreviewed evidence stays unresolved. [3] Complete review evidence before derived registry/site rebuilds; preserve formal-plan/full-text/no-inference safeguards and regression tests. [4] Frontend manifest, Plan Detection summary and release metadata match canonical data; repository-side sync/smoke checks have no deterministic blocker, and external hosting actions are recorded explicitly. [5] Relevant tests, source/audit checks, quality gates and resumable-pipeline checks are green, and ADE remains resumable beyond 25%. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_COVERAGE_25_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "id_prefix": "ckcov2582",
+    "min_tasks": 3,
+    "repository_intelligence_prefixes": [
+      "operations/plan-detection/registry-v1.json",
+      "operations/plan-detection/research-queue-v1.json",
+      "operations/plan-detection/verified-overrides-v1.json",
+      "operations/plan-detection/primary-reviewed-overrides-v1.json",
+      "operations/universe/current-universe-v1.json",
+      "scripts/build_plan_detection_registry_v1.mjs",
+      "scripts/lib/plan_detection_v1.mjs",
+      "scripts/validate_live_site_sync_v1.mjs",
+      "tests/test_plan_detection_validation_v1.js",
+      "site/data/plan-detection-summary-v1.json",
+      "site/data/release-status.json",
+      "site/data/frontend/manifest.json"
+    ],
+    "request_id": "ckcov25-request-82-774c07f2c8",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/chu-kei"
+  },
+  "request_fingerprint": "42a973903ecc15a152ff549caf29d6df2ce9224a122f7cfe884d6a9bb774347f",
+  "schema_version": 1,
+  "task_ids": [
+    "ckcov2582-001",
+    "ckcov2582-002",
+    "ckcov2582-003",
+    "ckcov2582-004",
+    "ckcov2582-005",
+    "ckcov2582-006"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 38924805188
+}
