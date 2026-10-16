@@ -3,9 +3,9 @@
   "last_error": null,
   "last_failure_kind": null,
   "provider_id": "jules",
-  "provider_session_id": "17702622138514774621",
+  "provider_session_id": "17212905719367481225",
   "replan_count": 0,
   "resume_after": null,
-  "state": "COMPLETED",
-  "task_id": "ckcov2582-001"
+  "state": "RUNNING",
+  "task_id": "ckcov2582-002"
 }
