@@ -1,15 +1,10 @@
 {
-  "accepted_plan_fingerprint": "94d5e899761ec28915ed0460e57d75ad32d46ecd88389ea91b178d868bd8ff00",
-  "attempt": 3,
-  "campaign_id": "jifinish-campaign-83-restart",
-  "development_memory_context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
-  "development_memory_record_count": 0,
-  "first_task_id": "jifinish83-001",
-  "proposal_fingerprint": "30935a3cf49897347fa07b35841f9ce5c9793764384b2a6063d532d1d86a81e8",
-  "reason": "trusted-plan-accepted",
-  "request_fingerprint": "828c9e4fb05c969145638089b348e8a6ab88d137d751e87d4e3bf934608c342a",
-  "request_id": "jifinish-request-83-restart",
+  "attempt": 1,
+  "detail": "task jules-step-001 path does not exist in repository snapshot and is not declared new: data/candidates/yamagata-city/review_candidate.json",
+  "reason": "planner-retryable-failure",
+  "request_fingerprint": "ac719e612600f72a46bc39537de1828289cc8e4927f11fe7b17bbff2721998d9",
+  "request_id": "jifinish-request-86-d6a4ace9ac",
   "schema_version": 1,
-  "state": "ACCEPTED",
-  "updated_at": "2026-10-13T03:48:32.772515+00:00"
+  "state": "REPLAN",
+  "updated_at": "2026-10-16T15:07:39.147709+00:00"
 }
