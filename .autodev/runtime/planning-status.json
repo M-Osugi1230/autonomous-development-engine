@@ -1,10 +1,10 @@
 {
-  "attempt": 1,
-  "detail": "task jules-step-001 path does not exist in repository snapshot and is not declared new: data/candidates/yamagata-city/review_candidate.json",
+  "attempt": 2,
+  "detail": "Jules planner did not reach plan approval boundary in time",
   "reason": "planner-retryable-failure",
   "request_fingerprint": "ab6391286f370fe03af4080c8b0f9b7d19c6c39efa5d569158cff9b20292e618",
   "request_id": "jifinish-request-86-d6a4ace9ac",
   "schema_version": 1,
   "state": "REPLAN",
-  "updated_at": "2026-10-16T15:14:43.636529+00:00"
+  "updated_at": "2026-10-16T15:27:02.909570+00:00"
 }
