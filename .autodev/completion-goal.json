@@ -1,20 +1,42 @@
 {
   "schema_version": 1,
   "project_key": "chu-kei-insight",
-  "request_prefix": "ckcov10",
-  "goal": "Expand Chu-kei Insight Plan Detection coverage safely from the current 268 resolved companies out of the 3,709-company listed-company universe (7.2257%) to at least 371 resolved companies (10% or higher). Prioritize company-count breadth over unnecessary deep-detail enrichment. Reuse the existing candidate, source-audit, validation, canonical-data, public-sync, and resumable quality pipeline. Before changing derived override, registry, or site summary files, first create or complete genuine company-level primary-review evidence under the existing quality-rebase/source-research review paths for high-confidence official or first-party candidates. Do not increase coverage by weakening confirmation or full-text-review gates. Work in bounded resumable batches until the target is reached. Do not add unrelated product features unless they are required to remove a deterministic blocker to this coverage objective.",
+  "request_prefix": "ckcov25",
+  "goal": "Advance Chu-kei Insight from the completed 10% Plan Detection milestone to at least 25% canonical Plan Detection coverage across the authoritative Japanese listed-company universe. The current baseline is 375 resolved companies out of 3,709 (10.11%); the minimum target at the current universe size is 928 resolved companies. Prioritize company-count breadth over unnecessary deep-detail enrichment while preserving evidence quality. First reconcile repository-generated public data and release-status metadata with the current canonical universe and Plan Detection registry, and verify that the static public product can consume the current frontend manifest/data artifacts without deterministic repository-side blockers. Then expand coverage in bounded, resumable, high-confidence batches by reusing existing primary reviews, verified overrides, audited patches, candidate queues, source-research artifacts, and first-party IR evidence before performing new research. Newly resolved states must remain grounded in official or first-party evidence with preserved provenance; never manufacture coverage by weakening review gates, inferring no_formal_plan from missing evidence, or promoting ambiguous evidence. Keep canonical registry, generated frontend/site datasets, search/browse/detail behavior, release metadata, tests, and quality gates aligned throughout. Treat external hosting/provider configuration that cannot be changed safely from the repository as an explicit boundary rather than silently claiming deployment success. Do not add unrelated product features unless required to remove a deterministic blocker to breadth, public-data synchronization, or safe autonomous continuation.",
   "target_repository": "M-Osugi1230/chu-kei",
   "base_branch": "main",
-  "allowed_path_prefixes": ["operations","scripts","site","tests","schemas","reports","releases","docs"],
-  "repository_intelligence_prefixes": ["operations/plan-detection","operations/research-priority","operations/quality-rebase/phase2/reviews","operations/patches","operations/source-research","operations/universe","scripts","docs","site"],
-  "graduation_criteria": [
-    "The canonical Plan Detection summary represents the intended listed-company universe and reports at least 371 resolved companies out of 3,709, corresponding to detectionCoverage of at least 0.10; if the authoritative universe size legitimately changes, the 10% threshold must be recalculated and the change documented rather than hidden.",
-    "Every newly resolved Plan Detection state is supported by official or first-party evidence with preserved company, source, document identity, publication date, plan/version/period or fiscal semantics, currentness boundaries, and provenance. Missing, ambiguous, or unreviewed evidence is never converted into no_formal_plan or another resolved state merely to increase coverage.",
-    "Coverage expansion is performed by completing genuine primary-review evidence first and only then rebuilding derived overrides/registry/site data. Existing requireFormalPlanConfirmed and requireFullTextHumanReviewComplete safeguards must not be weakened to manufacture coverage. Batches prioritize high-confidence official-source candidates and preserve validation safeguards against quarterly-document false positives, malformed plan periods, stale plans, and blanket or synthetic promotions.",
-    "Canonical data, generated site data, and public-product synchronization remain aligned after coverage changes. Search, browse, and company-detail behavior continue to operate on the broad universe, and any human-only publication or external promotion boundary remains explicit rather than silently auto-approved.",
-    "All repository validation, Plan Detection tests, quality gates, source/audit checks, and relevant production smoke/runtime checks are green for the final state, with no known deterministic pipeline blocker and with the autonomous pipeline remaining safely resumable for the next coverage milestone."
+  "allowed_path_prefixes": [
+    "operations",
+    "scripts",
+    "site",
+    "tests",
+    "schemas",
+    "reports",
+    "releases",
+    "docs"
   ],
-  "completion_marker_path": "docs/ADE_COVERAGE_10_COMPLETION.json",
-  "min_tasks": 2,
+  "repository_intelligence_prefixes": [
+    "operations/plan-detection",
+    "operations/research-priority",
+    "operations/quality-rebase",
+    "operations/patches",
+    "operations/source-research",
+    "operations/universe",
+    "scripts",
+    "tests",
+    "docs",
+    "site/data",
+    "site/assets"
+  ],
+  "graduation_criteria": [
+    "The authoritative Plan Detection registry and public summary represent the current listed-company universe and report at least 25% resolved coverage. At the current 3,709-company universe this requires at least 928 resolved companies; if the authoritative universe size legitimately changes, the threshold must be recalculated as ceil(universe_size * 0.25) and the change documented.",
+    "Every newly resolved Plan Detection state is supported by official or first-party evidence with preserved company identity, source URL and document identity, publication or checked date, plan/version/period or fiscal semantics, currentness boundary, and provenance. Missing, ambiguous, stale, or unreviewed evidence is never converted into no_formal_plan or another resolved state merely to increase coverage.",
+    "Coverage expansion completes genuine company-level review evidence before rebuilding derived overrides, registry, summaries, and frontend artifacts. Existing formal-plan confirmation, full-text/human-review, candidate non-publication, and no-inference safeguards are preserved or strengthened; regression tests continue to reject false positives and malformed plan-period derivations.",
+    "Repository public-product data is synchronized with canonical data: the frontend manifest is generated for the current universe, Plan Detection summary matches the registry, release-status metadata no longer reports materially stale universe/coverage state, bundle/universe identity remains aligned, and repository-side live-site synchronization validation has no deterministic blocker.",
+    "Search, browse, filters, and company-detail behavior continue to work over the broad universe after expansion. Relevant local/runtime/static smoke checks and data-integrity checks are green. If external hosting or domain configuration cannot be controlled from the repository, the remaining external action is recorded explicitly with evidence instead of being treated as completed.",
+    "All relevant repository validation, Plan Detection regression tests, source/audit checks, quality gates, resumable-pipeline checks, and synchronization checks are green at the final state. The autonomous pipeline remains safely resumable for a successor milestone beyond 25%, with no known deterministic repository-side blocker."
+  ],
+  "completion_marker_path": "docs/ADE_COVERAGE_25_COMPLETION.json",
+  "min_tasks": 3,
   "max_tasks": 8
 }
