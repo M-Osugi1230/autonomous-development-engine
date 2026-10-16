@@ -1,0 +1,126 @@
+{
+  "accepted_plan_fingerprint": "fdf612550bfae79c0e836b75617de34c93cc9a9239a92441ace990afa2e842bf",
+  "campaign_id": "jifinish-campaign-86-d6a4ace9ac",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+    "current_source_sha": "b58a948641a4b85e91fe30d353a230a9fdc67a65",
+    "execution_authority": false,
+    "extracted_record_count": 4,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jichi-insight",
+    "resolution_fingerprint": "b708db1802d9b4b2e4a106c004d420c14fd052e1eb4a49a2e5456b1fd1116fb9",
+    "retrieval_fingerprint": "f14e3b9ef509649a26b32b2bd219d47de83a879be4a7f66d7af103ea3e55a594",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "47f875e6bb37b01927fdde34ab3df66f1bd29ba1cd76722387280f692747b265",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "f509786944658940b8dd88916d8283b5206c6947e66027e5d5db584556b7f458",
+  "proposal": {
+    "goal": "Graduate Jichi Insight as a nationwide municipality insight platform. Continue autonomously from Phase 15 through complete canonical coverage, public-product alignment, and final runtime verification; preserve fiscal/document/version distinctions and evidence boundaries. Continue autonomously from the current repository state and do not stop at an intermediate milestone while safe executable work remains. Graduation criteria: [1] Canonical coverage includes every intended municipality; each is validly evidenced or explicitly unresolved, never omitted. [2] Evidence retains official URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred depth; no invented facts, causality, comparisons, rankings or scores. [3] Candidate generation, validation, review staging, promotion and public-data pipelines are deterministic, resumable and free of machine-resolvable blockers; required human review gates remain explicit. [4] Public browse/search/detail uses current canonical nationwide data and passes repository plus production smoke checks. [5] CI, regression, data-quality and final runtime verification are green; queue exhaustion or campaign completion alone never means project completion. Only the verified completion marker does. Keep CI, validation, provenance, quota limits, and existing human-only safety boundaries intact. Only when every graduation criterion is demonstrably satisfied and final repository/runtime checks are green, create or update docs/ADE_COMPLETION.json as JSON with schema_version=1 and status=COMPLETE plus concise evidence fields. If the marker does not yet qualify, choose the highest-value bounded next work. For every path that does not yet exist in the repository snapshot, explicitly phrase the plan step as 'Create new file <exact-path>' and declare that exact path in new_paths; never treat a missing path as an existing file.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Create new file data/catalog/morioka_phase15_sources.json",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/catalog/morioka_phase15_sources.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [
+          "data/catalog/morioka_phase15_sources.json"
+        ],
+        "outcome": "Create new file data/catalog/morioka_phase15_sources.json",
+        "title": "Create new file data/catalog/morioka_phase15_sources.json"
+      },
+      {
+        "acceptance": [
+          "Create new file tests/test_morioka_phase15_review.py",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_morioka_phase15_review.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [
+          "tests/test_morioka_phase15_review.py"
+        ],
+        "outcome": "Create new file tests/test_morioka_phase15_review.py",
+        "title": "Create new file tests/test_morioka_phase15_review.py"
+      }
+    ]
+  },
+  "proposal_fingerprint": "d591aa315274ddf81be9e0599292b3b35646a8fd07a78ae3da10f9ffc6cc9802",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 2,
+  "provider_plan_steps_sha256": "4c06c70981e8d85b2546147a1b96c12acad32b62b0e0cb130a8832207085d1ad",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "70414e52a0c82700ece62273e7415cb2d161d9f0e9164df0a02f88e3214b044a",
+  "repository_context_fingerprint": "938756a181866ca132243cba5a5a40169a6684ecbf8a18d2a22152f6507ef373",
+  "repository_impact_analysis_fingerprint": "21348ecf467260092e1d691c87254b12217496f684060df36143f7d52b80d788",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "c583e3d8a2a7f9468876591a192b90306ac3f2ed3650088b43e537267d5f029b",
+  "repository_source_sha": "b58a948641a4b85e91fe30d353a230a9fdc67a65",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "data",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jifinish-campaign-86-d6a4ace9ac",
+    "execution_phase": "completion-runner",
+    "goal": "Graduate Jichi Insight as a nationwide municipality insight platform. Continue autonomously from Phase 15 through complete canonical coverage, public-product alignment, and final runtime verification; preserve fiscal/document/version distinctions and evidence boundaries. Continue autonomously from the current repository state and do not stop at an intermediate milestone while safe executable work remains. Graduation criteria: [1] Canonical coverage includes every intended municipality; each is validly evidenced or explicitly unresolved, never omitted. [2] Evidence retains official URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred depth; no invented facts, causality, comparisons, rankings or scores. [3] Candidate generation, validation, review staging, promotion and public-data pipelines are deterministic, resumable and free of machine-resolvable blockers; required human review gates remain explicit. [4] Public browse/search/detail uses current canonical nationwide data and passes repository plus production smoke checks. [5] CI, regression, data-quality and final runtime verification are green; queue exhaustion or campaign completion alone never means project completion. Only the verified completion marker does. Keep CI, validation, provenance, quota limits, and existing human-only safety boundaries intact. Only when every graduation criterion is demonstrably satisfied and final repository/runtime checks are green, create or update docs/ADE_COMPLETION.json as JSON with schema_version=1 and status=COMPLETE plus concise evidence fields. If the marker does not yet qualify, choose the highest-value bounded next work. For every path that does not yet exist in the repository snapshot, explicitly phrase the plan step as 'Create new file <exact-path>' and declare that exact path in new_paths; never treat a missing path as an existing file.",
+    "id_prefix": "jifinish86",
+    "min_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "apps",
+      "data/catalog",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "request_id": "jifinish-request-86-d6a4ace9ac",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "request_fingerprint": "ab6391286f370fe03af4080c8b0f9b7d19c6c39efa5d569158cff9b20292e618",
+  "schema_version": 1,
+  "task_ids": [
+    "jifinish86-001",
+    "jifinish86-002"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 38945526098
+}
