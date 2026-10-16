@@ -4,22 +4,21 @@
     "ade-jichi-insight",
     "ade-jquants"
   ],
-  "allowed": true,
+  "allowed": false,
   "daily_limit": 15,
-  "observed_at": "2026-10-16T18:12:43.777859+00:00",
+  "observed_at": "2026-10-16T18:18:24.052170+00:00",
   "project_allocation": 4,
   "project_key": "ade-jichi-insight",
-  "project_used": 3,
-  "purpose": "planner",
-  "reason": "within-soft-allocation",
-  "remaining": 9,
-  "resume_after": null,
+  "project_used": 4,
+  "purpose": "implementation",
+  "reason": "project-soft-allocation-protected",
+  "remaining": 8,
+  "resume_after": "2026-10-17T15:03:23.279306+00:00",
   "schema_version": 1,
   "selected_project_keys": [
     "ade-jquants",
-    "ade-chu-kei",
-    "ade-jichi-insight"
+    "ade-chu-kei"
   ],
-  "total_used": 6,
+  "total_used": 7,
   "unknown_session_count": 0
 }
