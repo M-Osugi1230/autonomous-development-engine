@@ -27,8 +27,7 @@
     "tests/test_plan_detection_validation_v1.js",
     "site/data/plan-detection-summary-v1.json",
     "site/data/release-status.json",
-    "site/data/frontend/manifest.json",
-    "docs/ADE_COVERAGE_10_COMPLETION.json"
+    "site/data/frontend/manifest.json"
   ],
   "request_id": "ckcov25-request-82-774c07f2c8",
   "schema_version": 1,
