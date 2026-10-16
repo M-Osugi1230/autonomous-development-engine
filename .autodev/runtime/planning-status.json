@@ -1,10 +1,15 @@
 {
-  "attempt": 2,
-  "detail": "Jules planner did not reach plan approval boundary in time",
-  "reason": "planner-retryable-failure",
+  "accepted_plan_fingerprint": "fdf612550bfae79c0e836b75617de34c93cc9a9239a92441ace990afa2e842bf",
+  "attempt": 3,
+  "campaign_id": "jifinish-campaign-86-d6a4ace9ac",
+  "development_memory_context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+  "development_memory_record_count": 0,
+  "first_task_id": "jifinish86-001",
+  "proposal_fingerprint": "d591aa315274ddf81be9e0599292b3b35646a8fd07a78ae3da10f9ffc6cc9802",
+  "reason": "trusted-plan-accepted",
   "request_fingerprint": "ab6391286f370fe03af4080c8b0f9b7d19c6c39efa5d569158cff9b20292e618",
   "request_id": "jifinish-request-86-d6a4ace9ac",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-10-16T15:27:02.909570+00:00"
+  "state": "ACCEPTED",
+  "updated_at": "2026-10-16T18:17:53.599664+00:00"
 }
