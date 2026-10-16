@@ -1,0 +1,157 @@
+{
+  "content_summary": {
+    "module_count": 0,
+    "modules": [],
+    "schema_version": 1
+  },
+  "content_summary_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
+  "impact_analysis": {
+    "affected_paths": [],
+    "affected_test_paths": [],
+    "changed_paths": [
+      "docs/ADE_COVERAGE_25_COMPLETION.json",
+      "operations/plan-detection/primary-reviewed-overrides-v1.json",
+      "scripts/build_plan_detection_registry_v1.mjs",
+      "site/data/frontend/manifest.json",
+      "site/data/plan-detection-summary-v1.json",
+      "tests/test_plan_detection_validation_v1.js"
+    ],
+    "entries": [
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "docs/ADE_COVERAGE_25_COMPLETION.json",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "operations/plan-detection/primary-reviewed-overrides-v1.json",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "scripts/build_plan_detection_registry_v1.mjs",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "site/data/frontend/manifest.json",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "site/data/plan-detection-summary-v1.json",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": true,
+        "path": "tests/test_plan_detection_validation_v1.js",
+        "reason": "changed",
+        "via_path": null
+      }
+    ],
+    "schema_version": 1,
+    "truncated": false
+  },
+  "impact_analysis_fingerprint": "4b5ef780f4171b5e90927b21660afed447c9c58c0e20187bb9c8bc1a6da67794",
+  "planner_context": {
+    "base_branch": "main",
+    "content_summary_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
+    "content_summary_module_count": 0,
+    "dependency_edges_truncated": false,
+    "documentation_paths": [],
+    "internal_dependency_edge_count": 0,
+    "internal_dependency_edges": [],
+    "known_file_count_within_trusted_roots": 12,
+    "known_files_truncated": false,
+    "known_files_within_trusted_roots": [
+      "operations/plan-detection/primary-reviewed-overrides-v1.json",
+      "operations/plan-detection/registry-v1.json",
+      "operations/plan-detection/research-queue-v1.json",
+      "operations/plan-detection/verified-overrides-v1.json",
+      "operations/universe/current-universe-v1.json",
+      "scripts/build_plan_detection_registry_v1.mjs",
+      "scripts/lib/plan_detection_v1.mjs",
+      "scripts/validate_live_site_sync_v1.mjs",
+      "site/data/frontend/manifest.json",
+      "site/data/plan-detection-summary-v1.json",
+      "site/data/release-status.json",
+      "tests/test_plan_detection_validation_v1.js"
+    ],
+    "manifest_paths": [],
+    "python_module_summaries": [],
+    "python_module_summaries_truncated": false,
+    "relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+    "repository": "M-Osugi1230/chu-kei",
+    "schema_version": 1,
+    "snapshot_fingerprint": "ccccad3d5468838b588a5eeb30fc6c6710bc326c1b91fc2d5eabe017c58dc1c8",
+    "source_roots": [],
+    "source_sha": "37676e6f29d9dc8cb87b83feecce59886bf306ec",
+    "test_roots": [
+      "tests"
+    ],
+    "test_source_link_count": 0,
+    "test_source_links": [],
+    "test_source_links_truncated": false,
+    "trusted_writable_roots": [
+      "operations",
+      "scripts",
+      "site",
+      "tests",
+      "schemas",
+      "reports",
+      "releases",
+      "docs"
+    ],
+    "workflow_paths": []
+  },
+  "planner_context_fingerprint": "83a9a6cae926572d696037ac2d9e280ce5a77dd62d2f2d9ee5ac7aaba30ae500",
+  "relationship_graph": {
+    "dependency_edge_count": 0,
+    "dependency_edges": [],
+    "schema_version": 1,
+    "test_source_link_count": 0,
+    "test_source_links": []
+  },
+  "relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "schema_version": 1,
+  "snapshot": {
+    "base_branch": "main",
+    "documentation_paths": [],
+    "manifest_paths": [],
+    "path_count": 12,
+    "paths": [
+      "operations/plan-detection/primary-reviewed-overrides-v1.json",
+      "operations/plan-detection/registry-v1.json",
+      "operations/plan-detection/research-queue-v1.json",
+      "operations/plan-detection/verified-overrides-v1.json",
+      "operations/universe/current-universe-v1.json",
+      "scripts/build_plan_detection_registry_v1.mjs",
+      "scripts/lib/plan_detection_v1.mjs",
+      "scripts/validate_live_site_sync_v1.mjs",
+      "site/data/frontend/manifest.json",
+      "site/data/plan-detection-summary-v1.json",
+      "site/data/release-status.json",
+      "tests/test_plan_detection_validation_v1.js"
+    ],
+    "repository": "M-Osugi1230/chu-kei",
+    "schema_version": 1,
+    "source_roots": [],
+    "source_sha": "37676e6f29d9dc8cb87b83feecce59886bf306ec",
+    "test_roots": [
+      "tests"
+    ],
+    "workflow_paths": []
+  },
+  "snapshot_fingerprint": "ccccad3d5468838b588a5eeb30fc6c6710bc326c1b91fc2d5eabe017c58dc1c8"
+}
