@@ -49,6 +49,13 @@ def _fallback_available() -> bool:
     )
 
 
+def _explicit_quota_recheck_requested() -> bool:
+    value = os.environ.get("ADE_RECHECK_PROVIDER_QUOTA")
+    if not isinstance(value, str):
+        return False
+    return value.strip().casefold() in {"1", "true", "yes", "on"}
+
+
 def _preserve_attempt_floor(
     gh: GitHubClient,
     *,
@@ -97,6 +104,15 @@ def main() -> int:
             now=datetime.now(UTC),
             fallback_available=_fallback_available(),
         )
+        if (
+            action == "WAIT"
+            and checkpoint.get("state") == "PAUSED_QUOTA"
+            and session_id is None
+            and _explicit_quota_recheck_requested()
+        ):
+            action = "START_NEW"
+            print("RECHECK: quota policy/capacity changed; reassessing admission")
+
         active_attempt = checkpoint_attempt(checkpoint)
         retrying_provider_error = (
             action == "START_NEW"
