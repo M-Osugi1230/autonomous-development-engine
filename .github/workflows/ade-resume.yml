@@ -67,6 +67,59 @@ jobs:
           path: .autodev/runtime/jules-session.json
           if-no-files-found: ignore
 
+  controller-change-project-resume:
+    if: github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        control_ref:
+          - ade-jichi-insight
+          - ade-chu-kei
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    concurrency:
+      group: ade-project-state-${{ matrix.control_ref }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Load project state from control branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "${{ matrix.control_ref }}"
+          git checkout FETCH_HEAD -- .autodev
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Resume active project checkpoint after controller change
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          COPILOT_AGENT_TOKEN: ${{ secrets.COPILOT_AGENT_TOKEN }}
+          ADE_ENABLE_COPILOT_FALLBACK: ${{ vars.ADE_ENABLE_COPILOT_FALLBACK }}
+          ADE_CONTROL_REF: ${{ matrix.control_ref }}
+          ADE_PROJECT_KEY: ${{ matrix.control_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADE_GITHUB_OWNER: M-Osugi1230
+          ADE_GITHUB_REPO: autonomous-development-engine
+          ADE_JULES_DAILY_TASK_LIMIT: "15"
+        run: python .github/trusted/provider_resume.py
+
+      - name: Upload active project resume result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-controller-change-resume-result-${{ matrix.control_ref }}
+          path: .autodev/runtime/jules-session.json
+          if-no-files-found: ignore
+
   scheduled-project-resume:
     if: github.event_name == 'schedule'
     strategy:
