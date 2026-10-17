@@ -6,19 +6,19 @@
   ],
   "allowed": true,
   "daily_limit": 15,
-  "observed_at": "2026-10-17T19:06:07.844029+00:00",
+  "observed_at": "2026-10-17T19:34:23.670906+00:00",
   "project_allocation": 5,
   "project_key": "ade-chu-kei",
-  "project_used": 2,
+  "project_used": 3,
   "purpose": "implementation",
   "reason": "within-soft-allocation",
-  "remaining": 7,
+  "remaining": 5,
   "resume_after": null,
   "schema_version": 1,
   "selected_project_keys": [
     "ade-jquants",
     "ade-chu-kei"
   ],
-  "total_used": 8,
+  "total_used": 10,
   "unknown_session_count": 0
 }
