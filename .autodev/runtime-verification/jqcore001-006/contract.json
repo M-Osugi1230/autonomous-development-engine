@@ -2,8 +2,8 @@
   "environment": "repository",
   "max_attempts": 2,
   "required_probe_ids": [
-    "jquants-api-import-smoke",
-    "jquants-vercel-contract-smoke"
+    "repository-bytecode-smoke",
+    "repository-entrypoint-smoke"
   ],
   "schema_version": 1,
   "source_sha": "3c001c63dae4359123eeccb7cf98733491b4b59e",
