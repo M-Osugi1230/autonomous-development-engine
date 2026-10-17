@@ -1,0 +1,40 @@
+{
+  "attempts_by_probe": [
+    {
+      "attempts": 1,
+      "probe_id": "jquants-api-import-smoke"
+    },
+    {
+      "attempts": 1,
+      "probe_id": "jquants-vercel-contract-smoke"
+    }
+  ],
+  "report": {
+    "contract_fingerprint": "cfec5202ede6b2ca75c2c3b5196a53856a06fc0ff79452475cdb145434a6915d",
+    "disposition": "FAILED",
+    "missing_probe_ids": [],
+    "results": [
+      {
+        "attempt": 1,
+        "detail_code": "jquants-api-import-nonzero",
+        "probe_id": "jquants-api-import-smoke",
+        "schema_version": 1,
+        "source_sha": "3c001c63dae4359123eeccb7cf98733491b4b59e",
+        "status": "FAIL"
+      },
+      {
+        "attempt": 1,
+        "detail_code": "jquants-vercel-contract-pass",
+        "probe_id": "jquants-vercel-contract-smoke",
+        "schema_version": 1,
+        "source_sha": "3c001c63dae4359123eeccb7cf98733491b4b59e",
+        "status": "PASS"
+      }
+    ],
+    "schema_version": 1,
+    "source_sha": "3c001c63dae4359123eeccb7cf98733491b4b59e",
+    "verification_id": "rv-3c001c63dae4359123eeccb7cf98733491b4b59e"
+  },
+  "report_fingerprint": "200f02196ec25f8a4be937c9de270961f7cfd8bf13095cb75494720b180f8fc3",
+  "schema_version": 1
+}
