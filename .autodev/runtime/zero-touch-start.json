@@ -1,13 +1,13 @@
 {
   "campaign_id": "jquants-core-workflows-001",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-17T18:31:22.552158+00:00",
+  "dispatched_at": "2026-10-17T19:30:15.468541+00:00",
   "plan_fingerprint": "0effc07cc3a00b2ac6f7b4173cc39adcdb460d3c2df89140e8e11904422cdacf",
   "run_attempt": "2",
-  "run_id": "39049134007",
+  "run_id": "39059041210",
   "schema_version": 1,
   "source": "schedule",
-  "source_sha": "cd968b8d4c2e2223fe29463611f53def265ae058",
+  "source_sha": "3993e068b184b8a5f8944d6d968dcba320a29ebb",
   "status": "DISPATCHED",
-  "task_id": "jqcore001-005"
+  "task_id": "jqcore001-006"
 }
