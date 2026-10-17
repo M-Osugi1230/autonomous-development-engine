@@ -67,6 +67,16 @@ def contain_runtime_verification_failure(
     if not isinstance(task_ids, list) or receipt.task_id not in task_ids:
         raise ValueError("runtime failure task is not part of campaign")
 
+    current_task_id = state_payload.get("current_task_id")
+    if (
+        isinstance(current_task_id, str)
+        and current_task_id.strip()
+        and current_task_id != receipt.task_id
+    ):
+        raise RuntimeError(
+            "stale runtime verification failure cannot replace a newer current task"
+        )
+
     metadata = state_payload.get("metadata")
     if not isinstance(metadata, dict):
         metadata = {}
