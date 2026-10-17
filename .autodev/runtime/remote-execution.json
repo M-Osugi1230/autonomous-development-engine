@@ -1,8 +1,8 @@
 {
-  "schema_version": 1,
-  "task_id": "jqcore001-004",
-  "status": "PR_CREATED",
-  "target_repository": "M-Osugi1230/jquants-research-studio",
   "pull_request_url": "https://github.com/M-Osugi1230/jquants-research-studio/pull/133",
-  "recorded_at": "2026-10-10T23:01:14.538424+00:00"
+  "recorded_at": "2026-10-17T18:19:06.487015+00:00",
+  "schema_version": 1,
+  "status": "MERGED",
+  "target_repository": "M-Osugi1230/jquants-research-studio",
+  "task_id": "jqcore001-004"
 }
