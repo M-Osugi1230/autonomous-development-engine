@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from ade.execution_lease_store import claim_execution
 from ade.production_provider_broker import (
     broker_resume_action,
+    checkpoint_attempt,
     copilot_fallback_enabled,
 )
 from ade.providers.base import ProviderError, ProviderUnauthorizedError
@@ -18,7 +19,9 @@ from ade.remote_execution import execution_target_from_state
 
 from github_client import GitHubClient, GitHubError
 from provider_cycle import (
+    _checkpoint,
     _load_task,
+    _persist_checkpoint,
     _safe_error,
     _write_result,
     monitor_existing,
@@ -27,6 +30,7 @@ from provider_cycle import (
 )
 
 CHECKPOINT_FILE = Path(".autodev/runtime/checkpoint.json")
+CHECKPOINT_PATH = ".autodev/runtime/checkpoint.json"
 
 
 def _load_checkpoint() -> dict | None:
@@ -45,12 +49,34 @@ def _fallback_available() -> bool:
     )
 
 
+def _preserve_attempt_floor(
+    gh: GitHubClient,
+    *,
+    task_id: str,
+    attempt: int,
+) -> None:
+    if attempt <= 0:
+        return
+    payload, _ = gh.get_json_file(CHECKPOINT_PATH)
+    if payload.get("task_id") != task_id:
+        return
+    current_attempt = checkpoint_attempt(payload)
+    if current_attempt >= attempt:
+        return
+    payload["attempt"] = attempt
+    _persist_checkpoint(gh, payload)
+
+
 def main() -> int:
     controller_owner = os.environ.get("ADE_GITHUB_OWNER", "M-Osugi1230")
     controller_repo = os.environ.get(
         "ADE_GITHUB_REPO",
         "autonomous-development-engine",
     )
+    gh: GitHubClient | None = None
+    task_id = "unknown"
+    active_attempt = 0
+    retrying_provider_error = False
     try:
         checkpoint = _load_checkpoint()
         if checkpoint is None:
@@ -71,6 +97,15 @@ def main() -> int:
             now=datetime.now(UTC),
             fallback_available=_fallback_available(),
         )
+        active_attempt = checkpoint_attempt(checkpoint)
+        retrying_provider_error = (
+            action == "START_NEW"
+            and checkpoint.get("state") == "FAILED"
+            and checkpoint.get("last_failure_kind") == "PROVIDER_ERROR"
+        )
+        if retrying_provider_error:
+            active_attempt += 1
+
         if action == "NOOP":
             print(
                 f"NOOP: checkpoint state {checkpoint.get('state')} "
@@ -103,7 +138,7 @@ def main() -> int:
             print(
                 f"RESUME: monitoring {provider_id} session {session_id}"
             )
-            return monitor_existing(
+            result = monitor_existing(
                 provider,
                 provider_id=provider_id,
                 gh=gh,
@@ -111,6 +146,12 @@ def main() -> int:
                 session_id=session_id,
                 target_repository=target_repository,
             )
+            _preserve_attempt_floor(
+                gh,
+                task_id=task_id,
+                attempt=active_attempt,
+            )
+            return result
 
         if action == "START_NEW":
             run_id = os.environ.get("GITHUB_RUN_ID", "manual")
@@ -131,14 +172,25 @@ def main() -> int:
                     return 0
                 raise
 
-            print("RESUME: routing a new provider session")
-            return run_new_cycle(
+            if retrying_provider_error:
+                print(
+                    f"RESUME: retrying provider error attempt {active_attempt}"
+                )
+            else:
+                print("RESUME: routing a new provider session")
+            result = run_new_cycle(
                 task=task,
                 gh=gh,
                 owner=owner,
                 repo=repo,
                 target_repository=target_repository,
             )
+            _preserve_attempt_floor(
+                gh,
+                task_id=task_id,
+                attempt=active_attempt,
+            )
+            return result
 
         raise RuntimeError(f"unhandled resume action: {action}")
     except ProviderUnauthorizedError as exc:
@@ -161,14 +213,38 @@ def main() -> int:
         OSError,
         json.JSONDecodeError,
     ) as exc:
+        error = _safe_error(exc)
+        if (
+            retrying_provider_error
+            and gh is not None
+            and task_id != "unknown"
+        ):
+            try:
+                _persist_checkpoint(
+                    gh,
+                    _checkpoint(
+                        task_id,
+                        "FAILED",
+                        last_failure_kind="PROVIDER_ERROR",
+                        last_error=error,
+                    )
+                    | {"attempt": active_attempt},
+                )
+            except Exception as checkpoint_exc:
+                print(
+                    "WARNING: failed to persist provider retry checkpoint: "
+                    + _safe_error(checkpoint_exc),
+                    file=sys.stderr,
+                )
         _write_result(
             {
                 "state": "FAILED",
-                "error": _safe_error(exc),
+                "error": error,
+                "attempt": active_attempt,
             }
         )
         print(
-            f"Trusted provider resume failed: {_safe_error(exc)}",
+            f"Trusted provider resume failed: {error}",
             file=sys.stderr,
         )
         return 1
