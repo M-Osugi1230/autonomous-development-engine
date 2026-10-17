@@ -11,6 +11,7 @@ on:
   push:
     branches: [main]
     paths:
+      - ".autodev/global-quota-policy.json"
       - ".github/workflows/ade-resume.yml"
       - ".github/trusted/jules_resume.py"
       - ".github/trusted/jules_cycle.py"
@@ -104,6 +105,7 @@ jobs:
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
           COPILOT_AGENT_TOKEN: ${{ secrets.COPILOT_AGENT_TOKEN }}
           ADE_ENABLE_COPILOT_FALLBACK: ${{ vars.ADE_ENABLE_COPILOT_FALLBACK }}
+          ADE_RECHECK_PROVIDER_QUOTA: "true"
           ADE_CONTROL_REF: ${{ matrix.control_ref }}
           ADE_PROJECT_KEY: ${{ matrix.control_ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
