@@ -84,11 +84,12 @@
     "jqmat001-001",
     "jqcore001-001",
     "jqcore001-002",
-    "jqcore001-003"
+    "jqcore001-003",
+    "jqcore001-004"
   ],
-  "current_task_id": "jqcore001-004",
+  "current_task_id": "jqcore001-005",
   "failed_task_ids": [],
-  "iteration": 84,
+  "iteration": 85,
   "metadata": {
     "accepted_plan_fingerprint": "0effc07cc3a00b2ac6f7b4173cc39adcdb460d3c2df89140e8e11904422cdacf",
     "campaign_id": "jquants-core-workflows-001",
@@ -133,6 +134,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-10T22:55:05.922810+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-17T18:18:56.568726+00:00"
 }
