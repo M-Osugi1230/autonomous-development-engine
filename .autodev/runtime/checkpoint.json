@@ -1,11 +1,10 @@
 {
   "attempt": 0,
-  "last_error": null,
-  "last_failure_kind": null,
-  "provider_id": "jules",
-  "provider_session_id": "2358319919206840419",
+  "last_error": "external provider session completed without a pull request",
+  "last_failure_kind": "PROVIDER_ERROR",
+  "provider_session_id": null,
   "replan_count": 0,
   "resume_after": null,
-  "state": "RUNNING",
+  "state": "FAILED",
   "task_id": "ckcov2582-005"
 }
