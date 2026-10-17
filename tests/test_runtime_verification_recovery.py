@@ -107,6 +107,29 @@ class RuntimeVerificationRecoveryTests(unittest.TestCase):
             report.fingerprint(),
         )
 
+    def test_stale_runtime_failure_cannot_replace_newer_current_task(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "stale runtime verification"):
+            contain_runtime_verification_failure(
+                receipt=failed_receipt(),
+                report=failed_report(),
+                state_payload={
+                    "schema_version": 1,
+                    "status": "READY",
+                    "current_task_id": "task-003",
+                    "completed_task_ids": ["task-001", "task-002"],
+                    "failed_task_ids": [],
+                    "metadata": {"target_repository": "example/target"},
+                },
+                campaign_payload={
+                    "schema_version": 1,
+                    "campaign_id": "campaign-001",
+                    "goal": "ship feature",
+                    "task_ids": ["task-001", "task-002", "task-003"],
+                    "completed_task_ids": ["task-001", "task-002"],
+                    "status": "RUNNING",
+                },
+            )
+
     def test_adapter_error_uses_secret_free_fingerprint_only(self) -> None:
         detail = "deployment adapter failed bearer super-secret-value"
         fingerprint = runtime_failure_fingerprint(detail)
