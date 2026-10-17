@@ -86,11 +86,12 @@
     "jqcore001-002",
     "jqcore001-003",
     "jqcore001-004",
-    "jqcore001-005"
+    "jqcore001-005",
+    "jqcore001-006"
   ],
-  "current_task_id": "jqcore001-006",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 86,
+  "iteration": 87,
   "metadata": {
     "accepted_plan_fingerprint": "0effc07cc3a00b2ac6f7b4173cc39adcdb460d3c2df89140e8e11904422cdacf",
     "campaign_id": "jquants-core-workflows-001",
@@ -117,7 +118,7 @@
     "planner_proposal_fingerprint": "785c12200597f891033e04bf19fe9a15d196d7f296282821315d11dc8ceb5df5",
     "planning_request_fingerprint": "f37314bbd4274eef1c857aa5e6c4746aae9c78876f546abd1a13abb8600f1670",
     "planning_request_id": "jquants-core-workflows-request-002",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "repository_intelligence_content_fingerprint": "f6e9dfc827ef455f6d61388e06448b9452b753c119096250c09e0bd32008756f",
     "repository_intelligence_context_fingerprint": "813ec46fa03b7ece186ceae0757d9aa2b0c852a87ea5cd5ca230d62f56469990",
     "repository_intelligence_impact_fingerprint": "77b2f0ec92a56b274ce448dde128b3a29d64fd86133e8a61a5a86de62264304e",
@@ -134,6 +135,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-17T19:30:41.056702+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-17T19:41:46.146475+00:00"
 }
