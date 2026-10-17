@@ -1,13 +1,13 @@
 {
   "campaign_id": "ckcov25-campaign-82-774c07f2c8",
-  "dispatch_count": 1,
-  "dispatched_at": "2026-10-17T20:56:57.101267+00:00",
+  "dispatch_count": 2,
+  "dispatched_at": "2026-10-17T22:50:38.301815+00:00",
   "plan_fingerprint": "328f371fb60aa675126e8fc3bf0f22f0eab13c94cae118c25ce37805e25d36b8",
   "run_attempt": "1",
-  "run_id": "39068850512",
+  "run_id": "39076682804",
   "schema_version": 1,
   "source": "schedule",
-  "source_sha": "a16e8a069967c96ae5da39083a7a5889dbed3055",
+  "source_sha": "38d5b3c12c12a83db52949e9d914d2a443b7808f",
   "status": "DISPATCHED",
   "task_id": "ckcov2582-005"
 }
