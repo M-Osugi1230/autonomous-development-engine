@@ -1,10 +1,6 @@
 name: ADE Resume Watch
 
 on:
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
   repository_dispatch:
     types: [ade_resume_watch]
@@ -24,13 +20,9 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: ade-jules-cycle-${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || 'default' }}
-  cancel-in-progress: false
-
 jobs:
   resume:
-    if: github.event_name != 'schedule' && github.event_name != 'push'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     concurrency:
