@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 import json
 import unittest
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
 from urllib.error import HTTPError
 
@@ -48,6 +49,8 @@ class JulesProviderTests(unittest.TestCase):
         captured = {}
 
         def fake_urlopen(request, timeout):
+            if request.get_method() == "GET" and "/sessions?" in request.full_url:
+                return _FakeResponse({"sessions": []})
             captured["body"] = json.loads(request.data.decode("utf-8"))
             return _FakeResponse({"id": "123", "state": "QUEUED"})
 
@@ -67,6 +70,149 @@ class JulesProviderTests(unittest.TestCase):
             captured["body"]["sourceContext"]["githubRepoContext"]["startingBranch"],
             "main",
         )
+
+    def test_reuses_recent_active_session_instead_of_creating_duplicate(self) -> None:
+        created_at = (datetime.now(UTC) - timedelta(minutes=5)).isoformat()
+        existing = {
+            "id": "existing-123",
+            "state": "IN_PROGRESS",
+            "title": "[ADE:ade-jquants:implementation] Demo",
+            "prompt": "Do the work",
+            "createTime": created_at,
+            "sourceContext": {
+                "source": "sources/github/example/demo",
+                "githubRepoContext": {"startingBranch": "main"},
+            },
+        }
+        post_calls = 0
+
+        def fake_urlopen(request, timeout):
+            nonlocal post_calls
+            if request.get_method() == "GET" and "/sessions?" in request.full_url:
+                return _FakeResponse({"sessions": [existing]})
+            post_calls += 1
+            return _FakeResponse({"id": "duplicate", "state": "QUEUED"})
+
+        provider = JulesProvider(api_key="test-key")
+        with patch("ade.providers.jules.urlopen", side_effect=fake_urlopen):
+            result = provider.create_session(
+                prompt="Do the work",
+                source="sources/github/example/demo",
+                starting_branch="main",
+                title="[ADE:ade-jquants:implementation] Demo",
+                auto_create_pr=True,
+            )
+
+        self.assertEqual(result["id"], "existing-123")
+        self.assertEqual(post_calls, 0)
+
+    def test_reuses_recent_completed_session_when_pr_already_exists(self) -> None:
+        created_at = (datetime.now(UTC) - timedelta(minutes=5)).isoformat()
+        existing = {
+            "id": "completed-123",
+            "state": "COMPLETED",
+            "title": "[ADE:ade-jquants:implementation] Demo",
+            "prompt": "Do the work",
+            "createTime": created_at,
+            "sourceContext": {
+                "source": "sources/github/example/demo",
+                "githubRepoContext": {"startingBranch": "main"},
+            },
+            "outputs": [
+                {
+                    "pullRequest": {
+                        "url": "https://github.com/example/demo/pull/10"
+                    }
+                }
+            ],
+        }
+        post_calls = 0
+
+        def fake_urlopen(request, timeout):
+            nonlocal post_calls
+            if request.get_method() == "GET" and "/sessions?" in request.full_url:
+                return _FakeResponse({"sessions": [existing]})
+            post_calls += 1
+            return _FakeResponse({"id": "duplicate", "state": "QUEUED"})
+
+        provider = JulesProvider(api_key="test-key")
+        with patch("ade.providers.jules.urlopen", side_effect=fake_urlopen):
+            result = provider.create_session(
+                prompt="Do the work",
+                source="sources/github/example/demo",
+                starting_branch="main",
+                title="[ADE:ade-jquants:implementation] Demo",
+                auto_create_pr=True,
+            )
+
+        self.assertEqual(result["id"], "completed-123")
+        self.assertEqual(post_calls, 0)
+
+    def test_completed_session_without_pr_is_not_reused(self) -> None:
+        created_at = (datetime.now(UTC) - timedelta(minutes=5)).isoformat()
+        existing = {
+            "id": "completed-no-pr",
+            "state": "COMPLETED",
+            "title": "[ADE:ade-chu-kei:implementation] Demo",
+            "prompt": "Do the work",
+            "createTime": created_at,
+            "sourceContext": {
+                "source": "sources/github/example/demo",
+                "githubRepoContext": {"startingBranch": "main"},
+            },
+            "outputs": [],
+        }
+        post_calls = 0
+
+        def fake_urlopen(request, timeout):
+            nonlocal post_calls
+            if request.get_method() == "GET" and "/sessions?" in request.full_url:
+                return _FakeResponse({"sessions": [existing]})
+            post_calls += 1
+            return _FakeResponse({"id": "replacement", "state": "QUEUED"})
+
+        provider = JulesProvider(api_key="test-key")
+        with patch("ade.providers.jules.urlopen", side_effect=fake_urlopen):
+            result = provider.create_session(
+                prompt="Do the work",
+                source="sources/github/example/demo",
+                starting_branch="main",
+                title="[ADE:ade-chu-kei:implementation] Demo",
+                auto_create_pr=True,
+            )
+
+        self.assertEqual(result["id"], "replacement")
+        self.assertEqual(post_calls, 1)
+
+    def test_stale_completed_session_is_not_reused(self) -> None:
+        created_at = (datetime.now(UTC) - timedelta(hours=3)).isoformat()
+        existing = {
+            "id": "stale-123",
+            "state": "COMPLETED",
+            "title": "Demo",
+            "prompt": "Do the work",
+            "createTime": created_at,
+            "outputs": [
+                {"pullRequest": {"url": "https://github.com/example/demo/pull/9"}}
+            ],
+        }
+
+        def fake_urlopen(request, timeout):
+            if request.get_method() == "GET" and "/sessions?" in request.full_url:
+                return _FakeResponse({"sessions": [existing]})
+            return _FakeResponse({"id": "fresh-123", "state": "QUEUED"})
+
+        provider = JulesProvider(api_key="test-key")
+        with patch("ade.providers.jules.urlopen", side_effect=fake_urlopen):
+            result = provider.create_session(
+                prompt="Do the work",
+                source="sources/github/example/demo",
+                starting_branch="main",
+                title="Demo",
+                auto_create_pr=True,
+            )
+
+        self.assertEqual(result["id"], "fresh-123")
 
     def test_unauthorized_is_mapped(self) -> None:
         body = io.BytesIO(json.dumps({"error": {"message": "bad key"}}).encode("utf-8"))
