@@ -30,6 +30,9 @@ jobs:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    concurrency:
+      group: ade-project-state-${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || github.ref_name || 'main' }}
+      cancel-in-progress: false
     steps:
       - name: Checkout trusted controller from main
         uses: actions/checkout@v4
@@ -82,6 +85,9 @@ jobs:
           - ade-chu-kei
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    concurrency:
+      group: ade-project-state-${{ matrix.control_ref }}
+      cancel-in-progress: false
     steps:
       - name: Checkout trusted controller from main
         uses: actions/checkout@v4
