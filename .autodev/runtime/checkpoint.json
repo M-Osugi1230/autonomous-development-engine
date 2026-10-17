@@ -1,10 +1,11 @@
 {
   "attempt": 0,
-  "last_error": "no eligible provider is currently available",
-  "last_failure_kind": "PROVIDER_QUOTA",
-  "provider_session_id": null,
+  "last_error": null,
+  "last_failure_kind": null,
+  "provider_id": "jules",
+  "provider_session_id": "4276085141410048282",
   "replan_count": 0,
-  "resume_after": "2026-10-17T18:14:46.299790+00:00",
-  "state": "PAUSED_QUOTA",
+  "resume_after": null,
+  "state": "RUNNING",
   "task_id": "jifinish88-001"
 }
