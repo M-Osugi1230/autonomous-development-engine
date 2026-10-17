@@ -25,6 +25,7 @@ concurrency:
 
 jobs:
   start:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -61,6 +62,52 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ade-zero-touch-start-result
+          path: .autodev/runtime/zero-touch-start-result.json
+          if-no-files-found: error
+          retention-days: 30
+
+  scheduled-project-start:
+    if: github.event_name == 'schedule'
+    strategy:
+      fail-fast: false
+      matrix:
+        control_ref:
+          - ade-jichi-insight
+          - ade-jquants
+          - ade-chu-kei
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted controller from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Load project state from control branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "${{ matrix.control_ref }}"
+          git checkout FETCH_HEAD -- .autodev
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Evaluate and dispatch eligible project Campaign
+        env:
+          ADE_CONTROL_REF: ${{ matrix.control_ref }}
+          ADE_PROJECT_KEY: ${{ matrix.control_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/trusted/zero_touch_start.py
+
+      - name: Upload project zero-touch decision evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ade-zero-touch-start-result-${{ matrix.control_ref }}
           path: .autodev/runtime/zero-touch-start-result.json
           if-no-files-found: error
           retention-days: 30
