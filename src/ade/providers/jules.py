@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -14,6 +15,7 @@ class JulesProvider:
     """Minimal Jules REST API adapter for ADE."""
 
     DEFAULT_BASE_URL = "https://jules.googleapis.com/v1alpha"
+    SESSION_REUSE_WINDOW = timedelta(hours=2)
 
     def __init__(
         self,
@@ -103,6 +105,38 @@ class JulesProvider:
             raise ProviderError("sources response has invalid shape")
         return [item for item in sources if isinstance(item, dict)]
 
+    def list_sessions(
+        self,
+        *,
+        page_size: int = 100,
+        max_pages: int = 3,
+    ) -> list[dict[str, Any]]:
+        if type(page_size) is not int or not 1 <= page_size <= 100:
+            raise ValueError("page_size must be an integer between 1 and 100")
+        if type(max_pages) is not int or max_pages < 1:
+            raise ValueError("max_pages must be a positive integer")
+
+        sessions: list[dict[str, Any]] = []
+        page_token: str | None = None
+        for _ in range(max_pages):
+            query: dict[str, str | int] = {"pageSize": page_size}
+            if page_token:
+                query["pageToken"] = page_token
+            payload = self._request("GET", "sessions", query=query)
+            page = payload.get("sessions", [])
+            if not isinstance(page, list):
+                raise ProviderError("sessions response has invalid shape")
+            sessions.extend(item for item in page if isinstance(item, dict))
+
+            token = payload.get("nextPageToken")
+            if token is None or token == "":
+                return sessions
+            if not isinstance(token, str):
+                raise ProviderError("sessions nextPageToken has invalid shape")
+            page_token = token
+
+        return sessions
+
     def find_github_source(self, owner: str, repo: str) -> dict[str, Any] | None:
         for source in self.list_sources():
             github_repo = source.get("githubRepo")
@@ -111,6 +145,105 @@ class JulesProvider:
             if github_repo.get("owner") == owner and github_repo.get("repo") == repo:
                 return source
         return None
+
+    @staticmethod
+    def _session_time(session: dict[str, Any]) -> datetime | None:
+        for key in ("createTime", "createdAt", "created_at"):
+            raw = session.get(key)
+            if not isinstance(raw, str) or not raw.strip():
+                continue
+            try:
+                parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if parsed.tzinfo is None or parsed.utcoffset() is None:
+                continue
+            return parsed.astimezone(UTC)
+        return None
+
+    @staticmethod
+    def _pull_request_url(session: dict[str, Any]) -> str | None:
+        outputs = session.get("outputs")
+        if not isinstance(outputs, list):
+            return None
+        for output in outputs:
+            if not isinstance(output, dict):
+                continue
+            pull_request = output.get("pullRequest")
+            if not isinstance(pull_request, dict):
+                continue
+            url = pull_request.get("url")
+            if isinstance(url, str) and url.strip():
+                return url.strip()
+        return None
+
+    @staticmethod
+    def _source_matches(
+        session: dict[str, Any],
+        *,
+        source: str,
+        starting_branch: str,
+    ) -> bool:
+        context = session.get("sourceContext")
+        if not isinstance(context, dict):
+            return True
+        observed_source = context.get("source")
+        if isinstance(observed_source, str) and observed_source != source:
+            return False
+        repo_context = context.get("githubRepoContext")
+        if not isinstance(repo_context, dict):
+            return True
+        observed_branch = repo_context.get("startingBranch")
+        return not isinstance(observed_branch, str) or observed_branch == starting_branch
+
+    def _reusable_session(
+        self,
+        *,
+        prompt: str,
+        source: str,
+        starting_branch: str,
+        title: str | None,
+    ) -> dict[str, Any] | None:
+        if not title:
+            return None
+
+        now = datetime.now(UTC)
+        candidates: list[tuple[datetime, dict[str, Any]]] = []
+        for session in self.list_sessions(page_size=100, max_pages=3):
+            if session.get("title") != title:
+                continue
+            observed_prompt = session.get("prompt")
+            if (
+                isinstance(observed_prompt, str)
+                and observed_prompt.strip()
+                and observed_prompt != prompt
+            ):
+                continue
+            if not self._source_matches(
+                session,
+                source=source,
+                starting_branch=starting_branch,
+            ):
+                continue
+
+            created_at = self._session_time(session)
+            if created_at is None or now - created_at > self.SESSION_REUSE_WINDOW:
+                continue
+
+            state = session.get("state")
+            if not isinstance(state, str) or not state.strip():
+                continue
+            state = state.strip().upper()
+            if state in {"FAILED", "CANCELLED", "CANCELED"}:
+                continue
+            if state == "COMPLETED" and self._pull_request_url(session) is None:
+                continue
+            candidates.append((created_at, session))
+
+        if not candidates:
+            return None
+        candidates.sort(key=lambda item: item[0], reverse=True)
+        return candidates[0][1]
 
     def create_session(
         self,
@@ -128,6 +261,15 @@ class JulesProvider:
             raise ValueError("source must not be empty")
         if not starting_branch.strip():
             raise ValueError("starting_branch must not be empty")
+
+        reusable = self._reusable_session(
+            prompt=prompt,
+            source=source,
+            starting_branch=starting_branch,
+            title=title,
+        )
+        if reusable is not None:
+            return reusable
 
         payload: dict[str, Any] = {
             "prompt": prompt,
