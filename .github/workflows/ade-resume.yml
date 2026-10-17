@@ -75,7 +75,6 @@ jobs:
         control_ref:
           - main
           - ade-jichi-insight
-          - ade-jquants
           - ade-chu-kei
     runs-on: ubuntu-latest
     timeout-minutes: 45
