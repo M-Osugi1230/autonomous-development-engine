@@ -72,7 +72,6 @@ jobs:
       fail-fast: false
       matrix:
         control_ref:
-          - main
           - ade-jichi-insight
           - ade-chu-kei
     runs-on: ubuntu-latest
