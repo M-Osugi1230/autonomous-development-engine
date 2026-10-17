@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-10-17T19:34:17.967782+00:00",
-  "attempt": 1,
-  "expires_at": "2026-10-17T20:24:17.967782+00:00",
-  "owner_id": "github-actions-provider:39063028197:1",
+  "acquired_at": "2026-10-17T21:12:23.172685+00:00",
+  "attempt": 2,
+  "expires_at": "2026-10-17T22:02:23.172685+00:00",
+  "owner_id": "github-actions-provider-resume:39069944989:1",
   "schema_version": 1,
   "task_id": "ckcov2582-005"
 }
