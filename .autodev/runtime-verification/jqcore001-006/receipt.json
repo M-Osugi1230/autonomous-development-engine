@@ -1,11 +1,11 @@
 {
-  "contract_fingerprint": "cfec5202ede6b2ca75c2c3b5196a53856a06fc0ff79452475cdb145434a6915d",
-  "dispatch_count": 1,
-  "policy_fingerprint": "a3a379e1b408f934f64dce4eeb9d728eb1d076fb8efc0d547e2e858bacdf35e4",
-  "registry_fingerprint": "f37997a2c0c4fdd1e4b0fb2b0c971b2d60ac77ff7724638c74acafdbd3761ffe",
+  "contract_fingerprint": "b6602704da75bf8e0e16765047e26e60975b83e250d08771c60f4e1b26af8c99",
+  "dispatch_count": 0,
+  "policy_fingerprint": "699dfd9d473acf3ad384d0eaf0bae8893b22554247486304b07d185d41094422",
+  "registry_fingerprint": "aad8ccc2202a2ea893dc079a93ab1149f93a69e084d8c14991bdb9474ee84f64",
   "schema_version": 1,
   "source_sha": "3c001c63dae4359123eeccb7cf98733491b4b59e",
-  "status": "HUMAN_WAIT",
+  "status": "ARMED",
   "target_repository": "M-Osugi1230/jquants-research-studio",
   "task_id": "jqcore001-006",
   "verification_id": "rv-3c001c63dae4359123eeccb7cf98733491b4b59e"
