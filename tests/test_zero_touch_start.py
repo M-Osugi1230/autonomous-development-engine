@@ -65,6 +65,31 @@ def fixture() -> dict:
     }
 
 
+def failed_checkpoint(*, failure_kind: str = "PROVIDER_ERROR") -> dict:
+    return {
+        "task_id": "zt-001",
+        "state": "FAILED",
+        "attempt": 0,
+        "replan_count": 0,
+        "provider_session_id": None,
+        "last_failure_kind": failure_kind,
+        "last_error": "provider failed before producing usable output",
+        "resume_after": None,
+    }
+
+
+def receipt(args: dict, *, minutes_ago: int, dispatch_count: int) -> dict:
+    return {
+        "schema_version": 1,
+        "status": "DISPATCHED",
+        "campaign_id": "v1-1-proof",
+        "task_id": "zt-001",
+        "plan_fingerprint": args["accepted_plan_payload"]["fingerprint"],
+        "dispatched_at": (NOW - timedelta(minutes=minutes_ago)).isoformat(),
+        "dispatch_count": dispatch_count,
+    }
+
+
 class ZeroTouchStartTests(unittest.TestCase):
     def test_eligible_bundle_dispatches(self) -> None:
         decision = evaluate_zero_touch_start(**fixture())
@@ -74,32 +99,69 @@ class ZeroTouchStartTests(unittest.TestCase):
 
     def test_recent_receipt_suppresses_duplicate_event_replay(self) -> None:
         args = fixture()
-        args["receipt_payload"] = {
-            "schema_version": 1,
-            "status": "DISPATCHED",
-            "campaign_id": "v1-1-proof",
-            "task_id": "zt-001",
-            "plan_fingerprint": args["accepted_plan_payload"]["fingerprint"],
-            "dispatched_at": (NOW - timedelta(minutes=2)).isoformat(),
-            "dispatch_count": 1,
-        }
+        args["receipt_payload"] = receipt(args, minutes_ago=2, dispatch_count=1)
         decision = evaluate_zero_touch_start(**args)
         self.assertEqual(decision.disposition, StartDisposition.NOOP)
         self.assertEqual(decision.reason, "recent-zero-touch-dispatch")
 
     def test_stale_receipt_allows_watchdog_retry(self) -> None:
         args = fixture()
-        args["receipt_payload"] = {
-            "schema_version": 1,
-            "status": "DISPATCHED",
-            "campaign_id": "v1-1-proof",
-            "task_id": "zt-001",
-            "plan_fingerprint": args["accepted_plan_payload"]["fingerprint"],
-            "dispatched_at": (NOW - timedelta(minutes=11)).isoformat(),
-            "dispatch_count": 1,
-        }
+        args["receipt_payload"] = receipt(args, minutes_ago=11, dispatch_count=1)
         decision = evaluate_zero_touch_start(**args)
         self.assertEqual(decision.disposition, StartDisposition.DISPATCH)
+
+    def test_retryable_provider_error_dispatches_without_prior_retry_receipt(self) -> None:
+        args = fixture()
+        args["checkpoint_payload"] = failed_checkpoint()
+        decision = evaluate_zero_touch_start(**args)
+        self.assertEqual(decision.disposition, StartDisposition.DISPATCH)
+        self.assertEqual(decision.reason, "retryable-provider-error")
+
+    def test_retryable_provider_error_respects_recent_dispatch_cooldown(self) -> None:
+        args = fixture()
+        args["checkpoint_payload"] = failed_checkpoint()
+        args["receipt_payload"] = receipt(args, minutes_ago=2, dispatch_count=1)
+        decision = evaluate_zero_touch_start(**args)
+        self.assertEqual(decision.disposition, StartDisposition.NOOP)
+        self.assertEqual(decision.reason, "recent-zero-touch-dispatch")
+
+    def test_retryable_provider_error_allows_second_retry_after_cooldown(self) -> None:
+        args = fixture()
+        args["checkpoint_payload"] = failed_checkpoint()
+        args["receipt_payload"] = receipt(args, minutes_ago=11, dispatch_count=1)
+        decision = evaluate_zero_touch_start(**args)
+        self.assertEqual(decision.disposition, StartDisposition.DISPATCH)
+        self.assertEqual(decision.reason, "retryable-provider-error")
+
+    def test_retryable_provider_error_blocks_after_retry_budget_exhausted(self) -> None:
+        args = fixture()
+        args["checkpoint_payload"] = failed_checkpoint()
+        args["receipt_payload"] = receipt(args, minutes_ago=11, dispatch_count=2)
+        decision = evaluate_zero_touch_start(**args)
+        self.assertEqual(decision.disposition, StartDisposition.BLOCKED)
+        self.assertEqual(decision.reason, "provider-error-retry-exhausted")
+
+    def test_non_provider_failed_checkpoint_remains_blocked(self) -> None:
+        args = fixture()
+        args["checkpoint_payload"] = failed_checkpoint(failure_kind="CYCLE_FAILED")
+        decision = evaluate_zero_touch_start(**args)
+        self.assertEqual(decision.disposition, StartDisposition.BLOCKED)
+        self.assertEqual(decision.reason, "checkpoint-failed")
+
+    def test_retryable_provider_error_still_respects_live_lease(self) -> None:
+        args = fixture()
+        args["checkpoint_payload"] = failed_checkpoint()
+        args["lease_payload"] = {
+            "schema_version": 1,
+            "task_id": "zt-001",
+            "owner_id": "github-actions:1:1",
+            "attempt": 1,
+            "acquired_at": (NOW - timedelta(minutes=1)).isoformat(),
+            "expires_at": (NOW + timedelta(minutes=49)).isoformat(),
+        }
+        decision = evaluate_zero_touch_start(**args)
+        self.assertEqual(decision.disposition, StartDisposition.NOOP)
+        self.assertEqual(decision.reason, "active-execution-lease")
 
     def test_live_lease_suppresses_provider_duplicate(self) -> None:
         args = fixture()
