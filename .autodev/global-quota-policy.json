@@ -5,18 +5,13 @@
   "grace_minutes": 2,
   "projects": [
     {
-      "project_key": "ade-jquants",
-      "allocation": 6,
-      "priority": 40
-    },
-    {
       "project_key": "ade-chu-kei",
-      "allocation": 5,
+      "allocation": 9,
       "priority": 35
     },
     {
       "project_key": "ade-jichi-insight",
-      "allocation": 4,
+      "allocation": 6,
       "priority": 25
     }
   ]
