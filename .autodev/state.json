@@ -86,11 +86,12 @@
     "jifinish83-002",
     "jifinish83-003",
     "jifinish83-004",
-    "jifinish86-001"
+    "jifinish86-001",
+    "jifinish86-002"
   ],
-  "current_task_id": "jifinish86-002",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 86,
+  "iteration": 87,
   "metadata": {
     "accepted_plan_fingerprint": "fdf612550bfae79c0e836b75617de34c93cc9a9239a92441ace990afa2e842bf",
     "campaign_id": "jifinish-campaign-86-d6a4ace9ac",
@@ -151,7 +152,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "repository_intelligence_content_fingerprint": "70414e52a0c82700ece62273e7415cb2d161d9f0e9164df0a02f88e3214b044a",
     "repository_intelligence_context_fingerprint": "938756a181866ca132243cba5a5a40169a6684ecbf8a18d2a22152f6507ef373",
     "repository_intelligence_impact_fingerprint": "21348ecf467260092e1d691c87254b12217496f684060df36143f7d52b80d788",
@@ -325,6 +326,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-17T15:17:50.910867+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-17T15:26:12.005780+00:00"
 }
