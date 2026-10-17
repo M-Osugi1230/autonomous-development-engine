@@ -21,6 +21,7 @@ from .provider_routing import (
 
 JULES_PROVIDER_ID = "jules"
 COPILOT_PROVIDER_ID = "github-copilot"
+MAX_PROVIDER_ERROR_RETRIES = 2
 
 
 @dataclass(frozen=True, slots=True)
@@ -121,6 +122,13 @@ def checkpoint_provider_id(checkpoint: dict[str, Any]) -> str | None:
     return None
 
 
+def checkpoint_attempt(checkpoint: dict[str, Any]) -> int:
+    value = checkpoint.get("attempt", 0)
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise ValueError("checkpoint attempt must be a non-negative integer")
+    return value
+
+
 def copilot_fallback_enabled(
     *,
     token: str | None,
@@ -165,7 +173,15 @@ def broker_resume_action(
         raise ValueError("provider_session_id must be a non-empty string or null")
     provider_id = checkpoint_provider_id(checkpoint)
 
-    if state in {"COMPLETED", "FAILED", "HUMAN_WAIT", "REPLAN"}:
+    if state == "FAILED":
+        failure_kind = checkpoint.get("last_failure_kind")
+        if failure_kind == "PROVIDER_ERROR" and not session_id:
+            attempt = checkpoint_attempt(checkpoint)
+            if attempt < MAX_PROVIDER_ERROR_RETRIES:
+                return "START_NEW", None, None
+        return "NOOP", session_id, provider_id
+
+    if state in {"COMPLETED", "HUMAN_WAIT", "REPLAN"}:
         return "NOOP", session_id, provider_id
 
     if state == "RUNNING":
