@@ -1,0 +1,23 @@
+{
+  "active_project_keys": [
+    "ade-chu-kei",
+    "ade-jichi-insight",
+    "default"
+  ],
+  "allowed": true,
+  "daily_limit": 15,
+  "observed_at": "2026-10-17T21:10:17.440637+00:00",
+  "project_allocation": null,
+  "project_key": "default",
+  "project_used": 0,
+  "purpose": "implementation",
+  "reason": "unmanaged-project-global-capacity-available",
+  "remaining": 4,
+  "resume_after": null,
+  "schema_version": 1,
+  "selected_project_keys": [
+    "default"
+  ],
+  "total_used": 11,
+  "unknown_session_count": 0
+}
