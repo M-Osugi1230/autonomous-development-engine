@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-10-03T21:53:57.888889+00:00",
-  "attempt": 1,
-  "expires_at": "2026-10-03T22:43:57.888889+00:00",
-  "owner_id": "github-actions:37156590609:1",
+  "acquired_at": "2026-10-17T21:10:11.851956+00:00",
+  "attempt": 2,
+  "expires_at": "2026-10-17T22:00:11.851956+00:00",
+  "owner_id": "github-actions-provider-resume:39069780241:1",
   "schema_version": 1,
   "task_id": "jip15morioka003-002"
 }
