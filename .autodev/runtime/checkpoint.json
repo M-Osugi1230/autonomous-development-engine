@@ -1,10 +1,11 @@
 {
   "attempt": 0,
-  "last_error": "project state current_task_id 'jqcore001-004' does not match 'jqcore001-005'",
-  "last_failure_kind": "PROVIDER_ERROR",
-  "provider_session_id": null,
+  "last_error": null,
+  "last_failure_kind": null,
+  "provider_id": "jules",
+  "provider_session_id": "14447260041184830062",
   "replan_count": 0,
   "resume_after": null,
-  "state": "FAILED",
+  "state": "RUNNING",
   "task_id": "jqcore001-005"
 }
