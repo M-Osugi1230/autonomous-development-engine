@@ -7,6 +7,7 @@ from ade.production_provider_broker import (
     BrokerAvailability,
     COPILOT_PROVIDER_ID,
     JULES_PROVIDER_ID,
+    MAX_PROVIDER_ERROR_RETRIES,
     broker_resume_action,
     checkpoint_provider_id,
     copilot_fallback_enabled,
@@ -128,6 +129,68 @@ class ProductionProviderBrokerTests(unittest.TestCase):
         self.assertEqual(action, "WAIT")
         self.assertEqual(session_id, "task-1")
         self.assertEqual(provider_id, COPILOT_PROVIDER_ID)
+
+    def test_provider_error_without_session_is_retried_within_cap(self) -> None:
+        now = datetime(2026, 10, 18, 0, 0, tzinfo=UTC)
+        for attempt in range(MAX_PROVIDER_ERROR_RETRIES):
+            action, session_id, provider_id = broker_resume_action(
+                {
+                    "attempt": attempt,
+                    "state": "FAILED",
+                    "provider_session_id": None,
+                    "last_failure_kind": "PROVIDER_ERROR",
+                },
+                now=now,
+                fallback_available=False,
+            )
+            self.assertEqual(action, "START_NEW")
+            self.assertIsNone(session_id)
+            self.assertIsNone(provider_id)
+
+    def test_provider_error_stops_at_retry_cap(self) -> None:
+        now = datetime(2026, 10, 18, 0, 0, tzinfo=UTC)
+        action, _, _ = broker_resume_action(
+            {
+                "attempt": MAX_PROVIDER_ERROR_RETRIES,
+                "state": "FAILED",
+                "provider_session_id": None,
+                "last_failure_kind": "PROVIDER_ERROR",
+            },
+            now=now,
+            fallback_available=True,
+        )
+        self.assertEqual(action, "NOOP")
+
+    def test_failed_non_provider_error_is_not_retried(self) -> None:
+        now = datetime(2026, 10, 18, 0, 0, tzinfo=UTC)
+        action, _, _ = broker_resume_action(
+            {
+                "attempt": 0,
+                "state": "FAILED",
+                "provider_session_id": None,
+                "last_failure_kind": "CYCLE_FAILED",
+            },
+            now=now,
+            fallback_available=True,
+        )
+        self.assertEqual(action, "NOOP")
+
+    def test_failed_provider_error_with_session_is_not_duplicated(self) -> None:
+        now = datetime(2026, 10, 18, 0, 0, tzinfo=UTC)
+        action, session_id, provider_id = broker_resume_action(
+            {
+                "attempt": 0,
+                "state": "FAILED",
+                "provider_session_id": "existing-session",
+                "provider_id": JULES_PROVIDER_ID,
+                "last_failure_kind": "PROVIDER_ERROR",
+            },
+            now=now,
+            fallback_available=True,
+        )
+        self.assertEqual(action, "NOOP")
+        self.assertEqual(session_id, "existing-session")
+        self.assertEqual(provider_id, JULES_PROVIDER_ID)
 
     def test_copilot_requires_token_and_explicit_cost_opt_in(self) -> None:
         self.assertFalse(
