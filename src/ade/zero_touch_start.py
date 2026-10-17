@@ -12,7 +12,11 @@ from .cycle import CycleTask
 from .execution_lease import ExecutionLease
 from .models import ProjectState, ProjectStatus
 from .plan_compiler import compile_plan
+from .repair import FailureKind
 from .task_graph import GraphTaskStatus, TaskGraph
+
+
+MAX_PROVIDER_ERROR_RETRIES = 2
 
 
 class StartDisposition(StrEnum):
@@ -76,6 +80,25 @@ def _lease_from_dict(payload: dict[str, Any]) -> ExecutionLease:
     )
 
 
+def _receipt_matches(
+    payload: dict[str, Any] | None,
+    *,
+    campaign_id: str,
+    task_id: str,
+    plan_fingerprint: str,
+) -> bool:
+    if payload is None:
+        return False
+    if payload.get("schema_version") != 1:
+        raise ValueError("zero-touch receipt schema_version must be 1")
+    return (
+        payload.get("campaign_id") == campaign_id
+        and payload.get("task_id") == task_id
+        and payload.get("plan_fingerprint") == plan_fingerprint
+        and payload.get("status") == "DISPATCHED"
+    )
+
+
 def _receipt_dispatch_time(
     payload: dict[str, Any] | None,
     *,
@@ -83,22 +106,40 @@ def _receipt_dispatch_time(
     task_id: str,
     plan_fingerprint: str,
 ) -> datetime | None:
-    if payload is None:
-        return None
-    if payload.get("schema_version") != 1:
-        raise ValueError("zero-touch receipt schema_version must be 1")
-    if (
-        payload.get("campaign_id") != campaign_id
-        or payload.get("task_id") != task_id
-        or payload.get("plan_fingerprint") != plan_fingerprint
-        or payload.get("status") != "DISPATCHED"
+    if not _receipt_matches(
+        payload,
+        campaign_id=campaign_id,
+        task_id=task_id,
+        plan_fingerprint=plan_fingerprint,
     ):
         return None
+    assert payload is not None
     value = payload.get("dispatched_at")
     if not isinstance(value, str) or not value.strip():
         raise ValueError("zero-touch receipt dispatched_at is required")
     parsed = datetime.fromisoformat(value)
     return _utc(parsed, field="receipt dispatched_at")
+
+
+def _receipt_dispatch_count(
+    payload: dict[str, Any] | None,
+    *,
+    campaign_id: str,
+    task_id: str,
+    plan_fingerprint: str,
+) -> int:
+    if not _receipt_matches(
+        payload,
+        campaign_id=campaign_id,
+        task_id=task_id,
+        plan_fingerprint=plan_fingerprint,
+    ):
+        return 0
+    assert payload is not None
+    value = payload.get("dispatch_count", 1)
+    if type(value) is not int or value < 1:
+        raise ValueError("zero-touch receipt dispatch_count must be a positive integer")
+    return value
 
 
 def evaluate_zero_touch_start(
@@ -174,6 +215,7 @@ def evaluate_zero_touch_start(
         raise ValueError("cycle task does not match current task graph node")
 
     checkpoint: TaskCheckpoint | None = None
+    retrying_provider_error = False
     if checkpoint_payload is not None:
         checkpoint = TaskCheckpoint.from_dict(checkpoint_payload)
         if checkpoint.task_id == task_id:
@@ -188,7 +230,22 @@ def evaluate_zero_touch_start(
             if checkpoint.state is CheckpointState.COMPLETED:
                 return StartDecision(StartDisposition.NOOP, "provider-work-completed", task_id=task_id, **base)
             if checkpoint.state is CheckpointState.FAILED:
-                return StartDecision(StartDisposition.BLOCKED, "checkpoint-failed", task_id=task_id, **base)
+                if checkpoint.last_failure_kind is not FailureKind.PROVIDER_ERROR:
+                    return StartDecision(StartDisposition.BLOCKED, "checkpoint-failed", task_id=task_id, **base)
+                retry_count = _receipt_dispatch_count(
+                    receipt_payload,
+                    campaign_id=campaign.campaign_id,
+                    task_id=task_id,
+                    plan_fingerprint=fingerprint,
+                )
+                if retry_count >= MAX_PROVIDER_ERROR_RETRIES:
+                    return StartDecision(
+                        StartDisposition.BLOCKED,
+                        "provider-error-retry-exhausted",
+                        task_id=task_id,
+                        **base,
+                    )
+                retrying_provider_error = True
 
     if lease_payload is not None:
         lease = _lease_from_dict(lease_payload)
@@ -211,4 +268,5 @@ def evaluate_zero_touch_start(
     if last_dispatch is not None and now < last_dispatch + redispatch_after:
         return StartDecision(StartDisposition.NOOP, "recent-zero-touch-dispatch", task_id=task_id, **base)
 
-    return StartDecision(StartDisposition.DISPATCH, "eligible-zero-touch-start", task_id=task_id, **base)
+    reason = "retryable-provider-error" if retrying_provider_error else "eligible-zero-touch-start"
+    return StartDecision(StartDisposition.DISPATCH, reason, task_id=task_id, **base)
