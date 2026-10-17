@@ -1,0 +1,246 @@
+{
+  "accepted_plan_fingerprint": "3d41c568199d0f61d45646298f78ce270f8ac68b4d67dede0e9c791e1c1403c0",
+  "campaign_id": "jifinish-campaign-88-925fa37b88",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+    "current_source_sha": "0d66f8f53dfc4fadbed4d8d2b498156a3d702dbe",
+    "execution_authority": false,
+    "extracted_record_count": 4,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jichi-insight",
+    "resolution_fingerprint": "9df9ec0f645c24b6f6b8077b27b6dd486478133c480fb50049dccfd057f1cbd2",
+    "retrieval_fingerprint": "b7a722a1c8cc887b3f1519c22e3c547ce3b3c762ecea7cd464f1b3d71c838333",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "47f875e6bb37b01927fdde34ab3df66f1bd29ba1cd76722387280f692747b265",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "f509786944658940b8dd88916d8283b5206c6947e66027e5d5db584556b7f458",
+  "proposal": {
+    "goal": "Graduate Jichi Insight as a nationwide municipality insight platform. Continue autonomously from Phase 15 through complete canonical coverage, public-product alignment, and final runtime verification; preserve fiscal/document/version distinctions and evidence boundaries. For missing paths, planner steps must explicitly say 'Create new file <exact-path>' so new_paths is declared. Criteria: [1] Canonical coverage includes every intended municipality; each is validly evidenced or explicitly unresolved, never omitted. [2] Evidence retains official URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred depth; no invented facts, causality, comparisons, rankings or scores. [3] Candidate generation, validation, review staging, promotion and public-data pipelines are deterministic, resumable and free of machine-resolvable blockers; required human review gates remain explicit. [4] Public browse/search/detail uses current canonical nationwide data and passes repository plus production smoke checks. [5] CI, regression, data-quality and final runtime verification are green; queue exhaustion or campaign completion alone never means project completion. Only the verified completion marker does. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Update candidate staging data in `data/candidates/morioka-city/review_candidate.json` to ensure official primary source locators and human review pending boundaries are preserved.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/morioka-city/review_candidate.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [
+          "data/candidates/morioka-city/review_candidate.json"
+        ],
+        "outcome": "Update candidate staging data in `data/candidates/morioka-city/review_candidate.json` to ensure official primary source locators and human review pending boundaries are preserved.",
+        "title": "Update candidate staging data in `data/candidates/morioka-city/review_candidate.json` to ensure official primary source locators and human review pending boundaries are preserved."
+      },
+      {
+        "acceptance": [
+          "Validate candidate staging schema and boundary assertions in `tests/test_morioka_phase15_review.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_morioka_phase15_review.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "Validate candidate staging schema and boundary assertions in `tests/test_morioka_phase15_review.py`.",
+        "title": "Validate candidate staging schema and boundary assertions in `tests/test_morioka_phase15_review.py`."
+      },
+      {
+        "acceptance": [
+          "Update Akita City candidate staging package in `data/candidates/akita-city/review_candidate.json` with primary source evidence and pending review status.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/akita-city/review_candidate.json"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [
+          "data/candidates/akita-city/review_candidate.json"
+        ],
+        "outcome": "Update Akita City candidate staging package in `data/candidates/akita-city/review_candidate.json` with primary source evidence and pending review status.",
+        "title": "Update Akita City candidate staging package in `data/candidates/akita-city/review_candidate.json` with primary source evidence and pending review status."
+      },
+      {
+        "acceptance": [
+          "Verify Akita City review candidate schema and non-inference rules in `tests/test_phase15_akita_review_candidate_staging.py`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_akita_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "Verify Akita City review candidate schema and non-inference rules in `tests/test_phase15_akita_review_candidate_staging.py`.",
+        "title": "Verify Akita City review candidate schema and non-inference rules in `tests/test_phase15_akita_review_candidate_staging.py`."
+      },
+      {
+        "acceptance": [
+          "Create new file `data/candidates/yamagata-city/review_candidate.json` for Yamagata City Phase 15 review candidate staging with primary source evidence locators.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/yamagata-city/review_candidate.json"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [
+          "data/candidates/yamagata-city/review_candidate.json"
+        ],
+        "outcome": "Create new file `data/candidates/yamagata-city/review_candidate.json` for Yamagata City Phase 15 review candidate staging with primary source evidence locators.",
+        "title": "Create new file `data/candidates/yamagata-city/review_candidate.json` for Yamagata City Phase 15 review candidate staging with primary source evidence locators."
+      },
+      {
+        "acceptance": [
+          "Create new file `tests/test_phase15_yamagata_review_candidate_staging.py` to validate Yamagata City review candidate schema and pending human review constraints.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_yamagata_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jules-step-005"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-006",
+        "new_paths": [
+          "tests/test_phase15_yamagata_review_candidate_staging.py"
+        ],
+        "outcome": "Create new file `tests/test_phase15_yamagata_review_candidate_staging.py` to validate Yamagata City review candidate schema and pending human review constraints.",
+        "title": "Create new file `tests/test_phase15_yamagata_review_candidate_staging.py` to validate Yamagata City review candidate schema and pending human review constraints."
+      },
+      {
+        "acceptance": [
+          "Create new file `scripts/validate_phase15_candidates.py` to automate deterministic schema and evidence boundary validation across candidate staging packages.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/validate_phase15_candidates.py"
+        ],
+        "depends_on": [
+          "jules-step-006"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-007",
+        "new_paths": [
+          "scripts/validate_phase15_candidates.py"
+        ],
+        "outcome": "Create new file `scripts/validate_phase15_candidates.py` to automate deterministic schema and evidence boundary validation across candidate staging packages.",
+        "title": "Create new file `scripts/validate_phase15_candidates.py` to automate deterministic schema and evidence boundary validation across candidate staging packages."
+      },
+      {
+        "acceptance": [
+          "Update `apps/web/lib/nationwideCoverage.ts` to reflect canonical nationwide municipality coverage and review candidate staging states.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "apps/web/lib/nationwideCoverage.ts"
+        ],
+        "depends_on": [
+          "jules-step-007"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-008",
+        "new_paths": [],
+        "outcome": "Update `apps/web/lib/nationwideCoverage.ts` to reflect canonical nationwide municipality coverage and review candidate staging states.",
+        "title": "Update `apps/web/lib/nationwideCoverage.ts` to reflect canonical nationwide municipality coverage and review candidate staging states."
+      }
+    ]
+  },
+  "proposal_fingerprint": "5dd613c47d8f5f08e1ebbacef5ccf08ce32fbbf0b95f068a4f09af9d3b16f593",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 8,
+  "provider_plan_steps_sha256": "40069079265c704ac4ab6238d3bb3b094751258f168f5e779c1ef7b48e1f0d7d",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "70414e52a0c82700ece62273e7415cb2d161d9f0e9164df0a02f88e3214b044a",
+  "repository_context_fingerprint": "ab9d21a412fb8ed39fdc62f98106d4ccb76aec5144b8cb9f365527c14345dc23",
+  "repository_impact_analysis_fingerprint": "41d53a6a71afa3f2820d1b6b8c70b57c6c3f1eab7729bb1ca54ea236ece0f695",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "8b00ed82a2ff63c778188e551a30b9740c302581770eb3a8581b0fd349177e31",
+  "repository_source_sha": "0d66f8f53dfc4fadbed4d8d2b498156a3d702dbe",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "data",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jifinish-campaign-88-925fa37b88",
+    "execution_phase": "completion-runner",
+    "goal": "Graduate Jichi Insight as a nationwide municipality insight platform. Continue autonomously from Phase 15 through complete canonical coverage, public-product alignment, and final runtime verification; preserve fiscal/document/version distinctions and evidence boundaries. For missing paths, planner steps must explicitly say 'Create new file <exact-path>' so new_paths is declared. Criteria: [1] Canonical coverage includes every intended municipality; each is validly evidenced or explicitly unresolved, never omitted. [2] Evidence retains official URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred depth; no invented facts, causality, comparisons, rankings or scores. [3] Candidate generation, validation, review staging, promotion and public-data pipelines are deterministic, resumable and free of machine-resolvable blockers; required human review gates remain explicit. [4] Public browse/search/detail uses current canonical nationwide data and passes repository plus production smoke checks. [5] CI, regression, data-quality and final runtime verification are green; queue exhaustion or campaign completion alone never means project completion. Only the verified completion marker does. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "id_prefix": "jifinish88",
+    "min_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "apps",
+      "data/catalog",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "request_id": "jifinish-request-88-925fa37b88",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "request_fingerprint": "6ecd61d95ff7d42f117ca47c4de9395d53323217e93cd248ab5970ae02e1618c",
+  "schema_version": 1,
+  "task_ids": [
+    "jifinish88-001",
+    "jifinish88-002",
+    "jifinish88-003",
+    "jifinish88-004",
+    "jifinish88-005",
+    "jifinish88-006",
+    "jifinish88-007",
+    "jifinish88-008"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 39050521720
+}
