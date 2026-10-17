@@ -1,6 +1,6 @@
 {
   "ledger": {
-    "record_count": 20,
+    "record_count": 21,
     "records": [
       {
         "campaign_id": null,
@@ -43,6 +43,27 @@
           "runtime_verification"
         ],
         "task_id": "jqprod004-001"
+      },
+      {
+        "campaign_id": null,
+        "evidence_fingerprints": [
+          "8c15d6ac09a58172df1454c59933c1d89f88039b30aea4e014890b990de15aa5"
+        ],
+        "evidence_paths": [
+          ".autodev/runtime/recovery.json"
+        ],
+        "kind": "FAILURE",
+        "memory_id": "mem-4501882c28b3e05ab5dcc32c",
+        "repository": "M-Osugi1230/jquants-research-studio",
+        "schema_version": 1,
+        "source_sha": "3c001c63dae4359123eeccb7cf98733491b4b59e",
+        "statement": "Trusted recovery classified RUNTIME_VERIFICATION and selected HUMAN_WAIT under bounded recovery policy.",
+        "tags": [
+          "human_wait",
+          "recovery",
+          "runtime_verification"
+        ],
+        "task_id": "jqcore001-006"
       },
       {
         "campaign_id": null,
@@ -497,6 +518,6 @@
     ],
     "schema_version": 1
   },
-  "ledger_fingerprint": "655d073151e4f4cb0d58cd0e9d8b7d68f16aa8b8107141d99f6cc65edc62efe6",
+  "ledger_fingerprint": "5cfebd30b218372b8ec8f54156e54d72d8e1fd1099297dedf82094031773a228",
   "schema_version": 1
 }
