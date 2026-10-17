@@ -1,8 +1,8 @@
 {
-  "acquired_at": "2026-10-17T18:19:10.814034+00:00",
-  "attempt": 1,
-  "expires_at": "2026-10-17T18:20:10.814034+00:00",
-  "owner_id": "github-actions-provider:39057556772:1",
+  "acquired_at": "2026-10-17T18:31:31.371182+00:00",
+  "attempt": 2,
+  "expires_at": "2026-10-17T19:21:31.371182+00:00",
+  "owner_id": "github-actions-provider:39058465112:1",
   "schema_version": 1,
   "task_id": "jqcore001-005"
 }
