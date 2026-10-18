@@ -335,6 +335,13 @@
       "occurred_at": "2026-10-17T19:34:10.579672+00:00",
       "summary": "Merged Jules PR #265",
       "task_id": "ckcov2582-004"
+    },
+    {
+      "event_id": "pr-merged-267-7de7ece3bbc8",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-10-18T19:45:39.285888+00:00",
+      "summary": "Merged Jules PR #267",
+      "task_id": "ckcov2582-006"
     }
   ],
   "schema_version": 1
