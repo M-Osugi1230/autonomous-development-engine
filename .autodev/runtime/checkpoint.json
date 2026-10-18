@@ -1,10 +1,10 @@
 {
   "attempt": 0,
-  "last_error": "external provider session completed without a pull request",
-  "last_failure_kind": "PROVIDER_ERROR",
+  "last_error": "no eligible provider is currently available",
+  "last_failure_kind": "PROVIDER_QUOTA",
   "provider_session_id": null,
   "replan_count": 0,
-  "resume_after": null,
-  "state": "FAILED",
+  "resume_after": "2026-10-18T15:12:49.906788+00:00",
+  "state": "PAUSED_QUOTA",
   "task_id": "ckcov2582-005"
 }
