@@ -1,5 +1,5 @@
 {
-  "attempt": 0,
+  "attempt": 1,
   "last_error": "no eligible provider is currently available",
   "last_failure_kind": "PROVIDER_QUOTA",
   "provider_session_id": null,
