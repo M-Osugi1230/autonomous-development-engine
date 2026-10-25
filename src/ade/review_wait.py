@@ -16,6 +16,7 @@ class ReviewWaitRecord:
     created_at: str
     updated_at: str
     depends_on: tuple[str, ...] = ()
+    expected_base_branch: str | None = None
     status: str = "WAITING_REVIEW"
     schema_version: int = 1
 
@@ -32,6 +33,17 @@ class ReviewWaitRecord:
             raise ValueError("review wait reason must be non-empty")
         if self.status != "WAITING_REVIEW":
             raise ValueError("review wait status must be WAITING_REVIEW")
+        if self.expected_base_branch is not None:
+            if (
+                not isinstance(self.expected_base_branch, str)
+                or not self.expected_base_branch.strip()
+            ):
+                raise ValueError("expected_base_branch must be a non-empty string when set")
+            object.__setattr__(
+                self,
+                "expected_base_branch",
+                self.expected_base_branch.strip(),
+            )
         for field_name, value in (
             ("created_at", self.created_at),
             ("updated_at", self.updated_at),
@@ -79,6 +91,7 @@ class ReviewWaitRecord:
             "created_at": self.created_at,
             "updated_at": self.updated_at,
             "depends_on": list(self.depends_on),
+            "expected_base_branch": self.expected_base_branch,
             "status": self.status,
         }
 
@@ -96,6 +109,7 @@ class ReviewWaitRecord:
             "created_at",
             "updated_at",
             "depends_on",
+            "expected_base_branch",
             "status",
         }
         unknown = set(payload) - allowed
@@ -104,6 +118,9 @@ class ReviewWaitRecord:
         raw_dependencies = payload.get("depends_on", [])
         if not isinstance(raw_dependencies, list):
             raise ValueError("review wait depends_on must be a list")
+        expected_base_branch = payload.get("expected_base_branch")
+        if expected_base_branch is not None and not isinstance(expected_base_branch, str):
+            raise ValueError("review wait expected_base_branch must be a string or null")
         record = cls(
             schema_version=payload.get("schema_version", 0),
             task_id=str(payload.get("task_id", "")),
@@ -113,6 +130,7 @@ class ReviewWaitRecord:
             created_at=str(payload.get("created_at", "")),
             updated_at=str(payload.get("updated_at", "")),
             depends_on=tuple(raw_dependencies),
+            expected_base_branch=expected_base_branch,
             status=str(payload.get("status", "")),
         )
         number = payload.get("pull_request_number")
@@ -149,9 +167,10 @@ class ReviewWaitLedger:
                 if (
                     existing.target_repository != record.target_repository
                     or existing.pull_request_url != record.pull_request_url
+                    or existing.expected_base_branch != record.expected_base_branch
                 ):
                     raise ValueError(
-                        "review wait task cannot be rebound to a different pull request"
+                        "review wait task cannot be rebound to different trusted PR identity"
                     )
                 result.append(record)
                 replaced = True
