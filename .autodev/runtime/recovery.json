@@ -1,11 +1,11 @@
 {
   "action": "HUMAN_WAIT",
   "failure": "RUNTIME_VERIFICATION",
-  "fingerprint": "f6ab1f5dbdc7267e3fe075854c0c8e5877343d7724df6ec6d1a40942821bbbcf",
+  "fingerprint": "200f02196ec25f8a4be937c9de270961f7cfd8bf13095cb75494720b180f8fc3",
   "progress": {
     "rebases": 0,
     "repairs": 0,
-    "repeated_failures": 2,
+    "repeated_failures": 1,
     "replans": 0,
     "retries": 0
   },
