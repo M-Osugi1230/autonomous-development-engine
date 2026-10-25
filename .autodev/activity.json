@@ -342,6 +342,13 @@
       "occurred_at": "2026-10-18T19:58:11.841556+00:00",
       "summary": "Merged Jules PR #443",
       "task_id": "jifinish88-007"
+    },
+    {
+      "event_id": "pr-merged-444-a478d8aeb28b",
+      "kind": "PR_MERGED",
+      "occurred_at": "2026-10-25T12:13:11.146958+00:00",
+      "summary": "Merged Jules PR #444",
+      "task_id": "jifinish88-008"
     }
   ],
   "schema_version": 1
