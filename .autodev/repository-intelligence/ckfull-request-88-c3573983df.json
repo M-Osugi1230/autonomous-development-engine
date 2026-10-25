@@ -1,0 +1,165 @@
+{
+  "content_summary": {
+    "module_count": 0,
+    "modules": [],
+    "schema_version": 1
+  },
+  "content_summary_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
+  "impact_analysis": {
+    "affected_paths": [],
+    "affected_test_paths": [],
+    "changed_paths": [
+      "docs/ADE_COVERAGE_FULL_COMPLETION.json",
+      "operations/plan-detection/candidates/ade-batch-004/candidates-v1.json",
+      "operations/plan-detection/primary-reviewed-overrides-v1.json",
+      "operations/plan-detection/registry-v1.json",
+      "tests/test_plan_detection_validation_v1.js"
+    ],
+    "entries": [
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "docs/ADE_COVERAGE_FULL_COMPLETION.json",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "operations/plan-detection/candidates/ade-batch-004/candidates-v1.json",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "operations/plan-detection/primary-reviewed-overrides-v1.json",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": false,
+        "path": "operations/plan-detection/registry-v1.json",
+        "reason": "changed",
+        "via_path": null
+      },
+      {
+        "distance": 0,
+        "is_test": true,
+        "path": "tests/test_plan_detection_validation_v1.js",
+        "reason": "changed",
+        "via_path": null
+      }
+    ],
+    "schema_version": 1,
+    "truncated": false
+  },
+  "impact_analysis_fingerprint": "d6003e4e38b6cfb855caa9fa6d0c9e8042a48b773e5c180dad4afba99650dd55",
+  "planner_context": {
+    "base_branch": "main",
+    "content_summary_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
+    "content_summary_module_count": 0,
+    "dependency_edges_truncated": false,
+    "documentation_paths": [
+      "docs/ADE_COVERAGE_25_COMPLETION.json"
+    ],
+    "internal_dependency_edge_count": 0,
+    "internal_dependency_edges": [],
+    "known_file_count_within_trusted_roots": 18,
+    "known_files_truncated": false,
+    "known_files_within_trusted_roots": [
+      "docs/ADE_COVERAGE_25_COMPLETION.json",
+      "operations/plan-detection/candidates/ade-batch-001/candidates-v1.json",
+      "operations/plan-detection/candidates/ade-batch-002/candidates-v1.json",
+      "operations/plan-detection/candidates/ade-batch-003/candidates-v1.json",
+      "operations/plan-detection/primary-reviewed-overrides-v1.json",
+      "operations/plan-detection/registry-v1.json",
+      "operations/plan-detection/research-queue-v1.json",
+      "operations/plan-detection/verified-overrides-v1.json",
+      "operations/universe/current-universe-v1.json",
+      "scripts/build_plan_detection_registry_v1.mjs",
+      "scripts/lib/plan_detection_v1.mjs",
+      "scripts/run_quality_pipeline_v43.mjs",
+      "scripts/validate_live_site_sync_v1.mjs",
+      "scripts/validate_plan_detection_candidates_v1.mjs",
+      "site/data/frontend/manifest.json",
+      "site/data/plan-detection-summary-v1.json",
+      "site/data/release-status.json",
+      "tests/test_plan_detection_validation_v1.js"
+    ],
+    "manifest_paths": [],
+    "python_module_summaries": [],
+    "python_module_summaries_truncated": false,
+    "relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+    "repository": "M-Osugi1230/chu-kei",
+    "schema_version": 1,
+    "snapshot_fingerprint": "999b8c86ed037ec83d6fe58b8a8efafcead3d62c9ce422d94df982e459e83647",
+    "source_roots": [],
+    "source_sha": "b3ced8e620d718dcfdf83e603ab74dc190d30f6f",
+    "test_roots": [
+      "tests"
+    ],
+    "test_source_link_count": 0,
+    "test_source_links": [],
+    "test_source_links_truncated": false,
+    "trusted_writable_roots": [
+      "operations",
+      "scripts",
+      "site",
+      "tests",
+      "schemas",
+      "reports",
+      "releases",
+      "docs"
+    ],
+    "workflow_paths": []
+  },
+  "planner_context_fingerprint": "4434472f82ee46bc3de9f4992267638a9f2b28b4a385d8cce4f22c27983cc6df",
+  "relationship_graph": {
+    "dependency_edge_count": 0,
+    "dependency_edges": [],
+    "schema_version": 1,
+    "test_source_link_count": 0,
+    "test_source_links": []
+  },
+  "relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "schema_version": 1,
+  "snapshot": {
+    "base_branch": "main",
+    "documentation_paths": [
+      "docs/ADE_COVERAGE_25_COMPLETION.json"
+    ],
+    "manifest_paths": [],
+    "path_count": 18,
+    "paths": [
+      "docs/ADE_COVERAGE_25_COMPLETION.json",
+      "operations/plan-detection/candidates/ade-batch-001/candidates-v1.json",
+      "operations/plan-detection/candidates/ade-batch-002/candidates-v1.json",
+      "operations/plan-detection/candidates/ade-batch-003/candidates-v1.json",
+      "operations/plan-detection/primary-reviewed-overrides-v1.json",
+      "operations/plan-detection/registry-v1.json",
+      "operations/plan-detection/research-queue-v1.json",
+      "operations/plan-detection/verified-overrides-v1.json",
+      "operations/universe/current-universe-v1.json",
+      "scripts/build_plan_detection_registry_v1.mjs",
+      "scripts/lib/plan_detection_v1.mjs",
+      "scripts/run_quality_pipeline_v43.mjs",
+      "scripts/validate_live_site_sync_v1.mjs",
+      "scripts/validate_plan_detection_candidates_v1.mjs",
+      "site/data/frontend/manifest.json",
+      "site/data/plan-detection-summary-v1.json",
+      "site/data/release-status.json",
+      "tests/test_plan_detection_validation_v1.js"
+    ],
+    "repository": "M-Osugi1230/chu-kei",
+    "schema_version": 1,
+    "source_roots": [],
+    "source_sha": "b3ced8e620d718dcfdf83e603ab74dc190d30f6f",
+    "test_roots": [
+      "tests"
+    ],
+    "workflow_paths": []
+  },
+  "snapshot_fingerprint": "999b8c86ed037ec83d6fe58b8a8efafcead3d62c9ce422d94df982e459e83647"
+}
