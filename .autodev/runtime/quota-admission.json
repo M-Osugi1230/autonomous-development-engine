@@ -4,18 +4,18 @@
   ],
   "allowed": true,
   "daily_limit": 15,
-  "observed_at": "2026-10-18T19:58:29.032644+00:00",
+  "observed_at": "2026-10-25T13:54:31.384284+00:00",
   "project_allocation": 6,
   "project_key": "ade-jichi-insight",
-  "project_used": 6,
-  "purpose": "implementation",
-  "reason": "borrowed-unused-allocation",
-  "remaining": 4,
+  "project_used": 0,
+  "purpose": "planner",
+  "reason": "within-soft-allocation",
+  "remaining": 15,
   "resume_after": null,
   "schema_version": 1,
   "selected_project_keys": [
     "ade-jichi-insight"
   ],
-  "total_used": 11,
+  "total_used": 0,
   "unknown_session_count": 0
 }
