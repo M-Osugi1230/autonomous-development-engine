@@ -32,6 +32,9 @@ jobs:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    concurrency:
+      group: ade-project-state-${{ github.event.client_payload.project_key || github.event.client_payload.control_ref || github.ref_name || 'main' }}
+      cancel-in-progress: false
     steps:
       - name: Checkout project controller
         uses: actions/checkout@v4
@@ -69,12 +72,14 @@ jobs:
       fail-fast: false
       matrix:
         control_ref:
-          - main
           - ade-jichi-insight
           - ade-jquants
           - ade-chu-kei
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    concurrency:
+      group: ade-project-state-${{ matrix.control_ref }}
+      cancel-in-progress: false
     steps:
       - name: Checkout project controller
         uses: actions/checkout@v4
