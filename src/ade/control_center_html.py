@@ -19,7 +19,7 @@ def _status_class(status: str) -> str:
     normalized = status.upper()
     if normalized in {"RUNNING", "READY", "COMPLETED", "VERIFIED"}:
         return "good"
-    if normalized in {"RECOVERING", "PAUSED_QUOTA", "WAITING", "PENDING"}:
+    if normalized in {"RECOVERING", "PAUSED_QUOTA", "WAITING", "PENDING", "WAITING_REVIEW"}:
         return "warn"
     if normalized in {"HUMAN_WAIT", "FAILED", "BLOCKED"}:
         return "attention"
@@ -35,6 +35,11 @@ def _project_card(project: ControlCenterProjectSummary) -> str:
     current = _text(project.current_task_id, "Idle")
     next_action = _text(project.next_system_action, "No pending system action")
     resume = _text(project.resume_after, "Not scheduled")
+    review_tasks = (
+        ", ".join(_text(task_id) for task_id in project.waiting_review_task_ids)
+        if project.waiting_review_task_ids
+        else "None"
+    )
     return """
     <article class="project-card {status_class}">
       <div class="project-top">
@@ -50,10 +55,12 @@ def _project_card(project: ControlCenterProjectSummary) -> str:
         <div><strong>{current}</strong><span>Current task</span></div>
         <div><strong>{completed}/{total}</strong><span>Tasks</span></div>
         <div><strong>{queue}</strong><span>Queued</span></div>
+        <div><strong>{review_waits}</strong><span>Waiting review</span></div>
         <div><strong>{failed}</strong><span>Failed</span></div>
       </div>
       <div class="human-row">{human}</div>
       <dl class="details">
+        <div><dt>Review-wait tasks</dt><dd>{review_tasks}</dd></div>
         <div><dt>Next system action</dt><dd>{next_action}</dd></div>
         <div><dt>Resume after</dt><dd>{resume}</dd></div>
         <div><dt>Warnings</dt><dd>{warnings}</dd></div>
@@ -71,6 +78,8 @@ def _project_card(project: ControlCenterProjectSummary) -> str:
         completed=project.completed_tasks,
         total=project.total_tasks,
         queue=project.queue_depth,
+        review_waits=project.waiting_review_count,
+        review_tasks=review_tasks,
         failed=project.failed_tasks,
         human=human,
         next_action=next_action,
@@ -144,7 +153,7 @@ def render_control_center(snapshot: ControlCenterPortfolioSnapshot) -> str:
     @media (min-width:760px) {
       .shell { padding:26px 20px 42px; }
       .projects { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .stats { grid-template-columns:repeat(4,minmax(0,1fr)); }
+      .stats { grid-template-columns:repeat(5,minmax(0,1fr)); }
     }
   </style>
 </head>
