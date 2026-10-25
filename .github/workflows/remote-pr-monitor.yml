@@ -9,8 +9,15 @@ on:
       - ade-chu-kei
     paths:
       - ".autodev/runtime/remote-execution.json"
+      - ".autodev/runtime/review-waits.json"
+      - ".github/trusted/remote_pr_monitor.py"
       - ".github/trusted/remote_pr_monitor_targeted.py"
+      - ".github/trusted/review_wait_controller.py"
       - ".github/trusted/target_runtime_profile.py"
+      - ".github/trusted/dag_controller.py"
+      - "src/ade/review_wait.py"
+      - "src/ade/task_graph.py"
+      - "src/ade/task_graph_transition.py"
   repository_dispatch:
     types:
       - ade_remote_pr_monitor
