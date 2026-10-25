@@ -5,7 +5,7 @@
   "progress": {
     "rebases": 0,
     "repairs": 0,
-    "repeated_failures": 1,
+    "repeated_failures": 2,
     "replans": 0,
     "retries": 0
   },
