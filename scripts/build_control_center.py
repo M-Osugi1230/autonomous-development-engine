@@ -15,9 +15,11 @@ from ade.control_center import (
 )
 from ade.control_center_html import render_control_center
 from ade.mission_control import build_mission_control_snapshot
+from ade.review_wait import ReviewWaitLedger
 
 
 DEFAULT_OUTPUT_DIR = Path("dist/control-center")
+REVIEW_WAITS_PATH = Path(".autodev/runtime/review-waits.json")
 
 
 def _atomic_write_text(path: Path, content: str) -> None:
@@ -76,6 +78,14 @@ def _validate_projects(
     return tuple(normalized)
 
 
+def _load_review_waits(root: Path) -> ReviewWaitLedger:
+    path = root / REVIEW_WAITS_PATH
+    if not path.exists():
+        return ReviewWaitLedger()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return ReviewWaitLedger.from_dict(payload)
+
+
 def build_artifacts(
     *,
     projects: Sequence[tuple[str, str | Path]],
@@ -87,7 +97,17 @@ def build_artifacts(
     for label, root in validated_projects:
         snapshot = build_mission_control_snapshot(root)
         summary = ControlCenterProjectSummary.from_mission_control(snapshot)
-        summaries.append(replace(summary, project_id=label))
+        review_waits = _load_review_waits(root)
+        summaries.append(
+            replace(
+                summary,
+                project_id=label,
+                waiting_review_count=len(review_waits.records),
+                waiting_review_task_ids=tuple(
+                    record.task_id for record in review_waits.records
+                ),
+            )
+        )
 
     portfolio = ControlCenterPortfolioSnapshot(projects=tuple(summaries))
     destination = Path(output_dir)
@@ -135,7 +155,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             projects=projects,
             output_dir=args.output_dir,
         )
-    except (ValueError, OSError, TypeError) as exc:
+    except (ValueError, OSError, TypeError, json.JSONDecodeError) as exc:
         message = str(exc).splitlines()[0].strip() if str(exc).strip() else type(exc).__name__
         print(f"Control Center build failed: {message[:256]}", file=sys.stderr)
         return 1
