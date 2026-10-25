@@ -10,6 +10,7 @@ from .cycle import CycleTask
 class GraphTaskStatus(StrEnum):
     PENDING = "PENDING"
     RUNNING = "RUNNING"
+    WAITING_REVIEW = "WAITING_REVIEW"
     HUMAN_WAIT = "HUMAN_WAIT"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
