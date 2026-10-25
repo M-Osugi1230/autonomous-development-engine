@@ -32,24 +32,37 @@ def cycle_task(task_id: str) -> CycleTask:
     )
 
 
+def cycle_task_payload(task_id: str) -> dict:
+    task = cycle_task(task_id)
+    return {
+        "task_id": task.task_id,
+        "title": task.title,
+        "prompt": task.prompt,
+        "starting_branch": task.starting_branch,
+        "auto_create_pr": task.auto_create_pr,
+        "timeout_seconds": task.timeout_seconds,
+        "poll_interval_seconds": task.poll_interval_seconds,
+    }
+
+
 def graph_payload() -> dict:
     return {
         "schema_version": 1,
         "tasks": [
             {
-                "task": cycle_task("a").to_dict(),
+                "task": cycle_task_payload("a"),
                 "depends_on": [],
                 "status": "RUNNING",
                 "decision_id": None,
             },
             {
-                "task": cycle_task("b").to_dict(),
+                "task": cycle_task_payload("b"),
                 "depends_on": ["a"],
                 "status": "PENDING",
                 "decision_id": None,
             },
             {
-                "task": cycle_task("c").to_dict(),
+                "task": cycle_task_payload("c"),
                 "depends_on": [],
                 "status": "PENDING",
                 "decision_id": None,
