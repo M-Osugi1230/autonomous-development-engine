@@ -7,6 +7,7 @@ from typing import Any
 ALLOWED_STATUSES = {
     "PENDING",
     "RUNNING",
+    "WAITING_REVIEW",
     "HUMAN_WAIT",
     "COMPLETED",
     "FAILED",
@@ -168,6 +169,22 @@ def _runnable_nodes(
     return runnable
 
 
+def _activate_first_runnable(
+    graph: dict[str, Any],
+) -> dict[str, Any] | None:
+    if any(node["status"] == "RUNNING" for node in graph["tasks"]):
+        return None
+    runnable = _runnable_nodes(graph)
+    if not runnable:
+        return None
+    selected = runnable[0]
+    selected["status"] = "RUNNING"
+    selected["decision_id"] = None
+    task = deepcopy(selected["task"])
+    task.setdefault("schema_version", 1)
+    return task
+
+
 def advance_managed_graph(
     payload: dict[str, Any],
     *,
@@ -193,17 +210,72 @@ def advance_managed_graph(
 
     current["status"] = "COMPLETED"
     current["decision_id"] = None
+    return graph, _activate_first_runnable(graph)
 
-    runnable = _runnable_nodes(graph)
-    if not runnable:
+
+def park_managed_graph_for_review(
+    payload: dict[str, Any],
+    *,
+    task_id: str,
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Park one RUNNING task for review and activate independent safe work.
+
+    Dependents remain blocked because WAITING_REVIEW is intentionally not a
+    completed dependency. Only a PENDING task whose dependencies are all
+    COMPLETED can be selected.
+    """
+    graph = validate_graph_payload(payload)
+    if not isinstance(task_id, str) or not task_id.strip():
+        raise TrustedDagError("task_id must be a non-empty string")
+
+    current: dict[str, Any] | None = None
+    for node in graph["tasks"]:
+        if _task_id(node) == task_id:
+            current = node
+            break
+    if current is None:
+        raise TrustedDagError(f"task graph does not contain task {task_id}")
+
+    if current["status"] == "WAITING_REVIEW":
+        return graph, _activate_first_runnable(graph)
+    if current["status"] != "RUNNING":
+        raise TrustedDagError(
+            f"task {task_id} must be RUNNING before review parking"
+        )
+
+    current["status"] = "WAITING_REVIEW"
+    current["decision_id"] = None
+    return graph, _activate_first_runnable(graph)
+
+
+def reconcile_waiting_review(
+    payload: dict[str, Any],
+    *,
+    task_id: str,
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Reconcile a late merge without disturbing unrelated active work."""
+    graph = validate_graph_payload(payload)
+    if not isinstance(task_id, str) or not task_id.strip():
+        raise TrustedDagError("task_id must be a non-empty string")
+
+    current: dict[str, Any] | None = None
+    for node in graph["tasks"]:
+        if _task_id(node) == task_id:
+            current = node
+            break
+    if current is None:
+        raise TrustedDagError(f"task graph does not contain task {task_id}")
+
+    if current["status"] == "COMPLETED":
         return graph, None
+    if current["status"] != "WAITING_REVIEW":
+        raise TrustedDagError(
+            f"task {task_id} must be WAITING_REVIEW before reconciliation"
+        )
 
-    selected = runnable[0]
-    selected["status"] = "RUNNING"
-    selected["decision_id"] = None
-    task = deepcopy(selected["task"])
-    task.setdefault("schema_version", 1)
-    return graph, task
+    current["status"] = "COMPLETED"
+    current["decision_id"] = None
+    return graph, _activate_first_runnable(graph)
 
 
 def graph_has_unfinished_work(payload: dict[str, Any]) -> bool:
@@ -212,3 +284,8 @@ def graph_has_unfinished_work(payload: dict[str, Any]) -> bool:
         node["status"] not in {"COMPLETED", "FAILED"}
         for node in graph["tasks"]
     )
+
+
+def graph_has_waiting_review(payload: dict[str, Any]) -> bool:
+    graph = validate_graph_payload(payload)
+    return any(node["status"] == "WAITING_REVIEW" for node in graph["tasks"])
