@@ -1,0 +1,189 @@
+{
+  "accepted_plan_fingerprint": "20a9b2d606e3052fd6cc84e0b3f8844c8ccf6bc529d90814a766c3da709afa9f",
+  "campaign_id": "ckfull-campaign-88-c3573983df",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "318ff6273672845cf9c7837b5c89812a033268b4d22f2b77fe26f99d63cb909b",
+    "current_source_sha": "b3ced8e620d718dcfdf83e603ab74dc190d30f6f",
+    "execution_authority": false,
+    "extracted_record_count": 2,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/chu-kei",
+    "resolution_fingerprint": "1fbd4688e08af85902218d577cd789b488e321b33172ad12a1d234994a10634b",
+    "retrieval_fingerprint": "040d6fa6f86169399ca5a51206f08920fa7b5fb5c7e46e6c71b82022fe62b4b1",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "c96a4a4ee9c05ca6f25b52d5640c1e3633dc47a23440c5df77d5cfb834250dd6",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "3f7ef25804b9e7a74c6c69310db804fd9389a9e1af68926e21147494796727ea",
+  "proposal": {
+    "goal": "Expand Chu-kei Insight Plan Detection from the verified 25% milestone to full company-count coverage of the canonical universe. Prioritize breadth over depth: process every company in bounded resumable batches until no company remains not_checked. Preserve evidence boundaries and never infer a formal plan where official or first-party evidence does not support one. Criteria: [1] Canonical universe coverage is complete: every company has been reviewed and the public summary reports not_checked=0, recalculated against the authoritative current universe. [2] Every non-not_checked disposition is supported by official or first-party evidence with source identity, dates or period semantics, provenance and review state; ambiguous evidence remains explicitly bounded rather than inferred. [3] Candidate generation, validation, review staging, promotion and derived registry/site rebuilds remain deterministic, resumable and compatible with required human-review gates. [4] Frontend manifest, Plan Detection summary and release metadata match canonical data, and repository-side sync, smoke, source-audit and quality checks are green. [5] Final repository and runtime verification are green and a concise completion marker records full-coverage counts, evidence boundaries and verification results. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_COVERAGE_FULL_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "- Populate candidate batch ade-batch-004/candidates-v1.json for remaining unreviewed universe companies under human review governance.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "operations/plan-detection/candidates/ade-batch-004/candidates-v1.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [
+          "operations/plan-detection/candidates/ade-batch-004/candidates-v1.json"
+        ],
+        "outcome": "- Populate candidate batch ade-batch-004/candidates-v1.json for remaining unreviewed universe companies under human review governance.",
+        "title": "Generate candidate batch 004 in operations/plan-detection/candidates/ade-batch-004/candidates-v1.json."
+      },
+      {
+        "acceptance": [
+          "- Update primary reviewed overrides in operations/plan-detection/primary-reviewed-overrides-v1.json with official evidence dispositions.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "operations/plan-detection/primary-reviewed-overrides-v1.json"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "- Update primary reviewed overrides in operations/plan-detection/primary-reviewed-overrides-v1.json with official evidence dispositions.",
+        "title": "Stage reviewed plan detection overrides in operations/plan-detection/primary-reviewed-overrides-v1.json."
+      },
+      {
+        "acceptance": [
+          "- Rebuild canonical plan detection records in operations/plan-detection/registry-v1.json and sync dataset counts.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "operations/plan-detection/registry-v1.json"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [],
+        "outcome": "- Rebuild canonical plan detection records in operations/plan-detection/registry-v1.json and sync dataset counts.",
+        "title": "Rebuild canonical plan detection records in operations/plan-detection/registry-v1.json."
+      },
+      {
+        "acceptance": [
+          "- Update unit tests in tests/test_plan_detection_validation_v1.js to validate batch 004 candidates and summary counts.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_plan_detection_validation_v1.js"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "- Update unit tests in tests/test_plan_detection_validation_v1.js to validate batch 004 candidates and summary counts.",
+        "title": "Update unit tests in tests/test_plan_detection_validation_v1.js."
+      },
+      {
+        "acceptance": [
+          "- Record full coverage evidence and status in docs/ADE_COVERAGE_FULL_COMPLETION.json.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "docs/ADE_COVERAGE_FULL_COMPLETION.json"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [
+          "docs/ADE_COVERAGE_FULL_COMPLETION.json"
+        ],
+        "outcome": "- Record full coverage evidence and status in docs/ADE_COVERAGE_FULL_COMPLETION.json.",
+        "title": "Record full coverage completion evidence in docs/ADE_COVERAGE_FULL_COMPLETION.json."
+      }
+    ]
+  },
+  "proposal_fingerprint": "6c0f92e81fc0e23947869873b3b147dd5dd524814dc27619f52784ec41d14ccf",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 5,
+  "provider_plan_steps_sha256": "0e6f0e8d0fba946d62be8a49c4fc24bcaffb83f17d60b48743a52d847b334ba6",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
+  "repository_context_fingerprint": "4434472f82ee46bc3de9f4992267638a9f2b28b4a385d8cce4f22c27983cc6df",
+  "repository_impact_analysis_fingerprint": "d6003e4e38b6cfb855caa9fa6d0c9e8042a48b773e5c180dad4afba99650dd55",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "999b8c86ed037ec83d6fe58b8a8efafcead3d62c9ce422d94df982e459e83647",
+  "repository_source_sha": "b3ced8e620d718dcfdf83e603ab74dc190d30f6f",
+  "request": {
+    "allowed_path_prefixes": [
+      "operations",
+      "scripts",
+      "site",
+      "tests",
+      "schemas",
+      "reports",
+      "releases",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "ckfull-campaign-88-c3573983df",
+    "execution_phase": "completion-runner",
+    "goal": "Expand Chu-kei Insight Plan Detection from the verified 25% milestone to full company-count coverage of the canonical universe. Prioritize breadth over depth: process every company in bounded resumable batches until no company remains not_checked. Preserve evidence boundaries and never infer a formal plan where official or first-party evidence does not support one. Criteria: [1] Canonical universe coverage is complete: every company has been reviewed and the public summary reports not_checked=0, recalculated against the authoritative current universe. [2] Every non-not_checked disposition is supported by official or first-party evidence with source identity, dates or period semantics, provenance and review state; ambiguous evidence remains explicitly bounded rather than inferred. [3] Candidate generation, validation, review staging, promotion and derived registry/site rebuilds remain deterministic, resumable and compatible with required human-review gates. [4] Frontend manifest, Plan Detection summary and release metadata match canonical data, and repository-side sync, smoke, source-audit and quality checks are green. [5] Final repository and runtime verification are green and a concise completion marker records full-coverage counts, evidence boundaries and verification results. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_COVERAGE_FULL_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "id_prefix": "ckfull88",
+    "min_tasks": 3,
+    "repository_intelligence_prefixes": [
+      "operations/plan-detection",
+      "operations/universe/current-universe-v1.json",
+      "scripts/build_plan_detection_registry_v1.mjs",
+      "scripts/lib/plan_detection_v1.mjs",
+      "scripts/validate_plan_detection_candidates_v1.mjs",
+      "scripts/validate_live_site_sync_v1.mjs",
+      "scripts/run_quality_pipeline_v43.mjs",
+      "tests/test_plan_detection_validation_v1.js",
+      "site/data/plan-detection-summary-v1.json",
+      "site/data/release-status.json",
+      "site/data/frontend/manifest.json",
+      "docs/ADE_COVERAGE_25_COMPLETION.json"
+    ],
+    "request_id": "ckfull-request-88-c3573983df",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/chu-kei"
+  },
+  "request_fingerprint": "48634ecf56801b4023f94cd37470b03d7f2caeff8e9917e29650ced5854b2446",
+  "schema_version": 1,
+  "task_ids": [
+    "ckfull88-001",
+    "ckfull88-002",
+    "ckfull88-003",
+    "ckfull88-004",
+    "ckfull88-005"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 40245406395
+}
