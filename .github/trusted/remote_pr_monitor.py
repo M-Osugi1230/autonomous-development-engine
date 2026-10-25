@@ -23,6 +23,11 @@ from ade.runtime_verification_trigger import (
 from ade_pr_gate import advance_queue
 from github_client import GitHubClient, GitHubError
 from observability import record_merged_pr
+from review_wait_controller import (
+    load_review_waits,
+    park_current_task_for_review,
+    reconcile_review_wait_merge,
+)
 from runtime_probes import (
     build_runtime_probe_registry,
     build_runtime_verification_policy,
@@ -217,44 +222,137 @@ def _arm_post_merge_runtime_verification(
     return final_receipt
 
 
+def _trusted_merge_identity(pr: dict[str, Any]) -> tuple[str, str]:
+    head = pr.get("head", {})
+    head_sha = head.get("sha") if isinstance(head, dict) else None
+    if not isinstance(head_sha, str) or not head_sha:
+        raise RuntimeError("merged target pull request has no head SHA")
+    merge_sha = pr.get("merge_commit_sha")
+    if (
+        not isinstance(merge_sha, str)
+        or len(merge_sha) != 40
+        or any(ch not in "0123456789abcdef" for ch in merge_sha)
+    ):
+        raise RuntimeError("merged target pull request has no valid merge commit SHA")
+    return head_sha, merge_sha
+
+
+def _reconcile_waiting_reviews(gh: GitHubClient) -> list[str]:
+    """Reconcile late merges without relying on current_task_id.
+
+    The durable review-wait ledger preserves PR identity after another task has
+    become current, so scheduled monitor runs can safely complete the old task.
+    """
+    reconciled: list[str] = []
+    ledger = load_review_waits(gh)
+    for record in ledger.records:
+        owner, repo = record.target_repository.split("/", 1)
+        pr = _public_github_json(
+            f"/repos/{owner}/{repo}/pulls/{record.pull_request_number}"
+        )
+        if pr.get("html_url") != record.pull_request_url:
+            raise RuntimeError("review-wait pull request URL does not match record")
+        if not pr.get("merged_at"):
+            continue
+
+        receipt = RemoteExecutionReceipt(
+            task_id=record.task_id,
+            target_repository=record.target_repository,
+            pull_request_url=record.pull_request_url,
+            recorded_at=record.updated_at,
+            status="PR_CREATED",
+        )
+        head_sha, merge_sha = _trusted_merge_identity(pr)
+        state, _ = gh.get_json_file(STATE_PATH)
+        _arm_post_merge_runtime_verification(
+            gh,
+            state=state,
+            receipt=receipt,
+            trusted_head_sha=head_sha,
+            trusted_merge_sha=merge_sha,
+        )
+        changed, _ = reconcile_review_wait_merge(
+            gh,
+            receipt=receipt,
+            observed_at=datetime.now(UTC).isoformat(),
+        )
+        if changed:
+            try:
+                record_merged_pr(
+                    gh,
+                    pr_number=record.pull_request_number,
+                    pr_url=record.pull_request_url,
+                    task_id=record.task_id,
+                    head_sha=head_sha,
+                    occurred_at=datetime.now(UTC).isoformat(),
+                )
+            except (GitHubError, ValueError) as exc:
+                print(
+                    f"WARNING: late-merge observability update failed: {exc}",
+                    file=sys.stderr,
+                )
+            reconciled.append(record.task_id)
+    return reconciled
+
+
 def main() -> int:
-    receipt = _load_receipt()
-    if receipt is None:
-        result = {"schema_version": 1, "state": "NOOP", "reason": "remote-receipt-missing"}
-        _write(result)
-        print(json.dumps(result, sort_keys=True))
-        return 0
-
-    gh = GitHubClient()
-    state, _ = gh.get_json_file(STATE_PATH)
-    current_task_id = state.get("current_task_id")
-    if current_task_id != receipt.task_id:
-        result = {
-            "schema_version": 1,
-            "state": "NOOP",
-            "reason": "remote-receipt-not-current",
-            "receipt_task_id": receipt.task_id,
-            "current_task_id": current_task_id,
-        }
-        _write(result)
-        print(json.dumps(result, sort_keys=True))
-        return 0
-
-    if receipt.status == "MERGED":
-        result = {
-            "schema_version": 1,
-            "state": "NOOP",
-            "reason": "remote-receipt-already-merged",
-            "task_id": receipt.task_id,
-        }
-        _write(result)
-        print(json.dumps(result, sort_keys=True))
-        return 0
-
-    owner, repo = receipt.target_repository.split("/", 1)
-    pr_number = receipt.pull_request_number
-
     try:
+        gh = GitHubClient()
+        reconciled_review_tasks = _reconcile_waiting_reviews(gh)
+        receipt = _load_receipt()
+        if receipt is None:
+            result = {
+                "schema_version": 1,
+                "state": "RECONCILED" if reconciled_review_tasks else "NOOP",
+                "reason": (
+                    "late-review-merges-reconciled"
+                    if reconciled_review_tasks
+                    else "remote-receipt-missing"
+                ),
+                "reconciled_review_task_ids": reconciled_review_tasks,
+            }
+            _write(result)
+            print(json.dumps(result, sort_keys=True))
+            return 0
+
+        state, _ = gh.get_json_file(STATE_PATH)
+        current_task_id = state.get("current_task_id")
+        if current_task_id != receipt.task_id:
+            result = {
+                "schema_version": 1,
+                "state": "RECONCILED" if reconciled_review_tasks else "NOOP",
+                "reason": (
+                    "late-review-merges-reconciled"
+                    if reconciled_review_tasks
+                    else "remote-receipt-not-current"
+                ),
+                "receipt_task_id": receipt.task_id,
+                "current_task_id": current_task_id,
+                "reconciled_review_task_ids": reconciled_review_tasks,
+            }
+            _write(result)
+            print(json.dumps(result, sort_keys=True))
+            return 0
+
+        if receipt.status == "MERGED":
+            result = {
+                "schema_version": 1,
+                "state": "RECONCILED" if reconciled_review_tasks else "NOOP",
+                "reason": (
+                    "late-review-merges-reconciled"
+                    if reconciled_review_tasks
+                    else "remote-receipt-already-merged"
+                ),
+                "task_id": receipt.task_id,
+                "reconciled_review_task_ids": reconciled_review_tasks,
+            }
+            _write(result)
+            print(json.dumps(result, sort_keys=True))
+            return 0
+
+        owner, repo = receipt.target_repository.split("/", 1)
+        pr_number = receipt.pull_request_number
+
         for _ in range(MAX_POLLS):
             pr = _public_github_json(f"/repos/{owner}/{repo}/pulls/{pr_number}")
             html_url = pr.get("html_url")
@@ -286,26 +384,14 @@ def main() -> int:
                     "target_repository": receipt.target_repository,
                     "pull_request_number": pr_number,
                     "next_task_id": next_task_id,
+                    "reconciled_review_task_ids": reconciled_review_tasks,
                 }
                 _write(result)
                 print(json.dumps(result, sort_keys=True))
                 return 0
 
             if pr.get("merged_at"):
-                head = pr.get("head", {})
-                head_sha = head.get("sha") if isinstance(head, dict) else None
-                if not isinstance(head_sha, str) or not head_sha:
-                    raise RuntimeError("merged target pull request has no head SHA")
-                merge_sha = pr.get("merge_commit_sha")
-                if (
-                    not isinstance(merge_sha, str)
-                    or len(merge_sha) != 40
-                    or any(ch not in "0123456789abcdef" for ch in merge_sha)
-                ):
-                    raise RuntimeError(
-                        "merged target pull request has no valid merge commit SHA"
-                    )
-
+                head_sha, merge_sha = _trusted_merge_identity(pr)
                 runtime_receipt = _arm_post_merge_runtime_verification(
                     gh,
                     state=state,
@@ -349,33 +435,50 @@ def main() -> int:
                         else None
                     ),
                     "next_task_id": next_task_id,
+                    "reconciled_review_task_ids": reconciled_review_tasks,
                 }
                 _write(result)
                 print(json.dumps(result, sort_keys=True))
                 return 0
 
             if pr.get("state") == "closed":
+                next_task_id = park_current_task_for_review(
+                    gh,
+                    receipt=receipt,
+                    reason="target-pull-request-closed-without-merge",
+                    observed_at=datetime.now(UTC).isoformat(),
+                )
                 result = {
                     "schema_version": 1,
-                    "state": "HUMAN_WAIT",
+                    "state": "HUMAN_REVIEW_REQUIRED",
                     "reason": "target-pull-request-closed-without-merge",
                     "task_id": receipt.task_id,
                     "target_repository": receipt.target_repository,
                     "pull_request_number": pr_number,
+                    "next_task_id": next_task_id,
+                    "reconciled_review_task_ids": reconciled_review_tasks,
                 }
                 _write(result)
                 print(json.dumps(result, sort_keys=True))
-                return 2
+                return 0
 
             time.sleep(POLL_SECONDS)
 
+        next_task_id = park_current_task_for_review(
+            gh,
+            receipt=receipt,
+            reason="target-pull-request-not-merged-yet",
+            observed_at=datetime.now(UTC).isoformat(),
+        )
         result = {
             "schema_version": 1,
-            "state": "WAITING",
+            "state": "WAITING_REVIEW",
             "reason": "target-pull-request-not-merged-yet",
             "task_id": receipt.task_id,
             "target_repository": receipt.target_repository,
             "pull_request_number": pr_number,
+            "next_task_id": next_task_id,
+            "reconciled_review_task_ids": reconciled_review_tasks,
         }
         _write(result)
         print(json.dumps(result, sort_keys=True))
@@ -384,7 +487,6 @@ def main() -> int:
         result = {
             "schema_version": 1,
             "state": "FAILED",
-            "task_id": receipt.task_id,
             "error": str(exc).splitlines()[0][:256],
         }
         _write(result)

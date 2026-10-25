@@ -12,12 +12,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import autonomous_planner_cycle as planner_cycle
 from ade.planning_activation import PlanningGoalRequest
+from ade.review_wait import ReviewWaitLedger
 from github_client import GitHubClient, GitHubError
 
 COMPLETION_GOAL_PATH = Path(".autodev/completion-goal.json")
 PLANNING_GOAL_PATH = Path(".autodev/planning-goal.json")
 PLANNING_STATUS_PATH = Path(".autodev/runtime/planning-status.json")
 STATE_PATH = Path(".autodev/state.json")
+REVIEW_WAITS_PATH = Path(".autodev/runtime/review-waits.json")
 RESULT_PATH = Path(".autodev/runtime/autonomous-planner-result.json")
 REMOTE_COMPLETION_STATUS_PATH = ".autodev/runtime/completion-status.json"
 _SUCCESSOR_GOAL_MAX_CHARS = 1900
@@ -34,6 +36,14 @@ def _optional(path: Path) -> dict[str, Any] | None:
     if not path.exists():
         return None
     return _load(path)
+
+
+def _review_wait_task_ids(path: Path = REVIEW_WAITS_PATH) -> tuple[str, ...]:
+    payload = _optional(path)
+    if payload is None:
+        return ()
+    ledger = ReviewWaitLedger.from_dict(payload)
+    return tuple(record.task_id for record in ledger.records)
 
 
 def _write_result(payload: dict[str, Any]) -> None:
@@ -161,7 +171,11 @@ def _eligible_for_successor(
     request: PlanningGoalRequest,
     state: dict[str, Any],
     status: dict[str, Any] | None,
+    *,
+    waiting_review_task_ids: tuple[str, ...] = (),
 ) -> bool:
+    if waiting_review_task_ids:
+        return False
     if status is None:
         return False
     if status.get("request_fingerprint") != request.fingerprint():
@@ -239,6 +253,7 @@ def main() -> int:
     request = PlanningGoalRequest.from_dict(_load(PLANNING_GOAL_PATH))
     state = _load(STATE_PATH)
     status = _optional(PLANNING_STATUS_PATH)
+    waiting_review_task_ids = _review_wait_task_ids()
 
     reader = _target_reader(spec)
     target_head_sha = reader.get_branch_head_sha(
@@ -247,6 +262,26 @@ def main() -> int:
     )
 
     if _marker_is_complete(reader, spec, target_head_sha=target_head_sha):
+        if waiting_review_task_ids:
+            payload = {
+                "schema_version": 1,
+                "state": "HUMAN_WAIT",
+                "reason": "unresolved-review-waits-block-graduation",
+                "project_key": spec["project_key"],
+                "target_repository": spec["target_repository"],
+                "target_head_sha": target_head_sha,
+                "completion_marker_path": spec["completion_marker_path"],
+                "waiting_review_task_ids": list(waiting_review_task_ids),
+            }
+            _write_result(payload)
+            GitHubClient().upsert_json_file(
+                REMOTE_COMPLETION_STATUS_PATH,
+                payload,
+                message=f"completion: {spec['project_key']} waiting for review reconciliation",
+            )
+            print(json.dumps(payload, sort_keys=True))
+            return 0
+
         payload = {
             "schema_version": 1,
             "state": "COMPLETE",
@@ -266,7 +301,12 @@ def main() -> int:
         print(json.dumps(payload, sort_keys=True))
         return 0
 
-    if not _eligible_for_successor(request, state, status):
+    if not _eligible_for_successor(
+        request,
+        state,
+        status,
+        waiting_review_task_ids=waiting_review_task_ids,
+    ):
         return planner_cycle.main()
 
     successor = _build_successor_request(

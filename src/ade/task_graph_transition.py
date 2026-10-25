@@ -31,6 +31,8 @@ def transition_task(
 
     HUMAN_WAIT -> PENDING is intentionally excluded; use
     resume_task_after_decision() so a matching human decision is required.
+    WAITING_REVIEW -> COMPLETED is also intentionally excluded; use
+    reconcile_waiting_review_task() after the trusted PR monitor observes merge.
     """
     if not isinstance(graph, TaskGraph):
         raise ValueError("graph must be a TaskGraph")
@@ -70,6 +72,16 @@ def transition_task(
             )
             return _replace_node(graph, replacement)
 
+        if target is GraphTaskStatus.WAITING_REVIEW:
+            if decision_id is not None:
+                raise ValueError("decision_id is not valid for RUNNING -> WAITING_REVIEW")
+            replacement = replace(
+                node,
+                status=GraphTaskStatus.WAITING_REVIEW,
+                decision_id=None,
+            )
+            return _replace_node(graph, replacement)
+
         if target in (GraphTaskStatus.COMPLETED, GraphTaskStatus.FAILED):
             if decision_id is not None:
                 raise ValueError(
@@ -88,6 +100,12 @@ def transition_task(
         raise ValueError(
             "HUMAN_WAIT tasks require resume_task_after_decision() with a "
             "matching decision_id"
+        )
+
+    if source is GraphTaskStatus.WAITING_REVIEW:
+        raise ValueError(
+            "WAITING_REVIEW tasks require reconcile_waiting_review_task() after "
+            "trusted merge evidence"
         )
 
     raise ValueError(f"{source.value} is terminal and cannot transition")
@@ -116,6 +134,36 @@ def resume_task_after_decision(
     replacement = replace(
         node,
         status=GraphTaskStatus.PENDING,
+        decision_id=None,
+    )
+    return _replace_node(graph, replacement)
+
+
+def reconcile_waiting_review_task(
+    graph: TaskGraph,
+    *,
+    task_id: str,
+) -> TaskGraph:
+    """Mark a review-wait task complete after trusted merge reconciliation.
+
+    The transition is idempotent so duplicate scheduled monitor events cannot
+    complete the task twice or disturb a different task that is currently
+    running.
+    """
+    if not isinstance(graph, TaskGraph):
+        raise ValueError("graph must be a TaskGraph")
+    if not isinstance(task_id, str) or not task_id.strip():
+        raise ValueError("task_id must be a non-empty string")
+
+    node = graph.require(task_id)
+    if node.status is GraphTaskStatus.COMPLETED:
+        return graph
+    if node.status is not GraphTaskStatus.WAITING_REVIEW:
+        raise ValueError("task is not in WAITING_REVIEW")
+
+    replacement = replace(
+        node,
+        status=GraphTaskStatus.COMPLETED,
         decision_id=None,
     )
     return _replace_node(graph, replacement)

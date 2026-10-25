@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import unittest
 
 from ade.control_center import (
@@ -64,6 +65,23 @@ class ControlCenterPortfolioTests(unittest.TestCase):
         self.assertEqual(summary.warning_count, 1)
         self.assertFalse(summary.human_action_required)
         self.assertEqual(summary.next_system_action, "continue trusted execution")
+        self.assertEqual(summary.waiting_review_count, 0)
+        self.assertEqual(summary.waiting_review_task_ids, ())
+
+    def test_review_wait_summary_serializes_distinct_from_active_task(self) -> None:
+        summary = ControlCenterProjectSummary.from_mission_control(
+            self.snapshot("jichi", current_task="independent-task")
+        )
+        summary = replace(
+            summary,
+            waiting_review_count=1,
+            waiting_review_task_ids=("review-task",),
+        )
+        payload = summary.to_dict()
+
+        self.assertEqual(payload["current_task_id"], "independent-task")
+        self.assertEqual(payload["waiting_review_count"], 1)
+        self.assertEqual(payload["waiting_review_task_ids"], ["review-task"])
 
     def test_campaign_progress_is_preferred_when_available(self) -> None:
         summary = ControlCenterProjectSummary.from_mission_control(

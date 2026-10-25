@@ -18,6 +18,7 @@ class ProjectStatus(StrEnum):
 class TaskStatus(StrEnum):
     READY = "READY"
     RUNNING = "RUNNING"
+    WAITING_REVIEW = "WAITING_REVIEW"
     HUMAN_WAIT = "HUMAN_WAIT"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"

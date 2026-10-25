@@ -38,6 +38,12 @@ The controller keeps execution authority separate from planner, provider, review
 
 ADE also includes bounded recovery for retry, replan, quota pause/resume, HUMAN_WAIT, and terminal failure; crash-safe checkpoint continuation; read-only Mission Control; dependency-aware DAG scheduling; deterministic multi-provider routing; sticky provider sessions; and exact-source Runtime Verification.
 
+### Review-wait invariant
+
+`human review wait != global ADE stop`.
+
+A task whose pull request is awaiting required review is durably parked as `WAITING_REVIEW`. It remains unfinished, continues to block dependent work and Production Graduation, and is reconciled only from trusted merge evidence. At the same time, the DAG scheduler may continue other dependency-safe independent tasks. Explicit human decision gates remain `HUMAN_WAIT` and are never bypassed or auto-approved.
+
 ## Graduated capabilities
 
 - ADE v1.0 — production autonomous development foundation.

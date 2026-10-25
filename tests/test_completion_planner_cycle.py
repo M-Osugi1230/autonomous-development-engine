@@ -68,6 +68,22 @@ class CompletionPlannerCycleTests(unittest.TestCase):
         human_wait = {**status, "state": "HUMAN_WAIT"}
         self.assertFalse(completion._eligible_for_successor(request, state, human_wait))
 
+        self.assertFalse(
+            completion._eligible_for_successor(
+                request,
+                state,
+                status,
+                waiting_review_task_ids=("review-task",),
+            )
+        )
+
+    def test_review_wait_ledger_is_unfinished_work(self):
+        with self.subTest("no ledger"):
+            self.assertEqual(
+                completion._review_wait_task_ids(Path("does-not-exist.json")),
+                (),
+            )
+
     def test_successor_request_is_deterministic_and_carries_graduation_contract(self):
         spec = completion._validate_completion_goal(self.completion_goal())
         state = {

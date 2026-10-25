@@ -16,6 +16,7 @@ class ControlCenterHtmlTests(unittest.TestCase):
         *,
         lifecycle: str = "RUNNING",
         human_action_required: bool = False,
+        waiting_review_task_ids: tuple[str, ...] = (),
     ) -> ControlCenterProjectSummary:
         return ControlCenterProjectSummary(
             project_id=project_id,
@@ -38,6 +39,8 @@ class ControlCenterHtmlTests(unittest.TestCase):
             resume_after=None,
             phase="v0.2",
             milestone="portfolio",
+            waiting_review_count=len(waiting_review_task_ids),
+            waiting_review_task_ids=waiting_review_task_ids,
         )
 
     def test_renderer_shows_multiple_projects_and_attention(self) -> None:
@@ -63,6 +66,22 @@ class ControlCenterHtmlTests(unittest.TestCase):
         self.assertIn("No human action", html)
         self.assertIn("RECOVERING", html)
         self.assertIn("50%", html)
+
+    def test_renderer_distinguishes_active_task_and_review_wait(self) -> None:
+        html = render_control_center(
+            ControlCenterPortfolioSnapshot(
+                projects=(
+                    self.project(
+                        "jichi",
+                        waiting_review_task_ids=("review-task-7",),
+                    ),
+                )
+            )
+        )
+        self.assertIn("Waiting review", html)
+        self.assertIn("Review-wait tasks", html)
+        self.assertIn("review-task-7", html)
+        self.assertIn("task-1", html)
 
     def test_renderer_escapes_dynamic_values(self) -> None:
         snapshot = ControlCenterPortfolioSnapshot(
