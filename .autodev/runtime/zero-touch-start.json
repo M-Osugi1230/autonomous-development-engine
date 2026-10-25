@@ -1,13 +1,13 @@
 {
-  "campaign_id": "ckcov25-campaign-82-774c07f2c8",
-  "dispatch_count": 2,
-  "dispatched_at": "2026-10-17T22:50:38.301815+00:00",
-  "plan_fingerprint": "328f371fb60aa675126e8fc3bf0f22f0eab13c94cae118c25ce37805e25d36b8",
+  "campaign_id": "ckfull-campaign-88-c3573983df",
+  "dispatch_count": 1,
+  "dispatched_at": "2026-10-25T23:40:02.405188+00:00",
+  "plan_fingerprint": "20a9b2d606e3052fd6cc84e0b3f8844c8ccf6bc529d90814a766c3da709afa9f",
   "run_attempt": "1",
-  "run_id": "39076682804",
+  "run_id": "40245777031",
   "schema_version": 1,
-  "source": "schedule",
-  "source_sha": "38d5b3c12c12a83db52949e9d914d2a443b7808f",
+  "source": "repository_dispatch",
+  "source_sha": "ac49bc3569df9f648969930365ba806e42e2c67f",
   "status": "DISPATCHED",
-  "task_id": "ckcov2582-005"
+  "task_id": "ckfull88-001"
 }
