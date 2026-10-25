@@ -1,15 +1,15 @@
 {
-  "accepted_plan_fingerprint": "3d41c568199d0f61d45646298f78ce270f8ac68b4d67dede0e9c791e1c1403c0",
+  "accepted_plan_fingerprint": "b873e9dccc705d3ad527989e6f6bef632c84e23cc8e4c90c562b9ffff6b51da6",
   "attempt": 1,
-  "campaign_id": "jifinish-campaign-88-925fa37b88",
+  "campaign_id": "jifinish-campaign-96-c50abc10b9",
   "development_memory_context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
   "development_memory_record_count": 0,
-  "first_task_id": "jifinish88-001",
-  "proposal_fingerprint": "5dd613c47d8f5f08e1ebbacef5ccf08ce32fbbf0b95f068a4f09af9d3b16f593",
+  "first_task_id": "jifinish96-001",
+  "proposal_fingerprint": "b935d410845b72b80aa5eb249516ea2accdd00b1776f0683fe5d135a740f30ad",
   "reason": "trusted-plan-accepted",
-  "request_fingerprint": "6ecd61d95ff7d42f117ca47c4de9395d53323217e93cd248ab5970ae02e1618c",
-  "request_id": "jifinish-request-88-925fa37b88",
+  "request_fingerprint": "4d9e4eb9f22618434886899138d9afb5d26e943415ab2470205ef7badc5a4750",
+  "request_id": "jifinish-request-96-c50abc10b9",
   "schema_version": 1,
   "state": "ACCEPTED",
-  "updated_at": "2026-10-17T16:46:47.429126+00:00"
+  "updated_at": "2026-10-25T13:58:42.976673+00:00"
 }
