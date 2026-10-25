@@ -68,6 +68,8 @@ class ControlCenterProjectSummary:
     resume_after: str | None
     phase: str | None = None
     milestone: str | None = None
+    waiting_review_count: int = 0
+    waiting_review_task_ids: tuple[str, ...] = ()
     schema_version: int = 1
 
     def __post_init__(self) -> None:
@@ -85,6 +87,7 @@ class ControlCenterProjectSummary:
             "failed_tasks",
             "open_decision_count",
             "warning_count",
+            "waiting_review_count",
         ):
             value = getattr(self, field_name)
             if type(value) is not int or value < 0:
@@ -95,6 +98,14 @@ class ControlCenterProjectSummary:
             raise ValueError("progress_percent cannot exceed 100")
         if type(self.human_action_required) is not bool:
             raise ValueError("human_action_required must be boolean")
+        task_ids = tuple(self.waiting_review_task_ids)
+        if len(task_ids) != self.waiting_review_count:
+            raise ValueError("waiting_review_count must match waiting_review_task_ids")
+        if len(set(task_ids)) != len(task_ids):
+            raise ValueError("waiting_review_task_ids must be unique")
+        if any(not isinstance(item, str) or not item.strip() for item in task_ids):
+            raise ValueError("waiting_review_task_ids must be non-empty strings")
+        object.__setattr__(self, "waiting_review_task_ids", task_ids)
 
     @property
     def attention_rank(self) -> int:
@@ -154,6 +165,8 @@ class ControlCenterProjectSummary:
             "resume_after": self.resume_after,
             "phase": self.phase,
             "milestone": self.milestone,
+            "waiting_review_count": self.waiting_review_count,
+            "waiting_review_task_ids": list(self.waiting_review_task_ids),
         }
 
 
