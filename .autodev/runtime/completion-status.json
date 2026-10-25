@@ -5,8 +5,8 @@
   "reason": "previous-campaign-exhausted-before-graduation",
   "schema_version": 1,
   "state": "CONTINUING",
-  "successor_campaign_id": "jifinish-campaign-88-925fa37b88",
-  "successor_request_id": "jifinish-request-88-925fa37b88",
-  "target_head_sha": "0d66f8f53dfc4fadbed4d8d2b498156a3d702dbe",
+  "successor_campaign_id": "jifinish-campaign-96-c50abc10b9",
+  "successor_request_id": "jifinish-request-96-c50abc10b9",
+  "target_head_sha": "582b79373e05c9cba8071ee05f72ea1d990b80b3",
   "target_repository": "M-Osugi1230/jichi-insight"
 }
