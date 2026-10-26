@@ -91,7 +91,7 @@
     "ckfull88-001",
     "ckfull88-002"
   ],
-  "current_task_id": "ckfull88-003",
+  "current_task_id": null,
   "failed_task_ids": [],
   "iteration": 89,
   "metadata": {
@@ -161,6 +161,7 @@
     "repository_intelligence_relationship_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
     "repository_intelligence_snapshot_fingerprint": "999b8c86ed037ec83d6fe58b8a8efafcead3d62c9ce422d94df982e459e83647",
     "repository_intelligence_source_sha": "b3ced8e620d718dcfdf83e603ab74dc190d30f6f",
+    "review_wait_non_blocking": true,
     "runtime_verification_id": "rv-8eaf165959649d9f5ba4621549e96ccd070788a3",
     "runtime_verification_source_sha": "8eaf165959649d9f5ba4621549e96ccd070788a3",
     "scheduler": "dag",
@@ -323,11 +324,15 @@
     "v1_9_slice_006_verified_outcome_lineage_retirement": true,
     "v1_9_slice_007_mission_control_observability": true,
     "v1_9_source_release_candidate_id": "release-a4cd075b270b6ad434ae2602",
-    "v1_9_source_release_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327"
+    "v1_9_source_release_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "waiting_review_count": 1,
+    "waiting_review_task_ids": [
+      "ckfull88-003"
+    ]
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-26T00:18:31.593786+00:00"
+  "status": "HUMAN_WAIT",
+  "updated_at": "2026-10-26T00:51:55.701644+00:00"
 }
