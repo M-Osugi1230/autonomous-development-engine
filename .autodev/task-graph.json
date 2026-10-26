@@ -36,7 +36,7 @@
       "depends_on": [
         "ckfull88-002"
       ],
-      "status": "RUNNING",
+      "status": "WAITING_REVIEW",
       "task": {
         "auto_create_pr": true,
         "poll_interval_seconds": 15,
