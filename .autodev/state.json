@@ -87,11 +87,12 @@
     "ckcov2582-003",
     "ckcov2582-004",
     "ckcov2582-005",
-    "ckcov2582-006"
+    "ckcov2582-006",
+    "ckfull88-001"
   ],
-  "current_task_id": "ckfull88-001",
+  "current_task_id": "ckfull88-002",
   "failed_task_ids": [],
-  "iteration": 87,
+  "iteration": 88,
   "metadata": {
     "accepted_plan_fingerprint": "20a9b2d606e3052fd6cc84e0b3f8844c8ccf6bc529d90814a766c3da709afa9f",
     "campaign_id": "ckfull-campaign-88-c3573983df",
@@ -326,6 +327,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-25T23:40:26.037540+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-26T00:03:36.112869+00:00"
 }
