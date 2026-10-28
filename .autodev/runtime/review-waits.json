@@ -1,20 +1,4 @@
 {
-  "records": [
-    {
-      "created_at": "2026-10-26T00:51:55.701644+00:00",
-      "depends_on": [
-        "ckfull88-002"
-      ],
-      "expected_base_branch": "main",
-      "pull_request_number": 270,
-      "pull_request_url": "https://github.com/M-Osugi1230/chu-kei/pull/270",
-      "reason": "target-pull-request-not-merged-yet",
-      "schema_version": 1,
-      "status": "WAITING_REVIEW",
-      "target_repository": "M-Osugi1230/chu-kei",
-      "task_id": "ckfull88-003",
-      "updated_at": "2026-10-26T00:51:55.701644+00:00"
-    }
-  ],
+  "records": [],
   "schema_version": 1
 }
