@@ -91,11 +91,12 @@
     "ckfull88-001",
     "ckfull88-002",
     "ckfull88-003",
-    "ckfull88-004"
+    "ckfull88-004",
+    "ckfull88-005"
   ],
-  "current_task_id": "ckfull88-005",
+  "current_task_id": null,
   "failed_task_ids": [],
-  "iteration": 91,
+  "iteration": 92,
   "metadata": {
     "accepted_plan_fingerprint": "20a9b2d606e3052fd6cc84e0b3f8844c8ccf6bc529d90814a766c3da709afa9f",
     "campaign_id": "ckfull-campaign-88-c3573983df",
@@ -156,7 +157,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "repository_intelligence_content_fingerprint": "dc4bd16fc81db34c680757d7c8423088c669e00eb0cff6f1bcd1a7c6f1bf99f6",
     "repository_intelligence_context_fingerprint": "4434472f82ee46bc3de9f4992267638a9f2b28b4a385d8cce4f22c27983cc6df",
     "repository_intelligence_impact_fingerprint": "d6003e4e38b6cfb855caa9fa6d0c9e8042a48b773e5c180dad4afba99650dd55",
@@ -333,6 +334,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-28T14:55:20.206209+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-28T15:19:46.240806+00:00"
 }
