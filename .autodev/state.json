@@ -89,11 +89,12 @@
     "ckcov2582-005",
     "ckcov2582-006",
     "ckfull88-001",
-    "ckfull88-002"
+    "ckfull88-002",
+    "ckfull88-003"
   ],
-  "current_task_id": null,
+  "current_task_id": "ckfull88-004",
   "failed_task_ids": [],
-  "iteration": 89,
+  "iteration": 90,
   "metadata": {
     "accepted_plan_fingerprint": "20a9b2d606e3052fd6cc84e0b3f8844c8ccf6bc529d90814a766c3da709afa9f",
     "campaign_id": "ckfull-campaign-88-c3573983df",
@@ -325,14 +326,12 @@
     "v1_9_slice_007_mission_control_observability": true,
     "v1_9_source_release_candidate_id": "release-a4cd075b270b6ad434ae2602",
     "v1_9_source_release_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
-    "waiting_review_count": 1,
-    "waiting_review_task_ids": [
-      "ckfull88-003"
-    ]
+    "waiting_review_count": 0,
+    "waiting_review_task_ids": []
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "HUMAN_WAIT",
-  "updated_at": "2026-10-26T00:51:55.701644+00:00"
+  "status": "READY",
+  "updated_at": "2026-10-28T14:42:08.399686+00:00"
 }
