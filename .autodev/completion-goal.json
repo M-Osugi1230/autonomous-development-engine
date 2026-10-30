@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project_key": "jichi-insight",
   "request_prefix": "jifinish",
-  "goal": "Graduate Jichi Insight as a nationwide municipality insight platform. Continue autonomously from Phase 15 through complete canonical coverage, public-product alignment, and final runtime verification; preserve fiscal/document/version distinctions and evidence boundaries. For missing paths, planner steps must explicitly say 'Create new file <exact-path>' so new_paths is declared.",
+  "goal": "Graduate Jichi Insight only after Phase 15 reaches strict canonical completion. The authoritative source is data/catalog/phase15_core_capital_review_queue.json in M-Osugi1230/jichi-insight. Continue autonomously in canonical queue sequence from the first municipality that is not reviewed_complete, beginning with Morioka City (official code 032018), then Akita, Yamagata, Fukushima and onward until all 67 Phase 15 municipalities are reviewed_complete. Candidate staging, source inventory, tests, explicit unresolved states, queue exhaustion, or campaign exhaustion are intermediate states and must never be treated as completion. For each municipality, perform the bounded evidence-backed work required to promote it to reviewed_complete, preserving official source URLs, stable record-level locators, plan/version/period/fiscal distinctions, provenance, deferred depth and non-inference rules. Keep public data and UI aligned as canonical data changes. If a machine-resolvable blocker is found, resolve it; if a genuinely human-only ambiguity remains, record it explicitly and continue other safe executable work, but do not graduate while any Phase 15 municipality remains non-complete or blocked. For missing paths, planner steps must explicitly say 'Create new file <exact-path>' so new_paths is declared.",
   "target_repository": "M-Osugi1230/jichi-insight",
   "base_branch": "main",
   "allowed_path_prefixes": [
@@ -17,6 +17,8 @@
   "repository_intelligence_prefixes": [
     "apps",
     "data/catalog",
+    "data/candidates",
+    "data/indexed",
     "pipelines",
     "scripts",
     "tests",
@@ -24,11 +26,12 @@
     "docs"
   ],
   "graduation_criteria": [
-    "Canonical coverage includes every intended municipality; each is validly evidenced or explicitly unresolved, never omitted.",
-    "Evidence retains official URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred depth; no invented facts, causality, comparisons, rankings or scores.",
-    "Candidate generation, validation, review staging, promotion and public-data pipelines are deterministic, resumable and free of machine-resolvable blockers; required human review gates remain explicit.",
-    "Public browse/search/detail uses current canonical nationwide data and passes repository plus production smoke checks.",
-    "CI, regression, data-quality and final runtime verification are green; queue exhaustion or campaign completion alone never means project completion. Only the verified completion marker does."
+    "The canonical file data/catalog/phase15_core_capital_review_queue.json contains exactly 67 Phase 15 targets and all 67 have status reviewed_complete.",
+    "The canonical Phase 15 queue has review_in_progress=0, pending_record_review=0 and blocked_source_inventory=0; no candidate-staging, human-review-pending, explicitly-unresolved, queue-exhausted or campaign-exhausted state may substitute for reviewed_complete.",
+    "Every municipality promoted to reviewed_complete retains official primary-source URLs and stable record-level evidence locators, with plan/version/period/fiscal/availability/provenance/deferred-depth boundaries preserved and no invented facts, causality, comparisons, rankings or scores.",
+    "All Phase 15 schemas, evidence-coverage checks, non-inference gates, deterministic candidate/promotion validation and regression tests are green for the final canonical state.",
+    "Public browse/search/detail and generated public data are aligned with the final 67/67 canonical Phase 15 state and repository plus production/runtime smoke verification is green.",
+    "docs/ADE_COMPLETION.json may be set to schema_version=1 and status=COMPLETE only after all preceding criteria are demonstrably satisfied. Before that point it must remain non-COMPLETE. Queue exhaustion or campaign completion alone never means project completion."
   ],
   "completion_marker_path": "docs/ADE_COMPLETION.json",
   "min_tasks": 2,
