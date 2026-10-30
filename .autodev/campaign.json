@@ -1,6 +1,8 @@
 {
   "campaign_id": "ckprod-campaign-93-bae8a69e5a",
-  "completed_task_ids": [],
+  "completed_task_ids": [
+    "ckprod93-001"
+  ],
   "goal": "Graduate Chu-kei Insight from internal 3,709-company Plan Detection completion to production-ready public synchronization. Treat the canonical universe and operations/plan-detection/registry-v1.json as source of truth. Reconcile stale public summary, frontend and release artifacts, remove legacy 570-company or zero-result UI states caused by data mismatch, and verify the deployed data path. Do not expand research scope unless needed to repair a proven inconsistency. Criteria: [1] Canonical registry, universe and public Plan Detection summary reconcile to 3709 companies, resolved=3709, pending=0 and not_checked=0 with internally consistent status counts. [2] Frontend-derived artifacts are rebuilt from the canonical source and all 3709 companies are discoverable through list/search/detail flows without legacy 570-company or data-loading zero-result states. [3] Release metadata, deterministic sync checks, source audit, quality pipeline and browser/smoke tests are green on the final repository state. [4] Runtime/live-site verification confirms the production data path serves the current artifacts and core search, list and detail experiences work against the synchronized dataset. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_PRODUCTION_SYNC_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
   "schema_version": 1,
   "status": "RUNNING",
