@@ -1,11 +1,11 @@
 {
   "attempt": 0,
-  "last_error": null,
-  "last_failure_kind": null,
+  "last_error": "jules session requires human input",
+  "last_failure_kind": "HUMAN_INPUT",
   "provider_id": "jules",
   "provider_session_id": "4250658701944137917",
   "replan_count": 0,
   "resume_after": null,
-  "state": "RUNNING",
+  "state": "HUMAN_WAIT",
   "task_id": "ckprod93-003"
 }
