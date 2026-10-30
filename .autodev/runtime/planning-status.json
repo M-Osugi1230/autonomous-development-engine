@@ -1,15 +1,15 @@
 {
-  "accepted_plan_fingerprint": "20a9b2d606e3052fd6cc84e0b3f8844c8ccf6bc529d90814a766c3da709afa9f",
+  "accepted_plan_fingerprint": "6597430c1bebec5e0567512a581ee5ed3451756bafafb5348caeb11a5eeee4d2",
   "attempt": 1,
-  "campaign_id": "ckfull-campaign-88-c3573983df",
+  "campaign_id": "ckprod-campaign-93-bae8a69e5a",
   "development_memory_context_fingerprint": "318ff6273672845cf9c7837b5c89812a033268b4d22f2b77fe26f99d63cb909b",
   "development_memory_record_count": 0,
-  "first_task_id": "ckfull88-001",
-  "proposal_fingerprint": "6c0f92e81fc0e23947869873b3b147dd5dd524814dc27619f52784ec41d14ccf",
+  "first_task_id": "ckprod93-001",
+  "proposal_fingerprint": "9dd1c45c36ffefedc6ebdb34fb0660ae1af042b1e884378f7fdba092d342d88d",
   "reason": "trusted-plan-accepted",
-  "request_fingerprint": "48634ecf56801b4023f94cd37470b03d7f2caeff8e9917e29650ced5854b2446",
-  "request_id": "ckfull-request-88-c3573983df",
+  "request_fingerprint": "2df8004114aad98800c93849540f2a60aaeba2c7c821858e1903d7d68c93190f",
+  "request_id": "ckprod-request-93-bae8a69e5a",
   "schema_version": 1,
   "state": "ACCEPTED",
-  "updated_at": "2026-10-25T23:39:50.895826+00:00"
+  "updated_at": "2026-10-30T22:02:20.224206+00:00"
 }
