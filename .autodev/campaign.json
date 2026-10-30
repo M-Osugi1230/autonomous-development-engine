@@ -1,20 +1,14 @@
 {
-  "campaign_id": "ckfull-campaign-88-c3573983df",
-  "completed_task_ids": [
-    "ckfull88-001",
-    "ckfull88-002",
-    "ckfull88-003",
-    "ckfull88-004",
-    "ckfull88-005"
-  ],
-  "goal": "Expand Chu-kei Insight Plan Detection from the verified 25% milestone to full company-count coverage of the canonical universe. Prioritize breadth over depth: process every company in bounded resumable batches until no company remains not_checked. Preserve evidence boundaries and never infer a formal plan where official or first-party evidence does not support one. Criteria: [1] Canonical universe coverage is complete: every company has been reviewed and the public summary reports not_checked=0, recalculated against the authoritative current universe. [2] Every non-not_checked disposition is supported by official or first-party evidence with source identity, dates or period semantics, provenance and review state; ambiguous evidence remains explicitly bounded rather than inferred. [3] Candidate generation, validation, review staging, promotion and derived registry/site rebuilds remain deterministic, resumable and compatible with required human-review gates. [4] Frontend manifest, Plan Detection summary and release metadata match canonical data, and repository-side sync, smoke, source-audit and quality checks are green. [5] Final repository and runtime verification are green and a concise completion marker records full-coverage counts, evidence boundaries and verification results. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_COVERAGE_FULL_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+  "campaign_id": "ckprod-campaign-93-bae8a69e5a",
+  "completed_task_ids": [],
+  "goal": "Graduate Chu-kei Insight from internal 3,709-company Plan Detection completion to production-ready public synchronization. Treat the canonical universe and operations/plan-detection/registry-v1.json as source of truth. Reconcile stale public summary, frontend and release artifacts, remove legacy 570-company or zero-result UI states caused by data mismatch, and verify the deployed data path. Do not expand research scope unless needed to repair a proven inconsistency. Criteria: [1] Canonical registry, universe and public Plan Detection summary reconcile to 3709 companies, resolved=3709, pending=0 and not_checked=0 with internally consistent status counts. [2] Frontend-derived artifacts are rebuilt from the canonical source and all 3709 companies are discoverable through list/search/detail flows without legacy 570-company or data-loading zero-result states. [3] Release metadata, deterministic sync checks, source audit, quality pipeline and browser/smoke tests are green on the final repository state. [4] Runtime/live-site verification confirms the production data path serves the current artifacts and core search, list and detail experiences work against the synchronized dataset. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_PRODUCTION_SYNC_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
   "schema_version": 1,
-  "status": "COMPLETED",
+  "status": "RUNNING",
   "task_ids": [
-    "ckfull88-001",
-    "ckfull88-002",
-    "ckfull88-003",
-    "ckfull88-004",
-    "ckfull88-005"
+    "ckprod93-001",
+    "ckprod93-002",
+    "ckprod93-003",
+    "ckprod93-004",
+    "ckprod93-005"
   ]
 }
