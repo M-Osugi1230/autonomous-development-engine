@@ -1,0 +1,186 @@
+{
+  "accepted_plan_fingerprint": "6597430c1bebec5e0567512a581ee5ed3451756bafafb5348caeb11a5eeee4d2",
+  "campaign_id": "ckprod-campaign-93-bae8a69e5a",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "318ff6273672845cf9c7837b5c89812a033268b4d22f2b77fe26f99d63cb909b",
+    "current_source_sha": "cd2775684a46665d6a6af2777946e6ddc05d81e6",
+    "execution_authority": false,
+    "extracted_record_count": 2,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/chu-kei",
+    "resolution_fingerprint": "d704d3784f614ed02a84d9639e2b577eb0e2128302e267b90191eb5a29b7b41f",
+    "retrieval_fingerprint": "63793f34a7a8fa50a6da1670a28083a168c7039415969aaf5e5d69838fb72328",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "c96a4a4ee9c05ca6f25b52d5640c1e3633dc47a23440c5df77d5cfb834250dd6",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "3f7ef25804b9e7a74c6c69310db804fd9389a9e1af68926e21147494796727ea",
+  "proposal": {
+    "goal": "Graduate Chu-kei Insight from internal 3,709-company Plan Detection completion to production-ready public synchronization. Treat the canonical universe and operations/plan-detection/registry-v1.json as source of truth. Reconcile stale public summary, frontend and release artifacts, remove legacy 570-company or zero-result UI states caused by data mismatch, and verify the deployed data path. Do not expand research scope unless needed to repair a proven inconsistency. Criteria: [1] Canonical registry, universe and public Plan Detection summary reconcile to 3709 companies, resolved=3709, pending=0 and not_checked=0 with internally consistent status counts. [2] Frontend-derived artifacts are rebuilt from the canonical source and all 3709 companies are discoverable through list/search/detail flows without legacy 570-company or data-loading zero-result states. [3] Release metadata, deterministic sync checks, source audit, quality pipeline and browser/smoke tests are green on the final repository state. [4] Runtime/live-site verification confirms the production data path serves the current artifacts and core search, list and detail experiences work against the synchronized dataset. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_PRODUCTION_SYNC_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "- Update `site/data/plan-detection-summary-v1.json` to synchronize coverage and resolved status counts matching canonical `operations/plan-detection/registry-v1.json`.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "site/data/plan-detection-summary-v1.json",
+          "operations/plan-detection/registry-v1.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "- Update `site/data/plan-detection-summary-v1.json` to synchronize coverage and resolved status counts matching canonical `operations/plan-detection/registry-v1.json`.",
+        "title": "Reconcile Plan Detection canonical registry and public summary in site/data/plan-detection-summary-v1.json"
+      },
+      {
+        "acceptance": [
+          "- Rebuild `site/data/frontend/manifest.json` and frontend detail shards using canonical universe and registry data without legacy truncation.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "site/data/frontend/manifest.json"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "- Rebuild `site/data/frontend/manifest.json` and frontend detail shards using canonical universe and registry data without legacy truncation.",
+        "title": "Rebuild frontend company index shards and manifest in site/data/frontend/manifest.json"
+      },
+      {
+        "acceptance": [
+          "- Update `site/assets/app.js` to handle all 3,709 companies smoothly across list, search, and detail flows without 570-company or empty states.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "site/assets/app.js"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [],
+        "outcome": "- Update `site/assets/app.js` to handle all 3,709 companies smoothly across list, search, and detail flows without 570-company or empty states.",
+        "title": "Eliminate legacy dataset constraints and empty UI states in site/assets/app.js"
+      },
+      {
+        "acceptance": [
+          "- Update `tests/e2e/portal.spec.mjs` to verify search, filtering, and detail navigation against the full 3,709-company dataset.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/e2e/portal.spec.mjs"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "- Update `tests/e2e/portal.spec.mjs` to verify search, filtering, and detail navigation against the full 3,709-company dataset.",
+        "title": "Add end-to-end portal synchronization tests in tests/e2e/portal.spec.mjs"
+      },
+      {
+        "acceptance": [
+          "- Create `docs/ADE_PRODUCTION_SYNC_COMPLETION.json` with schema_version=1, status COMPLETE, and verifiable evidence.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "docs/ADE_PRODUCTION_SYNC_COMPLETION.json"
+        ],
+        "depends_on": [
+          "jules-step-004"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-005",
+        "new_paths": [
+          "docs/ADE_PRODUCTION_SYNC_COMPLETION.json"
+        ],
+        "outcome": "- Create `docs/ADE_PRODUCTION_SYNC_COMPLETION.json` with schema_version=1, status COMPLETE, and verifiable evidence.",
+        "title": "Document production synchronization verification in docs/ADE_PRODUCTION_SYNC_COMPLETION.json"
+      }
+    ]
+  },
+  "proposal_fingerprint": "9dd1c45c36ffefedc6ebdb34fb0660ae1af042b1e884378f7fdba092d342d88d",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 5,
+  "provider_plan_steps_sha256": "a1939742dd47b1149d26b9e5021c0550aa7ac4e51d4b09a7d07caa28874fd103",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "6fea85cf92c58398504f59c3e248e2fc672c11ce9bf84c3ac68e1aca2e110ecc",
+  "repository_context_fingerprint": "7cf5fd6a4207cda3cc574e7cdad07e7d603f694828ca842399f0c391dd36f55c",
+  "repository_impact_analysis_fingerprint": "20c54810c78822866f863a2fdcaeabacdb78b1d726e4c727c487415db26f71b8",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "c6715cde537ad88becbba46d99e62929effa3efb00991d6c67c0fdbb65928dec",
+  "repository_source_sha": "cd2775684a46665d6a6af2777946e6ddc05d81e6",
+  "request": {
+    "allowed_path_prefixes": [
+      "operations",
+      "scripts",
+      "site",
+      "tests",
+      "schemas",
+      "reports",
+      "releases",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "ckprod-campaign-93-bae8a69e5a",
+    "execution_phase": "completion-runner",
+    "goal": "Graduate Chu-kei Insight from internal 3,709-company Plan Detection completion to production-ready public synchronization. Treat the canonical universe and operations/plan-detection/registry-v1.json as source of truth. Reconcile stale public summary, frontend and release artifacts, remove legacy 570-company or zero-result UI states caused by data mismatch, and verify the deployed data path. Do not expand research scope unless needed to repair a proven inconsistency. Criteria: [1] Canonical registry, universe and public Plan Detection summary reconcile to 3709 companies, resolved=3709, pending=0 and not_checked=0 with internally consistent status counts. [2] Frontend-derived artifacts are rebuilt from the canonical source and all 3709 companies are discoverable through list/search/detail flows without legacy 570-company or data-loading zero-result states. [3] Release metadata, deterministic sync checks, source audit, quality pipeline and browser/smoke tests are green on the final repository state. [4] Runtime/live-site verification confirms the production data path serves the current artifacts and core search, list and detail experiences work against the synchronized dataset. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_PRODUCTION_SYNC_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+    "id_prefix": "ckprod93",
+    "min_tasks": 3,
+    "repository_intelligence_prefixes": [
+      "operations/plan-detection",
+      "operations/universe/current-universe-v1.json",
+      "scripts/build_plan_detection_registry_v1.mjs",
+      "scripts/validate_live_site_sync_v1.mjs",
+      "scripts/run_quality_pipeline_v43.mjs",
+      "site/data/plan-detection-summary-v1.json",
+      "site/data/release-status.json",
+      "site/data/frontend/manifest.json",
+      "site",
+      "tests"
+    ],
+    "request_id": "ckprod-request-93-bae8a69e5a",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/chu-kei"
+  },
+  "request_fingerprint": "2df8004114aad98800c93849540f2a60aaeba2c7c821858e1903d7d68c93190f",
+  "schema_version": 1,
+  "task_ids": [
+    "ckprod93-001",
+    "ckprod93-002",
+    "ckprod93-003",
+    "ckprod93-004",
+    "ckprod93-005"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 41134568438
+}
