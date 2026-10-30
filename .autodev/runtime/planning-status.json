@@ -1,10 +1,15 @@
 {
-  "attempt": 2,
-  "detail": "high-level goal exceeds trusted text budget",
-  "reason": "planner-retryable-failure",
-  "request_fingerprint": "810cbbb5884b8d38f50012b952a81f7c913e8eff274a2b16aeb4a402a1ef72d0",
-  "request_id": "jifinish-request-99-3a2e60e981",
+  "accepted_plan_fingerprint": "29a8bedbff65099fef2bf9ec393cc16f0d8288be086559f6346d4cdc533848ce",
+  "attempt": 1,
+  "campaign_id": "jifinish-campaign-100-recovery",
+  "development_memory_context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+  "development_memory_record_count": 0,
+  "first_task_id": "jifinish100-001",
+  "proposal_fingerprint": "2d37e5aaaa12253da9559d4f3fe67d61bb3ca61d6564c0b13076b37ea70a2f01",
+  "reason": "trusted-plan-accepted",
+  "request_fingerprint": "a8b6bffdd06a0176cf072a2f3b48f5cadb3902409bf4daea1f27fd146b2676a6",
+  "request_id": "jifinish-request-100-recovery",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-10-30T21:58:47.695967+00:00"
+  "state": "ACCEPTED",
+  "updated_at": "2026-10-30T22:05:44.042909+00:00"
 }
