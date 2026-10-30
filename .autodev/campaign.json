@@ -1,16 +1,13 @@
 {
-  "campaign_id": "jifinish-campaign-96-c50abc10b9",
-  "completed_task_ids": [
-    "jifinish96-001",
-    "jifinish96-002",
-    "jifinish96-003"
-  ],
-  "goal": "Graduate Jichi Insight as a nationwide municipality insight platform. Continue autonomously from Phase 15 through complete canonical coverage, public-product alignment, and final runtime verification; preserve fiscal/document/version distinctions and evidence boundaries. For missing paths, planner steps must explicitly say 'Create new file <exact-path>' so new_paths is declared. Criteria: [1] Canonical coverage includes every intended municipality; each is validly evidenced or explicitly unresolved, never omitted. [2] Evidence retains official URLs, stable locators, plan/version/period/fiscal/availability boundaries, provenance and deferred depth; no invented facts, causality, comparisons, rankings or scores. [3] Candidate generation, validation, review staging, promotion and public-data pipelines are deterministic, resumable and free of machine-resolvable blockers; required human review gates remain explicit. [4] Public browse/search/detail uses current canonical nationwide data and passes repository plus production smoke checks. [5] CI, regression, data-quality and final runtime verification are green; queue exhaustion or campaign completion alone never means project completion. Only the verified completion marker does. Continue from current repository state until all criteria are demonstrably satisfied; do not stop at intermediate milestones while safe executable work remains. Preserve CI, provenance, quota limits, and existing human-only review/safety boundaries. Never invent unsupported facts or bypass required review. Only after all criteria and final repository/runtime checks are green, write docs/ADE_COMPLETION.json with schema_version=1,status=COMPLETE plus concise evidence. Otherwise choose the highest-value bounded next work. Declare exact new_paths for new files.",
+  "campaign_id": "jifinish-campaign-100-recovery",
+  "completed_task_ids": [],
+  "goal": "Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE.",
   "schema_version": 1,
-  "status": "COMPLETED",
+  "status": "RUNNING",
   "task_ids": [
-    "jifinish96-001",
-    "jifinish96-002",
-    "jifinish96-003"
+    "jifinish100-001",
+    "jifinish100-002",
+    "jifinish100-003",
+    "jifinish100-004"
   ]
 }
