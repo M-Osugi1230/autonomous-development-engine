@@ -131,8 +131,9 @@
       "task_id": "v14rv2-001"
     },
     "milestone": "v1.9-graduated",
-    "next_required_human_action": null,
+    "next_required_human_action": "jules session requires human input",
     "next_system_action": "monitor-provider-session",
+    "pause_reason": "provider-human-input",
     "phase": "completion-runner",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -336,6 +337,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-10-30T22:44:54.923710+00:00"
+  "status": "HUMAN_WAIT",
+  "updated_at": "2026-10-30T22:57:48.652899+00:00"
 }
