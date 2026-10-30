@@ -71,7 +71,6 @@ jobs:
       matrix:
         control_ref:
           - ade-jichi-insight
-          - ade-jquants
           - ade-chu-kei
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -127,7 +126,6 @@ jobs:
       matrix:
         control_ref:
           - ade-jichi-insight
-          - ade-jquants
           - ade-chu-kei
     runs-on: ubuntu-latest
     timeout-minutes: 45
