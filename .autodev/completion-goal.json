@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project_key": "jichi-insight",
   "request_prefix": "jifinish",
-  "goal": "Graduate Jichi Insight only after Phase 15 reaches strict canonical completion. The authoritative source is data/catalog/phase15_core_capital_review_queue.json in M-Osugi1230/jichi-insight. Continue autonomously in canonical queue sequence from the first municipality that is not reviewed_complete, beginning with Morioka City (official code 032018), then Akita, Yamagata, Fukushima and onward until all 67 Phase 15 municipalities are reviewed_complete. Candidate staging, source inventory, tests, explicit unresolved states, queue exhaustion, or campaign exhaustion are intermediate states and must never be treated as completion. For each municipality, perform the bounded evidence-backed work required to promote it to reviewed_complete, preserving official source URLs, stable record-level locators, plan/version/period/fiscal distinctions, provenance, deferred depth and non-inference rules. Keep public data and UI aligned as canonical data changes. If a machine-resolvable blocker is found, resolve it; if a genuinely human-only ambiguity remains, record it explicitly and continue other safe executable work, but do not graduate while any Phase 15 municipality remains non-complete or blocked. For missing paths, planner steps must explicitly say 'Create new file <exact-path>' so new_paths is declared.",
+  "goal": "Finish Jichi Insight Phase 15. Use data/catalog/phase15_core_capital_review_queue.json as authoritative. Process municipalities in queue order from the first non-complete row until all 67 are reviewed_complete. Staging, unresolved states, or queue/campaign exhaustion are not completion. Preserve official evidence and version/fiscal boundaries, avoid inference, and keep public data aligned. Resolve machine-fixable blockers automatically; record genuine human-only blockers but do not graduate with any blocker or non-complete municipality.",
   "target_repository": "M-Osugi1230/jichi-insight",
   "base_branch": "main",
   "allowed_path_prefixes": [
@@ -26,12 +26,12 @@
     "docs"
   ],
   "graduation_criteria": [
-    "The canonical file data/catalog/phase15_core_capital_review_queue.json contains exactly 67 Phase 15 targets and all 67 have status reviewed_complete.",
-    "The canonical Phase 15 queue has review_in_progress=0, pending_record_review=0 and blocked_source_inventory=0; no candidate-staging, human-review-pending, explicitly-unresolved, queue-exhausted or campaign-exhausted state may substitute for reviewed_complete.",
-    "Every municipality promoted to reviewed_complete retains official primary-source URLs and stable record-level evidence locators, with plan/version/period/fiscal/availability/provenance/deferred-depth boundaries preserved and no invented facts, causality, comparisons, rankings or scores.",
-    "All Phase 15 schemas, evidence-coverage checks, non-inference gates, deterministic candidate/promotion validation and regression tests are green for the final canonical state.",
-    "Public browse/search/detail and generated public data are aligned with the final 67/67 canonical Phase 15 state and repository plus production/runtime smoke verification is green.",
-    "docs/ADE_COMPLETION.json may be set to schema_version=1 and status=COMPLETE only after all preceding criteria are demonstrably satisfied. Before that point it must remain non-COMPLETE. Queue exhaustion or campaign completion alone never means project completion."
+    "Phase 15 canonical queue has exactly 67 targets and reviewed_complete=67.",
+    "review_in_progress=0, pending_record_review=0, blocked_source_inventory=0; staging or unresolved states never count as complete.",
+    "Each completed municipality keeps official URLs, stable evidence locators, provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores.",
+    "Phase 15 schema, evidence, non-inference, validation and regression checks are green.",
+    "Public data/UI match the final canonical state and production/runtime smoke checks are green.",
+    "Only then may docs/ADE_COMPLETION.json have status COMPLETE; otherwise it must remain non-COMPLETE."
   ],
   "completion_marker_path": "docs/ADE_COMPLETION.json",
   "min_tasks": 2,
