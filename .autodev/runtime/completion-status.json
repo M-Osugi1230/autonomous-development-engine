@@ -1,10 +1,12 @@
 {
-  "completion_goal_fingerprint": "cd1c240c5940797c4677eae98a209bfdfb5d9a230b10b647e1b7604f4af4e6f5",
+  "completion_goal_fingerprint": "003950deadf63d567f51dd833c7978529ae67e1784eff14e93ca0966f25189be",
   "completion_marker_path": "docs/ADE_COMPLETION.json",
   "project_key": "jichi-insight",
-  "reason": "completion-marker-verified",
+  "reason": "previous-campaign-exhausted-before-graduation",
   "schema_version": 1,
-  "state": "COMPLETE",
-  "target_head_sha": "9f03249806bb703a1b835ba71718b4ae2c5cad30",
+  "state": "CONTINUING",
+  "successor_campaign_id": "jifinish-campaign-99-3a2e60e981",
+  "successor_request_id": "jifinish-request-99-3a2e60e981",
+  "target_head_sha": "2ec265591ea931662e83fe6eed8fa9c3b9d2254c",
   "target_repository": "M-Osugi1230/jichi-insight"
 }
