@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jifinish-campaign-96-c50abc10b9",
+  "campaign_id": "jifinish-campaign-100-recovery",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-25T13:58:54.517809+00:00",
-  "plan_fingerprint": "b873e9dccc705d3ad527989e6f6bef632c84e23cc8e4c90c562b9ffff6b51da6",
+  "dispatched_at": "2026-10-30T22:05:56.306485+00:00",
+  "plan_fingerprint": "29a8bedbff65099fef2bf9ec393cc16f0d8288be086559f6346d4cdc533848ce",
   "run_attempt": "1",
-  "run_id": "40200075836",
+  "run_id": "41135781248",
   "schema_version": 1,
   "source": "repository_dispatch",
-  "source_sha": "38d5b3c12c12a83db52949e9d914d2a443b7808f",
+  "source_sha": "e487bf48094ce5db4173373a3197ed89b7f70087",
   "status": "DISPATCHED",
-  "task_id": "jifinish96-001"
+  "task_id": "jifinish100-001"
 }
