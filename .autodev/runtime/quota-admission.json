@@ -5,19 +5,19 @@
   ],
   "allowed": true,
   "daily_limit": 15,
-  "observed_at": "2026-10-30T22:02:44.814805+00:00",
+  "observed_at": "2026-10-30T22:25:30.633077+00:00",
   "project_allocation": 9,
   "project_key": "ade-chu-kei",
-  "project_used": 1,
+  "project_used": 2,
   "purpose": "implementation",
   "reason": "within-soft-allocation",
-  "remaining": 13,
+  "remaining": 12,
   "resume_after": null,
   "schema_version": 1,
   "selected_project_keys": [
-    "ade-chu-kei",
-    "ade-jichi-insight"
+    "ade-jichi-insight",
+    "ade-chu-kei"
   ],
-  "total_used": 2,
+  "total_used": 3,
   "unknown_session_count": 0
 }
