@@ -1,0 +1,162 @@
+{
+  "accepted_plan_fingerprint": "29a8bedbff65099fef2bf9ec393cc16f0d8288be086559f6346d4cdc533848ce",
+  "campaign_id": "jifinish-campaign-100-recovery",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+    "current_source_sha": "da8eaff7b77ec97c599305d0d43cdb2ee7b772a9",
+    "execution_authority": false,
+    "extracted_record_count": 4,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jichi-insight",
+    "resolution_fingerprint": "4c16048c4a440d7a0158e99c3ded6c6c8c2af17bbb7ed047315e6aa64d5a6274",
+    "retrieval_fingerprint": "4a3fffee0c812e7416e8da773a75a045b64d8b2e6135fb9d22dc404a73afa889",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "47f875e6bb37b01927fdde34ab3df66f1bd29ba1cd76722387280f692747b265",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "f509786944658940b8dd88916d8283b5206c6947e66027e5d5db584556b7f458",
+  "proposal": {
+    "goal": "Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Stage Morioka city Phase 15 review candidate data in `data/candidates/morioka-city/review_candidate.json` ensuring primary source evidence and schema compliance.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/morioka-city/review_candidate.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [],
+        "outcome": "Stage Morioka city Phase 15 review candidate data in `data/candidates/morioka-city/review_candidate.json` ensuring primary source evidence and schema compliance.",
+        "title": "Stage Morioka city Phase 15 review candidate data in `data/candidates/morioka-city/review_candidate.json` ensuring primary source evidence and schema compliance."
+      },
+      {
+        "acceptance": [
+          "Execute Morioka candidate regression tests in `tests/test_morioka_phase15_review.py` to verify invariants and boundary conditions.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_morioka_phase15_review.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [],
+        "outcome": "Execute Morioka candidate regression tests in `tests/test_morioka_phase15_review.py` to verify invariants and boundary conditions.",
+        "title": "Execute Morioka candidate regression tests in `tests/test_morioka_phase15_review.py` to verify invariants and boundary conditions."
+      },
+      {
+        "acceptance": [
+          "Validate candidate packages across the repository via `scripts/validate_phase15_candidates.py` to ensure absence of invented claims or rankings.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "scripts/validate_phase15_candidates.py"
+        ],
+        "depends_on": [
+          "jules-step-002"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-003",
+        "new_paths": [],
+        "outcome": "Validate candidate packages across the repository via `scripts/validate_phase15_candidates.py` to ensure absence of invented claims or rankings.",
+        "title": "Validate candidate packages across the repository via `scripts/validate_phase15_candidates.py` to ensure absence of invented claims or rankings."
+      },
+      {
+        "acceptance": [
+          "Maintain non-COMPLETE status in `docs/ADE_COMPLETION.json` until all canonical queue requirements are fully satisfied.",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "docs/ADE_COMPLETION.json"
+        ],
+        "depends_on": [
+          "jules-step-003"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-004",
+        "new_paths": [],
+        "outcome": "Maintain non-COMPLETE status in `docs/ADE_COMPLETION.json` until all canonical queue requirements are fully satisfied.",
+        "title": "Maintain non-COMPLETE status in `docs/ADE_COMPLETION.json` until all canonical queue requirements are fully satisfied."
+      }
+    ]
+  },
+  "proposal_fingerprint": "2d37e5aaaa12253da9559d4f3fe67d61bb3ca61d6564c0b13076b37ea70a2f01",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 4,
+  "provider_plan_steps_sha256": "943e8d517be55117cbce40590a4a3fc9d8da0a007e681005b3a184fb7357d8e0",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "70414e52a0c82700ece62273e7415cb2d161d9f0e9164df0a02f88e3214b044a",
+  "repository_context_fingerprint": "38b42e1d53ca5f308c900496309851ca1f2e002c5d5f3241a5377c26229674c9",
+  "repository_impact_analysis_fingerprint": "007b633e122f8b37a2f4b603594b64c940f3c5b04b8366188f9f5d4eb6db6d00",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "19efc2f370d655ba6e8b96a43e7e845c584019bc3d9ebd7b71f99f705107bcd7",
+  "repository_source_sha": "da8eaff7b77ec97c599305d0d43cdb2ee7b772a9",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "data",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jifinish-campaign-100-recovery",
+    "execution_phase": "completion-runner",
+    "goal": "Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE.",
+    "id_prefix": "jifinish100",
+    "min_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "apps",
+      "data/catalog",
+      "data/candidates",
+      "data/indexed",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "request_id": "jifinish-request-100-recovery",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "request_fingerprint": "a8b6bffdd06a0176cf072a2f3b48f5cadb3902409bf4daea1f27fd146b2676a6",
+  "schema_version": 1,
+  "task_ids": [
+    "jifinish100-001",
+    "jifinish100-002",
+    "jifinish100-003",
+    "jifinish100-004"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 41134924597
+}
