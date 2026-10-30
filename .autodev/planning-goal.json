@@ -1,4 +1,11 @@
 {
+  "schema_version": 1,
+  "request_id": "jifinish-request-100-recovery",
+  "campaign_id": "jifinish-campaign-100-recovery",
+  "id_prefix": "jifinish100",
+  "goal": "Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE.",
+  "target_repository": "M-Osugi1230/jichi-insight",
+  "base_branch": "main",
   "allowed_path_prefixes": [
     "apps",
     "data",
@@ -8,12 +15,6 @@
     "schemas",
     "docs"
   ],
-  "base_branch": "main",
-  "campaign_id": "jifinish-campaign-99-3a2e60e981",
-  "execution_phase": "completion-runner",
-  "goal": "Graduate Jichi Insight only after Phase 15 reaches strict canonical completion. The authoritative source is data/catalog/phase15_core_capital_review_queue.json in M-Osugi1230/jichi-insight. Continue autonomously in canonical queue sequence from the first municipality that is not reviewed_complete, beginning with Morioka City (official code 032018), then Akita, Yamagata, Fukushima and onward until all 67 Phase 15 municipalities are reviewed_complete. Candidate staging, source inventory, tests, explicit unresolved states, queue exhaustion, or campaign exhaustion are intermediate states and must never be treated as completion. For each municipality, perform the bounded evidence-backed work required to promote it to reviewed_complete, preserving official source URLs, stable record-level locators, plan/version/period/fiscal distinctions, provenance, deferred depth and non-inference rules. Keep public data and UI aligned as canonical data changes. If a machine-resolvable blocker is found, resolve it; if a genuinely human-only ambiguity remains, record it explicitly and continue other safe executable work, but do not graduate while any Phase 15 municipality remains non-complete or blocked. For missing paths, planner steps must explicitly say 'Create new file <exact-path>' so new_paths is declared. Continue autonomously from the current repository state and do not stop at an intermediate milestone while safe executable work remains. Graduation criteria: [1] The canonical file data/catalog/phase15_core_capital_review_queue.json contains exactly 67 Phase 15 targets and all 67 have status reviewed_complete. [2] The canonical Phase 15 queue has review_in_progress=0, pending_record_review=0 and blocked_source_inventory=0; no candidate-staging, human-review-pending, explicitly-unresolved, queue-exhausted or campaign-exhausted state may substitute for reviewed_complete. [3] Every municipality promoted to reviewed_complete retains official primary-source URLs and stable record-level evidence locators, with plan/version/period/fiscal/availability/provenance/deferred-depth boundaries preserved and no invented facts, causality, comparisons, rankings or scores. [4] All Phase 15 schemas, evidence-coverage checks, non-inference gates, deterministic candidate/promotion validation and regression tests are green for the final canonical state. [5] Public browse/search/detail and generated public data are aligned with the final 67/67 canonical Phase 15 state and repository plus production/runtime smoke verification is green. [6] docs/ADE_COMPLETION.json may be set to schema_version=1 and status=COMPLETE only after all preceding criteria are demonstrably satisfied. Before that point it must remain non-COMPLETE. Queue exhaustion or campaign completion alone never means project completion. Keep CI, validation, provenance, quota limits, and existing human-only safety boundaries intact. Only when every graduation criterion is demonstrably satisfied and final repository/runtime checks are green, create or update docs/ADE_COMPLETION.json as JSON with schema_version=1 and status=COMPLETE plus concise evidence fields. If the marker does not yet qualify, choose the highest-value bounded work that moves the project toward graduation. When creating a not-yet-existing file, declare its exact path in new_paths.",
-  "id_prefix": "jifinish99",
-  "min_tasks": 2,
   "repository_intelligence_prefixes": [
     "apps",
     "data/catalog",
@@ -25,7 +26,6 @@
     "schemas",
     "docs"
   ],
-  "request_id": "jifinish-request-99-3a2e60e981",
-  "schema_version": 1,
-  "target_repository": "M-Osugi1230/jichi-insight"
+  "execution_phase": "completion-runner",
+  "min_tasks": 2
 }
