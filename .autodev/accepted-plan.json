@@ -1,7 +1,7 @@
 {
-  "fingerprint": "29a8bedbff65099fef2bf9ec393cc16f0d8288be086559f6346d4cdc533848ce",
+  "fingerprint": "cff340827ca95ff4c343de6ea7a34de9aa03d6447888ef912766d8101fd0ec06",
   "plan": {
-    "goal": "Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE.",
+    "goal": "Advance Jichi Insight Phase 15 by preparing NEW, evidence-backed review packages without bypassing human approval. Current canonical data/catalog/phase15_core_capital_review_queue.json has 4/67 reviewed_complete and four existing prepared candidates (Morioka 032018, Akita 052019, Yamagata 062014, Fukushima 072010) awaiting human source review. DO NOT repeat staging for these four. Work on unprepared municipalities in queue order: first Koriyama 072036, then Iwaki 072044, Mito 082015, Utsunomiya 092010. Source inventories already exist at data/indexed/<city>-city/source_inventory.json. Create new file data/candidates/koriyama-city/review_candidate.json first, following existing review candidate schema and precise primary-source citations; create analogous candidate files for subsequent cities only as safely feasible. Planner steps for each missing path must explicitly say 'Create new file <exact-path>' and include new_paths. Add only necessary schema checks and tests with explicit paths. Keep package_state prepared, human_review required and pending, and publication ineligible until genuine review; do not promote to reviewed_complete or invent approvals. Maintain provenance, period/version/fiscal differences, non-inference, regression CI, and accurate public data. Success means new useful candidate files and green checks, not queue exhaustion. Overall graduation still requires all 67 reviewed_complete and all runtime gates green.",
     "human_boundaries": [
       "destructive or irreversible operation",
       "credential or secret access",
@@ -11,61 +11,31 @@
     "tasks": [
       {
         "acceptance": [
-          "Stage Morioka city Phase 15 review candidate data in `data/candidates/morioka-city/review_candidate.json` ensuring primary source evidence and schema compliance.",
+          "Create new file data/candidates/koriyama-city/review_candidate.json",
           "Repository CI remains green"
         ],
         "allowed_paths": [
-          "data/candidates/morioka-city/review_candidate.json"
+          "data/candidates/koriyama-city/review_candidate.json"
         ],
         "depends_on": [],
-        "prompt": "Goal: Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE. Outcome: Stage Morioka city Phase 15 review candidate data in `data/candidates/morioka-city/review_candidate.json` ensuring primary source evidence and schema compliance. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jifinish100-001",
-        "title": "Stage Morioka city Phase 15 review candidate data in `data/candidates/morioka-city/review_candidate.json` ensuring primary source evidence and schema compliance."
+        "prompt": "Goal: Advance Jichi Insight Phase 15 by preparing NEW, evidence-backed review packages without bypassing human approval. Current canonical data/catalog/phase15_core_capital_review_queue.json has 4/67 reviewed_complete and four existing prepared candidates (Morioka 032018, Akita 052019, Yamagata 062014, Fukushima 072010) awaiting human source review. DO NOT repeat staging for these four. Work on unprepared municipalities in queue order: first Koriyama 072036, then Iwaki 072044, Mito 082015, Utsunomiya 092010. Source inventories already exist at data/indexed/<city>-city/source_inventory.json. Create new file data/candidates/koriyama-city/review_candidate.json first, following existing review candidate schema and precise primary-source citations; create analogous candidate files for subsequent cities only as safely feasible. Planner steps for each missing path must explicitly say 'Create new file <exact-path>' and include new_paths. Add only necessary schema checks and tests with explicit paths. Keep package_state prepared, human_review required and pending, and publication ineligible until genuine review; do not promote to reviewed_complete or invent approvals. Maintain provenance, period/version/fiscal differences, non-inference, regression CI, and accurate public data. Success means new useful candidate files and green checks, not queue exhaustion. Overall graduation still requires all 67 reviewed_complete and all runtime gates green. Outcome: Create new file data/candidates/koriyama-city/review_candidate.json Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "jifinish101-001",
+        "title": "Create new file data/candidates/koriyama-city/review_candidate.json"
       },
       {
         "acceptance": [
-          "Execute Morioka candidate regression tests in `tests/test_morioka_phase15_review.py` to verify invariants and boundary conditions.",
+          "Create new file tests/test_phase15_koriyama_review_candidate_staging.py",
           "Repository CI remains green"
         ],
         "allowed_paths": [
-          "tests/test_morioka_phase15_review.py"
+          "tests/test_phase15_koriyama_review_candidate_staging.py"
         ],
         "depends_on": [
-          "jifinish100-001"
+          "jifinish101-001"
         ],
-        "prompt": "Goal: Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE. Outcome: Execute Morioka candidate regression tests in `tests/test_morioka_phase15_review.py` to verify invariants and boundary conditions. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jifinish100-002",
-        "title": "Execute Morioka candidate regression tests in `tests/test_morioka_phase15_review.py` to verify invariants and boundary conditions."
-      },
-      {
-        "acceptance": [
-          "Validate candidate packages across the repository via `scripts/validate_phase15_candidates.py` to ensure absence of invented claims or rankings.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "scripts/validate_phase15_candidates.py"
-        ],
-        "depends_on": [
-          "jifinish100-002"
-        ],
-        "prompt": "Goal: Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE. Outcome: Validate candidate packages across the repository via `scripts/validate_phase15_candidates.py` to ensure absence of invented claims or rankings. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jifinish100-003",
-        "title": "Validate candidate packages across the repository via `scripts/validate_phase15_candidates.py` to ensure absence of invented claims or rankings."
-      },
-      {
-        "acceptance": [
-          "Maintain non-COMPLETE status in `docs/ADE_COMPLETION.json` until all canonical queue requirements are fully satisfied.",
-          "Repository CI remains green"
-        ],
-        "allowed_paths": [
-          "docs/ADE_COMPLETION.json"
-        ],
-        "depends_on": [
-          "jifinish100-003"
-        ],
-        "prompt": "Goal: Finish Jichi Insight Phase 15 using data/catalog/phase15_core_capital_review_queue.json as authoritative. Start at the first row not reviewed_complete and work in canonical queue order. Continue autonomously across successor campaigns until all 67 targets are reviewed_complete. Graduation requires: exactly 67 targets and reviewed_complete=67; review_in_progress=0; pending_record_review=0; blocked_source_inventory=0; official URLs and stable evidence locators retained with provenance and plan/version/fiscal boundaries; no invented claims, rankings or scores; Phase 15 schema/evidence/non-inference/validation/regression checks green; public data/UI aligned; production/runtime smoke green. Candidate staging, unresolved states, queue exhaustion and campaign exhaustion are not completion. Resolve machine-fixable blockers automatically. Only after every graduation condition is proven may docs/ADE_COMPLETION.json be set to status COMPLETE; otherwise keep it non-COMPLETE. Outcome: Maintain non-COMPLETE status in `docs/ADE_COMPLETION.json` until all canonical queue requirements are fully satisfied. Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
-        "task_id": "jifinish100-004",
-        "title": "Maintain non-COMPLETE status in `docs/ADE_COMPLETION.json` until all canonical queue requirements are fully satisfied."
+        "prompt": "Goal: Advance Jichi Insight Phase 15 by preparing NEW, evidence-backed review packages without bypassing human approval. Current canonical data/catalog/phase15_core_capital_review_queue.json has 4/67 reviewed_complete and four existing prepared candidates (Morioka 032018, Akita 052019, Yamagata 062014, Fukushima 072010) awaiting human source review. DO NOT repeat staging for these four. Work on unprepared municipalities in queue order: first Koriyama 072036, then Iwaki 072044, Mito 082015, Utsunomiya 092010. Source inventories already exist at data/indexed/<city>-city/source_inventory.json. Create new file data/candidates/koriyama-city/review_candidate.json first, following existing review candidate schema and precise primary-source citations; create analogous candidate files for subsequent cities only as safely feasible. Planner steps for each missing path must explicitly say 'Create new file <exact-path>' and include new_paths. Add only necessary schema checks and tests with explicit paths. Keep package_state prepared, human_review required and pending, and publication ineligible until genuine review; do not promote to reviewed_complete or invent approvals. Maintain provenance, period/version/fiscal differences, non-inference, regression CI, and accurate public data. Success means new useful candidate files and green checks, not queue exhaustion. Overall graduation still requires all 67 reviewed_complete and all runtime gates green. Outcome: Create new file tests/test_phase15_koriyama_review_candidate_staging.py Scope discipline: implement only this task's stated outcome and acceptance. Do not add test code to non-test implementation files or implementation code to dedicated test files unless this task's outcome explicitly requires it.",
+        "task_id": "jifinish101-002",
+        "title": "Create new file tests/test_phase15_koriyama_review_candidate_staging.py"
       }
     ]
   },
