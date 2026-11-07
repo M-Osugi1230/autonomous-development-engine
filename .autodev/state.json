@@ -99,13 +99,14 @@
     "jifinish96-001",
     "jifinish96-002",
     "jifinish96-003",
-    "jifinish101-001"
+    "jifinish101-001",
+    "jifinish101-002"
   ],
-  "current_task_id": "jifinish101-002",
+  "current_task_id": null,
   "failed_task_ids": [
     "jifinish100-001"
   ],
-  "iteration": 99,
+  "iteration": 100,
   "metadata": {
     "accepted_plan_fingerprint": "cff340827ca95ff4c343de6ea7a34de9aa03d6447888ef912766d8101fd0ec06",
     "campaign_id": "jifinish-campaign-101-machine-evidence",
@@ -166,7 +167,7 @@
     "previous_pilot_block_reason": "Frozen baseline failed required target CI due pre-existing repository validation/test inconsistencies; baseline repaired separately in target PR #2 and merged before successor pilot.",
     "previous_pilot_id": "one-minute-cli-command-guard-001",
     "previous_pilot_outcome": "BASELINE_BLOCKED",
-    "queue_exhausted": false,
+    "queue_exhausted": true,
     "recovered_session_id": "7530171788976476239",
     "recovered_task_id": "jifinish100-001",
     "recovery_reason": "provider-completed-without-pr",
@@ -344,6 +345,6 @@
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
-  "updated_at": "2026-11-07T14:33:50.114435+00:00"
+  "status": "READY",
+  "updated_at": "2026-11-07T14:42:12.117702+00:00"
 }
