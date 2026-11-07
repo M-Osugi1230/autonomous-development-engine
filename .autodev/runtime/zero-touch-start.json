@@ -1,13 +1,13 @@
 {
-  "campaign_id": "jifinish-campaign-100-recovery",
+  "campaign_id": "jifinish-campaign-101-machine-evidence",
   "dispatch_count": 1,
-  "dispatched_at": "2026-10-30T22:05:56.306485+00:00",
-  "plan_fingerprint": "29a8bedbff65099fef2bf9ec393cc16f0d8288be086559f6346d4cdc533848ce",
+  "dispatched_at": "2026-11-07T14:19:38.429884+00:00",
+  "plan_fingerprint": "cff340827ca95ff4c343de6ea7a34de9aa03d6447888ef912766d8101fd0ec06",
   "run_attempt": "1",
-  "run_id": "41135781248",
+  "run_id": "42381057115",
   "schema_version": 1,
   "source": "repository_dispatch",
   "source_sha": "e487bf48094ce5db4173373a3197ed89b7f70087",
   "status": "DISPATCHED",
-  "task_id": "jifinish100-001"
+  "task_id": "jifinish101-001"
 }
