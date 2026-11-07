@@ -100,8 +100,10 @@
     "jifinish96-002",
     "jifinish96-003"
   ],
-  "current_task_id": "jifinish100-001",
-  "failed_task_ids": [],
+  "current_task_id": null,
+  "failed_task_ids": [
+    "jifinish100-001"
+  ],
   "iteration": 98,
   "metadata": {
     "accepted_plan_fingerprint": "29a8bedbff65099fef2bf9ec393cc16f0d8288be086559f6346d4cdc533848ce",
@@ -136,7 +138,7 @@
     },
     "milestone": "v1.9-graduated",
     "next_required_human_action": null,
-    "next_system_action": "monitor-provider-session",
+    "next_system_action": "autonomous-planner-recovery",
     "phase": "completion-runner",
     "phase11_safety_gates_complete": true,
     "phase12_completed_at": "2026-09-27T03:20:00Z",
@@ -332,11 +334,15 @@
     "v1_9_slice_006_verified_outcome_lineage_retirement": true,
     "v1_9_slice_007_mission_control_observability": true,
     "v1_9_source_release_candidate_id": "release-a4cd075b270b6ad434ae2602",
-    "v1_9_source_release_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327"
+    "v1_9_source_release_sha": "726431b60db8b25cdd4bc15bb1493a0060f36327",
+    "recovery_reason": "provider-completed-without-pr",
+    "recovered_task_id": "jifinish100-001",
+    "recovered_session_id": "7530171788976476239",
+    "required_human_review_preserved": true
   },
   "project_id": "autonomous-development-engine",
   "provider": "jules",
   "schema_version": 1,
-  "status": "RUNNING",
+  "status": "READY",
   "updated_at": "2026-11-07T06:35:28.027826+00:00"
 }
