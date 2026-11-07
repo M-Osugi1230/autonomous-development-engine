@@ -1,11 +1,11 @@
 {
   "attempt": 0,
-  "last_error": null,
-  "last_failure_kind": null,
+  "last_error": "Jules session 7530171788976476239 reached COMPLETED without a pull request; previously staged Morioka candidate has no new diff. Superseded to continue evidence preparation without bypassing human review.",
+  "last_failure_kind": "CYCLE_FAILED",
   "provider_id": "jules",
   "provider_session_id": "7530171788976476239",
   "replan_count": 0,
   "resume_after": null,
-  "state": "RUNNING",
+  "state": "FAILED",
   "task_id": "jifinish100-001"
 }
