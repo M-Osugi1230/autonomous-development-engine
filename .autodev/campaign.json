@@ -1,11 +1,12 @@
 {
   "campaign_id": "jifinish-campaign-101-machine-evidence",
   "completed_task_ids": [
-    "jifinish101-001"
+    "jifinish101-001",
+    "jifinish101-002"
   ],
   "goal": "Advance Jichi Insight Phase 15 by preparing NEW, evidence-backed review packages without bypassing human approval. Current canonical data/catalog/phase15_core_capital_review_queue.json has 4/67 reviewed_complete and four existing prepared candidates (Morioka 032018, Akita 052019, Yamagata 062014, Fukushima 072010) awaiting human source review. DO NOT repeat staging for these four. Work on unprepared municipalities in queue order: first Koriyama 072036, then Iwaki 072044, Mito 082015, Utsunomiya 092010. Source inventories already exist at data/indexed/<city>-city/source_inventory.json. Create new file data/candidates/koriyama-city/review_candidate.json first, following existing review candidate schema and precise primary-source citations; create analogous candidate files for subsequent cities only as safely feasible. Planner steps for each missing path must explicitly say 'Create new file <exact-path>' and include new_paths. Add only necessary schema checks and tests with explicit paths. Keep package_state prepared, human_review required and pending, and publication ineligible until genuine review; do not promote to reviewed_complete or invent approvals. Maintain provenance, period/version/fiscal differences, non-inference, regression CI, and accurate public data. Success means new useful candidate files and green checks, not queue exhaustion. Overall graduation still requires all 67 reviewed_complete and all runtime gates green.",
   "schema_version": 1,
-  "status": "RUNNING",
+  "status": "COMPLETED",
   "task_ids": [
     "jifinish101-001",
     "jifinish101-002"
