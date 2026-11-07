@@ -1,10 +1,15 @@
 {
-  "attempt": 2,
-  "detail": "task jules-step-001 path does not exist in repository snapshot and is not declared new: data/candidates/koriyama-city/review_candidate.json",
-  "reason": "planner-retryable-failure",
+  "accepted_plan_fingerprint": "cff340827ca95ff4c343de6ea7a34de9aa03d6447888ef912766d8101fd0ec06",
+  "attempt": 3,
+  "campaign_id": "jifinish-campaign-101-machine-evidence",
+  "development_memory_context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+  "development_memory_record_count": 0,
+  "first_task_id": "jifinish101-001",
+  "proposal_fingerprint": "37f6efcde52b7b3477616fccecb18ff0015f109608eed0d1e5c99d54e1a6fd6c",
+  "reason": "trusted-plan-accepted",
   "request_fingerprint": "cf6f3e574f2470e4d796f78196bc39595e02bd4b4ac3d1e2947636eb523bb6a6",
   "request_id": "jifinish-request-101-machine-evidence",
   "schema_version": 1,
-  "state": "REPLAN",
-  "updated_at": "2026-11-07T08:34:00.698299+00:00"
+  "state": "ACCEPTED",
+  "updated_at": "2026-11-07T14:19:26.348676+00:00"
 }
