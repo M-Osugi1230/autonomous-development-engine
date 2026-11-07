@@ -1,0 +1,129 @@
+{
+  "accepted_plan_fingerprint": "cff340827ca95ff4c343de6ea7a34de9aa03d6447888ef912766d8101fd0ec06",
+  "campaign_id": "jifinish-campaign-101-machine-evidence",
+  "development_memory": {
+    "authority": "advisory-data-only",
+    "context_fingerprint": "678a5c2156e57b2ad3a3191e19258f7ba1a8f49a5e3e50d69ddf56186805748a",
+    "current_source_sha": "da8eaff7b77ec97c599305d0d43cdb2ee7b772a9",
+    "execution_authority": false,
+    "extracted_record_count": 4,
+    "memory_fingerprints": [],
+    "memory_ids": [],
+    "memory_may_expand_scope": false,
+    "memory_may_override_acceptance": false,
+    "repository": "M-Osugi1230/jichi-insight",
+    "resolution_fingerprint": "4c16048c4a440d7a0158e99c3ded6c6c8c2af17bbb7ed047315e6aa64d5a6274",
+    "retrieval_fingerprint": "4a3fffee0c812e7416e8da773a75a045b64d8b2e6135fb9d22dc404a73afa889",
+    "retrieved_record_count": 0,
+    "schema_version": 1,
+    "source_evidence_fingerprint": "47f875e6bb37b01927fdde34ab3df66f1bd29ba1cd76722387280f692747b265",
+    "source_evidence_path": ".autodev/development-memory.json",
+    "used": false
+  },
+  "implementation_output_accepted": false,
+  "plan_approved": false,
+  "planning_only": true,
+  "planning_session_terminal_state": "AWAITING_PLAN_APPROVAL",
+  "policy_fingerprint": "6fba579136cadac13fde7fb6bc1025ae7fa2882ef53754634cf1cb5c99c30dd2",
+  "proposal": {
+    "goal": "Advance Jichi Insight Phase 15 by preparing NEW, evidence-backed review packages without bypassing human approval. Current canonical data/catalog/phase15_core_capital_review_queue.json has 4/67 reviewed_complete and four existing prepared candidates (Morioka 032018, Akita 052019, Yamagata 062014, Fukushima 072010) awaiting human source review. DO NOT repeat staging for these four. Work on unprepared municipalities in queue order: first Koriyama 072036, then Iwaki 072044, Mito 082015, Utsunomiya 092010. Source inventories already exist at data/indexed/<city>-city/source_inventory.json. Create new file data/candidates/koriyama-city/review_candidate.json first, following existing review candidate schema and precise primary-source citations; create analogous candidate files for subsequent cities only as safely feasible. Planner steps for each missing path must explicitly say 'Create new file <exact-path>' and include new_paths. Add only necessary schema checks and tests with explicit paths. Keep package_state prepared, human_review required and pending, and publication ineligible until genuine review; do not promote to reviewed_complete or invent approvals. Maintain provenance, period/version/fiscal differences, non-inference, regression CI, and accurate public data. Success means new useful candidate files and green checks, not queue exhaustion. Overall graduation still requires all 67 reviewed_complete and all runtime gates green.",
+    "human_boundaries": [
+      "destructive or irreversible operation",
+      "credential or secret access",
+      "externally consequential side effect"
+    ],
+    "schema_version": 1,
+    "tasks": [
+      {
+        "acceptance": [
+          "Create new file data/candidates/koriyama-city/review_candidate.json",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "data/candidates/koriyama-city/review_candidate.json"
+        ],
+        "depends_on": [],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-001",
+        "new_paths": [
+          "data/candidates/koriyama-city/review_candidate.json"
+        ],
+        "outcome": "Create new file data/candidates/koriyama-city/review_candidate.json",
+        "title": "Create new file data/candidates/koriyama-city/review_candidate.json"
+      },
+      {
+        "acceptance": [
+          "Create new file tests/test_phase15_koriyama_review_candidate_staging.py",
+          "Repository CI remains green"
+        ],
+        "allowed_paths": [
+          "tests/test_phase15_koriyama_review_candidate_staging.py"
+        ],
+        "depends_on": [
+          "jules-step-001"
+        ],
+        "human_only": false,
+        "human_reason": null,
+        "key": "jules-step-002",
+        "new_paths": [
+          "tests/test_phase15_koriyama_review_candidate_staging.py"
+        ],
+        "outcome": "Create new file tests/test_phase15_koriyama_review_candidate_staging.py",
+        "title": "Create new file tests/test_phase15_koriyama_review_candidate_staging.py"
+      }
+    ]
+  },
+  "proposal_fingerprint": "37f6efcde52b7b3477616fccecb18ff0015f109608eed0d1e5c99d54e1a6fd6c",
+  "provider": "jules",
+  "provider_execution_boundary_crossed": false,
+  "provider_plan_step_count": 4,
+  "provider_plan_steps_sha256": "15ffafc1529767c32877b67b558489a9e7ea1caea5dec6310aa891f4e00b5683",
+  "provider_proposal_mode": "derived-plan-steps",
+  "repository_content_summary_fingerprint": "70414e52a0c82700ece62273e7415cb2d161d9f0e9164df0a02f88e3214b044a",
+  "repository_context_fingerprint": "38b42e1d53ca5f308c900496309851ca1f2e002c5d5f3241a5377c26229674c9",
+  "repository_impact_analysis_fingerprint": "be2d389ede8e86375f54d22a63ec1b7cb1424cb63767a9e9e37edf60ef707f65",
+  "repository_relationship_graph_fingerprint": "a334c41ecaff66d17cec5d2fa7ab887bcf0bc947a2db6bdac0cdbdb3b5bc25d2",
+  "repository_snapshot_fingerprint": "19efc2f370d655ba6e8b96a43e7e845c584019bc3d9ebd7b71f99f705107bcd7",
+  "repository_source_sha": "da8eaff7b77ec97c599305d0d43cdb2ee7b772a9",
+  "request": {
+    "allowed_path_prefixes": [
+      "apps",
+      "data",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "base_branch": "main",
+    "campaign_id": "jifinish-campaign-101-machine-evidence",
+    "execution_phase": "completion-runner",
+    "goal": "Advance Jichi Insight Phase 15 by preparing NEW, evidence-backed review packages without bypassing human approval. Current canonical data/catalog/phase15_core_capital_review_queue.json has 4/67 reviewed_complete and four existing prepared candidates (Morioka 032018, Akita 052019, Yamagata 062014, Fukushima 072010) awaiting human source review. DO NOT repeat staging for these four. Work on unprepared municipalities in queue order: first Koriyama 072036, then Iwaki 072044, Mito 082015, Utsunomiya 092010. Source inventories already exist at data/indexed/<city>-city/source_inventory.json. Create new file data/candidates/koriyama-city/review_candidate.json first, following existing review candidate schema and precise primary-source citations; create analogous candidate files for subsequent cities only as safely feasible. Planner steps for each missing path must explicitly say 'Create new file <exact-path>' and include new_paths. Add only necessary schema checks and tests with explicit paths. Keep package_state prepared, human_review required and pending, and publication ineligible until genuine review; do not promote to reviewed_complete or invent approvals. Maintain provenance, period/version/fiscal differences, non-inference, regression CI, and accurate public data. Success means new useful candidate files and green checks, not queue exhaustion. Overall graduation still requires all 67 reviewed_complete and all runtime gates green.",
+    "id_prefix": "jifinish101",
+    "max_tasks": 4,
+    "min_tasks": 2,
+    "repository_intelligence_prefixes": [
+      "apps",
+      "data/catalog",
+      "data/candidates",
+      "data/indexed",
+      "pipelines",
+      "scripts",
+      "tests",
+      "schemas",
+      "docs"
+    ],
+    "request_id": "jifinish-request-101-machine-evidence",
+    "schema_version": 1,
+    "target_repository": "M-Osugi1230/jichi-insight"
+  },
+  "request_fingerprint": "cf6f3e574f2470e4d796f78196bc39595e02bd4b4ac3d1e2947636eb523bb6a6",
+  "schema_version": 1,
+  "task_ids": [
+    "jifinish101-001",
+    "jifinish101-002"
+  ],
+  "workflow_run_attempt": 1,
+  "workflow_run_id": 42380550256
+}
