@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "project_key": "chu-kei-insight",
+  "request_prefix": "ckprod",
+  "goal": "Advance Chu-kei Insight as a public platform for researching the mid-term management plans of Japanese listed companies. Treat the canonical universe (operations/universe/current-universe-v1.json) and operations/plan-detection/registry-v1.json as the source of truth; never hard-code company counts. Grow plan-detection coverage honestly through the primary-review pipeline toward owner-set milestones, keep every not-yet-determined company visible as unverified, and keep the production site in verified parity with the canonical source. Do not expand research scope beyond what the canonical pipeline and these criteria require.",
+  "target_repository": "M-Osugi1230/chu-kei",
+  "base_branch": "main",
+  "allowed_path_prefixes": [
+    "operations",
+    "scripts",
+    "site",
+    "tests",
+    "schemas",
+    "reports",
+    "releases",
+    "docs"
+  ],
+  "repository_intelligence_prefixes": [
+    "operations/plan-detection",
+    "operations/quality-rebase",
+    "operations/universe/current-universe-v1.json",
+    "scripts/build_plan_detection_registry_v1.mjs",
+    "scripts/validate_live_site_sync_v1.mjs",
+    "scripts/run_quality_pipeline_v43.mjs",
+    "site/data/plan-detection-summary-v1.json",
+    "site/data/release-status.json",
+    "site/data/frontend/manifest.json",
+    "site",
+    "tests"
+  ],
+  "graduation_criteria": [
+    "L0 Universe discoverability: every company present in the canonical universe and registry at evaluation time is discoverable through the production list, search and detail flows, with no legacy fixed-size dataset constraints and no data-loading zero-result states.",
+    "L1 Honest determination state: plan-detection status counts in the canonical registry, the universe and the public Plan Detection summary are internally consistent; every resolved determination is backed by the primary-review pipeline with a checkedAt timestamp and an official sourceUrl; companies not yet determined remain shown as unverified and are never filled in by inference, estimation or fabricated review.",
+    "L2 Comparison core: companies with a resolved current plan expose the canonical comparison-core fields defined by the registry builders, with missing fields reported as missing rather than synthesized.",
+    "Milestone coverage: the resolved plan-detection count reaches the current milestone target of 500 companies (Milestone 1, set by the repository owner on 2026-11-15). Later milestones are set only by an explicit owner decision recorded in this file. Reaching a milestone does not require pending=0 or not_checked=0.",
+    "Public parity: the official live-deployment parity audit reports PUBLIC_PARITY_VERIFIED for the production origin registered in the repository deployment targets, on the final repository state.",
+    "Integrity: no test, audit or quality gate is disabled, skipped or re-budgeted to force a green result, and no ADE state file is edited to bypass human review. Known pre-existing debt is named explicitly and worked down, not hidden: chu-kei Issue #288 (quality freshness debt on the structured source bundle) stays open until the underlying records are genuinely re-verified."
+  ],
+  "completion_marker_path": "docs/ADE_PRODUCTION_SYNC_COMPLETION.json",
+  "min_tasks": 3,
+  "max_tasks": 8
+}
