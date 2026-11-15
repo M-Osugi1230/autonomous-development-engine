@@ -1,11 +1,10 @@
 {
   "active_project_keys": [
-    "ade-chu-kei",
     "ade-jichi-insight"
   ],
   "allowed": true,
   "daily_limit": 15,
-  "observed_at": "2026-11-15T02:52:39.511527+00:00",
+  "observed_at": "2026-11-15T03:08:23.123418+00:00",
   "project_allocation": 6,
   "project_key": "ade-jichi-insight",
   "project_used": 0,
@@ -15,7 +14,6 @@
   "resume_after": null,
   "schema_version": 1,
   "selected_project_keys": [
-    "ade-chu-kei",
     "ade-jichi-insight"
   ],
   "total_used": 0,
